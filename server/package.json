@@ -4,6 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "lint": "eslint modules validation",
+    "lint:fix": "eslint modules validation --fix",
     "server-dev": "nodemon main.js --config nodemon.json"
   },
   "author": "",
@@ -37,6 +39,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "eslint": "^3.17.1",
     "nodemon": "^1.11.0"
   }
 }

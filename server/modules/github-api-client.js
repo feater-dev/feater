@@ -62,7 +62,7 @@ module.exports = function (config) {
 
         return client
             .repos
-            .getCommit(addRepoFullNameToParams({sha: commitSha}, repoFullName))
+            .getCommit(addRepoFullNameToParams({ sha: commitSha }, repoFullName))
             .error(handleError);
     }
 

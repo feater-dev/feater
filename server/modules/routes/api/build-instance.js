@@ -12,7 +12,7 @@ module.exports = function (buildInstanceRepository, buildDefinitionRepository, p
                             buildInstances
                                 .toArray()
                                 .then(function (buildInstances) {
-                                    res.json({data: buildInstances});
+                                    res.json({ data: buildInstances });
                                 });
                         });
                 }
@@ -79,7 +79,7 @@ module.exports = function (buildInstanceRepository, buildDefinitionRepository, p
                             }
                         };
 
-                        res.json({data});
+                        res.json({ data });
                     }
 
                     function respondWithErrors(errors) {
@@ -128,7 +128,7 @@ module.exports = function (buildInstanceRepository, buildDefinitionRepository, p
                     }
 
                     function respondWithId() {
-                        res.status(201).json({data: {id: scope.buildInstanceId}});
+                        res.status(201).json({ data: { id: scope.buildInstanceId } });
                     }
 
                     function executeBuildInstanceJobs() {

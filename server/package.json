@@ -1,0 +1,42 @@
+{
+  "name": "xsolve-feat",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "server-dev": "nodemon main.js --config nodemon.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "escape-string-regexp": "^1.0.5",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "express-sessions": "^1.0.6",
+    "fs-extra": "^2.0.0",
+    "gift": "^0.10.0",
+    "github": "^7.2.0",
+    "ini-config": "https://github.com/mariusz-bak-xsolve-pl/node-ini-config/tarball/master",
+    "jsonschema": "^1.1.1",
+    "kontainer-di": "^0.9.9",
+    "method-override": "^2.3.7",
+    "moment": "^2.17.1",
+    "mongodb": "^2.2.16",
+    "morgan": "^1.7.0",
+    "node-validator": "^0.1.26",
+    "nodegit-clone": "^1.2.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth": "^1.0.0",
+    "pug": "^2.0.0-beta6",
+    "rand-token": "^0.3.0",
+    "redis": "^2.6.3",
+    "serve-favicon": "^2.3.2",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}

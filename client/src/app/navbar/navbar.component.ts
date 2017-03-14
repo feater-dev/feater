@@ -1,0 +1,64 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+    selector: 'app-navbar',
+    template: `
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" style="cursor: pointer;" (click)="goToHomepage()">XSolve Feat</a>
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar-main">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a style="cursor: pointer;" (click)="goToProjectList()">Projects</a>
+                        </li>
+                        <li>
+                            <a style="cursor: pointer;" (click)="goToBuildDefinitionList()">Build definitions</a>
+                        </li>
+                        <li>
+                            <a style="cursor: pointer;" (click)="goToBuildInstanceList()">Build instances</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a>Signed in as <em>Mariusz Bąk</em></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `,
+    styles: []
+})
+export class NavbarComponent implements OnInit {
+
+    constructor(
+        private router: Router
+    ) {}
+
+    ngOnInit() {}
+
+    goToHomepage() {
+        this.router.navigate(['/']);
+    }
+
+    goToProjectList() {
+        this.router.navigate(['/projects']);
+    }
+
+    goToBuildDefinitionList() {
+        this.router.navigate(['/build-definitions']);
+    }
+
+    goToBuildInstanceList() {
+        this.router.navigate(['/build-instances']);
+    }
+
+}

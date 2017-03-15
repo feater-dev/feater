@@ -1,66 +1,60 @@
-var Promise = require('bluebird');
-var mongodb = require('mongodb');
+const Promise = require('bluebird');
+const mongodb = require('mongodb');
 
-module.exports = function (mongodbHelper) {
+module.exports = mongodbHelper => {
 
     function list(query) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('user')
-                        .find(query, function (err, result) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+                mongo
+                    .collection('user')
+                    .find(query, (err, result) => {
+                        if (err) {
+                            reject(err);
 
-                                return;
-                            }
+                            return;
+                        }
 
-                            resolve(result);
-                        });
-                });
-            });
+                        resolve(result);
+                    });
+            }));
     }
 
     function get(userId) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('user')
-                        .findOne({ _id: mongodb.ObjectID(userId) }, function (err, user) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+                mongo
+                    .collection('user')
+                    .findOne({ _id: mongodb.ObjectID(userId) }, (err, user) => {
+                        if (err) {
+                            reject(err);
 
-                                return;
-                            }
+                            return;
+                        }
 
-                            resolve(user);
-                        });
-                });
-            });
+                        resolve(user);
+                    });
+            }));
     }
 
     function add(user) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('user')
-                        .insertOne(user, null, function (err, result) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+                mongo
+                    .collection('user')
+                    .insertOne(user, null, (err, { insertedId }) => {
+                        if (err) {
+                            reject(err);
 
-                                return;
-                            }
+                            return;
+                        }
 
-                            resolve(result.insertedId);
-                        });
-                });
-            });
+                        resolve(insertedId);
+                    });
+            }));
     }
 
     return {

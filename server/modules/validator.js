@@ -1,23 +1,23 @@
-var Validator = require('jsonschema').Validator;
-var Promise = require('bluebird');
+const Validator = require('jsonschema').Validator;
+const Promise = require('bluebird');
 
-module.exports = function () {
+module.exports = () => {
 
-    var schemas = {
+    const schemas = {
         // API request models.
-        'api.project.addProject': require(__dirname + '/../validation/api/project/add-project'),
-        'api.buildDefinition.addBuildDefinition': require(__dirname + '/../validation/api/build-definition/add-build-definition'),
-        'api.buildInstance.addBuildInstance': require(__dirname + '/../validation/api/build-instance/add-build-instance'),
+        'api.project.addProject': require(`${__dirname}/../validation/api/project/add-project`),
+        'api.buildDefinition.addBuildDefinition': require(`${__dirname}/../validation/api/build-definition/add-build-definition`),
+        'api.buildInstance.addBuildInstance': require(`${__dirname}/../validation/api/build-instance/add-build-instance`),
 
         // Build definiction config YAML.
-        'buildDefinitionConfig.root': require(__dirname + '/../validation/build-definition-config/root')
+        'buildDefinitionConfig.root': require(`${__dirname}/../validation/build-definition-config/root`)
     };
 
     function validate(data, schemaName) {
-        var validator = new Validator();
+        const validator = new Validator();
 
-        return new Promise(function (resolve, reject) {
-            var result = validator.validate(data, schemas[schemaName]);
+        return new Promise((resolve, reject) => {
+            const result = validator.validate(data, schemas[schemaName]);
 
             if (result.errors.length) {
                 reject(result.errors);
@@ -30,7 +30,7 @@ module.exports = function () {
     }
 
     return {
-        validate: validate
+        validate
     };
 
 };

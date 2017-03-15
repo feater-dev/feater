@@ -1,10 +1,16 @@
-var _ = require('underscore');
-var path = require('path');
-var fs = require('fs-extra');
-var Promise = require('bluebird');
-var { exec, spawn } = require('child_process');
+const _ = require('underscore');
+const path = require('path');
+const fs = require('fs-extra');
+const Promise = require('bluebird');
+const { exec, spawn } = require('child_process');
 
-module.exports = function (config, portProvider, interpolationHelper, buildInstanceRepository, githubApiClient) {
+module.exports = (
+    { github },
+    portProvider,
+    interpolationHelper,
+    buildInstanceRepository,
+    githubApiClient
+) => {
 
     const BUFFER_SIZE = 64 * 1024 * 1024;
 
@@ -96,7 +102,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         has(key) {
-            for (var i = 0; i < this.entries.length; i += 1) {
+            for (let i = 0; i < this.entries.length; i += 1) {
                 if (this.entries[i].key === key) {
                     return true;
                 }
@@ -106,8 +112,8 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         keys() {
-            return _.map(this.entries, (entry) => {
-                return entry.key;
+            return _.map(this.entries, ({ key }) => {
+                return key;
             });
         }
 
@@ -123,7 +129,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         get(key) {
-            for (var i = 0; i < this.entries.length; i += 1) {
+            for (let i = 0; i < this.entries.length; i += 1) {
                 if (this.entries[i].key === key) {
                     return this.entries[i].value;
                 }
@@ -170,7 +176,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             return _.filter(
                 this.jobToRequiredJobsMap.keys(),
                 (job) => {
-                    var requiredJobs;
+                    let requiredJobs;
 
                     // First check if job is already fulfilled, rejected or cancelled.
                     if (this.jobToPromiseMap.has(job)) {
@@ -179,7 +185,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
                     // Then check if its required jobs are all fulfilled.
                     requiredJobs = this.jobToRequiredJobsMap.get(job);
-                    for (var i = 0; i < requiredJobs.length; i += 1) {
+                    for (let i = 0; i < requiredJobs.length; i += 1) {
                         if (
                             !this.jobToPromiseMap.has(requiredJobs[i])
                             || !this.jobToPromiseMap.get(requiredJobs[i]).isFulfilled()
@@ -194,7 +200,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         areAllJobsExecuted() {
-            var notExecutedJobs = _.filter(
+            const notExecutedJobs = _.filter(
                 this.jobToRequiredJobsMap.keys(),
                 (job) => {
                     return (
@@ -228,9 +234,9 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             this.assertJobDependenciesConsistency();
 
             return new Promise((resolve, reject) => {
-                var executeNext = () => {
+                const executeNext = () => {
                     //console.log(`DEBUG --- Execute next`);
-                    var executableJobs = this.findExecutableJobs();
+                    const executableJobs = this.findExecutableJobs();
 
                     if (0 === executableJobs.length) {
                         if (this.hasPendingJobs()) {
@@ -249,7 +255,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                     //console.log(`DEBUG --- Executable jobs: ${_.map(executableJobs, (executableJob) => jobToString(executableJob)).join(', ')}`);
 
                     executableJobs.forEach((executableJob) => {
-                        var executableJobPromise = this.jobExecutorCollection
+                        const executableJobPromise = this.jobExecutorCollection
                             .getSupporting(executableJob)
                             .execute(executableJob);
 
@@ -282,8 +288,8 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve) => {
-                var { buildInstance } = job;
-                var fullPath = path.join('/home/mariusz/Development/Feat/buildInstances', buildInstance.id); // TODO Base directory should be given from outside.
+                const { buildInstance } = job;
+                const fullPath = path.join('/home/mariusz/Development/Feat/buildInstances', buildInstance.id); // TODO Base directory should be given from outside.
                 fs.mkdirSync(fullPath);  // TODO Check if this directory doesn't already exist.
                 buildInstance.fullPath = fullPath;
                 job.setResult({ fullPath });
@@ -300,10 +306,10 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var { buildInstance } = job;
+            const { buildInstance } = job;
 
             return new Promise((resolve) => {
-                var port = portProvider.providePort(
+                const port = portProvider.providePort(
                     _.map(job.portRanges, (portRange) => ({ minPort: portRange[0], maxPort: portRange[1] }))
                 );
                 buildInstance.addExternalPort(job.portName, port);
@@ -323,13 +329,13 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var { buildInstance } = job;
+            const { buildInstance } = job;
 
             return new Promise((resolve) => {
                 _.each(
                     buildInstance.componentInstances,
-                    (componentInstance, componentId) => {
-                        buildInstance.addEnvironmentalVariable(`FEAT__PATH__${componentId.toUpperCase()}`, componentInstance.fullPath);
+                    ({ fullPath }, componentId) => {
+                        buildInstance.addEnvironmentalVariable(`FEAT__PATH__${componentId.toUpperCase()}`, fullPath);
                     }
                 );
                 _.each(
@@ -369,15 +375,15 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var { buildInstance } = job;
+            const { buildInstance } = job;
 
             return new Promise((resolve) => {
                 _.each(
                     buildInstance.config.summaryItems,
-                    (summaryItem) => {
+                    ({ name, value }) => {
                         buildInstance.addSummaryItem(
-                            summaryItem.name,
-                            interpolationHelper.interpolateText(summaryItem.value, buildInstance.featVariables, buildInstance.externalPorts)
+                            name,
+                            interpolationHelper.interpolateText(value, buildInstance.featVariables, buildInstance.externalPorts)
                         )
                     }
                 );
@@ -398,13 +404,13 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var { buildInstance } = job;
-                var dockerComposeDirectoryFullPath = path.join(
+                const { buildInstance } = job;
+                const dockerComposeDirectoryFullPath = path.join(
                     buildInstance.componentInstances[buildInstance.config.composeFile.componentId].fullPath,
                     path.dirname(buildInstance.config.composeFile.relativePath)
                 );
-                var dockerComposeFileName = path.basename(buildInstance.config.composeFile.relativePath);
-                var dockerComposeEnvironemntalVariables = _.extend(
+                const dockerComposeFileName = path.basename(buildInstance.config.composeFile.relativePath);
+                const dockerComposeEnvironemntalVariables = _.extend(
                     {},
                     buildInstance.environmentalVariables,
                     {
@@ -416,7 +422,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
                 buildInstance.log('Running docker-compose.');
 
-                var dockerCompose = spawn(
+                const dockerCompose = spawn(
                     'docker-compose', ['--file', dockerComposeFileName, 'up', '--abort-on-container-exit', '--no-color'],
                     {
                         cwd: dockerComposeDirectoryFullPath,
@@ -424,12 +430,12 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                     }
                 );
 
-                var stdoutLogger = buildInstance.logger.createNested('docker-compose stdout', { splitLines: true });
+                const stdoutLogger = buildInstance.logger.createNested('docker-compose stdout', { splitLines: true });
                 dockerCompose.stdout.on('data', (data) => {
                     stdoutLogger.debug(data.toString());
                 });
 
-                var stderrLogger = buildInstance.logger.createNested('docker-compose stderr', { splitLines: true });
+                const stderrLogger = buildInstance.logger.createNested('docker-compose stderr', { splitLines: true });
                 dockerCompose.stderr.on('data', (data) => {
                     stderrLogger.error(data.toString());
                 });
@@ -464,7 +470,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var { source, reference } = job.componentInstance.config;
+                const { source, reference } = job.componentInstance.config;
                 if (!source || !reference) {
                     reject(Error('Missing source or reference.'));
 
@@ -480,7 +486,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                     .getRepo(source.name)
                     .then(
                         () => {
-                            var commitPromise;
+                            let commitPromise;
 
                             switch (reference.type) {
                                 case 'tag':
@@ -503,10 +509,10 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
                             commitPromise.then(
                                 (commit) => {
-                                    var resolvedReference = {
+                                    const resolvedReference = {
                                         type: 'commit',
                                         repository: source.name,
-                                        commit: commit
+                                        commit
                                     };
                                     job.componentInstance.resolvedReference = resolvedReference;
                                     job.setResult({ resolvedReference });
@@ -528,17 +534,17 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var { componentInstance, componentInstance: { buildInstance } } = job;
-                var { repository, commit } = componentInstance.resolvedReference;
-                var zipFileUrl = `https://api.github.com/repos/${repository}/zipball/${commit.sha}`;
-                var zipFileFullPath = path.join(buildInstance.fullPath, `${repository.replace('/', '-')}-${commit.sha}.zip`);
+                const { componentInstance, componentInstance: { buildInstance } } = job;
+                const { repository, commit } = componentInstance.resolvedReference;
+                const zipFileUrl = `https://api.github.com/repos/${repository}/zipball/${commit.sha}`;
+                const zipFileFullPath = path.join(buildInstance.fullPath, `${repository.replace('/', '-')}-${commit.sha}.zip`);
 
                 componentInstance.zipFileUrl = zipFileUrl;
                 componentInstance.zipFileFullPath = zipFileFullPath;
 
                 componentInstance.log(`Downloading archive for repository ${repository} at commit ${commit.sha}.`);
                 exec(
-                    `curl -s -H "Authorization: token ${config.github.personalAccessToken}" -L ${zipFileUrl} > ${zipFileFullPath}`,
+                    `curl -s -H "Authorization: token ${github.personalAccessToken}" -L ${zipFileUrl} > ${zipFileFullPath}`,
                     { maxBuffer: BUFFER_SIZE },
                     (error) => {
                         if (error) {
@@ -566,8 +572,8 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var { componentInstance, componentInstance: { buildInstance } } = job;
-                var extractedFullPath = path.join(
+                const { componentInstance, componentInstance: { buildInstance } } = job;
+                const extractedFullPath = path.join(
                     buildInstance.fullPath,
                     path.basename(componentInstance.zipFileFullPath, '.zip')
                 );
@@ -604,7 +610,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var { componentInstance, sourceRelativePath, destinationRelativePath } = job;
+            const { componentInstance, sourceRelativePath, destinationRelativePath } = job;
 
             return new Promise((resolve) => {
                 componentInstance.log(`Copying ${sourceRelativePath} to ${destinationRelativePath}.`);
@@ -624,11 +630,11 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var { componentInstance } = job;
+            const { componentInstance } = job;
 
             return new Promise((resolve) => {
-                var fullPath = path.join(componentInstance.fullPath, job.relativePath);
-                var { featVariables, externalPorts } = componentInstance.buildInstance;
+                const fullPath = path.join(componentInstance.fullPath, job.relativePath);
+                const { featVariables, externalPorts } = componentInstance.buildInstance;
 
                 componentInstance.log(`Interpolating Feat variables in ${job.relativePath}.`);
                 interpolationHelper.interpolateFile(fullPath, featVariables, externalPorts);
@@ -650,7 +656,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         getSupporting(job) {
-            var supportingJobExecutors = _.filter(
+            const supportingJobExecutors = _.filter(
                 this.jobExecutors,
                 (jobExecutor) => jobExecutor.supports(job)
             );
@@ -671,7 +677,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
     // Factory method.
 
     function createBuildInstanceDependantJobsExecutor(buildInstance) {
-        var jobExecutorCollection = new JobExecutorCollection();
+        const jobExecutorCollection = new JobExecutorCollection();
 
         jobExecutorCollection
             .add(new CreateDirectoryJobExecutor())
@@ -685,64 +691,64 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             .add(new CopyBeforeBuildTaskJobExecutor())
             .add(new InterpolateBeforeBuildTaskJobExecutor());
 
-        var dependantJobsExecutor = new DependantJobsExecutor(jobExecutorCollection);
+        const dependantJobsExecutor = new DependantJobsExecutor(jobExecutorCollection);
 
-        var resolveReferenceJobs = _.map(
+        const resolveReferenceJobs = _.map(
             buildInstance.componentInstances,
             (componentInstance) => {
-                var job = new ResolveReferenceJob(componentInstance);
+                const job = new ResolveReferenceJob(componentInstance);
                 dependantJobsExecutor.add(job);
 
                 return job;
             }
         );
 
-        var createDirectoryJob = new CreateDirectoryJob(buildInstance);
+        const createDirectoryJob = new CreateDirectoryJob(buildInstance);
         dependantJobsExecutor.add(createDirectoryJob, resolveReferenceJobs);
 
-        var extractArchiveJobs = [];
+        const extractArchiveJobs = [];
         _.each(
             buildInstance.componentInstances,
             (componentInstance) => {
-                var downloadArchiveJob = new DownloadArchiveJob(componentInstance);
-                var extractArchiveJob = new ExtractArchiveJob(componentInstance);
+                const downloadArchiveJob = new DownloadArchiveJob(componentInstance);
+                const extractArchiveJob = new ExtractArchiveJob(componentInstance);
                 dependantJobsExecutor.add(downloadArchiveJob, [createDirectoryJob]);
                 dependantJobsExecutor.add(extractArchiveJob, [downloadArchiveJob]);
                 extractArchiveJobs.push(extractArchiveJob);
             }
         );
 
-        var providePortJobs = _.map(
+        const providePortJobs = _.map(
             buildInstance.config.externalPorts,
             ({ ranges: portRanges }, portName) => {
-                var job = new ProvidePortJob(buildInstance, portName, portRanges);
+                const job = new ProvidePortJob(buildInstance, portName, portRanges);
                 dependantJobsExecutor.add(job, extractArchiveJobs);
 
                 return job;
             }
         );
 
-        var componentIdToBeforeBuildTaskJobsMap = {};
+        const componentIdToBeforeBuildTaskJobsMap = {};
         _.each(
             buildInstance.componentInstances,
             (componentInstance, componentId) => {
                 componentIdToBeforeBuildTaskJobsMap[componentId] = [];
                 _.each(
                     componentInstance.config.beforeBuildTasks,
-                    (beforeBuildEntry) => {
-                        var job;
+                    ({ type, sourceRelativePath, destinationRelativePath, relativePath }) => {
+                        let job;
 
-                        switch (beforeBuildEntry.type) {
+                        switch (type) {
                             case 'copy':
-                                job = new CopyBeforeBuildTaskJob(componentInstance, beforeBuildEntry.sourceRelativePath, beforeBuildEntry.destinationRelativePath);
+                                job = new CopyBeforeBuildTaskJob(componentInstance, sourceRelativePath, destinationRelativePath);
                                 break;
 
                             case 'interpolate':
-                                job = new InterpolateBeforeBuildTaskJob(componentInstance, beforeBuildEntry.relativePath);
+                                job = new InterpolateBeforeBuildTaskJob(componentInstance, relativePath);
                                 break;
 
                             default:
-                                throw new Error(`Unknown type of before build task ${beforeBuildEntry.type} for component ${componentId}.`);
+                                throw new Error(`Unknown type of before build task ${type} for component ${componentId}.`);
                         }
 
                         dependantJobsExecutor.add(
@@ -755,7 +761,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             }
         );
 
-        var lastBeforeBuildTaskJobs = [];
+        let lastBeforeBuildTaskJobs = [];
         _.map(
             buildInstance.componentInstances,
             (componentInstance, componentId) => {
@@ -763,13 +769,13 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             }
         );
 
-        var prepareEnvironmentalVariablesJob = new PrepareEnvironmentalVariablesJob(buildInstance);
+        const prepareEnvironmentalVariablesJob = new PrepareEnvironmentalVariablesJob(buildInstance);
         dependantJobsExecutor.add(prepareEnvironmentalVariablesJob, providePortJobs.concat(lastBeforeBuildTaskJobs));
 
-        var prepareSummaryItemsJob = new PrepareSummaryItemsJob(buildInstance);
+        const prepareSummaryItemsJob = new PrepareSummaryItemsJob(buildInstance);
         dependantJobsExecutor.add(prepareSummaryItemsJob, [prepareEnvironmentalVariablesJob]);
 
-        var runDockerComposeJob = new RunDockerComposeJob(buildInstance);
+        const runDockerComposeJob = new RunDockerComposeJob(buildInstance);
         dependantJobsExecutor.add(runDockerComposeJob, [prepareSummaryItemsJob]);
 
         return dependantJobsExecutor;

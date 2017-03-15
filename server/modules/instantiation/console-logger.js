@@ -1,6 +1,6 @@
-var moment = require('moment');
+const moment = require('moment');
 
-module.exports = function () {
+module.exports = () => {
 
     class ConsoleLogger {
         log(level, message) {
@@ -19,7 +19,7 @@ module.exports = function () {
         }
         log(level, message) {
             // TODO Filter by level.
-            var messages = this.splitLines ? message.replace(/\n$/gm, '').split('\n') : [message];
+            const messages = this.splitLines ? message.replace(/\n$/gm, '').split('\n') : [message];
             messages.forEach((message) => {
                 this.parent.log(level, `${this.prefix} | ${message}`)
             });

@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = () => {
 
     class PortRange {
         constructor(minPort, maxPort) {
@@ -23,7 +23,7 @@ module.exports = function () {
         }
 
         contains(port) {
-            for (var i = 0; i < this.portRanges.length; i += 1) {
+            for (let i = 0; i < this.portRanges.length; i += 1) {
                 if (this.portRanges[i].contains(port)) {
                     return true;
                 }
@@ -52,7 +52,8 @@ module.exports = function () {
         }
 
         providePort(expectedPortRanges) {
-            var i, port;
+            let i;
+            let port;
             for (i = 0; i < expectedPortRanges.length; i += 1) {
                 for (port = expectedPortRanges[i].minPort; port <= expectedPortRanges[i].maxPort; port += 1) {
                     if (this.availablePortRanges.contains(port) && !this.externalPortRanges.contains(port)) {
@@ -67,7 +68,7 @@ module.exports = function () {
         }
     }
 
-    var portProvider = new PortProvider();
+    const portProvider = new PortProvider();
 
     portProvider
         .addAvailablePortRange(1000, 1005) // TODO Move to config.

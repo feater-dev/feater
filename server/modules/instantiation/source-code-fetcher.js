@@ -1,11 +1,11 @@
-var path = require('path');
-var _ = require('underscore');
+const path = require('path');
+const _ = require('underscore');
 
-module.exports = function (config, instanceClasses, jobs) {
+module.exports = (config, instanceClasses, jobs) => {
 
-    var { BuildInstance, ComponentInstance } = instanceClasses;
+    const { BuildInstance, ComponentInstance } = instanceClasses;
 
-    var dummyFeatVariables = {
+    const dummyFeatVariables = {
         'scheme': 'http',
         'domain': 'localhost',
         'npm_cache': path.join(__dirname, '../../../cache/npm'), // TODO Move this to config.
@@ -13,7 +13,7 @@ module.exports = function (config, instanceClasses, jobs) {
     };
 
     function createBuildInstance(buildInstanceId, buildDefinition) {
-        var buildInstance = new BuildInstance(
+        const buildInstance = new BuildInstance(
             buildInstanceId,
             buildDefinition.config,
             path.join('/home/mariusz/Development/Feat/buildInstances', buildInstanceId.toString())
@@ -21,7 +21,7 @@ module.exports = function (config, instanceClasses, jobs) {
 
         buildInstance.log('About to set up.');
 
-        var componentIds = _.keys(buildDefinition.config.components);
+        const componentIds = _.keys(buildDefinition.config.components);
 
         buildInstance.log('Setting dummy Feat variables.');
 
@@ -30,7 +30,7 @@ module.exports = function (config, instanceClasses, jobs) {
         });
 
         _.map(componentIds, (componentId) => {
-            var componentInstance = new ComponentInstance(
+            const componentInstance = new ComponentInstance(
                 componentId,
                 buildInstance,
                 buildDefinition.config.components[componentId]

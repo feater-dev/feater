@@ -1,51 +1,47 @@
-var Promise = require('bluebird');
-var mongodb = require('mongodb');
+const Promise = require('bluebird');
+const mongodb = require('mongodb');
 
-module.exports = function (mongodbHelper) {
+module.exports = mongodbHelper => {
 
     function list(query) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('project')
-                        .find(query, function (err, result) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+            mongo
+                .collection('project')
+                .find(query, (err, result) => {
+                    if (err) {
+                        reject(err);
 
-                                return;
-                            }
+                        return;
+                    }
 
-                            resolve(result);
-                        });
+                    resolve(result);
                 });
-            });
+        }));
     }
 
     function get(projectId) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('project')
-                        .findOne({ _id: mongodb.ObjectID(projectId) }, function (err, project) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+            mongo
+                .collection('project')
+                .findOne({ _id: mongodb.ObjectID(projectId) }, (err, project) => {
+                    if (err) {
+                        reject(err);
 
-                                return;
-                            }
+                        return;
+                    }
 
-                            resolve(project);
-                        });
+                    resolve(project);
                 });
-            });
+        }));
     }
 
     function getOrFail(projectId) {
         return get(projectId)
-            .then(function (project) {
+            .then(project => {
                 if (null === project) {
                     throw new Error("Document not found.");
                 }
@@ -57,21 +53,19 @@ module.exports = function (mongodbHelper) {
     function add(project) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('project')
-                        .insertOne(project, null, function (err, result) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+            mongo
+                .collection('project')
+                .insertOne(project, null, (err, { insertedId }) => {
+                    if (err) {
+                        reject(err);
 
-                                return;
-                            }
+                        return;
+                    }
 
-                            resolve(result.insertedId);
-                        });
+                    resolve(insertedId);
                 });
-            });
+        }));
     }
 
     return {

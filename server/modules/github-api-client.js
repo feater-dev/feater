@@ -1,9 +1,9 @@
-var Client = require('github');
+const Client = require('github');
 
-module.exports = function (config) {
+module.exports = ({ github }) => {
 
-    var client = new Client({
-        debug: config.github.debugMode,
+    const client = new Client({
+        debug: github.debugMode,
         protocol: 'https',
         host: 'api.github.com',
         headers: {
@@ -17,12 +17,12 @@ module.exports = function (config) {
     function authenticateClient() {
         client.authenticate({
             type: 'token',
-            token: config.github.personalAccessToken
+            token: github.personalAccessToken
         });
     }
 
     function addRepoFullNameToParams(params, repoFullName) {
-        var repoFullNameSplit = repoFullName.split('/');
+        const repoFullNameSplit = repoFullName.split('/');
 
         params.owner = repoFullNameSplit[0];
         params.repo = repoFullNameSplit[1];
@@ -67,25 +67,21 @@ module.exports = function (config) {
     }
 
     function getTagReference(repoFullName, tagName) {
-        return getReference(repoFullName, 'tags/' + tagName);
+        return getReference(repoFullName, `tags/${tagName}`);
     }
 
     function getTagCommit(repoFullName, tagName) {
         return getTagReference(repoFullName, tagName)
-            .then(function (tagReference) {
-                return getCommit(repoFullName, tagReference.object.sha);
-            });
+            .then(({ object }) => getCommit(repoFullName, object.sha));
     }
 
     function getBranchReference(repoFullName, branchName) {
-        return getReference(repoFullName, 'heads/' + branchName);
+        return getReference(repoFullName, `heads/${branchName}`);
     }
 
     function getBranchCommit(repoFullName, branchName) {
         return getBranchReference(repoFullName, branchName)
-            .then(function (branchReference) {
-                return getCommit(repoFullName, branchReference.object.sha);
-            });
+            .then(({ object }) => getCommit(repoFullName, object.sha));
     }
 
     function getFile(repoFullName, reference, filePath) {
@@ -102,9 +98,7 @@ module.exports = function (config) {
 
     function getFileContent(repoFullName, reference, filePath) {
         return getFile(repoFullName, reference, filePath)
-            .then(function (file) {
-                return new Buffer(file.content, 'base64').toString('ascii');
-            });
+            .then(({ content }) => new Buffer(content, 'base64').toString('ascii'));
     }
 
     return {

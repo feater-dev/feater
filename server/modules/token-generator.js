@@ -1,7 +1,7 @@
-var randToken = require('rand-token');
+const randToken = require('rand-token');
 
 module.exports = {
-    generate: function () {
+    generate() {
         return randToken.generate(16);
     }
 };

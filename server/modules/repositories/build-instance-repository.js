@@ -1,52 +1,48 @@
-var Promise = require('bluebird');
-var mongodb = require('mongodb');
-var ObjectID = mongodb.ObjectID;
+const Promise = require('bluebird');
+const mongodb = require('mongodb');
+const ObjectID = mongodb.ObjectID;
 
-module.exports = function (mongodbHelper) {
+module.exports = mongodbHelper => {
 
     function list(query) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('buildInstance')
-                        .find(query, function (err, result) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+                mongo
+                    .collection('buildInstance')
+                    .find(query, (err, result) => {
+                        if (err) {
+                            reject(err);
 
-                                return;
-                            }
+                            return;
+                        }
 
-                            resolve(result);
-                        });
-                });
-            });
+                        resolve(result);
+                    });
+            }));
     }
 
     function get(buildInstanceId) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('buildInstance')
-                        .findOne({ _id: mongodb.ObjectID(buildInstanceId) }, function (err, buildInstance) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+                mongo
+                    .collection('buildInstance')
+                    .findOne({ _id: mongodb.ObjectID(buildInstanceId) }, (err, buildInstance) => {
+                        if (err) {
+                            reject(err);
 
-                                return;
-                            }
+                            return;
+                        }
 
-                            resolve(buildInstance);
-                        });
-                });
-            });
+                        resolve(buildInstance);
+                    });
+            }));
     }
 
     function getOrFail(buildInstanceId) {
         return get(buildInstanceId)
-            .then(function (buildInstance) {
+            .then(buildInstance => {
                 if (null === buildInstance) {
                     throw new Error("Document not found.");
                 }
@@ -58,21 +54,19 @@ module.exports = function (mongodbHelper) {
     function add(buildInstance) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('buildInstance')
-                        .insertOne(buildInstance, null, function (err, result) {
-                            if (err) {
-                                reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+                mongo
+                    .collection('buildInstance')
+                    .insertOne(buildInstance, null, (err, { insertedId }) => {
+                        if (err) {
+                            reject(err);
 
-                                return;
-                            }
+                            return;
+                        }
 
-                            resolve(result.insertedId);
-                        });
-                });
-            });
+                        resolve(insertedId);
+                    });
+            }));
     }
 
     function updateExternalPorts(buildInstance) {
@@ -96,29 +90,27 @@ module.exports = function (mongodbHelper) {
         );
     }
 
-    function update(buildInstance, updateContents) {
+    function update({ id }, updateContents) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
-                    mongo
-                        .collection('buildInstance')
-                        .updateOne(
-                            { _id: ObjectID(buildInstance.id) },
-                            updateContents,
-                            { w: 1 },
-                            function (err, result) {
-                                if (err) {
-                                    reject(err);
+            .then(mongo => new Promise((resolve, reject) => {
+                mongo
+                    .collection('buildInstance')
+                    .updateOne(
+                        { _id: ObjectID(id) },
+                        updateContents,
+                        { w: 1 },
+                        (err, { insertedId }) => {
+                            if (err) {
+                                reject(err);
 
-                                    return;
-                                }
-
-                                resolve(result.insertedId);
+                                return;
                             }
-                        );
-                });
-            });
+
+                            resolve(insertedId);
+                        }
+                    );
+            }));
     }
 
     return {

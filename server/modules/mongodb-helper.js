@@ -1,11 +1,11 @@
-var MongoClient = require('mongodb').MongoClient;
-var Promise = require('bluebird');
+const MongoClient = require('mongodb').MongoClient;
+const Promise = require('bluebird');
 
-module.exports = function (config) {
+module.exports = ({ mongo }) => {
 
     function getMongo() {
-        return new Promise(function (resolve, reject) {
-            MongoClient.connect(config.mongo.dsn, function (err, mongo) {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(mongo.dsn, (err, mongo) => {
                 if (err) {
                     reject(err);
 
@@ -18,7 +18,7 @@ module.exports = function (config) {
     }
 
     return {
-        getMongo: getMongo
+        getMongo
     };
 
 };

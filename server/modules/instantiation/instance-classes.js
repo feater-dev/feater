@@ -1,7 +1,7 @@
-var path = require('path');
-var _ = require('underscore');
+const path = require('path');
+const _ = require('underscore');
 
-module.exports = function (consoleLogger) {
+module.exports = consoleLogger => {
 
     class BuildInstance {
         constructor(id, buildDefinitionConfig) {

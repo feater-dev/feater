@@ -1,51 +1,51 @@
-var _ = require('underscore');
-var path = require('path');
+const _ = require('underscore');
+const path = require('path');
 
-module.exports = (function () {
+module.exports = ((() => {
 
     function createApp() {
-        var express = require('express');
-        var serveFavicon = require('serve-favicon');
-        var methodOverride = require('method-override');
-        var cookieParser = require('cookie-parser');
-        var bodyParser = require('body-parser');
-        var morgan = require('morgan');
+        const express = require('express');
+        const serveFavicon = require('serve-favicon');
+        const methodOverride = require('method-override');
+        const cookieParser = require('cookie-parser');
+        const bodyParser = require('body-parser');
+        const morgan = require('morgan');
 
-        var app = express();
+        const app = express();
 
-        app.use(express.static(__dirname + '/public'));
-        app.use(serveFavicon(__dirname + '/public/favicon.ico'));
+        app.use(express.static(`${__dirname}/public`));
+        app.use(serveFavicon(`${__dirname}/public/favicon.ico`));
         app.use(morgan('dev'));
 
         app.use(cookieParser());
-        app.use(bodyParser.urlencoded({extended: true}));
+        app.use(bodyParser.urlencoded({ extended: true }));
         app.use(bodyParser.json());
-        app.use(bodyParser.json({type: 'app/vnd.api+json'}));
+        app.use(bodyParser.json({ type: 'app/vnd.api+json' }));
         app.use(methodOverride());
         app.set('view engine', 'pug');
-        app.set('views', __dirname + '/views');
+        app.set('views', `${__dirname}/views`);
 
         return app;
     }
 
     function createContainer(app) {
-        var rawConfig = require('ini-config')(__dirname);
+        const rawConfig = require('ini-config')(__dirname);
 
         rawConfig.apply('dev'); // TODO Use some env variable.
 
-        var modules = require(__dirname + '/modules/index');
-        var container = require(__dirname + '/container')(app, rawConfig, modules);
+        const modules = require(`${__dirname}/modules/index`);
+        const container = require(`${__dirname}/container`)(app, rawConfig, modules);
 
         return container;
     }
 
     function initializeAuth(app, container) {
-        var expressSession = require('express-session');
-        var ExpressSessions = require('express-sessions');
-        var passport = require('passport');
-        var GoogleOAuth2Strategy = require('passport-google-oauth').OAuth2Strategy;
-        var redis = require('redis');
-        var config = container.getModule('config');
+        const expressSession = require('express-session');
+        const ExpressSessions = require('express-sessions');
+        const passport = require('passport');
+        const GoogleOAuth2Strategy = require('passport-google-oauth').OAuth2Strategy;
+        const redis = require('redis');
+        const config = container.getModule('config');
 
         app.use(expressSession({
             secret: 'someSessionSecret',
@@ -68,20 +68,16 @@ module.exports = (function () {
             {
                 clientID: config.googleOAuth2.clientId,
                 clientSecret: config.googleOAuth2.clientSecret,
-                callbackURL: config.web.baseUrl + '/auth/google/callback'
+                callbackURL: `${config.web.baseUrl}/auth/google/callback`
             },
-            function(accessToken, refreshToken, profile, done) {
+            (accessToken, refreshToken, profile, done) => {
 
-                process.nextTick(function () {
+                process.nextTick(() => {
                     if (!_.contains(config.googleOAuth2.allowedDomains, profile._json.domain)) {
                         // TODO Do something for this error not being shown.
 
                         return done(new Error(
-                            'Invalid domain, allowed domains are ' +
-                            _.map(config.googleOAuth2.allowedDomains, function (allowedDomain) {
-                                return '\'' + allowedDomain + '\'';
-                            }).join(', ') +
-                            '.'
+                            `Invalid domain, allowed domains are ${_.map(config.googleOAuth2.allowedDomains, allowedDomain => `'${allowedDomain}'`).join(', ')}.`
                         ));
                     }
 
@@ -99,25 +95,15 @@ module.exports = (function () {
             }
         ));
 
-        passport.serializeUser(function(user, done) {
-            // TODO How this should be handled?
+        passport.serializeUser((user, done) => // TODO How this should be handled?
+            done(null, JSON.stringify(user)));
 
-            return done(null, JSON.stringify(user));
-        });
-
-        passport.deserializeUser(function(serializedUser, done) {
-            // TODO How this should be handled?
-            // console.log(JSON.parse(serializedUser));
-
-            return done(null, JSON.parse(serializedUser));
-        });
+        passport.deserializeUser((serializedUser, done) => // TODO How this should be handled?
+            done(null, JSON.parse(serializedUser)));
     }
 
     function registerRoutes(app, container) {
-        var title = 'XSolve Feat ' + container.getModule('config').app.versionNumber; // TODO Move it somewhere else.
-        var fixtures = require(__dirname + '/fixtures'); // TODO Move it somewhere else or remove it completely.
-
-        var routes = _.flatten(
+        const routes = _.flatten(
             [
                 // TODO Add route for serving client app.
 
@@ -129,19 +115,19 @@ module.exports = (function () {
             true
         );
 
-        routes.forEach(function (route) {
+        routes.forEach(route => {
             app[route.method].apply(app, _.flatten([route.path, route.middlewares], true));
         });
 
         // Serve SPA
-        app.use(function(req, res, next) {
+        app.use((req, res) => {
             res.status(200).sendFile(path.join(__dirname, 'public/index.html'));
         });
     }
 
-    return function () {
-        var app = createApp();
-        var container = createContainer(app);
+    return () => {
+        const app = createApp();
+        const container = createContainer(app);
 
         initializeAuth(app, container);
         registerRoutes(app, container);
@@ -149,4 +135,4 @@ module.exports = (function () {
         return container;
     };
 
-})();
+}))();

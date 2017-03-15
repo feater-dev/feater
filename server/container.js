@@ -1,13 +1,11 @@
-var container = require('kontainer-di');
+const container = require('kontainer-di');
 
-module.exports = function (app, rawConfig, modules) {
+module.exports = (app, rawConfig, modules) => {
 
-    container.register('app', [], function () {
-        return app;
-    });
+    container.register('app', [], () => app);
 
-    container.register('config', [], function () {
-        var config = {
+    container.register('config', [], () => {
+        const config = {
             app: {
                 versionNumber: rawConfig.app.versionNumber
             },
@@ -33,7 +31,7 @@ module.exports = function (app, rawConfig, modules) {
             }
         };
 
-        config.web.baseUrl = config.web.scheme + '://' + config.web.host + ':' + config.web.port;
+        config.web.baseUrl = `${config.web.scheme}://${config.web.host}:${config.web.port}`;
 
         return config;
     });

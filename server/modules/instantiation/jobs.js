@@ -2,8 +2,7 @@ var _ = require('underscore');
 var path = require('path');
 var fs = require('fs-extra');
 var Promise = require('bluebird');
-var {exec, spawn} = require('child_process');
-var escapeStringRegexp = require('escape-string-regexp');
+var { exec, spawn } = require('child_process');
 
 module.exports = function (config, portProvider, interpolationHelper, buildInstanceRepository, githubApiClient) {
 
@@ -282,12 +281,12 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            return new Promise((resolve, reject) => {
-                var {buildInstance} = job;
+            return new Promise((resolve) => {
+                var { buildInstance } = job;
                 var fullPath = path.join('/home/mariusz/Development/Feat/buildInstances', buildInstance.id); // TODO Base directory should be given from outside.
                 fs.mkdirSync(fullPath);  // TODO Check if this directory doesn't already exist.
                 buildInstance.fullPath = fullPath;
-                job.setResult({fullPath});
+                job.setResult({ fullPath });
 
                 resolve();
 
@@ -301,11 +300,11 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var {buildInstance} = job;
+            var { buildInstance } = job;
 
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 var port = portProvider.providePort(
-                    _.map(job.portRanges, (portRange) => ({minPort: portRange[0], maxPort: portRange[1]}))
+                    _.map(job.portRanges, (portRange) => ({ minPort: portRange[0], maxPort: portRange[1] }))
                 );
                 buildInstance.addExternalPort(job.portName, port);
 
@@ -324,9 +323,9 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var {buildInstance} = job;
+            var { buildInstance } = job;
 
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 _.each(
                     buildInstance.componentInstances,
                     (componentInstance, componentId) => {
@@ -370,9 +369,9 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var {buildInstance} = job;
+            var { buildInstance } = job;
 
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 _.each(
                     buildInstance.config.summaryItems,
                     (summaryItem) => {
@@ -399,7 +398,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var {buildInstance} = job;
+                var { buildInstance } = job;
                 var dockerComposeDirectoryFullPath = path.join(
                     buildInstance.componentInstances[buildInstance.config.composeFile.componentId].fullPath,
                     path.dirname(buildInstance.config.composeFile.relativePath)
@@ -425,12 +424,12 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                     }
                 );
 
-                var stdoutLogger = buildInstance.logger.createNested('docker-compose stdout', {splitLines: true});
+                var stdoutLogger = buildInstance.logger.createNested('docker-compose stdout', { splitLines: true });
                 dockerCompose.stdout.on('data', (data) => {
                     stdoutLogger.debug(data.toString());
                 });
 
-                var stderrLogger = buildInstance.logger.createNested('docker-compose stderr', {splitLines: true});
+                var stderrLogger = buildInstance.logger.createNested('docker-compose stderr', { splitLines: true });
                 dockerCompose.stderr.on('data', (data) => {
                     stderrLogger.error(data.toString());
                 });
@@ -465,7 +464,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var {source, reference} = job.componentInstance.config;
+                var { source, reference } = job.componentInstance.config;
                 if (!source || !reference) {
                     reject(Error('Missing source or reference.'));
 
@@ -480,7 +479,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                 githubApiClient
                     .getRepo(source.name)
                     .then(
-                        (repo) => {
+                        () => {
                             var commitPromise;
 
                             switch (reference.type) {
@@ -510,7 +509,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                                         commit: commit
                                     };
                                     job.componentInstance.resolvedReference = resolvedReference;
-                                    job.setResult({resolvedReference});
+                                    job.setResult({ resolvedReference });
                                     resolve();
                                 },
                                 (error) => { reject(error); }
@@ -529,8 +528,8 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var {componentInstance, componentInstance: {buildInstance}} = job;
-                var {repository, commit} = componentInstance.resolvedReference;
+                var { componentInstance, componentInstance: { buildInstance } } = job;
+                var { repository, commit } = componentInstance.resolvedReference;
                 var zipFileUrl = `https://api.github.com/repos/${repository}/zipball/${commit.sha}`;
                 var zipFileFullPath = path.join(buildInstance.fullPath, `${repository.replace('/', '-')}-${commit.sha}.zip`);
 
@@ -540,7 +539,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                 componentInstance.log(`Downloading archive for repository ${repository} at commit ${commit.sha}.`);
                 exec(
                     `curl -s -H "Authorization: token ${config.github.personalAccessToken}" -L ${zipFileUrl} > ${zipFileFullPath}`,
-                    {maxBuffer: BUFFER_SIZE},
+                    { maxBuffer: BUFFER_SIZE },
                     (error) => {
                         if (error) {
                             componentInstance.log('Failed to download archive.');
@@ -567,7 +566,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var {componentInstance, componentInstance: {buildInstance}} = job;
+                var { componentInstance, componentInstance: { buildInstance } } = job;
                 var extractedFullPath = path.join(
                     buildInstance.fullPath,
                     path.basename(componentInstance.zipFileFullPath, '.zip')
@@ -582,7 +581,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                         `mv ${extractedFullPath} ${componentInstance.fullPath}`,
                         `rm ${componentInstance.zipFileFullPath}`
                     ].join(' && '),
-                    {maxBuffer: BUFFER_SIZE},
+                    { maxBuffer: BUFFER_SIZE },
                     (error) => {
                         if (error) {
                             componentInstance.log('Failed to extract archive.');
@@ -605,9 +604,9 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var {componentInstance, sourceRelativePath, destinationRelativePath} = job;
+            var { componentInstance, sourceRelativePath, destinationRelativePath } = job;
 
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 componentInstance.log(`Copying ${sourceRelativePath} to ${destinationRelativePath}.`);
                 fs.copySync(
                     path.join(componentInstance.fullPath, sourceRelativePath),
@@ -625,11 +624,11 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
 
         execute(job) {
-            var {componentInstance} = job;
+            var { componentInstance } = job;
 
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 var fullPath = path.join(componentInstance.fullPath, job.relativePath);
-                var {featVariables, externalPorts} = componentInstance.buildInstance;
+                var { featVariables, externalPorts } = componentInstance.buildInstance;
 
                 componentInstance.log(`Interpolating Feat variables in ${job.relativePath}.`);
                 interpolationHelper.interpolateFile(fullPath, featVariables, externalPorts);
@@ -715,7 +714,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         var providePortJobs = _.map(
             buildInstance.config.externalPorts,
-            ({ranges: portRanges}, portName) => {
+            ({ ranges: portRanges }, portName) => {
                 var job = new ProvidePortJob(buildInstance, portName, portRanges);
                 dependantJobsExecutor.add(job, extractArchiveJobs);
 

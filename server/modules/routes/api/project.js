@@ -12,7 +12,7 @@ module.exports = function (projectRepository, validator) {
                             projects
                                 .toArray()
                                 .then(function (projects) {
-                                    res.json({data: projects});
+                                    res.json({ data: projects });
                                 });
                         });
                 }
@@ -32,7 +32,7 @@ module.exports = function (projectRepository, validator) {
                                 return;
                             }
 
-                            res.json({data: project});
+                            res.json({ data: project });
                         });
                 }
             ]
@@ -50,7 +50,7 @@ module.exports = function (projectRepository, validator) {
                                 projectRepository
                                     .add(project)
                                     .then(function (projectId) {
-                                        res.status(201).json({data: {id: projectId}});
+                                        res.status(201).json({ data: { id: projectId } });
                                     });
                             },
                             function (errors) {

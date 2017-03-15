@@ -51,7 +51,7 @@ module.exports = function (consoleLogger) {
         }
 
         addSummaryItem(name, value) {
-            this.summaryItems.push({name, value});
+            this.summaryItems.push({ name, value });
 
             return this;
         }

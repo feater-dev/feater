@@ -1,12 +1,9 @@
-var fs = require('fs-extra');
 var path = require('path');
-var {exec} = require('child_process');
-var Promise = require('bluebird');
 var _ = require('underscore');
 
-module.exports = function (config, instanceClasses, jobs, githubApiClient) {
+module.exports = function (config, instanceClasses, jobs) {
 
-    var {BuildInstance, ComponentInstance} = instanceClasses;
+    var { BuildInstance, ComponentInstance } = instanceClasses;
 
     var dummyFeatVariables = {
         'scheme': 'http',

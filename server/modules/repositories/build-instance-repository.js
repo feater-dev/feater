@@ -31,7 +31,7 @@ module.exports = function (mongodbHelper) {
                 return new Promise(function (resolve, reject) {
                     mongo
                         .collection('buildInstance')
-                        .findOne({_id: mongodb.ObjectID(buildInstanceId)}, function (err, buildInstance) {
+                        .findOne({ _id: mongodb.ObjectID(buildInstanceId) }, function (err, buildInstance) {
                             if (err) {
                                 reject(err);
 
@@ -78,21 +78,21 @@ module.exports = function (mongodbHelper) {
     function updateExternalPorts(buildInstance) {
         return update(
             buildInstance,
-            {'$set': {externalPorts: buildInstance.externalPorts}}
+            { '$set': { externalPorts: buildInstance.externalPorts } }
         );
     }
 
     function updateEnvironmentalVariables(buildInstance) {
         return update(
             buildInstance,
-            {'$set': {environmentalVariables: buildInstance.environmentalVariables}}
+            { '$set': { environmentalVariables: buildInstance.environmentalVariables } }
         );
     }
 
     function updateSummaryItems(buildInstance) {
         return update(
             buildInstance,
-            {'$set': {summaryItems: buildInstance.summaryItems}}
+            { '$set': { summaryItems: buildInstance.summaryItems } }
         );
     }
 
@@ -104,9 +104,9 @@ module.exports = function (mongodbHelper) {
                     mongo
                         .collection('buildInstance')
                         .updateOne(
-                            {_id: ObjectID(buildInstance.id)},
+                            { _id: ObjectID(buildInstance.id) },
                             updateContents,
-                            {w: 1},
+                            { w: 1 },
                             function (err, result) {
                                 if (err) {
                                     reject(err);

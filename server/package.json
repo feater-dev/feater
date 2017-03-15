@@ -2,11 +2,12 @@
   "name": "xsolve-feat",
   "version": "0.0.1",
   "description": "",
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
+    "start": "npm run serve:dev",
     "lint": "eslint modules validation",
     "lint:fix": "eslint modules validation --fix",
-    "server-dev": "nodemon main.js --config nodemon.json"
+    "serve:dev": "NODE_ENV=development nodemon main.js --config nodemon.json"
   },
   "author": "",
   "license": "ISC",

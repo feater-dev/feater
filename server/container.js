@@ -38,8 +38,8 @@ module.exports = function (app, rawConfig, modules) {
         return config;
     });
 
-    modules.forEach(function (module) {
-        container.registerModule(module.name, module.dependencies, require(module.require));
+    modules.forEach(({ name, dependencies, module })=> {
+        container.registerModule(name, dependencies, module);
     });
 
     return container;

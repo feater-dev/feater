@@ -14,7 +14,7 @@ module.exports = function (buildDefinitionRepository, projectRepository, validat
                             buildDefinitions
                                 .toArray()
                                 .then(function (buildDefinition) {
-                                    res.json({data: buildDefinition});
+                                    res.json({ data: buildDefinition });
                                 });
                         });
                 }
@@ -63,7 +63,7 @@ module.exports = function (buildDefinitionRepository, projectRepository, validat
                             name: scope.project.name
                         };
 
-                        res.json({data});
+                        res.json({ data });
                     }
 
                     function respondWithErrors(errors) {
@@ -99,7 +99,7 @@ module.exports = function (buildDefinitionRepository, projectRepository, validat
                             });
                     }
 
-                    function persistDocument([config, project]) {
+                    function persistDocument([config]) {
                         var buildDefinitionDocument = {
                             projectId: req.body.projectId,
                             name: req.body.name,
@@ -111,7 +111,7 @@ module.exports = function (buildDefinitionRepository, projectRepository, validat
                     }
 
                     function respondWithId(id) {
-                        res.status(201).json({data: {id: id}});
+                        res.status(201).json({ data: { id: id } });
                     }
 
                     function respondWithErrors(errors) {

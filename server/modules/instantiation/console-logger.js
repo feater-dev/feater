@@ -1,5 +1,3 @@
-var path = require('path');
-var _ = require('underscore');
 var moment = require('moment');
 
 module.exports = function () {
@@ -8,13 +6,13 @@ module.exports = function () {
         log(level, message) {
             console.log(`${moment().format('YYYY-MM-DD HH:mm:ss.SSS')} | ${level} | ${message}`);
         }
-        createNested(prefix, options = {splitLines: false}) {
+        createNested(prefix, options = { splitLines: false }) {
             return new Logger(prefix, this, options);
         }
     }
 
     class Logger {
-        constructor(prefix, parent, {splitLines}) {
+        constructor(prefix, parent, { splitLines }) {
             this.prefix = prefix;
             this.parent = parent;
             this.splitLines = splitLines;
@@ -50,7 +48,7 @@ module.exports = function () {
         emergency(message) {
             this.log('emergency', message);
         }
-        createNested(prefix, options = {splitLines: false}) {
+        createNested(prefix, options = { splitLines: false }) {
             return new Logger(prefix, this, options);
         }
     }

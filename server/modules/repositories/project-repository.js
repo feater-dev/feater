@@ -30,7 +30,7 @@ module.exports = function (mongodbHelper) {
                 return new Promise(function (resolve, reject) {
                     mongo
                         .collection('project')
-                        .findOne({_id: mongodb.ObjectID(projectId)}, function (err, project) {
+                        .findOne({ _id: mongodb.ObjectID(projectId) }, function (err, project) {
                             if (err) {
                                 reject(err);
 

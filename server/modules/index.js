@@ -71,7 +71,7 @@ module.exports = [
     },
     {
         name: 'instantiation.sourceCodeFetcher',
-        dependencies: ['config', 'instantiation.instanceClasses', 'instantiation.jobs', 'github.apiClient'],
+        dependencies: ['config', 'instantiation.instanceClasses', 'instantiation.jobs'],
         require: __dirname + '/instantiation/source-code-fetcher'
     },
     {

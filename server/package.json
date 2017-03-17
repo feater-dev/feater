@@ -29,7 +29,7 @@
     "mongodb": "^2.2.16",
     "morgan": "^1.7.0",
     "node-validator": "^0.1.26",
-    "nodegit-clone": "^1.2.0",
+    "nodegit-clone": "<1.2.0 || >1.2.0 ^1.0.0",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
     "pug": "^2.0.0-beta6",

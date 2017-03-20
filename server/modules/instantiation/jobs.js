@@ -424,7 +424,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                 buildInstance.log('Running docker-compose.');
 
                 var dockerCompose = spawn(
-                    'docker-compose', ['--file', dockerComposeFileName, 'up', '--abort-on-container-exit', '--no-color'],
+                    'docker-compose', ['--file', dockerComposeFileName, 'up', '-d', '--no-color'],
                     {
                         cwd: dockerComposeDirectoryFullPath,
                         env: dockerComposeEnvironemntalVariables

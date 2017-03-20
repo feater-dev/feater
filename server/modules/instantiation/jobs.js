@@ -88,6 +88,13 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
     }
 
+    class RunAfterBuildTaskJob extends ComponentInstanceJob {
+        constructor(componentInstance, scriptPath) {
+            super(componentInstance);
+            this.scriptPath = scriptPath;
+        }
+    }
+
     // Job dependencies.
 
     class ObjectMap {
@@ -457,6 +464,60 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         }
     }
 
+    class RunAfterBuildTaskJobExecutor extends JobExecutor {
+        supports(job) {
+            return (job instanceof RunAfterBuildTaskJob);
+        }
+
+        execute(job) {
+            return new Promise((resolve, reject) => {
+                var { componentInstance, scriptPath } = job;
+                var componentId = componentInstance.id;
+
+                componentInstance.log(`Running ${scriptPath}.`);
+
+                var script = spawn(
+                    scriptPath,
+                    {
+                        cwd: componentInstance.fullPath,
+                        env: {
+                            FEAT__INSTANCE_ID: componentInstance.buildInstance.id
+                        }
+                    }
+                );
+
+                var stdoutLogger = componentInstance.logger.createNested(
+                    `${componentId} ${scriptPath} stdout`,
+                    { splitLines: true }
+                );
+                script.stdout.on('data', (data) => {
+                    stdoutLogger.debug(data.toString());
+                });
+
+                var stderrLogger = componentInstance.logger.createNested(
+                    `${componentId} ${scriptPath} stderr`,
+                    { splitLines: true }
+                );
+                script.stderr.on('data', (data) => {
+                    stderrLogger.error(data.toString());
+                });
+
+                script.on('error', (error) => {
+                    reject(error);
+                });
+
+                script.on('exit', (code) => {
+                    reject(code);
+                });
+
+                script.on('close', (code) => {
+                    componentInstance.log(`${scriptPath} exited with code ${code}.`);
+                    resolve();
+                });
+            });
+        }
+    }
+
     class ResolveReferenceJobExecutor extends JobExecutor {
         supports(job) {
             return (job instanceof ResolveReferenceJob);
@@ -771,6 +832,19 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         var runDockerComposeJob = new RunDockerComposeJob(buildInstance);
         dependantJobsExecutor.add(runDockerComposeJob, [prepareSummaryItemsJob]);
+
+        _.each(
+            buildInstance.componentInstances,
+            (componentInstance) => {
+                _.each(
+                    componentInstance.config.afterBuildScripts,
+                    (scriptPath) => {
+                        var job = new RunAfterBuildTaskJob(componentInstance, scriptPath);
+                        dependantJobsExecutor.add(job, [runDockerComposeJob]);
+                    }
+                );
+            }
+        );
 
         return dependantJobsExecutor;
     }

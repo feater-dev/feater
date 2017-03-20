@@ -60,6 +60,13 @@ module.exports = {
                                     }
                                 }
                             }
+                        },
+                        "afterBuildScripts":{
+                            "type":"array",
+                            "items":{
+                                "type":"string",
+                                "minLength":1
+                            }
                         }
                     }
                 }

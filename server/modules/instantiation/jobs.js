@@ -446,10 +446,6 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                 });
 
                 dockerCompose.on('exit', (code) => {
-                    reject(code);
-                });
-
-                dockerCompose.on('close', (code) => {
                     if (0 !== code) {
                         buildInstance.log('Failed to run docker-compose.');
                         reject(code);
@@ -473,45 +469,30 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             return new Promise((resolve, reject) => {
                 var { componentInstance, scriptPath } = job;
                 var componentId = componentInstance.id;
+                var scriptFullPath = path.join(componentInstance.fullPath, scriptPath);
+                var env = _.extend(
+                    {},
+                    componentInstance.buildInstance.environmentalVariables,
+                    {
+                        FEAT__INSTANCE_ID: componentInstance.buildInstance.id,
+                    }
+                )
 
                 componentInstance.log(`Running ${scriptPath}.`);
 
-                var script = spawn(
-                    scriptPath,
-                    {
-                        cwd: componentInstance.fullPath,
-                        env: {
-                            FEAT__INSTANCE_ID: componentInstance.buildInstance.id
-                        }
+                exec(scriptFullPath, {
+                    cwd: componentInstance.fullPath,
+                    env: env,
+                }, (error, stdout) => {
+                    if (error) {
+                        componentInstance.error(`Failed to execute ${scriptPath}`);
+                        reject(error);
+
+                        return;
                     }
-                );
 
-                var stdoutLogger = componentInstance.logger.createNested(
-                    `${componentId} ${scriptPath} stdout`,
-                    { splitLines: true }
-                );
-                script.stdout.on('data', (data) => {
-                    stdoutLogger.debug(data.toString());
-                });
-
-                var stderrLogger = componentInstance.logger.createNested(
-                    `${componentId} ${scriptPath} stderr`,
-                    { splitLines: true }
-                );
-                script.stderr.on('data', (data) => {
-                    stderrLogger.error(data.toString());
-                });
-
-                script.on('error', (error) => {
-                    reject(error);
-                });
-
-                script.on('exit', (code) => {
-                    reject(code);
-                });
-
-                script.on('close', (code) => {
-                    componentInstance.log(`${scriptPath} exited with code ${code}.`);
+                    componentInstance.log(`Succeeded to execute ${scriptPath}`);
+                    componentInstance.log(stdout);
                     resolve();
                 });
             });
@@ -744,7 +725,8 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             .add(new DownloadArchiveJobExecutor())
             .add(new ExtractArchiveJobExecutor())
             .add(new CopyBeforeBuildTaskJobExecutor())
-            .add(new InterpolateBeforeBuildTaskJobExecutor());
+            .add(new InterpolateBeforeBuildTaskJobExecutor())
+            .add(new RunAfterBuildTaskJobExecutor());
 
         var dependantJobsExecutor = new DependantJobsExecutor(jobExecutorCollection);
 

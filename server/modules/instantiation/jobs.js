@@ -491,8 +491,8 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                         return;
                     }
 
-                    componentInstance.log(`Succeeded to execute ${scriptPath}`);
                     componentInstance.log(stdout);
+                    componentInstance.log(`Succeeded to execute ${scriptPath}`);
                     resolve();
                 });
             });
@@ -820,10 +820,10 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             (componentInstance) => {
                 _.each(
                     componentInstance.config.afterBuildScripts,
-                    (scriptPath) => {
-                        var job = new RunAfterBuildTaskJob(componentInstance, scriptPath);
-                        dependantJobsExecutor.add(job, [runDockerComposeJob]);
-                    }
+                    scriptPath => dependantJobsExecutor.add(
+                        new RunAfterBuildTaskJob(componentInstance, scriptPath),
+                        [runDockerComposeJob]
+                    );
                 );
             }
         );

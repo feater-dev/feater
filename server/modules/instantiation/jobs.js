@@ -333,6 +333,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
             var { buildInstance } = job;
 
             return new Promise((resolve) => {
+                buildInstance.addEnvironmentalVariable(`FEAT__INSTANCE_ID`, buildInstance.id);
                 _.each(
                     buildInstance.componentInstances,
                     (componentInstance, componentId) => {
@@ -474,7 +475,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                     {},
                     componentInstance.buildInstance.environmentalVariables,
                     {
-                        FEAT__INSTANCE_ID: componentInstance.buildInstance.id,
+                        FEAT__COMPONENT_ID: componentInstance.id,
                     }
                 )
 
@@ -823,7 +824,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                     scriptPath => dependantJobsExecutor.add(
                         new RunAfterBuildTaskJob(componentInstance, scriptPath),
                         [runDockerComposeJob]
-                    );
+                    )
                 );
             }
         );

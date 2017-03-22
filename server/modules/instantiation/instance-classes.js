@@ -50,6 +50,14 @@ module.exports = function (consoleLogger) {
             ).join(' ');
         }
 
+        getAllVariables() {
+            return _.extend(
+                {}.
+                this.featVariables,
+                this.environmentalVariables
+            );
+        }
+
         addSummaryItem(name, value) {
             this.summaryItems.push({ name, value });
 

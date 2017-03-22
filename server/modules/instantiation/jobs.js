@@ -385,7 +385,11 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                     (summaryItem) => {
                         buildInstance.addSummaryItem(
                             summaryItem.name,
-                            interpolationHelper.interpolateText(summaryItem.value, buildInstance.featVariables, buildInstance.externalPorts)
+                            interpolationHelper.interpolateText(
+                                summaryItem.value,
+                                buildInstance.getAllVariables(),
+                                buildInstance.externalPorts
+                            )
                         )
                     }
                 );
@@ -486,7 +490,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                     env: env,
                 }, (error, stdout) => {
                     if (error) {
-                        componentInstance.error(`Failed to execute ${scriptPath}`);
+                        componentInstance.log(`Failed to execute ${scriptPath}`);
                         reject(error);
 
                         return;

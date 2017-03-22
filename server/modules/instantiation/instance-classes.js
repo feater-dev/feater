@@ -52,7 +52,7 @@ module.exports = function (consoleLogger) {
 
         getAllVariables() {
             return _.extend(
-                {}.
+                {},
                 this.featVariables,
                 this.environmentalVariables
             );

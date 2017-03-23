@@ -40,25 +40,9 @@ module.exports = (function () {
     }
 
     function initializeAuth(app, container) {
-        var expressSession = require('express-session');
-        var ExpressSessions = require('express-sessions');
         var passport = require('passport');
         var GoogleOAuth2Strategy = require('passport-google-oauth').OAuth2Strategy;
-        var redis = require('redis');
         var config = container.getModule('config');
-
-        app.use(expressSession({
-            secret: 'someSessionSecret',
-            cookie: {
-                maxAge: 2628000000
-            },
-            store: new ExpressSessions({
-                storage: 'redis',
-                instance: redis.createClient(config.redis.dsn),
-                collection: 'sessions',
-                expire: 86400
-            })
-        }));
 
         app.use(passport.initialize());
 

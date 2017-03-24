@@ -19,9 +19,6 @@ module.exports = function (app, rawConfig, modules) {
             mongo: {
                 dsn: rawConfig.mongo.dsn
             },
-            redis: {
-                dsn: rawConfig.redis.dsn
-            },
             github: {
                 debugMode: !!rawConfig.github.debugMode,
                 personalAccessToken: rawConfig.github.personalAccessToken

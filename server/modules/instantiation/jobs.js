@@ -204,7 +204,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                 }
             );
 
-            return (notExecutedJobs.length > 0);
+            return (notExecutedJobs.length === 0);
         }
 
         increasePendingJobsCount() {
@@ -237,7 +237,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                             return;
                         }
                         if (!this.areAllJobsExecuted()) {
-                            reject();
+                            reject(new Error('There are still some not executed jobs'));
 
                             return;
                         }

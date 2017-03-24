@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-npm run server-dev
+npm run serve:dev

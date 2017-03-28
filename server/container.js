@@ -1,4 +1,5 @@
 var container = require('kontainer-di');
+var path = require('path');
 
 module.exports = function (app, rawConfig, modules) {
 
@@ -7,6 +8,11 @@ module.exports = function (app, rawConfig, modules) {
     });
 
     container.register('config', [], function () {
+        const generateInstanceDirectoryPath = (instancesDirectory) =>
+            path.isAbsolute(instancesDirectory)
+                ?  instancesDirectory
+                : path.resolve(__dirname, '..', instancesDirectory)
+
         var config = {
             app: {
                 versionNumber: rawConfig.app.versionNumber
@@ -15,6 +21,9 @@ module.exports = function (app, rawConfig, modules) {
                 scheme: rawConfig.web.scheme,
                 host: rawConfig.web.host,
                 port: +rawConfig.web.port
+            },
+            build: {
+              instancesDirectory: generateInstanceDirectoryPath(rawConfig.build.instancesDirectory)
             },
             mongo: {
                 dsn: rawConfig.mongo.dsn

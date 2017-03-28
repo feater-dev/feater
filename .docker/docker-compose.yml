@@ -1,8 +1,12 @@
 version: '2'
 
 services:
-
-  angular:
+  feat:
     build: .
     volumes:
       - '../:/app'
+    ports:
+      - "3000:3000"
+
+  mongo:
+    image: mongo:3

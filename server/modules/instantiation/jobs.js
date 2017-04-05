@@ -304,20 +304,21 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         execute(job) {
             var { buildInstance } = job;
 
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 var portProvider = new PortProvider();
 
-                portProvider.providePort(
-                    _.map(job.portRanges, portRange => new PortRange(portRange[0], portRange[1]))
-                ).then(port => {
-                    buildInstance.addExternalPort(job.portName, port);
+                portProvider
+                    .providePort(
+                        _.map(job.portRanges, portRange => new PortRange(portRange[0], portRange[1]))
+                    )
+                    .then(port => {
+                        buildInstance.addExternalPort(job.portName, port);
+                        buildInstance.log(`Assigned port ${port} for ${job.portName} external port.`);
 
-                    buildInstance.log(`Assigned port ${port} for ${job.portName} external port.`);
-
-                    buildInstanceRepository
-                        .updateExternalPorts(buildInstance)
-                        .then(resolve);
-                });
+                        buildInstanceRepository
+                            .updateExternalPorts(buildInstance)
+                            .then(resolve);
+                    });
             });
         }
     }

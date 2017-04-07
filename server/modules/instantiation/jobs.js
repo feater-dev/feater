@@ -8,6 +8,8 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
     const BUFFER_SIZE = 64 * 1024 * 1024;
 
+    var { PortRange, PortProvider } = portProvider;
+
     // Generic jon
 
     class Job {
@@ -309,17 +311,21 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         execute(job) {
             var { buildInstance } = job;
 
-            return new Promise((resolve) => {
-                var port = portProvider.providePort(
-                    _.map(job.portRanges, (portRange) => ({ minPort: portRange[0], maxPort: portRange[1] }))
-                );
-                buildInstance.addExternalPort(job.portName, port);
+            return new Promise(resolve => {
+                var portProvider = new PortProvider();
 
-                buildInstance.log(`Assigned port ${port} for ${job.portName} external port.`);
+                portProvider
+                    .providePort(
+                        _.map(job.portRanges, portRange => new PortRange(portRange[0], portRange[1]))
+                    )
+                    .then(port => {
+                        buildInstance.addExternalPort(job.portName, port);
+                        buildInstance.log(`Assigned port ${port} for ${job.portName} external port.`);
 
-                buildInstanceRepository
-                    .updateExternalPorts(buildInstance)
-                    .then(resolve);
+                        buildInstanceRepository
+                            .updateExternalPorts(buildInstance)
+                            .then(resolve);
+                    });
             });
         }
     }

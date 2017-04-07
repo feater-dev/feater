@@ -1,3 +1,8 @@
+require('any-promise/register/bluebird');
+
+var portfinder = require('portfinder');
+var Promise = require('any-promise');
+
 module.exports = function () {
 
     class PortRange {
@@ -36,7 +41,7 @@ module.exports = function () {
     class PortProvider {
         constructor() {
             this.availablePortRanges = new PortRangeCollection();
-            this.externalPortRanges = new PortRangeCollection();
+            this.availablePortRanges.add(new PortRange(1, 65535)); // todo move to app config
         }
 
         addAvailablePortRange(minPort, maxPort) {
@@ -52,28 +57,31 @@ module.exports = function () {
         }
 
         providePort(expectedPortRanges) {
-            var i, port;
-            for (i = 0; i < expectedPortRanges.length; i += 1) {
-                for (port = expectedPortRanges[i].minPort; port <= expectedPortRanges[i].maxPort; port += 1) {
-                    if (this.availablePortRanges.contains(port) && !this.externalPortRanges.contains(port)) {
-                        this.addExternalPortRange(port, port);
+            return Promise
+                .any(expectedPortRanges.map(portRange => this.findPort(portRange)))
+                .catch(_ => new Error('Failed to allocate port.'));
+        }
 
-                        return port;
-                    }
-                }
-            }
+        findPort(portRange) {
+            portfinder.basePort = portRange.minPort;
 
-            throw new Error('Failed to allocate port.');
+            return new Promise((resolve, reject) => {
+                portfinder.getPortPromise()
+                    .then(port => {
+                        if (this.availablePortRanges.contains(port) && portRange.contains(port)) {
+                            resolve(port);
+
+                            return;
+                        }
+
+                        reject(new Error('Couldn\'t find any available unallocated port in given range'));
+                    })
+            });
         }
     }
 
-    var portProvider = new PortProvider();
-
-    portProvider
-        .addAvailablePortRange(1000, 1005) // TODO Move to config.
-        .addAvailablePortRange(1010, 1099)
-        .addAvailablePortRange(3320, 3400)
-        .addAvailablePortRange(8000, 8100);
-
-    return portProvider;
+    return {
+        PortRange,
+        PortProvider
+    };
 }

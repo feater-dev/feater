@@ -3,6 +3,7 @@ var path = require('path');
 var fs = require('fs-extra');
 var Promise = require('bluebird');
 var { exec, spawn } = require('child_process');
+var decompress = require('decompress');
 
 module.exports = function (config, portProvider, interpolationHelper, buildInstanceRepository, githubApiClient) {
 
@@ -283,7 +284,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         execute(job) {
             return new Promise((resolve) => {
                 var { buildInstance } = job;
-                var fullPath = path.join('/home/mariusz/Development/Feat/buildInstances', buildInstance.id); // TODO Base directory should be given from outside.
+                var fullPath = path.join(config.build.instancesDirectory, buildInstance.id); // TODO Base directory should be given from outside.
                 fs.mkdirSync(fullPath);  // TODO Check if this directory doesn't already exist.
                 buildInstance.fullPath = fullPath;
                 job.setResult({ fullPath });
@@ -566,34 +567,24 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var { componentInstance, componentInstance: { buildInstance } } = job;
-                var extractedFullPath = path.join(
-                    buildInstance.fullPath,
-                    path.basename(componentInstance.zipFileFullPath, '.zip')
-                );
-
+                var { componentInstance } = job;
                 componentInstance.relativePath = componentInstance.id;
 
                 componentInstance.log('Extracting archive.');
-                exec(
-                    [
-                        `unzip ${componentInstance.zipFileFullPath} -d ${buildInstance.fullPath}`,
-                        `mv ${extractedFullPath} ${componentInstance.fullPath}`,
-                        `rm ${componentInstance.zipFileFullPath}`
-                    ].join(' && '),
-                    { maxBuffer: BUFFER_SIZE },
-                    (error) => {
-                        if (error) {
-                            componentInstance.log('Failed to extract archive.');
-                            reject(error);
-
-                            return;
+                decompress(componentInstance.zipFileFullPath, componentInstance.fullPath, {
+                    strip: 1 //Remove leading directory
+                }).then(() => {
+                    fs.unlink(componentInstance.zipFileFullPath, (err) => {
+                        if (err) {
+                            reject(err)
                         }
-                        componentInstance.log('Succeeded to extract archive.');
-
                         resolve();
-                    }
-                );
+                    })
+                })
+                  .catch(error => {
+                    componentInstance.log('Failed to extract archive.');
+                    reject(error);
+                  })
             });
         }
     }

@@ -3,9 +3,12 @@ var fs = require('fs-extra');
 var Promise = require('bluebird');
 
 
-module.exports = function (baseClasses) {
+module.exports = function (
+    config,
+    baseClasses
+) {
 
-    var {BuildInstanceJob, JobExecutor} = baseClasses;
+    var { BuildInstanceJob, JobExecutor } = baseClasses;
 
     class CreateDirectoryJob extends BuildInstanceJob {
     }
@@ -17,11 +20,15 @@ module.exports = function (baseClasses) {
 
         execute(job) {
             return new Promise((resolve) => {
-                var {buildInstance} = job;
-                var fullPath = path.join(__dirname, '../../../../buildInstances', buildInstance.id); // TODO Base directory should be given from outside.
-                fs.mkdirSync(fullPath);  // TODO Check if this directory doesn't already exist.
-                buildInstance.fullPath = fullPath;
-                job.setResult({fullPath});
+                var { buildInstance } = job;
+
+                var fullBuildPath = path.join(config.paths.buildInstanceBuild, buildInstance.id);
+                fs.mkdirSync(fullBuildPath);
+                buildInstance.fullBuildPath = fullBuildPath;
+
+                buildInstance.fullVolumePath = path.join(config.paths.buildInstanceVolume, buildInstance.id);
+
+                job.setResult({ fullBuildPath });
 
                 resolve();
 

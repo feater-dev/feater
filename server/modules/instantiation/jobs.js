@@ -18,18 +18,18 @@ module.exports = function (
     executor
 ) {
 
-    var {ResolveReferenceJob, ResolveReferenceJobExecutor} = resolveReference;
-    var {CreateDirectoryJob, CreateDirectoryJobExecutor} = createDirectory;
-    var {DownloadArchiveJob, DownloadArchiveJobExecutor} = downloadArchive;
-    var {ExtractArchiveJob, ExtractArchiveJobExecutor} = extractArchive;
-    var {ProvidePortJob, ProvidePortJobExecutor} = providePort;
-    var {CopyBeforeBuildTaskJob, CopyBeforeBuildTaskJobExecutor} = copyBeforeBuildTask;
-    var {InterpolateBeforeBuildTaskJob, InterpolateBeforeBuildTaskJobExecutor} = interpolateBeforeBuildTask;
-    var {PrepareEnvironmentalVariablesJob, PrepareEnvironmentalVariablesJobExecutor} = prepareEnvironmentalVariables;
-    var {PrepareSummaryItemsJob, PrepareSummaryItemsJobExecutor} = prepareSummaryItems;
-    var {RunDockerComposeJob, RunDockerComposeJobExecutor} = runDockerCompose;
+    var { ResolveReferenceJob, ResolveReferenceJobExecutor } = resolveReference;
+    var { CreateDirectoryJob, CreateDirectoryJobExecutor } = createDirectory;
+    var { DownloadArchiveJob, DownloadArchiveJobExecutor } = downloadArchive;
+    var { ExtractArchiveJob, ExtractArchiveJobExecutor } = extractArchive;
+    var { ProvidePortJob, ProvidePortJobExecutor } = providePort;
+    var { CopyBeforeBuildTaskJob, CopyBeforeBuildTaskJobExecutor } = copyBeforeBuildTask;
+    var { InterpolateBeforeBuildTaskJob, InterpolateBeforeBuildTaskJobExecutor } = interpolateBeforeBuildTask;
+    var { PrepareEnvironmentalVariablesJob, PrepareEnvironmentalVariablesJobExecutor } = prepareEnvironmentalVariables;
+    var { PrepareSummaryItemsJob, PrepareSummaryItemsJobExecutor } = prepareSummaryItems;
+    var { RunDockerComposeJob, RunDockerComposeJobExecutor } = runDockerCompose;
 
-    var {JobExecutorCollection, DependantJobsExecutor} = executor;
+    var { JobExecutorCollection, DependantJobsExecutor } = executor;
 
     function createJobExecutorCollection() {
         var jobExecutorCollection = new JobExecutorCollection();
@@ -82,7 +82,7 @@ module.exports = function (
         if (buildInstance.config.externalPorts.length) {
             var providePortJobs = _.map(
                 buildInstance.config.externalPorts,
-                ({ranges: portRanges}, portName) => {
+                ({ ranges: portRanges }, portName) => {
                     var job = new ProvidePortJob(buildInstance, portName, portRanges);
                     dependantJobsExecutor.add(job, extractArchiveJobs);
 

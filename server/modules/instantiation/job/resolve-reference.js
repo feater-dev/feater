@@ -8,7 +8,7 @@ module.exports = function (
     githubApiClient
 ) {
 
-    var {ComponentInstanceJob, JobExecutor} = baseClasses;
+    var { ComponentInstanceJob, JobExecutor } = baseClasses;
 
     class ResolveReferenceJob extends ComponentInstanceJob {}
 

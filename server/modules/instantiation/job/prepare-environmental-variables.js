@@ -3,7 +3,7 @@ var Promise = require('bluebird');
 
 module.exports = function (baseClasses, interpolationHelper, buildInstanceRepository) {
 
-    var {BuildInstanceJob, JobExecutor} = baseClasses;
+    var { BuildInstanceJob, JobExecutor } = baseClasses;
 
     class PrepareEnvironmentalVariablesJob extends BuildInstanceJob {}
 
@@ -19,14 +19,8 @@ module.exports = function (baseClasses, interpolationHelper, buildInstanceReposi
                 _.each(
                     buildInstance.componentInstances,
                     (componentInstance, componentId) => {
-                        buildInstance.addEnvironmentalVariable(
-                            `FEAT__BUILD_PATH__${componentId.toUpperCase()}`,
-                            componentInstance.fullPath
-                        );
-                        buildInstance.addEnvironmentalVariable(
-                            `FEAT__VOLUME_PATH__${componentId.toUpperCase()}`,
-                            componentInstance.fullPath.replace(/^\/app\//, '/home/malef/Development/Feat/app/') // TODO Need to provide absolute path on host, should be passed via config or environment.
-                        );
+                        buildInstance.addEnvironmentalVariable(`FEAT__BUILD_PATH__${componentId.toUpperCase()}`, componentInstance.fullBuildPath);
+                        buildInstance.addEnvironmentalVariable(`FEAT__VOLUME_PATH__${componentId.toUpperCase()}`, componentInstance.fullVolumePath);
                     }
                 );
                 _.each(

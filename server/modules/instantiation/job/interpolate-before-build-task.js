@@ -6,7 +6,7 @@ module.exports = function (
     interpolationHelper
 ) {
 
-    var {ComponentInstanceJob, JobExecutor} = baseClasses;
+    var { ComponentInstanceJob, JobExecutor } = baseClasses;
 
     class InterpolateBeforeBuildTaskJob extends ComponentInstanceJob {
         constructor(componentInstance, relativePath) {
@@ -24,7 +24,7 @@ module.exports = function (
             var { componentInstance } = job;
 
             return new Promise((resolve) => {
-                var fullPath = path.join(componentInstance.fullPath, job.relativePath);
+                var fullPath = path.join(componentInstance.fullBuildPath, job.relativePath);
                 var { featVariables, externalPorts } = componentInstance.buildInstance;
 
                 componentInstance.log(`Interpolating Feat variables in ${job.relativePath}.`);

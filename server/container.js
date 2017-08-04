@@ -23,6 +23,10 @@ module.exports = function (app, rawConfig, modules) {
                 debugMode: !!rawConfig.github.debugMode,
                 personalAccessToken: rawConfig.github.personalAccessToken
             },
+            paths: {
+                buildInstanceBuild: rawConfig.paths.buildInstanceBuild,
+                buildInstanceVolume: rawConfig.paths.buildInstanceVolume
+            },
             googleOAuth2: {
                 clientId: rawConfig.googleOAuth2.clientId,
                 clientSecret: rawConfig.googleOAuth2.clientSecret,

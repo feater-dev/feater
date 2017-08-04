@@ -8,7 +8,7 @@ module.exports = function (
     baseClasses
 ) {
 
-    var {ComponentInstanceJob, JobExecutor} = baseClasses;
+    var { ComponentInstanceJob, JobExecutor } = baseClasses;
 
     const BUFFER_SIZE = 64 * 1024 * 1024;
 
@@ -24,7 +24,7 @@ module.exports = function (
                 var { componentInstance, componentInstance: { buildInstance } } = job;
                 var { repository, commit } = componentInstance.resolvedReference;
                 var zipFileUrl = `https://api.github.com/repos/${repository}/zipball/${commit.sha}`;
-                var zipFileFullPath = path.join(buildInstance.fullPath, `${repository.replace('/', '-')}-${commit.sha}.zip`);
+                var zipFileFullPath = path.join(buildInstance.fullBuildPath, `${repository.replace('/', '-')}-${commit.sha}.zip`);
 
                 componentInstance.zipFileUrl = zipFileUrl;
                 componentInstance.zipFileFullPath = zipFileFullPath;

@@ -7,7 +7,7 @@ module.exports = function (
     buildInstanceRepository
 ) {
 
-    var {BuildInstanceJob, JobExecutor} = baseClasses;
+    var { BuildInstanceJob, JobExecutor } = baseClasses;
 
     class PrepareSummaryItemsJob extends BuildInstanceJob {}
 

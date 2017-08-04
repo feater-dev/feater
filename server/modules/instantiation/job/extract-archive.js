@@ -7,7 +7,7 @@ module.exports = function (
     baseClasses
 ) {
 
-    var {ComponentInstanceJob, JobExecutor} = baseClasses;
+    var { ComponentInstanceJob, JobExecutor } = baseClasses;
 
     const BUFFER_SIZE = 64 * 1024 * 1024;
 
@@ -22,7 +22,7 @@ module.exports = function (
             return new Promise((resolve, reject) => {
                 var { componentInstance, componentInstance: { buildInstance } } = job;
                 var extractedFullPath = path.join(
-                    buildInstance.fullPath,
+                    buildInstance.fullBuildPath,
                     path.basename(componentInstance.zipFileFullPath, '.zip')
                 );
 
@@ -31,8 +31,8 @@ module.exports = function (
                 componentInstance.log('Extracting archive.');
                 exec(
                     [
-                        `unzip ${componentInstance.zipFileFullPath} -d ${buildInstance.fullPath}`,
-                        `mv ${extractedFullPath} ${componentInstance.fullPath}`,
+                        `unzip ${componentInstance.zipFileFullPath} -d ${buildInstance.fullBuildPath}`,
+                        `mv ${extractedFullPath} ${componentInstance.fullBuildPath}`,
                         `rm ${componentInstance.zipFileFullPath}`
                     ].join(' && '),
                     { maxBuffer: BUFFER_SIZE },

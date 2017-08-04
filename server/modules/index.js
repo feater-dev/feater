@@ -81,6 +81,7 @@ module.exports = [
     {
         name: 'instantiation.job.createDirectory',
         dependencies: [
+            'config',
             'instantiation.job.baseClasses'
         ],
         module: require(__dirname + '/instantiation/job/create-directory')

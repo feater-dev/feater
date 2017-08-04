@@ -6,7 +6,7 @@ module.exports = function (
     baseClasses
 ) {
 
-    var {ComponentInstanceJob, JobExecutor} = baseClasses;
+    var { ComponentInstanceJob, JobExecutor } = baseClasses;
 
     class CopyBeforeBuildTaskJob extends ComponentInstanceJob {
         constructor(componentInstance, sourceRelativePath, destinationRelativePath) {
@@ -27,8 +27,8 @@ module.exports = function (
             return new Promise((resolve) => {
                 componentInstance.log(`Copying ${sourceRelativePath} to ${destinationRelativePath}.`);
                 fs.copySync(
-                    path.join(componentInstance.fullPath, sourceRelativePath),
-                    path.join(componentInstance.fullPath, destinationRelativePath)
+                    path.join(componentInstance.fullBuildPath, sourceRelativePath),
+                    path.join(componentInstance.fullBuildPath, destinationRelativePath)
                 );
 
                 resolve();

@@ -2,7 +2,7 @@ var Promise = require('bluebird');
 
 module.exports = function (baseClasses, portProvider, buildInstanceRepository) {
 
-    var {BuildInstanceJob, JobExecutor} = baseClasses;
+    var { BuildInstanceJob, JobExecutor } = baseClasses;
 
     class ProvidePortJob extends BuildInstanceJob {
         constructor(buildInstance, portName, portRanges) {

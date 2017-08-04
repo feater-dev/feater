@@ -9,7 +9,7 @@ module.exports = function (
     baseClasses
 ) {
 
-    var {BuildInstanceJob, JobExecutor} = baseClasses;
+    var { BuildInstanceJob, JobExecutor } = baseClasses;
 
     class RunDockerComposeJob extends BuildInstanceJob {}
 
@@ -22,7 +22,7 @@ module.exports = function (
             return new Promise((resolve, reject) => {
                 var { buildInstance } = job;
                 var dockerComposeDirectoryFullPath = path.join(
-                    buildInstance.componentInstances[buildInstance.config.composeFile.componentId].fullPath,
+                    buildInstance.componentInstances[buildInstance.config.composeFile.componentId].fullBuildPath,
                     path.dirname(buildInstance.config.composeFile.relativePath)
                 );
                 var dockerComposeFileName = path.basename(buildInstance.config.composeFile.relativePath);

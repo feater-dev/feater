@@ -1,7 +1,7 @@
 var path = require('path');
 var fs = require('fs-extra');
 var Promise = require('bluebird');
-var { exec } = require('child_process');
+var decompress = require('decompress');
 
 module.exports = function (
     baseClasses
@@ -29,25 +29,27 @@ module.exports = function (
                 componentInstance.relativePath = componentInstance.id;
 
                 componentInstance.log('Extracting archive.');
-                exec(
-                    [
-                        `unzip ${componentInstance.zipFileFullPath} -d ${buildInstance.fullBuildPath}`,
-                        `mv ${extractedFullPath} ${componentInstance.fullBuildPath}`,
-                        `rm ${componentInstance.zipFileFullPath}`
-                    ].join(' && '),
-                    { maxBuffer: BUFFER_SIZE },
-                    (error) => {
-                        if (error) {
-                            componentInstance.log('Failed to extract archive.');
-                            reject(error);
 
-                            return;
-                        }
-                        componentInstance.log('Succeeded to extract archive.');
+                decompress(componentInstance.zipFileFullPath, componentInstance.fullBuildPath, { strip: 1 })
+                    .then(() => {
+                        fs.unlink(
+                            componentInstance.zipFileFullPath,
+                            (error) => {
+                                if (error) {
+                                    componentInstance.log('Failed to remove archive after extracting.');
+                                    reject(error);
 
-                        resolve();
-                    }
-                );
+                                    return;
+                                }
+
+                                resolve();
+                            }
+                        )
+                    })
+                    .catch((error) => {
+                        componentInstance.log('Failed to extract archive.');
+                        reject(error)
+                    });
             });
         }
     }

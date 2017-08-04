@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-ng build -prod -op ../server/public
+./node_modules/@angular/cli/bin/ng ng build -prod -op ../server/public

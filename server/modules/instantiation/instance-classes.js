@@ -17,7 +17,8 @@ module.exports = function (consoleLogger) {
             this.summaryItems = [];
         }
 
-        // fullPath
+        // fullBuildPath
+        // fullVolumePath
 
         addComponentInstance(componentInstance) {
             this.componentInstances[componentInstance.id] = componentInstance;
@@ -80,8 +81,12 @@ module.exports = function (consoleLogger) {
             this.logger.info(message);
         }
 
-        get fullPath() {
-            return path.join(this.buildInstance.fullPath, this.relativePath);
+        get fullBuildPath() {
+            return path.join(this.buildInstance.fullBuildPath, this.relativePath);
+        }
+
+        get fullVolumePath() {
+            return path.join(this.buildInstance.fullVolumePath, this.relativePath);
         }
     }
 

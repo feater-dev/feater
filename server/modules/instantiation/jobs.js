@@ -283,7 +283,7 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
         execute(job) {
             return new Promise((resolve) => {
                 var { buildInstance } = job;
-                var fullPath = path.join('/home/mariusz/Development/Feat/buildInstances', buildInstance.id); // TODO Base directory should be given from outside.
+                var fullPath = path.join(__dirname, '../../../buildInstances', buildInstance.id); // TODO Base directory should be given from outside.
                 fs.mkdirSync(fullPath);  // TODO Check if this directory doesn't already exist.
                 buildInstance.fullPath = fullPath;
                 job.setResult({ fullPath });
@@ -329,7 +329,14 @@ module.exports = function (config, portProvider, interpolationHelper, buildInsta
                 _.each(
                     buildInstance.componentInstances,
                     (componentInstance, componentId) => {
-                        buildInstance.addEnvironmentalVariable(`FEAT__PATH__${componentId.toUpperCase()}`, componentInstance.fullPath);
+                        buildInstance.addEnvironmentalVariable(
+                            `FEAT__BUILD_PATH__${componentId.toUpperCase()}`,
+                            componentInstance.fullPath
+                        );
+                        buildInstance.addEnvironmentalVariable(
+                            `FEAT__VOLUME_PATH__${componentId.toUpperCase()}`,
+                            componentInstance.fullPath.replace(/^\/app\//, '/home/malef/Development/Feat/') // TODO Need to provide absolute path on host, should be passed via config or environment.
+                        );
                     }
                 );
                 _.each(

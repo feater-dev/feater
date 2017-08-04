@@ -16,7 +16,7 @@ module.exports = function (config, instanceClasses, jobs) {
         var buildInstance = new BuildInstance(
             buildInstanceId,
             buildDefinition.config,
-            path.join('/home/mariusz/Development/Feat/buildInstances', buildInstanceId.toString())
+            path.join(__dirname, '../../../buildInstances', buildInstanceId.toString()) // TODO Move this to config.
         );
 
         buildInstance.log('About to set up.');

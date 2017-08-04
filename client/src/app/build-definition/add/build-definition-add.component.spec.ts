@@ -18,7 +18,7 @@ describe('BuildDefinitionAddComponent', () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(BuildDefinitionAddComponent);
-        component = fixture.componentDefinition;
+        component = fixture.componentInstance;
         fixture.detectChanges();
     });
 

@@ -99,7 +99,6 @@ module.exports = (function () {
 
     function registerRoutes(app, container) {
         var title = 'XSolve Feat ' + container.getModule('config').app.versionNumber; // TODO Move it somewhere else.
-        var fixtures = require(__dirname + '/fixtures'); // TODO Move it somewhere else or remove it completely.
 
         var routes = _.flatten(
             [

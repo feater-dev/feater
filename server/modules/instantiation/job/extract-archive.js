@@ -21,15 +21,10 @@ module.exports = function (
         execute(job) {
             return new Promise((resolve, reject) => {
                 var { componentInstance, componentInstance: { buildInstance } } = job;
-                var extractedFullPath = path.join(
-                    buildInstance.fullBuildPath,
-                    path.basename(componentInstance.zipFileFullPath, '.zip')
-                );
-
-                componentInstance.relativePath = componentInstance.id;
 
                 componentInstance.log('Extracting archive.');
 
+                componentInstance.relativePath = componentInstance.id;
                 decompress(componentInstance.zipFileFullPath, componentInstance.fullBuildPath, { strip: 1 })
                     .then(() => {
                         fs.unlink(

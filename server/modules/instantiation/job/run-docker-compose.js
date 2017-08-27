@@ -30,7 +30,7 @@ module.exports = function (
                     {},
                     buildInstance.environmentalVariables,
                     {
-                        COMPOSE_PROJECT_NAME: `feat${buildInstance.id}`,
+                        COMPOSE_PROJECT_NAME: `featbuild${buildInstance.id}`,
                         COMPOSE_HTTP_TIMEOUT: 5000,
                         PATH: '/usr/local/bin/' // TODO Move to config.
                     }

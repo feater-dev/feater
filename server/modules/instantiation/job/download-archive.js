@@ -42,10 +42,7 @@ module.exports = function (
                         }
                         componentInstance.log('Succeeded to download archive.');
 
-                        resolve({
-                            zipFileUrl,
-                            zipFileFullPath
-                        });
+                        resolve();
                     }
                 );
             });

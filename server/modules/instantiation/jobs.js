@@ -15,7 +15,8 @@ module.exports = function (
     prepareEnvironmentalVariables,
     prepareSummaryItems,
     runDockerCompose,
-    executor
+    executor,
+    JobRunner
 ) {
 
     var { ResolveReferenceJob, ResolveReferenceJobExecutor } = resolveReference;
@@ -29,7 +30,9 @@ module.exports = function (
     var { PrepareSummaryItemsJob, PrepareSummaryItemsJobExecutor } = prepareSummaryItems;
     var { RunDockerComposeJob, RunDockerComposeJobExecutor } = runDockerCompose;
 
-    var { JobExecutorCollection, DependantJobsExecutor } = executor;
+    var { JobExecutorCollection } = executor;
+
+    var { PromiseRunner, JobRunner } = JobRunner;
 
     function createJobExecutorCollection() {
         var jobExecutorCollection = new JobExecutorCollection();
@@ -49,104 +52,110 @@ module.exports = function (
         return jobExecutorCollection;
     }
 
-    function createBuildInstanceDependantJobsExecutor(buildInstance) {
-        var dependantJobsExecutor = new DependantJobsExecutor(createJobExecutorCollection());
+    function startBuildInstance(buildInstance) {
+        let jobExecutorCollection = createJobExecutorCollection();
+        let stages = [];
 
-        var resolveReferenceJobs = _.map(
-            buildInstance.componentInstances,
-            (componentInstance) => {
-                var job = new ResolveReferenceJob(componentInstance);
-                dependantJobsExecutor.add(job);
+        stages.push({
+            jobRunners: [
+                new JobRunner(jobExecutorCollection, [
+                    new CreateDirectoryJob(buildInstance)
+                ])
+            ]
+        });
 
-                return job;
-            }
-        );
-
-        var createDirectoryJob = new CreateDirectoryJob(buildInstance);
-        dependantJobsExecutor.add(createDirectoryJob, resolveReferenceJobs);
-
-        var extractArchiveJobs = [];
-        _.each(
-            buildInstance.componentInstances,
-            (componentInstance) => {
-                var downloadArchiveJob = new DownloadArchiveJob(componentInstance);
-                var extractArchiveJob = new ExtractArchiveJob(componentInstance);
-                dependantJobsExecutor.add(downloadArchiveJob, [createDirectoryJob]);
-                dependantJobsExecutor.add(extractArchiveJob, [downloadArchiveJob]);
-                extractArchiveJobs.push(extractArchiveJob);
-            }
-        );
-
-        var previousJobs = extractArchiveJobs;
-
-        if (buildInstance.config.externalPorts.length) {
-            var providePortJobs = _.map(
-                buildInstance.config.externalPorts,
-                ({ ranges: portRanges }, portName) => {
-                    var job = new ProvidePortJob(buildInstance, portName, portRanges);
-                    dependantJobsExecutor.add(job, extractArchiveJobs);
-
-                    return job;
+        stages.push({
+            jobRunners: _.map(
+                buildInstance.componentInstances,
+                (componentInstance) => {
+                    return new JobRunner(jobExecutorCollection, [
+                        new ResolveReferenceJob(componentInstance),
+                        new DownloadArchiveJob(componentInstance),
+                        new ExtractArchiveJob(componentInstance)
+                    ]);
                 }
-            );
-            previousJobs = providePortJobs;
+            )
+        });
+
+        stages.push({
+            jobRunners: _.map(
+                buildInstance.config.externalPorts,
+                ({ranges: portRanges}, portName) => {
+                    return new JobRunner(jobExecutorCollection, [
+                        new ProvidePortJob(buildInstance, portName, portRanges)
+                    ]);
+                }
+            )
+        });
+
+
+        function mapBeforeBuildTaskToJob(beforeBuildTask, componentInstance) {
+            switch (beforeBuildTask.type) {
+                case 'copy':
+                    return new CopyBeforeBuildTaskJob(
+                        componentInstance,
+                        beforeBuildTask.sourceRelativePath,
+                        beforeBuildTask.destinationRelativePath
+                    );
+
+                case 'interpolate':
+                    return new InterpolateBeforeBuildTaskJob(
+                        componentInstance,
+                        beforeBuildTask.relativePath
+                    );
+
+                default:
+                    throw new Error(`Unknown type of before build task ${beforeBuildTask.type} for component ${componentId}.`);
+            }
         }
 
-        var componentIdToBeforeBuildTaskJobsMap = {};
-        _.each(
-            buildInstance.componentInstances,
-            (componentInstance, componentId) => {
-                componentIdToBeforeBuildTaskJobsMap[componentId] = [];
-                _.each(
-                    componentInstance.config.beforeBuildTasks,
-                    (beforeBuildEntry) => {
-                        var job;
+        stages.push({
+            jobRunners: _.map(
+                buildInstance.componentInstances,
+                (componentInstance) => {
+                    return new JobRunner(
+                        jobExecutorCollection,
+                        _.map(componentInstance.config.beforeBuildTasks, (beforeBuildTask) => {
+                            return mapBeforeBuildTaskToJob(beforeBuildTask, componentInstance);
+                        })
+                    );
+                }
+            )
+        });
 
-                        switch (beforeBuildEntry.type) {
-                            case 'copy':
-                                job = new CopyBeforeBuildTaskJob(componentInstance, beforeBuildEntry.sourceRelativePath, beforeBuildEntry.destinationRelativePath);
-                                break;
-
-                            case 'interpolate':
-                                job = new InterpolateBeforeBuildTaskJob(componentInstance, beforeBuildEntry.relativePath);
-                                break;
-
-                            default:
-                                throw new Error(`Unknown type of before build task ${beforeBuildEntry.type} for component ${componentId}.`);
-                        }
-
-                        dependantJobsExecutor.add(
-                            job,
-                            previousJobs.concat(componentIdToBeforeBuildTaskJobsMap[componentId].slice(-1))
-                        );
-                        componentIdToBeforeBuildTaskJobsMap[componentId].push(job);
-                    }
-                );
-            }
+        stages.push({
+            jobRunners: [
+                new JobRunner(jobExecutorCollection, [
+                    new PrepareEnvironmentalVariablesJob(buildInstance),
+                    new PrepareSummaryItemsJob(buildInstance),
+                    new RunDockerComposeJob(buildInstance)
+                ])
+            ]
+        });
+        
+        function createStagePromiseRunner({jobRunners}) {
+            return new PromiseRunner(
+                _.map(jobRunners, (jobRunner) => {
+                    return () => {
+                        return jobRunner.runInSequence();
+                    };
+                })
+            );
+        }
+        
+        let buildInstancePromiseRunner = new PromiseRunner(
+            _.map(stages, (stage) => {
+                return () => {
+                    return createStagePromiseRunner(stage).runInParallel();
+                };
+            })
         );
 
-        var lastBeforeBuildTaskJobs = [];
-        _.map(
-            buildInstance.componentInstances,
-            (componentInstance, componentId) => {
-                lastBeforeBuildTaskJobs = lastBeforeBuildTaskJobs.concat(componentIdToBeforeBuildTaskJobsMap[componentId].slice(-1));
-            }
-        );
-
-        var prepareEnvironmentalVariablesJob = new PrepareEnvironmentalVariablesJob(buildInstance);
-        dependantJobsExecutor.add(prepareEnvironmentalVariablesJob, previousJobs.concat(lastBeforeBuildTaskJobs));
-
-        var prepareSummaryItemsJob = new PrepareSummaryItemsJob(buildInstance);
-        dependantJobsExecutor.add(prepareSummaryItemsJob, [prepareEnvironmentalVariablesJob]);
-
-        var runDockerComposeJob = new RunDockerComposeJob(buildInstance);
-        dependantJobsExecutor.add(runDockerComposeJob, [prepareSummaryItemsJob]);
-
-        return dependantJobsExecutor;
+        return buildInstancePromiseRunner.runInSequence();
     }
 
     return {
-        createBuildInstanceDependantJobsExecutor
+        startBuildInstance
     };
 
 };

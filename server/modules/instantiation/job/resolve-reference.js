@@ -19,7 +19,8 @@ module.exports = function (
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var { source, reference } = job.componentInstance.config;
+                var { componentInstance } = job;
+                var { source, reference } = componentInstance.config;
                 if (!source || !reference) {
                     reject(Error('Missing source or reference.'));
 
@@ -30,6 +31,8 @@ module.exports = function (
 
                     return;
                 }
+
+                componentInstance.log(`Resolving reference to source ${source.name} of type ${reference.name} and name ${reference.name}.`);
 
                 githubApiClient
                     .getRepo(source.name)
@@ -65,6 +68,7 @@ module.exports = function (
                                     };
                                     job.componentInstance.resolvedReference = resolvedReference;
                                     job.setResult({ resolvedReference });
+
                                     resolve();
                                 },
                                 (error) => { reject(error); }

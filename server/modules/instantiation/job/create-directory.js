@@ -21,8 +21,10 @@ module.exports = function (
         execute(job) {
             return new Promise((resolve) => {
                 var { buildInstance } = job;
-
                 var fullBuildPath = path.join(config.paths.buildInstanceBuild, buildInstance.id);
+
+                buildInstance.log(`Creating build instance directory at ${fullBuildPath}.`);
+
                 fs.mkdirSync(fullBuildPath);
                 buildInstance.fullBuildPath = fullBuildPath;
 

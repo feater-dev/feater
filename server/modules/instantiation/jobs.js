@@ -16,7 +16,7 @@ module.exports = function (
     prepareSummaryItems,
     runDockerCompose,
     executor,
-    JobRunner
+    runners
 ) {
 
     var { ResolveReferenceJob, ResolveReferenceJobExecutor } = resolveReference;
@@ -32,7 +32,7 @@ module.exports = function (
 
     var { JobExecutorCollection } = executor;
 
-    var { PromiseRunner, JobRunner } = JobRunner;
+    var { PromiseRunner, JobRunner } = runners;
 
     function createJobExecutorCollection() {
         var jobExecutorCollection = new JobExecutorCollection();

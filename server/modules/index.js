@@ -158,9 +158,9 @@ module.exports = [
     },
 
     {
-        name: 'instantiation.job.jobSequence',
+        name: 'instantiation.job.runners',
         dependencies: [],
-        module: require(__dirname + '/instantiation/job/job-sequence')
+        module: require(__dirname + '/instantiation/job/runners')
     },
 
     {
@@ -177,7 +177,7 @@ module.exports = [
             'instantiation.job.prepareSummaryItems',
             'instantiation.job.runDockerCompose',
             'instantiation.job.executor',
-            'instantiation.job.jobSequence'
+            'instantiation.job.runners'
         ],
         module: require(__dirname + '/instantiation/jobs')
     },

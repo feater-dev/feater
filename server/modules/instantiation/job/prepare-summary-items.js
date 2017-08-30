@@ -1,11 +1,6 @@
 var _ = require('underscore');
-var Promise = require('bluebird');
 
-module.exports = function (
-    baseClasses,
-    interpolationHelper,
-    buildInstanceRepository
-) {
+module.exports = function (baseClasses, interpolationHelper, buildInstanceRepository) {
 
     var { BuildInstanceJob, JobExecutor } = baseClasses;
 

@@ -1,13 +1,9 @@
 var _ = require('underscore');
 var path = require('path');
 var fs = require('fs-extra');
-var Promise = require('bluebird');
 var { spawn } = require('child_process');
 
-
-module.exports = function (
-    baseClasses
-) {
+module.exports = function (baseClasses) {
 
     var { BuildInstanceJob, JobExecutor } = baseClasses;
 

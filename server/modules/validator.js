@@ -1,5 +1,4 @@
 var Validator = require('jsonschema').Validator;
-var Promise = require('bluebird');
 
 module.exports = function () {
 

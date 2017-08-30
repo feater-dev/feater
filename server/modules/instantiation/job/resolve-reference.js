@@ -1,12 +1,7 @@
 var path = require('path');
 var fs = require('fs-extra');
-var Promise = require('bluebird');
 
-
-module.exports = function (
-    baseClasses,
-    githubApiClient
-) {
+module.exports = function (baseClasses, githubApiClient) {
 
     var { ComponentInstanceJob, JobExecutor } = baseClasses;
 

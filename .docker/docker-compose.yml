@@ -2,7 +2,8 @@ version: '2'
 
 services:
 
-  feat:
+  app:
+    container_name: feat_app
     build: .
     volumes:
       - '../:/app'
@@ -11,6 +12,7 @@ services:
       - '3000:3000'
 
   mongo:
+    container_name: feat_mongo
     image: mongo:3.0
     ports:
       - '27017:27017'

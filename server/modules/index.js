@@ -158,6 +158,12 @@ module.exports = [
     },
 
     {
+        name: 'instantiation.job.runners',
+        dependencies: [],
+        module: require(__dirname + '/instantiation/job/runners')
+    },
+
+    {
         name: 'instantiation.jobs',
         dependencies: [
             'instantiation.job.resolveReference',
@@ -170,7 +176,8 @@ module.exports = [
             'instantiation.job.prepareEnvironmentalVariables',
             'instantiation.job.prepareSummaryItems',
             'instantiation.job.runDockerCompose',
-            'instantiation.job.executor'
+            'instantiation.job.executor',
+            'instantiation.job.runners'
         ],
         module: require(__dirname + '/instantiation/jobs')
     },

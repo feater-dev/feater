@@ -1,13 +1,9 @@
 var _ = require('underscore');
 var path = require('path');
 var fs = require('fs-extra');
-var Promise = require('bluebird');
 var { spawn } = require('child_process');
 
-
-module.exports = function (
-    baseClasses
-) {
+module.exports = function (baseClasses) {
 
     var { BuildInstanceJob, JobExecutor } = baseClasses;
 
@@ -30,7 +26,7 @@ module.exports = function (
                     {},
                     buildInstance.environmentalVariables,
                     {
-                        COMPOSE_PROJECT_NAME: `feat${buildInstance.id}`,
+                        COMPOSE_PROJECT_NAME: `featbuild${buildInstance.id}`,
                         COMPOSE_HTTP_TIMEOUT: 5000,
                         PATH: '/usr/local/bin/' // TODO Move to config.
                     }

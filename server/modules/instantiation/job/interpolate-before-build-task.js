@@ -1,10 +1,6 @@
 var path = require('path');
-var Promise = require('bluebird');
 
-module.exports = function (
-    baseClasses,
-    interpolationHelper
-) {
+module.exports = function (baseClasses, interpolationHelper) {
 
     var { ComponentInstanceJob, JobExecutor } = baseClasses;
 

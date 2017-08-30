@@ -1,12 +1,8 @@
 var path = require('path');
 var fs = require('fs-extra');
-var Promise = require('bluebird');
 var { exec } = require('child_process');
 
-module.exports = function (
-    config,
-    baseClasses
-) {
+module.exports = function (config, baseClasses) {
 
     var { ComponentInstanceJob, JobExecutor } = baseClasses;
 
@@ -42,10 +38,7 @@ module.exports = function (
                         }
                         componentInstance.log('Succeeded to download archive.');
 
-                        resolve({
-                            zipFileUrl,
-                            zipFileFullPath
-                        });
+                        resolve();
                     }
                 );
             });

@@ -1,4 +1,3 @@
-var Promise = require('bluebird');
 var mongodb = require('mongodb');
 var ObjectID = mongodb.ObjectID;
 

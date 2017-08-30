@@ -1,4 +1,4 @@
-var Promise = require('bluebird');
+var _ = require('underscore');
 
 module.exports = function (baseClasses, portProvider, buildInstanceRepository) {
 

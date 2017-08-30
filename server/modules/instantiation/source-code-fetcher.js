@@ -47,11 +47,10 @@ module.exports = function (config, instanceClasses, jobs) {
         buildInstance.log('About to execute jobs.');
 
         return jobs
-            .createBuildInstanceDependantJobsExecutor(buildInstance)
-            .execute()
+            .startBuildInstance(buildInstance)
             .then(
-                () => { buildInstance.log('Jobs executed.'); },
-                () => { buildInstance.log('Some jobs failed.'); }
+                () => { buildInstance.log('Build instance started.'); },
+                () => { buildInstance.log('Build instance failed to start.'); }
             );
     }
 

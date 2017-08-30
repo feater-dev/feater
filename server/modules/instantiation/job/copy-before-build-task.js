@@ -1,10 +1,7 @@
 var path = require('path');
 var fs = require('fs-extra');
-var Promise = require('bluebird');
 
-module.exports = function (
-    baseClasses
-) {
+module.exports = function (baseClasses) {
 
     var { ComponentInstanceJob, JobExecutor } = baseClasses;
 

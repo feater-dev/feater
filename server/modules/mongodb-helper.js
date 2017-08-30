@@ -1,5 +1,4 @@
 var MongoClient = require('mongodb').MongoClient;
-var Promise = require('bluebird');
 
 module.exports = function (config) {
 

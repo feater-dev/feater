@@ -9,7 +9,6 @@ module.exports = function (config) {
         headers: {
             'user-agent': 'XSolve Feat'
         },
-        Promise: require('bluebird'),
         followRedirects: false,
         timeout: 20000
     });
@@ -43,7 +42,7 @@ module.exports = function (config) {
         return client
             .repos
             .get(addRepoFullNameToParams({}, repoFullName))
-            .error(handleError);
+            .catch(handleError);
     }
 
     function getReference(repoFullName, reference) {
@@ -54,7 +53,7 @@ module.exports = function (config) {
             .getReference(addRepoFullNameToParams({
                 ref: reference
             }, repoFullName))
-            .error(handleError);
+            .catch(handleError);
     }
 
     function getCommit(repoFullName, commitSha) {
@@ -63,7 +62,7 @@ module.exports = function (config) {
         return client
             .repos
             .getCommit(addRepoFullNameToParams({ sha: commitSha }, repoFullName))
-            .error(handleError);
+            .catch(handleError);
     }
 
     function getTagReference(repoFullName, tagName) {
@@ -97,7 +96,7 @@ module.exports = function (config) {
                 path: filePath,
                 ref: reference
             }, repoFullName))
-            .error(handleError);
+            .catch(handleError);
     }
 
     function getFileContent(repoFullName, reference, filePath) {

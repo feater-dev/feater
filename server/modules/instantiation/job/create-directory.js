@@ -3,7 +3,7 @@ var fs = require('fs-extra');
 
 module.exports = function (config, baseClasses) {
 
-    var { BuildInstanceJob, JobExecutor } = baseClasses;
+    let { BuildInstanceJob, JobExecutor } = baseClasses;
 
     class CreateDirectoryJob extends BuildInstanceJob {
     }
@@ -14,9 +14,9 @@ module.exports = function (config, baseClasses) {
         }
 
         execute(job) {
-            return new Promise((resolve) => {
-                var { buildInstance } = job;
-                var fullBuildPath = path.join(config.paths.buildInstanceBuild, buildInstance.id);
+            return new Promise(resolve => {
+                let { buildInstance } = job;
+                let fullBuildPath = path.join(config.paths.buildInstanceBuild, buildInstance.id);
 
                 buildInstance.log(`Creating build instance directory at ${fullBuildPath}.`);
 

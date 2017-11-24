@@ -14,7 +14,7 @@ module.exports = function (baseClasses, interpolationHelper, buildInstanceReposi
         execute(job) {
             var { buildInstance } = job;
 
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 _.each(
                     buildInstance.componentInstances,
                     (componentInstance, componentId) => {

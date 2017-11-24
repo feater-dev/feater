@@ -1,9 +1,9 @@
-var path = require('path');
-var fs = require('fs-extra');
+let path = require('path');
+let fs = require('fs-extra');
 
 module.exports = function (baseClasses) {
 
-    var { ComponentInstanceJob, JobExecutor } = baseClasses;
+    let { ComponentInstanceJob, JobExecutor } = baseClasses;
 
     class CopyBeforeBuildTaskJob extends ComponentInstanceJob {
         constructor(componentInstance, sourceRelativePath, destinationRelativePath) {
@@ -19,9 +19,9 @@ module.exports = function (baseClasses) {
         }
 
         execute(job) {
-            var { componentInstance, sourceRelativePath, destinationRelativePath } = job;
+            let { componentInstance, sourceRelativePath, destinationRelativePath } = job;
 
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 componentInstance.log(`Copying ${sourceRelativePath} to ${destinationRelativePath}.`);
                 fs.copySync(
                     path.join(componentInstance.fullBuildPath, sourceRelativePath),

@@ -189,17 +189,50 @@ module.exports = [
     },
     {
         name: 'routes.api.project',
-        dependencies: ['mongodb.repository.project', 'validator'],
+        dependencies: [
+            'steps.mapBuilder',
+            'steps.mapRunner',
+            'mongodb.repository.project',
+            'validator'
+        ],
         module: require(__dirname + '/routes/api/project')
     },
     {
         name: 'routes.api.buildDefinition',
-        dependencies: ['mongodb.repository.buildDefinition', 'mongodb.repository.project', 'validator'],
+        dependencies: [
+            'steps.mapBuilder',
+            'steps.mapRunner',
+            'mongodb.repository.buildDefinition',
+            'mongodb.repository.project',
+            'validator'
+        ],
         module: require(__dirname + '/routes/api/build-definition')
     },
     {
         name: 'routes.api.buildInstance',
-        dependencies: ['mongodb.repository.buildInstance', 'mongodb.repository.buildDefinition', 'mongodb.repository.project', 'instantiation.sourceCodeFetcher', 'validator'],
+        dependencies: [
+            'steps.mapBuilder',
+            'steps.mapRunner',
+            'mongodb.repository.buildInstance',
+            'mongodb.repository.buildDefinition',
+            'mongodb.repository.project',
+            'instantiation.sourceCodeFetcher',
+            'validator'
+        ],
         module: require(__dirname + '/routes/api/build-instance')
+    },
+    {
+        name: 'steps.mapBuilder',
+        dependencies: [
+            'mongodb.repository.project',
+            'mongodb.repository.buildDefinition',
+            'mongodb.repository.buildInstance'
+        ],
+        module: require(__dirname + '/routes/api/steps-map-builder')
+    },
+    {
+        name: 'steps.mapRunner',
+        dependencies: [],
+        module: require(__dirname + '/helper/steps-map-runner')
     }
 ];

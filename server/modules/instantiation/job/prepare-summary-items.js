@@ -14,10 +14,10 @@ module.exports = function (baseClasses, interpolationHelper, buildInstanceReposi
         execute(job) {
             var { buildInstance } = job;
 
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 _.each(
                     buildInstance.config.summaryItems,
-                    (summaryItem) => {
+                    summaryItem => {
                         buildInstance.addSummaryItem(
                             summaryItem.name,
                             interpolationHelper.interpolateText(summaryItem.value, buildInstance.featVariables, buildInstance.externalPorts)

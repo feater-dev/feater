@@ -28,7 +28,7 @@ module.exports = function (config, instanceClasses, jobs) {
             buildInstance.addFeatVariable(name, value);
         });
 
-        _.map(componentIds, (componentId) => {
+        _.map(componentIds, componentId => {
             var componentInstance = new ComponentInstance(
                 componentId,
                 buildInstance,

@@ -1,19 +1,16 @@
-module.exports = function (buildDefinitionRepository, projectRepository, validator) {
+module.exports = function (stepsMapBuilder, stepsMapRunner, buildDefinitionRepository, projectRepository, validator) {
 
     return [
         {
             method: 'get',
             path: '/api/build-definition',
             middlewares: [
-                function (req, res) {
+                (req, res) => {
                     buildDefinitionRepository
                         .list({})
-                        .then(function (buildDefinitions) {
-                            buildDefinitions
-                                .toArray()
-                                .then(function (buildDefinition) {
-                                    res.json({ data: buildDefinition });
-                                });
+                        .then(buildDefinitions => buildDefinitions.toArray())
+                        .then(buildDefinition => {
+                            res.json({ data: buildDefinition });
                         });
                 }
             ]
@@ -22,57 +19,31 @@ module.exports = function (buildDefinitionRepository, projectRepository, validat
             method: 'get',
             path: '/api/build-definition/:buildDefinitionId',
             middlewares: [
-                function (req, res) {
-                    var scope = {};
+                (req, res) => {
+                    let stepsMap = {};
 
-                    function findDocument() {
-                        return buildDefinitionRepository
-                            .get(req.params.buildDefinitionId)
-                            .then(function (document) {
-                                if (null === document) {
-                                    res.status(404).send();
+                    stepsMapBuilder.addFindBuildDefinitionByIdStep(stepsMap, req.params.buildDefinitionId);
+                    stepsMapBuilder.addFindProjectByBuildDefinitionStep(stepsMap);
 
-                                    return;
-                                }
+                    stepsMapRunner
+                        .run(stepsMap)
+                        .then(resolutions => {
+                            let data = JSON.parse(
+                                JSON.stringify(resolutions.buildDefinition)
+                            );
+                            delete data.projectId;
+                            data.project = {
+                                _id: resolutions.project._id,
+                                name: resolutions.project.name
+                            };
 
-                                scope.document = document;
-                            });
-                    }
+                            res.json({ data });
 
-                    function findProject() {
-                        return projectRepository
-                            .get(scope.document.projectId)
-                            .then(function (project) {
-                                if (null === project) {
-                                    res.status(404).send();
-
-                                    return;
-                                }
-
-                                scope.project = project;
-                            });
-                    }
-
-                    function respondWithData() {
-                        var data = JSON.parse(JSON.stringify(scope.document));
-                        delete data.projectId;
-                        data.project = {
-                            _id: scope.project._id,
-                            name: scope.project.name
-                        };
-
-                        res.json({ data });
-                    }
-
-                    function respondWithErrors(errors) {
-                        console.log('ERRORS', errors);
-                        res.status(400).send();
-                    }
-
-                    findDocument()
-                        .then(findProject)
-                        .then(respondWithData)
-                        .catch(respondWithErrors);
+                        })
+                        .catch(errors => {
+                            console.log('ERRORS', errors);
+                            res.status(400).send();
+                        });
                 }
             ]
         },
@@ -80,7 +51,7 @@ module.exports = function (buildDefinitionRepository, projectRepository, validat
             method: 'post',
             path: '/api/build-definition',
             middlewares: [
-                function (req, res) {
+                (req, res) => {
 
                     function validateRequest() {
                         return validator
@@ -92,9 +63,7 @@ module.exports = function (buildDefinitionRepository, projectRepository, validat
 
                         return validator
                             .validate(config, 'buildDefinitionConfig.root')
-                            .then(function () {
-                                return config;
-                            });
+                            .then(() => config);
                     }
 
                     function persistDocument([config]) {
@@ -118,7 +87,7 @@ module.exports = function (buildDefinitionRepository, projectRepository, validat
                     }
 
                     validateRequest()
-                        .then(function () {
+                        .then(() => {
                             return Promise.all([
                                 validateConfig(),
                                 projectRepository.getOrFail(req.body.projectId)

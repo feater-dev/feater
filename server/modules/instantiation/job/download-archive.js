@@ -1,5 +1,4 @@
 var path = require('path');
-var fs = require('fs-extra');
 var { exec } = require('child_process');
 
 module.exports = function (config, baseClasses) {
@@ -29,7 +28,7 @@ module.exports = function (config, baseClasses) {
                 exec(
                     `curl -s -H "Authorization: token ${config.github.personalAccessToken}" -L ${zipFileUrl} > ${zipFileFullPath}`,
                     { maxBuffer: BUFFER_SIZE },
-                    (error) => {
+                    error => {
                         if (error) {
                             componentInstance.log('Failed to download archive.');
                             reject(error);

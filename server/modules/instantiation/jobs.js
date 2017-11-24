@@ -1,7 +1,4 @@
 var _ = require('underscore');
-var path = require('path');
-var fs = require('fs-extra');
-var { exec, spawn } = require('child_process');
 
 module.exports = function (
     resolveReference,
@@ -66,7 +63,7 @@ module.exports = function (
         stages.push({
             jobRunners: _.map(
                 buildInstance.componentInstances,
-                (componentInstance) => {
+                componentInstance => {
                     return new JobRunner(jobExecutorCollection, [
                         new ResolveReferenceJob(componentInstance),
                         new DownloadArchiveJob(componentInstance),
@@ -79,7 +76,7 @@ module.exports = function (
         stages.push({
             jobRunners: _.map(
                 buildInstance.config.externalPorts,
-                ({ranges: portRanges}, portName) => {
+                ({ ranges: portRanges }, portName) => {
                     return new JobRunner(jobExecutorCollection, [
                         new ProvidePortJob(buildInstance, portName, portRanges)
                     ]);
@@ -104,19 +101,20 @@ module.exports = function (
                     );
 
                 default:
-                    throw new Error(`Unknown type of before build task ${beforeBuildTask.type} for component ${componentId}.`);
+                    throw new Error(`Unknown type of before build task ${beforeBuildTask.type} for component ${componentInstance.id}.`);
             }
         }
 
         stages.push({
             jobRunners: _.map(
                 buildInstance.componentInstances,
-                (componentInstance) => {
+                componentInstance => {
                     return new JobRunner(
                         jobExecutorCollection,
-                        _.map(componentInstance.config.beforeBuildTasks, (beforeBuildTask) => {
-                            return mapBeforeBuildTaskToJob(beforeBuildTask, componentInstance);
-                        })
+                        _.map(
+                            componentInstance.config.beforeBuildTasks,
+                            beforeBuildTask => mapBeforeBuildTaskToJob(beforeBuildTask, componentInstance)
+                        )
                     );
                 }
             )
@@ -132,9 +130,9 @@ module.exports = function (
             ]
         });
         
-        function createStagePromiseRunner({jobRunners}) {
+        function createStagePromiseRunner({ jobRunners }) {
             return new PromiseRunner(
-                _.map(jobRunners, (jobRunner) => {
+                _.map(jobRunners, jobRunner => {
                     return () => {
                         return jobRunner.runInSequence();
                     };
@@ -143,7 +141,7 @@ module.exports = function (
         }
         
         let buildInstancePromiseRunner = new PromiseRunner(
-            _.map(stages, (stage) => {
+            _.map(stages, stage => {
                 return () => {
                     return createStagePromiseRunner(stage).runInParallel();
                 };

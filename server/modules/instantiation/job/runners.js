@@ -23,13 +23,16 @@ module.exports  = function () {
         runInSequence() {
             let lastNestedPromise;
 
-            _.each(this.createPromiseCallbacks, (createPromiseCallback) => {
-                if (!lastNestedPromise) {
-                    lastNestedPromise = createPromiseCallback();
-                } else {
-                    lastNestedPromise = lastNestedPromise.then(createPromiseCallback);
+            _.each(
+                this.createPromiseCallbacks,
+                createPromiseCallback => {
+                    if (!lastNestedPromise) {
+                        lastNestedPromise = createPromiseCallback();
+                    } else {
+                        lastNestedPromise = lastNestedPromise.then(createPromiseCallback);
+                    }
                 }
-            });
+            );
 
             return this.createPromise(lastNestedPromise);
         }
@@ -37,9 +40,10 @@ module.exports  = function () {
         runInParallel() {
             return this.createPromise(
                 Promise.all(
-                    _.map(this.createPromiseCallbacks, (createPromiseCallback) => {
-                        return createPromiseCallback();
-                    })
+                    _.map(
+                        this.createPromiseCallbacks,
+                        createPromiseCallback => createPromiseCallback()
+                    )
                 )
             );
         }
@@ -60,11 +64,14 @@ module.exports  = function () {
         }
 
         createPromiseRunner() {
-            let executeJobCallbacks = _.map(this.jobs, (job) => {
-                return () => {
-                    return this.jobExecutorCollection.getSupporting(job).execute(job);
-                };
-            });
+            let executeJobCallbacks = _.map(
+                this.jobs,
+                job => {
+                    return () => {
+                        return this.jobExecutorCollection.getSupporting(job).execute(job);
+                    };
+                }
+            );
 
             return new PromiseRunner(executeJobCallbacks);
         }

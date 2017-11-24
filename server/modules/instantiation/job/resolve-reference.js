@@ -1,6 +1,3 @@
-var path = require('path');
-var fs = require('fs-extra');
-
 module.exports = function (baseClasses, githubApiClient) {
 
     var { ComponentInstanceJob, JobExecutor } = baseClasses;
@@ -55,7 +52,7 @@ module.exports = function (baseClasses, githubApiClient) {
                             }
 
                             commitPromise.then(
-                                (commit) => {
+                                commit => {
                                     var resolvedReference = {
                                         type: 'commit',
                                         repository: source.name,
@@ -66,10 +63,14 @@ module.exports = function (baseClasses, githubApiClient) {
 
                                     resolve();
                                 },
-                                (error) => { reject(error); }
+                                error => {
+                                    reject(error);
+                                }
                             );
                         },
-                        (error) => { reject(error); }
+                        error => {
+                            reject(error);
+                        }
                     );
             });
         }

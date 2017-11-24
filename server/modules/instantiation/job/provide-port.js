@@ -20,7 +20,7 @@ module.exports = function (baseClasses, portProvider, buildInstanceRepository) {
         execute(job) {
             var { buildInstance } = job;
 
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 var port = portProvider.providePort(
                     _.map(job.portRanges, (portRange) => ({ minPort: portRange[0], maxPort: portRange[1] }))
                 );

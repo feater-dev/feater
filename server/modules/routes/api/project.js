@@ -1,19 +1,16 @@
-module.exports = function (projectRepository, validator) {
+module.exports = function (stepsMapBuilder, stepsMapRunner, projectRepository, validator) {
 
     return [
         {
             method: 'get',
             path: '/api/project',
             middlewares: [
-                function (req, res) {
+                (req, res) => {
                     projectRepository
                         .list({})
-                        .then(function (projects) {
-                            projects
-                                .toArray()
-                                .then(function (projects) {
-                                    res.json({ data: projects });
-                                });
+                        .then(projects => projects.toArray())
+                        .then(projects => {
+                            res.json({ data: projects });
                         });
                 }
             ]
@@ -22,17 +19,24 @@ module.exports = function (projectRepository, validator) {
             method: 'get',
             path: '/api/project/:projectId',
             middlewares: [
-                function (req, res) {
-                    projectRepository
-                        .get(req.params.projectId)
-                        .then(function (project) {
-                            if (null === project) {
-                                res.status(404).send();
+                (req, res) => {
+                    let stepsMap = {};
 
-                                return;
-                            }
+                    stepsMapBuilder.addFindProjectByIdStep(stepsMap, req.params.projectId);
 
-                            res.json({ data: project });
+                    stepsMapRunner
+                        .run(stepsMap)
+                        .then(resolutions => {
+                            let data = JSON.parse(
+                                JSON.stringify(resolutions.project)
+                            );
+
+                            res.json({ data });
+
+                        })
+                        .catch(errors => {
+                            console.log('ERRORS', errors);
+                            res.status(400).send();
                         });
                 }
             ]
@@ -41,19 +45,19 @@ module.exports = function (projectRepository, validator) {
             method: 'post',
             path: '/api/project',
             middlewares: [
-                function (req, res) {
+                (req, res) => {
                     validator
                         .validate(req.body, 'api.project.addProject')
                         .then(
-                            function () {
-                                var project = req.body;
+                            () => {
+                                let project = req.body;
                                 projectRepository
                                     .add(project)
-                                    .then(function (projectId) {
+                                    .then(projectId => {
                                         res.status(201).json({ data: { id: projectId } });
                                     });
                             },
-                            function (errors) {
+                            errors => {
                                 console.log('ERRORS', errors);
                                 res.status(400).send();
                             }

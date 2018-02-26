@@ -6,6 +6,7 @@ services:
     build: .
     volumes:
       - '../:/app'
+      - '../../cache/build/:/cache/build'
       - '/var/run/docker.sock:/var/run/docker.sock'
     ports:
       - '${FEAT_APP_PORT}:3000'

@@ -14,8 +14,11 @@ debugMode = false
 personalAccessToken = personalAccessToken
 
 [paths]
-buildInstanceBuild = /app/buildInstances/
-buildInstanceVolume = /home/me/feat/app/buildInstances/
+build = /cache/build/
+buildVolume = /home/me/feat/cache/build/
+composerCacheVolume = /home/me/feat/cache/composer/
+githubCacheVolume = /home/me/feat/cache/github/
+npmCacheVolume = /home/me/feat/cache/npm/
 
 [googleOAuth2]
 clientId = googleOAuth2ClientId

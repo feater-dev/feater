@@ -24,8 +24,11 @@ module.exports = function (app, rawConfig, modules) {
                 personalAccessToken: rawConfig.github.personalAccessToken
             },
             paths: {
-                buildInstanceBuild: rawConfig.paths.buildInstanceBuild,
-                buildInstanceVolume: rawConfig.paths.buildInstanceVolume
+                build: rawConfig.paths.build,
+                buildVolume: rawConfig.paths.buildVolume,
+                composerCacheVolume: rawConfig.paths.composerCacheVolume,
+                githubCacheVolume: rawConfig.paths.githubCacheVolume,
+                npmCacheVolume: rawConfig.paths.npmCacheVolume
             },
             googleOAuth2: {
                 clientId: rawConfig.googleOAuth2.clientId,

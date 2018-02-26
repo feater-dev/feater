@@ -8,8 +8,8 @@ module.exports = function (config, instanceClasses, jobs) {
     var dummyFeatVariables = {
         'scheme': 'http',
         'domain': 'localhost',
-        'npm_cache': path.join(__dirname, '../../../cache/npm'), // TODO Move this to config.
-        'composer_cache': path.join(__dirname, '/../../../cache/composer') // TODO Move this to config.
+        'npm_cache': config.paths.npmCacheVolume,
+        'composer_cache': config.paths.composerCacheVolume
     };
 
     function createBuildInstance(buildInstanceId, buildDefinition) {
@@ -50,7 +50,7 @@ module.exports = function (config, instanceClasses, jobs) {
             .startBuildInstance(buildInstance)
             .then(
                 () => { buildInstance.log('Build instance started.'); },
-                () => { buildInstance.log('Build instance failed to start.'); }
+                (error) => { buildInstance.log('Build instance failed to start.'); console.log(error) }
             );
     }
 

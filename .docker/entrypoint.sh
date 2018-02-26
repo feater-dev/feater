@@ -1,11 +1,11 @@
 #!/bin/bash
 
 cd /app/client
-npm install
+yarn install
 ./build-dev.sh
 
 cd /app/server
-npm install
+yarn install
 ./run-server.sh
 
 while true; do echo a >> /dev/null ; sleep 1; done

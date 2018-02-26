@@ -9,7 +9,8 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 RUN apt-get update \
     && apt-get install -y nodejs \
     && npm install -g --allow-root npm@latest \
-    && npm update -g --allow-root nvm
+    && npm update -g --allow-root nvm \
+    && npm install -g --allow-root yarn
 
 # Install Docker CE.
 RUN apt-get install -y apt-transport-https ca-certificates curl software-properties-common

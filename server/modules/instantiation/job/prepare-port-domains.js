@@ -25,17 +25,20 @@ module.exports = function (config, baseClasses, buildInstanceRepository) {
                         return;
                     }
 
-                    for (let port of buildInstance.config.exposedPorts[serviceId]) {
-                        let exposedPort = {
+                    for (let exposedPort of buildInstance.config.exposedPorts[serviceId]) {
+                        let longDomain = `build-${buildInstance.shortid}-${service.cleanId}-${exposedPort.port}.${config.web.host}`;
+                        let shortDomain = `build-${buildInstance.shortid}-${exposedPort.id}.${config.web.host}`;
+
+                        buildInstance.addFeatVariable(`exposed_port_domain_long__${exposedPort.id}`, longDomain);
+                        buildInstance.addFeatVariable(`exposed_port_domain__${exposedPort.id}`, shortDomain);
+
+                        service.exposedPorts.push({
                             serviceId,
-                            port,
-                            name: 'dummy', // TODO
-                            domain: `build-${buildInstance.shortid}-${service.cleanId}-${port}.${config.web.host}`
-                        };
-
-                        buildInstance.addFeatVariable(`exposed_port_domain.${serviceId}.${port}`, exposedPort.domain);
-
-                        service.exposedPorts.push(exposedPort);
+                            id: exposedPort.id,
+                            name: exposedPort.name,
+                            port: exposedPort.port,
+                            domains: [longDomain, shortDomain]
+                        });
                     }
                 }
 

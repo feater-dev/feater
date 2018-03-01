@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import {
     BuildDefinitionAddForm,
     BuildDefinitionAddFormComponentFormElement,
-    BuildDefinitionAddFormExternalPortFormElement,
+    BuildDefinitionAddFormExposedPortFormElement,
     BuildDefinitionAddFormEnvironmentalVariableFormElement,
     BuildDefinitionAddFormSummaryItemFormElement, BuildDefinitionAddFormConfigFormElement
 } from '../../build-definition/build-definition-add-form.model';
@@ -78,7 +78,7 @@ import { Project } from '../../project/project.model';
                         <h3 style="display: inline;">External ports</h3>
                         <a
                             class="btn btn-success btn-sm"
-                            (click)="addExternalPort()"
+                            (click)="addExposedPort()"
                             style="position: relative; bottom: 5px; margin-left: 8px;"
                         >
                             Add external port
@@ -88,10 +88,10 @@ import { Project } from '../../project/project.model';
                         <p *ngIf="0 === item.config.exposedPorts.length">
                             No external ports defined.
                         </p>
-                        <div *ngFor="let externalPort of item.config.exposedPorts">
+                        <div *ngFor="let exposedPort of item.config.exposedPorts">
                             <app-build-definition-add-external-port-form-element
-                                [item]="externalPort"
-                                (deleteItem)="deleteExternalPort($event)"
+                                [item]="exposedPort"
+                                (deleteItem)="deleteExposedPort($event)"
                             ></app-build-definition-add-external-port-form-element>
                         </div>
                     </div>
@@ -258,15 +258,17 @@ export class BuildDefinitionAddComponent implements OnInit {
         }
     }
 
-    addExternalPort() : void {
+    addExposedPort() : void {
         this.item.config.exposedPorts.push({
+            serviceId: '',
             id: '',
+            name: '',
             port: 8000
         });
     }
 
-    deleteExternalPort(externalPort: BuildDefinitionAddFormExternalPortFormElement) : void {
-        var index = this.item.config.exposedPorts.indexOf(externalPort);
+    deleteExposedPort(exposedPort: BuildDefinitionAddFormExposedPortFormElement) : void {
+        var index = this.item.config.exposedPorts.indexOf(exposedPort);
         if (-1 !== index) {
             this.item.config.exposedPorts.splice(index, 1);
         }
@@ -336,11 +338,15 @@ export class BuildDefinitionAddComponent implements OnInit {
             }
         );
         this.item.config.exposedPorts.forEach(
-            function (externalPort : BuildDefinitionAddFormExternalPortFormElement) {
-                if (!mappedItem.config.exposedPorts[externalPort.id]) {
-                    mappedItem.config.exposedPorts[externalPort.id] = [];
+            function (exposedPort : BuildDefinitionAddFormExposedPortFormElement) {
+                if (!mappedItem.config.exposedPorts[exposedPort.serviceId]) {
+                    mappedItem.config.exposedPorts[exposedPort.serviceId] = [];
                 }
-                mappedItem.config.exposedPorts[externalPort.id].push(externalPort.port);
+                mappedItem.config.exposedPorts[exposedPort.serviceId].push({
+                    id: exposedPort.id,
+                    name: exposedPort.name,
+                    port: exposedPort.port,
+                });
             }
         );
         this.item.config.environmentalVariables.forEach(
@@ -371,11 +377,13 @@ export class BuildDefinitionAddComponent implements OnInit {
             mappedJsonConfig.components.push(component);
         }
 
-        for (let id in jsonConfig.exposedPorts) {
-            for (let port of jsonConfig.exposedPorts[id]) {
+        for (let serviceId in jsonConfig.exposedPorts) {
+            for (let exposedPort of jsonConfig.exposedPorts[serviceId]) {
                 mappedJsonConfig.exposedPorts.push({
-                    id: id,
-                    port: port
+                    serviceId: serviceId,
+                    id: exposedPort.id,
+                    name: exposedPort.name,
+                    port: exposedPort.port
                 });
             }
         }

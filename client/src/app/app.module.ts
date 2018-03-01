@@ -13,7 +13,7 @@ import { BuildDefinitionAddComponent } from './build-definition/add/build-defini
 import { BuildDefinitionAddComponentFormElementComponent } from './build-definition/add/form-element/build-definition-add.component-form-element.component';
 import { BuildDefinitionAddBeforeBuildTaskCopyFormElementComponent } from './build-definition/add/form-element/build-definition-add.before-build-task-copy-form-element.component';
 import { BuildDefinitionAddBeforeBuildTaskInterpolateFormElementComponent } from './build-definition/add/form-element/build-definition-add.before-build-task-interpolate-form-element.component';
-import { BuildDefinitionAddExternalPortFormElementComponent } from './build-definition/add/form-element/build-definition-add.external-port-form-element.component';
+import { BuildDefinitionAddExposedPortFormElementComponent } from './build-definition/add/form-element/build-definition-add.exposed-port-form-element.component';
 import { BuildDefinitionAddEnvironmentalVariableFormElementComponent } from './build-definition/add/form-element/build-definition-add.environmental-variable-form-element.component';
 import { BuildDefinitionAddSummaryItemFormElementComponent } from './build-definition/add/form-element/build-definition-add.summary-item-form-element.component';
 import { BuildDefinitionAddComposeFileFormElementComponent } from './build-definition/add/form-element/build-definition-add.compose-file-form-element.component';
@@ -53,7 +53,7 @@ const appRoutes: Routes = [
         BuildDefinitionAddComponentFormElementComponent,
         BuildDefinitionAddBeforeBuildTaskCopyFormElementComponent,
         BuildDefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
-        BuildDefinitionAddExternalPortFormElementComponent,
+        BuildDefinitionAddExposedPortFormElementComponent,
         BuildDefinitionAddEnvironmentalVariableFormElementComponent,
         BuildDefinitionAddSummaryItemFormElementComponent,
         BuildDefinitionAddComposeFileFormElementComponent,

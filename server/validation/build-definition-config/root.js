@@ -72,7 +72,26 @@ module.exports = {
                 "^[_a-zA-Z\\d]+$":{
                     "type":"array",
                     "items": {
-                        "type": "number"
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "name",
+                            "port"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "port": {
+                                "type": "number"
+                            }
+                        },
+                        "additionalProperties": false
                     }
                 }
             },

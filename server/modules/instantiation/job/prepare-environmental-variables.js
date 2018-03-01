@@ -35,7 +35,7 @@ module.exports = function (baseClasses, interpolationHelper, buildInstanceReposi
                     (value, name) => {
                         buildInstance.addEnvironmentalVariable(
                             name,
-                            interpolationHelper.interpolateText(value, buildInstance.featVariables, buildInstance.exposedPorts)
+                            interpolationHelper.interpolateText(value, buildInstance.featVariables)
                         )
                     }
                 );

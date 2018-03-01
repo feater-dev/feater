@@ -1,10 +1,10 @@
-var _ = require('underscore');
-var fs = require('fs-extra');
-var escapeStringRegexp = require('escape-string-regexp');
+let _ = require('underscore');
+let fs = require('fs-extra');
+let escapeStringRegexp = require('escape-string-regexp');
 
 module.exports = function () {
 
-    function interpolateText(text, featVariables = {}, exposedPorts = {}) {
+    function interpolateText(text, featVariables = {}) {
         text = _.reduce(
             _.keys(featVariables),
             (text, name) => {
@@ -16,21 +16,12 @@ module.exports = function () {
             text
         );
 
-        text = _.reduce(
-            _.keys(exposedPorts),
-            (text, portId) => text.replace(
-                new RegExp(escapeStringRegexp(`{{{port.${portId}}}}`), 'g'),
-                exposedPorts[portId]
-            ),
-            text
-        );
-
         return text;
     }
 
-    function interpolateFile(fullPath, featVariables = {}, exposedPorts = {}) {
+    function interpolateFile(fullPath, featVariables = {}) {
         let contents = fs.readFileSync(fullPath).toString();
-        contents = interpolateText(contents, featVariables, exposedPorts);
+        contents = interpolateText(contents, featVariables);
         fs.truncateSync(fullPath);
         fs.writeFileSync(fullPath, contents);
     }

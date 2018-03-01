@@ -14,8 +14,18 @@ export interface BuildInstance {
     name: string;
     buildDefinition: BuildDefinitionReference;
     environmentalVariables?: Object;
-    exposedPorts?: Object;
+    exposedPorts?: ExposedPortsByServiceId;
     summaryItems?: Object[];
+}
+
+type ExposedPortsByServiceId = {
+    [key:string]: ExposedPort
+}
+
+export interface ExposedPort {
+    id: string;
+    name: string;
+    port: number;
 }
 
 export interface MappedBuildInstance {

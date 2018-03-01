@@ -35,10 +35,10 @@ import { BuildInstance, MappedBuildInstance } from '../build-instance.model';
                             <label class="col-lg-2 control-label">External ports</label>
                             <div class="col-lg-10">
                                 <div
-                                    *ngFor="let externalPort of item?.exposedPorts"
+                                    *ngFor="let exposedPort of item?.exposedPorts"
                                     class="form-control-static"
                                 >
-                                    <strong>{{ externalPort.id }}</strong><br>{{ externalPort.value }}
+                                    <strong>{{ exposedPort.id }}</strong><br>{{ exposedPort.value }}
                                 </div>
                             </div>
                         </div>

@@ -34,8 +34,8 @@ module.exports = function (consoleLogger) {
             return this;
         }
 
-        addExternalPort(name, port) {
-            this.exposedPorts[name] = port;
+        addExternalPort(exposedPort) {
+            this.exposedPorts[id] = exposedPort;
 
             return this;
         }

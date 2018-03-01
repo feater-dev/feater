@@ -26,13 +26,18 @@ module.exports = function (config, baseClasses, buildInstanceRepository) {
                 for (let serviceId in buildInstance.services) {
                     let service = buildInstance.services[serviceId];
 
+                    console.log(service.exposedPorts);
                     for (let exposedPort of service.exposedPorts) {
-                        nginxConfs.push(
-`
+                        console.log(exposedPort);
+                        for (let domain of exposedPort.domains) {
+                            console.log(domain);
+
+                            nginxConfs.push(
+                                `
 # Proxy domain for port ${exposedPort.port} of ${serviceId} running at ${service.ipAddress}
 server {
     listen 80;
-    server_name ${exposedPort.domain};
+    server_name ${domain};
 
     location / {
         proxy_pass http://${service.ipAddress}:${exposedPort.port};
@@ -40,7 +45,8 @@ server {
     }
 }
 `
-                        );
+                            );
+                        }
                     }
                 }
 

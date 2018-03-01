@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 import { BuildDefinition } from '../build-definition.model';
 import {
     BuildDefinitionAddForm, BuildDefinitionAddFormComponentFormElement,
-    BuildDefinitionAddFormEnvironmentalVariableFormElement, BuildDefinitionAddFormExternalPortFormElement
+    BuildDefinitionAddFormEnvironmentalVariableFormElement, BuildDefinitionAddFormExposedPortFormElement
 } from '../build-definition-add-form.model';
 
 @Injectable()

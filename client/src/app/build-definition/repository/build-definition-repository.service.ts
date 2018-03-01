@@ -14,7 +14,7 @@ import {
 @Injectable()
 export class BuildDefinitionRepositoryService {
 
-    private itemsUrl = 'http://localhost:3000/api/build-definition';
+    private itemsUrl = 'http://feat.local:3000/api/build-definition';
 
     constructor(private http: Http) {}
 

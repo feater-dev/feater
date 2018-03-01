@@ -5,12 +5,16 @@ module.exports = function (
     createDirectory,
     downloadArchive,
     extractArchive,
-    providePort,
     copyBeforeBuildTask,
     interpolateBeforeBuildTask,
     prepareEnvironmentalVariables,
     prepareSummaryItems,
+    parseDockerCompose,
     runDockerCompose,
+    getContainerIds,
+    connectContainersToNetwork,
+    preparePortDomains,
+    proxyPortDomains,
     executor,
     runners
 ) {
@@ -19,12 +23,16 @@ module.exports = function (
     var { CreateDirectoryJob, CreateDirectoryJobExecutor } = createDirectory;
     var { DownloadArchiveJob, DownloadArchiveJobExecutor } = downloadArchive;
     var { ExtractArchiveJob, ExtractArchiveJobExecutor } = extractArchive;
-    var { ProvidePortJob, ProvidePortJobExecutor } = providePort;
     var { CopyBeforeBuildTaskJob, CopyBeforeBuildTaskJobExecutor } = copyBeforeBuildTask;
     var { InterpolateBeforeBuildTaskJob, InterpolateBeforeBuildTaskJobExecutor } = interpolateBeforeBuildTask;
     var { PrepareEnvironmentalVariablesJob, PrepareEnvironmentalVariablesJobExecutor } = prepareEnvironmentalVariables;
     var { PrepareSummaryItemsJob, PrepareSummaryItemsJobExecutor } = prepareSummaryItems;
+    var { ParseDockerComposeJob, ParseDockerComposeJobExecutor } = parseDockerCompose;
     var { RunDockerComposeJob, RunDockerComposeJobExecutor } = runDockerCompose;
+    var { GetContainerIdsJob, GetContainerIdsJobExecutor } = getContainerIds;
+    var { ConnectContainersToNetworkJob, ConnectContainersToNetworkJobExecutor } = connectContainersToNetwork;
+    var { PreparePortDomainsJob, PreparePortDomainsJobExecutor } = preparePortDomains;
+    var { ProxyPortDomainsJob, ProxyPortDomainsJobExecutor } = proxyPortDomains;
 
     var { JobExecutorCollection } = executor;
 
@@ -35,10 +43,14 @@ module.exports = function (
 
         jobExecutorCollection
             .add(new CreateDirectoryJobExecutor())
-            .add(new ProvidePortJobExecutor())
             .add(new PrepareEnvironmentalVariablesJobExecutor())
             .add(new PrepareSummaryItemsJobExecutor())
+            .add(new ParseDockerComposeJobExecutor())
             .add(new RunDockerComposeJobExecutor())
+            .add(new GetContainerIdsJobExecutor())
+            .add(new ConnectContainersToNetworkJobExecutor())
+            .add(new PreparePortDomainsJobExecutor())
+            .add(new ProxyPortDomainsJobExecutor())
             .add(new ResolveReferenceJobExecutor())
             .add(new DownloadArchiveJobExecutor())
             .add(new ExtractArchiveJobExecutor())
@@ -74,16 +86,13 @@ module.exports = function (
         });
 
         stages.push({
-            jobRunners: _.map(
-                buildInstance.config.externalPorts,
-                ({ ranges: portRanges }, portName) => {
-                    return new JobRunner(jobExecutorCollection, [
-                        new ProvidePortJob(buildInstance, portName, portRanges)
-                    ]);
-                }
-            )
+            jobRunners: [
+                new JobRunner(jobExecutorCollection, [
+                    new ParseDockerComposeJob(buildInstance),
+                    new PreparePortDomainsJob(buildInstance)
+                ])
+            ]
         });
-
 
         function mapBeforeBuildTaskToJob(beforeBuildTask, componentInstance) {
             switch (beforeBuildTask.type) {
@@ -125,7 +134,10 @@ module.exports = function (
                 new JobRunner(jobExecutorCollection, [
                     new PrepareEnvironmentalVariablesJob(buildInstance),
                     new PrepareSummaryItemsJob(buildInstance),
-                    new RunDockerComposeJob(buildInstance)
+                    new RunDockerComposeJob(buildInstance),
+                    new GetContainerIdsJob(buildInstance),
+                    new ConnectContainersToNetworkJob(buildInstance),
+                    new ProxyPortDomainsJob(buildInstance)
                 ])
             ]
         });

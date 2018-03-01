@@ -1,3 +1,5 @@
+let nanoidGenerate = require('nanoid/generate');
+
 module.exports = function (stepsMapBuilder, stepsMapRunner, buildInstanceRepository, buildDefinitionRepository, projectRepository, sourceCodeFetcher, validator) {
 
     return [
@@ -89,7 +91,11 @@ module.exports = function (stepsMapBuilder, stepsMapRunner, buildInstanceReposit
 
                     function executeBuildInstanceJobs() {
                         process.nextTick(() => {
-                            var buildInstance = sourceCodeFetcher.createBuildInstance(scope.buildInstanceId, scope.buildDefinition);
+                            var buildInstance = sourceCodeFetcher.createBuildInstance(
+                                scope.buildInstanceId,
+                                nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 8),
+                                scope.buildDefinition
+                            );
                             sourceCodeFetcher.executeJobsForBuildInstance(buildInstance);
                         });
                     }

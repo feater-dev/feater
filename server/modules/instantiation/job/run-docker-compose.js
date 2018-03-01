@@ -16,16 +16,19 @@ module.exports = function (baseClasses) {
         execute(job) {
             return new Promise((resolve, reject) => {
                 let { buildInstance } = job;
-                let dockerComposeDirectoryFullPath = path.join(
+
+                let dockerComposeDirectoryAbsolutePath = path.join(
                     buildInstance.componentInstances[buildInstance.config.composeFile.componentId].fullBuildPath,
                     path.dirname(buildInstance.config.composeFile.relativePath)
                 );
+
                 let dockerComposeFileName = path.basename(buildInstance.config.composeFile.relativePath);
+
                 let dockerComposeEnvironemntalVariables = _.extend(
                     {},
                     buildInstance.environmentalVariables,
                     {
-                        COMPOSE_PROJECT_NAME: `featbuild${buildInstance.id}`,  // TODO Move to config.
+                        COMPOSE_PROJECT_NAME: `featbuild${buildInstance.shortid}`,  // TODO Move to config.
                         COMPOSE_HTTP_TIMEOUT: 5000,
                         PATH: '/usr/local/bin/' // TODO Move to config.
                     }
@@ -34,19 +37,19 @@ module.exports = function (baseClasses) {
                 buildInstance.log('Running docker-compose.');
 
                 let dockerCompose = spawn(
-                    'docker-compose', ['--file', dockerComposeFileName, 'up', '--abort-on-container-exit', '--no-color'],
+                    'docker-compose', ['--file', dockerComposeFileName, 'up', '-d', '--no-color'],
                     {
-                        cwd: dockerComposeDirectoryFullPath,
+                        cwd: dockerComposeDirectoryAbsolutePath,
                         env: dockerComposeEnvironemntalVariables
                     }
                 );
 
-                let stdoutLogger = buildInstance.logger.createNested('docker-compose stdout', { splitLines: true });
+                let stdoutLogger = buildInstance.logger.createNested('compose stdout', { splitLines: true });
                 dockerCompose.stdout.on('data', data => {
                     stdoutLogger.debug(data.toString());
                 });
 
-                let stderrLogger = buildInstance.logger.createNested('docker-compose stderr', { splitLines: true });
+                let stderrLogger = buildInstance.logger.createNested('compose stderr', { splitLines: true });
                 dockerCompose.stderr.on('data', data => {
                     stderrLogger.error(data.toString());
                 });
@@ -56,7 +59,14 @@ module.exports = function (baseClasses) {
                 });
 
                 dockerCompose.on('exit', code => {
-                    reject(code);
+                    if (0 !== code) {
+                        buildInstance.log('Failed to run docker-compose.');
+                        reject(code);
+
+                        return;
+                    }
+
+                    resolve();
                 });
 
                 dockerCompose.on('close', code => {
@@ -67,7 +77,6 @@ module.exports = function (baseClasses) {
                         return;
                     }
 
-                    buildInstance.log('Succeeded to run docker-compose.');
                     resolve();
                 });
             });

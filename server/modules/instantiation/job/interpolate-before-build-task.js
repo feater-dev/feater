@@ -21,10 +21,10 @@ module.exports = function (baseClasses, interpolationHelper) {
 
             return new Promise(resolve => {
                 let fullPath = path.join(componentInstance.fullBuildPath, job.relativePath);
-                let { featVariables, externalPorts } = componentInstance.buildInstance;
+                let { featVariables, exposedPorts } = componentInstance.buildInstance;
 
                 componentInstance.log(`Interpolating Feat variables in ${job.relativePath}.`);
-                interpolationHelper.interpolateFile(fullPath, featVariables, externalPorts);
+                interpolationHelper.interpolateFile(fullPath, featVariables, exposedPorts);
 
                 resolve();
             });

@@ -31,11 +31,11 @@ import { BuildInstance, MappedBuildInstance } from '../build-instance.model';
                             </div>
                         </div>
 
-                        <div class="form-group" [hidden]="!item?.externalPorts?.length">
+                        <div class="form-group" [hidden]="!item?.exposedPorts?.length">
                             <label class="col-lg-2 control-label">External ports</label>
                             <div class="col-lg-10">
                                 <div
-                                    *ngFor="let externalPort of item?.externalPorts"
+                                    *ngFor="let externalPort of item?.exposedPorts"
                                     class="form-control-static"
                                 >
                                     <strong>{{ externalPort.id }}</strong><br>{{ externalPort.value }}
@@ -118,15 +118,15 @@ export class BuildInstanceDetailComponent implements OnInit {
             name: item.name,
             buildDefinition: item.buildDefinition,
             environmentalVariables: [],
-            externalPorts: [],
+            exposedPorts: [],
             summaryItems: item.summaryItems
         };
 
-        if (item.externalPorts && 0 < Object.keys(item.externalPorts).length) {
-            Object.keys(item.externalPorts).forEach(function (id) {
-                mappedItem.externalPorts.push({
+        if (item.exposedPorts && 0 < Object.keys(item.exposedPorts).length) {
+            Object.keys(item.exposedPorts).forEach(function (id) {
+                mappedItem.exposedPorts.push({
                     id,
-                    value: item.externalPorts[id]
+                    value: item.exposedPorts[id]
                 });
             });
         }

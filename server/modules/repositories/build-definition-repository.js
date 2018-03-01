@@ -5,11 +5,11 @@ module.exports = function (mongodbHelper) {
     function list(query) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('buildDefinition')
-                        .find(query, function (err, result) {
+                        .find(query, (err, result) => {
                             if (err) {
                                 reject(err);
 
@@ -25,11 +25,11 @@ module.exports = function (mongodbHelper) {
     function get(buildDefinitionId) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('buildDefinition')
-                        .findOne({ _id: mongodb.ObjectID(buildDefinitionId) }, function (err, buildDefinition) {
+                        .findOne({ _id: mongodb.ObjectID(buildDefinitionId) }, (err, buildDefinition) => {
                             if (err) {
                                 reject(err);
 
@@ -44,7 +44,7 @@ module.exports = function (mongodbHelper) {
 
     function getOrFail(buildDefinitionId) {
         return get(buildDefinitionId)
-            .then(function (buildDefinition) {
+            .then(buildDefinition => {
                 if (null === buildDefinition) {
                     throw new Error("Document not found.");
                 }
@@ -56,13 +56,13 @@ module.exports = function (mongodbHelper) {
     function add(buildDefinition) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     buildDefinition.projectId = new mongodb.ObjectID(buildDefinition.projectId);
 
                     mongo
                         .collection('buildDefinition')
-                        .insertOne(buildDefinition, null, function (err, result) {
+                        .insertOne(buildDefinition, null, (err, result) => {
                             if (err) {
                                 reject(err);
 

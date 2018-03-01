@@ -20,7 +20,7 @@ module.exports = function (baseClasses, interpolationHelper, buildInstanceReposi
                     summaryItem => {
                         buildInstance.addSummaryItem(
                             summaryItem.name,
-                            interpolationHelper.interpolateText(summaryItem.value, buildInstance.featVariables, buildInstance.externalPorts)
+                            interpolationHelper.interpolateText(summaryItem.value, buildInstance.featVariables, buildInstance.exposedPorts)
                         )
                     }
                 );

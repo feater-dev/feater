@@ -4,21 +4,23 @@ var _ = require('underscore');
 module.exports = function (consoleLogger) {
 
     class BuildInstance {
-        constructor(id, buildDefinitionConfig) {
+        constructor(id, shortid, config) {
             this.id = id;
-            this.config = buildDefinitionConfig;
+            this.shortid = shortid;
+            this.config = config;
 
-            this.logger = consoleLogger.createNested(`Build instance ${this.id}`);
+            this.logger = consoleLogger.createNested(`build ${this.shortid}`);
 
             this.componentInstances = {};
             this.featVariables = {};
-            this.externalPorts = {};
+            this.exposedPorts = {};
+            this.interpolatedTokens = {};
             this.environmentalVariables = {};
             this.summaryItems = [];
         }
 
         // fullBuildPath
-        // fullVolumePath
+        // fullBuildHostPath
 
         addComponentInstance(componentInstance) {
             this.componentInstances[componentInstance.id] = componentInstance;
@@ -33,9 +35,13 @@ module.exports = function (consoleLogger) {
         }
 
         addExternalPort(name, port) {
-            this.externalPorts[name] = port;
+            this.exposedPorts[name] = port;
 
             return this;
+        }
+
+        addInterpolatedToken(name, value) {
+            this.interpolatedTokens[name] = value;
         }
 
         addEnvironmentalVariable(name, value) {
@@ -63,13 +69,13 @@ module.exports = function (consoleLogger) {
     }
 
     class ComponentInstance {
-        constructor(id, buildInstance, buildDefinitionComponentConfig) {
+        constructor(id, buildInstance, config) {
             this.id = id;
             this.buildInstance = buildInstance;
             this.buildInstance.addComponentInstance(this);
-            this.config = buildDefinitionComponentConfig;
+            this.config = config;
 
-            this.logger = this.buildInstance.logger.createNested(`Component ${this.id}`);
+            this.logger = this.buildInstance.logger.createNested(`component ${this.id}`);
         }
 
         // resolvedReference
@@ -85,8 +91,8 @@ module.exports = function (consoleLogger) {
             return path.join(this.buildInstance.fullBuildPath, this.relativePath);
         }
 
-        get fullVolumePath() {
-            return path.join(this.buildInstance.fullVolumePath, this.relativePath);
+        get fullBuildHostPath() {
+            return path.join(this.buildInstance.fullBuildHostPath, this.relativePath);
         }
     }
 

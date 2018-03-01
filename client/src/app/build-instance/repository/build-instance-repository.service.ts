@@ -11,7 +11,7 @@ import { BuildInstanceAddForm } from '../build-instance-add-form.model';
 @Injectable()
 export class BuildInstanceRepositoryService {
 
-    private itemsUrl = 'http://localhost:3000/api/build-instance';
+    private itemsUrl = 'http://feat.local:3000/api/build-instance';
 
     constructor(private http: Http) {}
 

@@ -5,11 +5,11 @@ module.exports = function (mongodbHelper) {
     function list(query) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('user')
-                        .find(query, function (err, result) {
+                        .find(query, (err, result) => {
                             if (err) {
                                 reject(err);
 
@@ -25,11 +25,11 @@ module.exports = function (mongodbHelper) {
     function get(userId) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('user')
-                        .findOne({ _id: mongodb.ObjectID(userId) }, function (err, user) {
+                        .findOne({ _id: mongodb.ObjectID(userId) }, (err, user) => {
                             if (err) {
                                 reject(err);
 
@@ -45,11 +45,11 @@ module.exports = function (mongodbHelper) {
     function add(user) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('user')
-                        .insertOne(user, null, function (err, result) {
+                        .insertOne(user, null, (err, result) => {
                             if (err) {
                                 reject(err);
 

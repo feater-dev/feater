@@ -6,11 +6,11 @@ module.exports = function (mongodbHelper) {
     function list(query) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('buildInstance')
-                        .find(query, function (err, result) {
+                        .find(query, (err, result) => {
                             if (err) {
                                 reject(err);
 
@@ -26,11 +26,11 @@ module.exports = function (mongodbHelper) {
     function get(buildInstanceId) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo  => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('buildInstance')
-                        .findOne({ _id: mongodb.ObjectID(buildInstanceId) }, function (err, buildInstance) {
+                        .findOne({ _id: mongodb.ObjectID(buildInstanceId) }, (err, buildInstance) => {
                             if (err) {
                                 reject(err);
 
@@ -57,11 +57,11 @@ module.exports = function (mongodbHelper) {
     function add(buildInstance) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('buildInstance')
-                        .insertOne(buildInstance, null, function (err, result) {
+                        .insertOne(buildInstance, null, (err, result) => {
                             if (err) {
                                 reject(err);
 
@@ -74,12 +74,12 @@ module.exports = function (mongodbHelper) {
             });
     }
 
-    function updateExternalPorts(buildInstance) {
-        return update(
-            buildInstance,
-            { '$set': { externalPorts: buildInstance.externalPorts } }
-        );
-    }
+    // function updateFeatVariables(buildInstance) {
+    //     return update(
+    //         buildInstance,
+    //         { '$set': { featVariables: buildInstance.featVariables } }
+    //     );
+    // }
 
     function updateEnvironmentalVariables(buildInstance) {
         return update(
@@ -95,18 +95,25 @@ module.exports = function (mongodbHelper) {
         );
     }
 
+    function updateServices(buildInstance) {
+        return update(
+            buildInstance,
+            { '$set': { services: buildInstance.services } }
+        );
+    }
+
     function update(buildInstance, updateContents) {
         return mongodbHelper
             .getMongo()
-            .then(function (mongo) {
-                return new Promise(function (resolve, reject) {
+            .then(mongo => {
+                return new Promise((resolve, reject) => {
                     mongo
                         .collection('buildInstance')
                         .updateOne(
                             { _id: ObjectID(buildInstance.id) },
                             updateContents,
                             { w: 1 },
-                            function (err, result) {
+                            (err, result) => {
                                 if (err) {
                                     reject(err);
 
@@ -125,9 +132,10 @@ module.exports = function (mongodbHelper) {
         get,
         getOrFail,
         add,
-        updateExternalPorts,
+        // updateFeatVariables,
         updateEnvironmentalVariables,
-        updateSummaryItems
+        updateSummaryItems,
+        updateServices
     };
 
 };

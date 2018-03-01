@@ -4,21 +4,23 @@ var escapeStringRegexp = require('escape-string-regexp');
 
 module.exports = function () {
 
-    function interpolateText(text, featVariables = {}, externalPorts = {}) {
+    function interpolateText(text, featVariables = {}, exposedPorts = {}) {
         text = _.reduce(
             _.keys(featVariables),
-            (text, name) => text.replace(
-                new RegExp(escapeStringRegexp(`{{{${name}}}}`), 'g'),
-                featVariables[name]
-            ),
+            (text, name) => {
+                return text.replace(
+                    new RegExp(escapeStringRegexp(`{{{${name}}}}`), 'g'),
+                    featVariables[name]
+                )
+            },
             text
         );
 
         text = _.reduce(
-            _.keys(externalPorts),
+            _.keys(exposedPorts),
             (text, portId) => text.replace(
                 new RegExp(escapeStringRegexp(`{{{port.${portId}}}}`), 'g'),
-                externalPorts[portId]
+                exposedPorts[portId]
             ),
             text
         );
@@ -26,9 +28,9 @@ module.exports = function () {
         return text;
     }
 
-    function interpolateFile(fullPath, featVariables = {}, externalPorts = {}) {
-        var contents = fs.readFileSync(fullPath).toString();
-        contents = interpolateText(contents, featVariables, externalPorts);
+    function interpolateFile(fullPath, featVariables = {}, exposedPorts = {}) {
+        let contents = fs.readFileSync(fullPath).toString();
+        contents = interpolateText(contents, featVariables, exposedPorts);
         fs.truncateSync(fullPath);
         fs.writeFileSync(fullPath, contents);
     }

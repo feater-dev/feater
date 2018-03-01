@@ -3,28 +3,30 @@ var _ = require('underscore');
 
 module.exports = function (config, instanceClasses, jobs) {
 
-    var { BuildInstance, ComponentInstance } = instanceClasses;
+    let { BuildInstance, ComponentInstance } = instanceClasses;
 
-    var dummyFeatVariables = {
-        'scheme': 'http',
-        'domain': 'localhost',
-        'npm_cache': config.paths.npmCacheVolume,
-        'composer_cache': config.paths.composerCacheVolume
+    let featVariables = {
+        'scheme': config.web.scheme,
+        'host': config.web.host,
+        'port': config.web.port,
+        'npm_cache': config.hostPaths.npmCache,
+        'composer_cache': config.hostPaths.composerCache
     };
 
-    function createBuildInstance(buildInstanceId, buildDefinition) {
-        var buildInstance = new BuildInstance(
-            buildInstanceId,
+    function createBuildInstance(id, shortid, buildDefinition) {
+        let buildInstance = new BuildInstance(
+            id,
+            shortid,
             buildDefinition.config
         );
 
-        buildInstance.log('About to set up.');
+        buildInstance.log('Setting up build instance.');
 
-        var componentIds = _.keys(buildDefinition.config.components);
+        let componentIds = _.keys(buildDefinition.config.components);
 
-        buildInstance.log('Setting dummy Feat variables.');
+        buildInstance.log('Setting basic Feat variables.');
 
-        _.each(dummyFeatVariables, (value, name) => {
+        _.each(featVariables, (value, name) => {
             buildInstance.addFeatVariable(name, value);
         });
 
@@ -34,11 +36,7 @@ module.exports = function (config, instanceClasses, jobs) {
                 buildInstance,
                 buildDefinition.config.components[componentId]
             );
-
-            componentInstance.log('Set up.')
         });
-
-        buildInstance.log('Set up.');
 
         return buildInstance;
     }
@@ -49,8 +47,12 @@ module.exports = function (config, instanceClasses, jobs) {
         return jobs
             .startBuildInstance(buildInstance)
             .then(
-                () => { buildInstance.log('Build instance started.'); },
-                (error) => { buildInstance.log('Build instance failed to start.'); console.log(error) }
+                () => {
+                    buildInstance.log('Build instance started.');
+                },
+                error => {
+                    buildInstance.log('Build instance failed to start.');
+                }
             );
     }
 

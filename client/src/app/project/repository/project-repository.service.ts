@@ -11,7 +11,7 @@ import { ProjectAddForm } from '../project-add-form.model';
 @Injectable()
 export class ProjectRepositoryService {
 
-    private itemsUrl = 'http://localhost:3000/api/project';
+    private itemsUrl = 'http://feat.local:3000/api/project';
 
     constructor(private http: Http) {}
 

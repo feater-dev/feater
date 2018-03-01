@@ -57,7 +57,6 @@ module.exports = function (projectRepository, buildDefinitionRepository, buildIn
             stepsMap.buildDefinition = {
                 dependsOn: ['buildInstance'],
                 callback: resolutions => {
-                    console.log(resolutions);
                     return buildDefinitionRepository
                         .get(resolutions.buildInstance.buildDefinitionId)
                         .then(buildDefinition => {

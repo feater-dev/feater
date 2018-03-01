@@ -55,11 +55,6 @@ module.exports = [
         module: require(__dirname + '/instantiation/console-logger')
     },
     {
-        name: 'instantiation.portProvider',
-        dependencies: [],
-        module: require(__dirname + '/instantiation/port-provider')
-    },
-    {
         name: 'instantiation.instanceClasses',
         dependencies: ['instantiation.consoleLogger'],
         module: require(__dirname + '/instantiation/instance-classes')
@@ -102,15 +97,6 @@ module.exports = [
         module: require(__dirname + '/instantiation/job/extract-archive')
     },
     {
-        name: 'instantiation.job.providePort',
-        dependencies: [
-            'instantiation.job.baseClasses',
-            'instantiation.portProvider',
-            'mongodb.repository.buildInstance'
-        ],
-        module: require(__dirname + '/instantiation/job/provide-port')
-    },
-    {
         name: 'instantiation.job.copyBeforeBuildTask',
         dependencies: [
             'instantiation.job.baseClasses'
@@ -144,11 +130,54 @@ module.exports = [
         module: require(__dirname + '/instantiation/job/prepare-summary-items')
     },
     {
+        name: 'instantiation.job.parseDockerCompose',
+        dependencies: [
+            'config',
+            'instantiation.job.baseClasses',
+            'mongodb.repository.buildInstance'
+        ],
+        module: require(__dirname + '/instantiation/job/parse-docker-compose')
+    },
+    {
         name: 'instantiation.job.runDockerCompose',
         dependencies: [
             'instantiation.job.baseClasses'
         ],
         module: require(__dirname + '/instantiation/job/run-docker-compose')
+    },
+    {
+        name: 'instantiation.job.getContainerIds',
+        dependencies: [
+            'instantiation.job.baseClasses',
+            'mongodb.repository.buildInstance'
+        ],
+        module: require(__dirname + '/instantiation/job/get-container-ids')
+    },
+    {
+        name: 'instantiation.job.connectContainersToNetwork',
+        dependencies: [
+            'instantiation.job.baseClasses',
+            'mongodb.repository.buildInstance'
+        ],
+        module: require(__dirname + '/instantiation/job/connect-containers-to-network')
+    },
+    {
+        name: 'instantiation.job.preparePortDomains',
+        dependencies: [
+            'config',
+            'instantiation.job.baseClasses',
+            'mongodb.repository.buildInstance'
+        ],
+        module: require(__dirname + '/instantiation/job/prepare-port-domains')
+    },
+    {
+        name: 'instantiation.job.proxyPortDomains',
+        dependencies: [
+            'config',
+            'instantiation.job.baseClasses',
+            'mongodb.repository.buildInstance'
+        ],
+        module: require(__dirname + '/instantiation/job/proxy-port-domains')
     },
 
     {
@@ -170,12 +199,16 @@ module.exports = [
             'instantiation.job.createDirectory',
             'instantiation.job.downloadArchive',
             'instantiation.job.extractArchive',
-            'instantiation.job.providePort',
             'instantiation.job.copyBeforeBuildTask',
             'instantiation.job.interpolateBeforeBuildTask',
             'instantiation.job.prepareEnvironmentalVariables',
             'instantiation.job.prepareSummaryItems',
+            'instantiation.job.parseDockerCompose',
             'instantiation.job.runDockerCompose',
+            'instantiation.job.getContainerIds',
+            'instantiation.job.connectContainersToNetwork',
+            'instantiation.job.preparePortDomains',
+            'instantiation.job.proxyPortDomains',
             'instantiation.job.executor',
             'instantiation.job.runners'
         ],

@@ -6,7 +6,7 @@ export interface BuildDefinitionAddForm {
 
 export interface BuildDefinitionAddFormConfigFormElement {
     components: BuildDefinitionAddFormComponentFormElement[];
-    externalPorts: BuildDefinitionAddFormExternalPortFormElement[];
+    exposedPorts: BuildDefinitionAddFormExternalPortFormElement[];
     environmentalVariables: BuildDefinitionAddFormEnvironmentalVariableFormElement[];
     composeFile: BuildDefinitionAddComposeFileFormElement;
     summaryItems: BuildDefinitionAddFormSummaryItemFormElement[];
@@ -35,8 +35,7 @@ export interface BuildDefinitionAddFormComponentReferenceFormElement {
 
 export interface BuildDefinitionAddFormExternalPortFormElement {
     id: string;
-    rangeStart: number;
-    rangeEnd: number;
+    port: number;
 }
 
 export interface BuildDefinitionAddFormEnvironmentalVariableFormElement {

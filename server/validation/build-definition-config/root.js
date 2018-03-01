@@ -2,7 +2,7 @@ module.exports = {
     "type":"object",
     "required":[
         "components",
-        "externalPorts",
+        "exposedPorts",
         "composeFile",
         "environmentalVariables"
     ],
@@ -66,34 +66,13 @@ module.exports = {
             },
             "additionalProperties":false
         },
-        "externalPorts":{
+        "exposedPorts":{
             "type":"object",
             "patternProperties":{
                 "^[_a-zA-Z\\d]+$":{
-                    "type":"object",
-                    "required":[
-                        "ranges"
-                    ],
-                    "properties":{
-                        "ranges":{
-                            "type":"array",
-                            "minItems":1,
-                            "items":{
-                                "type":"array",
-                                "minItems":2,
-                                "maxItems":2,
-                                "items":[
-                                    {
-                                        "type":"number",
-                                        "minimum":1
-                                    },
-                                    {
-                                        "type":"number",
-                                        "minimum":1
-                                    }
-                                ]
-                            }
-                        }
+                    "type":"array",
+                    "items": {
+                        "type": "number"
                     }
                 }
             },

@@ -3,7 +3,7 @@ versionNumber = 0.0.1
 
 [web]
 scheme = https
-host = feat.xsolve.pl
+host = feat.local
 port = 443
 
 [mongo]
@@ -14,11 +14,14 @@ debugMode = false
 personalAccessToken = personalAccessToken
 
 [paths]
+repositoryCache = /cache/repository/
 build = /cache/build/
-buildVolume = /home/me/feat/cache/build/
-composerCacheVolume = /home/me/feat/cache/composer/
-githubCacheVolume = /home/me/feat/cache/github/
-npmCacheVolume = /home/me/feat/cache/npm/
+domain = /cache/domain/
+
+[dev.hostPaths]
+build = /home/me/feat/cache/build/
+composerCache = /home/me/feat/cache/composer/
+npmCache = /home/me/feat/cache/npm/
 
 [googleOAuth2]
 clientId = googleOAuth2ClientId

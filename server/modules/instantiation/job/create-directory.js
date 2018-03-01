@@ -16,16 +16,15 @@ module.exports = function (config, baseClasses) {
         execute(job) {
             return new Promise(resolve => {
                 let { buildInstance } = job;
-                let fullBuildPath = path.join(config.paths.build, buildInstance.id);
 
-                buildInstance.log(`Creating build instance directory at ${fullBuildPath}.`);
+                buildInstance.log('Creating build directory.');
 
-                fs.mkdirSync(fullBuildPath);
-                buildInstance.fullBuildPath = fullBuildPath;
+                buildInstance.fullBuildPath = path.join(config.paths.build, buildInstance.shortid);
+                buildInstance.fullBuildHostPath = path.join(config.hostPaths.build, buildInstance.shortid);
 
-                buildInstance.fullVolumePath = path.join(config.paths.buildVolume, buildInstance.id);
+                fs.mkdirSync(buildInstance.fullBuildPath);
 
-                job.setResult({ fullBuildPath });
+                job.setResult({ fullBuildPath: buildInstance.fullBuildPath });
 
                 resolve();
 

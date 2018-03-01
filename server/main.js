@@ -1,13 +1,15 @@
-var _ = require('underscore');
+let _ = require('underscore');
 
-var container = require('./bootstrap')();
+let container = require('./bootstrap')();
 
-var app = container.getModule('app');
-var config = container.getModule('config');
+let app = container.getModule('app');
+let config = container.getModule('config');
 
 app.listen(config.web.port, function () {
-    console.log('XSolve Feat app listening on port ' + config.web.port + '!');
+    console.log(`XSolve Feat app listening on port ${config.web.port}.`);
 });
+
+
 
 //// Token example.
 //

@@ -1,9 +1,9 @@
-var fs = require('fs-extra');
-var decompress = require('decompress');
+let fs = require('fs-extra');
+let decompress = require('decompress');
 
 module.exports = function (baseClasses) {
 
-    var { ComponentInstanceJob, JobExecutor } = baseClasses;
+    let { ComponentInstanceJob, JobExecutor } = baseClasses;
 
     class ExtractArchiveJob extends ComponentInstanceJob {}
 
@@ -14,27 +14,13 @@ module.exports = function (baseClasses) {
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var { componentInstance } = job;
+                let { componentInstance } = job;
 
                 componentInstance.log('Extracting archive.');
 
                 componentInstance.relativePath = componentInstance.id;
                 decompress(componentInstance.zipFileFullPath, componentInstance.fullBuildPath, { strip: 1 })
-                    .then(() => {
-                        fs.unlink(
-                            componentInstance.zipFileFullPath,
-                            error => {
-                                if (error) {
-                                    componentInstance.log('Failed to remove archive after extracting.');
-                                    reject(error);
-
-                                    return;
-                                }
-
-                                resolve();
-                            }
-                        )
-                    })
+                    .then(resolve)
                     .catch(error => {
                         componentInstance.log('Failed to extract archive.');
                         reject(error)

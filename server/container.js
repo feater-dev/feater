@@ -14,7 +14,7 @@ module.exports = function (app, rawConfig, modules) {
             web: {
                 scheme: rawConfig.web.scheme,
                 host: rawConfig.web.host,
-                port: +rawConfig.web.port
+                port: parseInt(rawConfig.web.port, 10)
             },
             mongo: {
                 dsn: rawConfig.mongo.dsn
@@ -24,11 +24,14 @@ module.exports = function (app, rawConfig, modules) {
                 personalAccessToken: rawConfig.github.personalAccessToken
             },
             paths: {
+                repositoryCache: rawConfig.paths.repositoryCache,
                 build: rawConfig.paths.build,
-                buildVolume: rawConfig.paths.buildVolume,
-                composerCacheVolume: rawConfig.paths.composerCacheVolume,
-                githubCacheVolume: rawConfig.paths.githubCacheVolume,
-                npmCacheVolume: rawConfig.paths.npmCacheVolume
+                domain: rawConfig.paths.domain
+            },
+            hostPaths: {
+                build: rawConfig.hostPaths.build,
+                composerCache: rawConfig.hostPaths.composerCache,
+                npmCache: rawConfig.hostPaths.npmCache
             },
             googleOAuth2: {
                 clientId: rawConfig.googleOAuth2.clientId,
@@ -38,6 +41,14 @@ module.exports = function (app, rawConfig, modules) {
         };
 
         config.web.baseUrl = config.web.scheme + '://' + config.web.host + ':' + config.web.port;
+
+        config.web.hostAndPort = config.web.host;
+        if (
+            'http' === config.web.scheme && 80 !== config.web.port
+            || 'https' === config.web.scheme && 443 !== config.web.port
+        ) {
+            config.web.hostAndPort += `:${config.web.port}`;
+        }
 
         return config;
     });

@@ -85,10 +85,10 @@ import { Project } from '../../project/project.model';
                         </a>
                     </div>
                     <div class="col-lg-12">
-                        <p *ngIf="0 === item.config.externalPorts.length">
+                        <p *ngIf="0 === item.config.exposedPorts.length">
                             No external ports defined.
                         </p>
-                        <div *ngFor="let externalPort of item.config.externalPorts">
+                        <div *ngFor="let externalPort of item.config.exposedPorts">
                             <app-build-definition-add-external-port-form-element
                                 [item]="externalPort"
                                 (deleteItem)="deleteExternalPort($event)"
@@ -209,7 +209,7 @@ export class BuildDefinitionAddComponent implements OnInit {
             name: '',
             config: {
                 components: [],
-                externalPorts: [],
+                exposedPorts: [],
                 environmentalVariables: [],
                 composeFile: {
                     componentId: '',
@@ -259,17 +259,16 @@ export class BuildDefinitionAddComponent implements OnInit {
     }
 
     addExternalPort() : void {
-        this.item.config.externalPorts.push({
+        this.item.config.exposedPorts.push({
             id: '',
-            rangeStart: 8000,
-            rangeEnd: 8099
+            port: 8000
         });
     }
 
     deleteExternalPort(externalPort: BuildDefinitionAddFormExternalPortFormElement) : void {
-        var index = this.item.config.externalPorts.indexOf(externalPort);
+        var index = this.item.config.exposedPorts.indexOf(externalPort);
         if (-1 !== index) {
-            this.item.config.externalPorts.splice(index, 1);
+            this.item.config.exposedPorts.splice(index, 1);
         }
     }
 
@@ -320,7 +319,7 @@ export class BuildDefinitionAddComponent implements OnInit {
             name: this.item.name,
             config: {
                 components: {},
-                externalPorts: {},
+                exposedPorts: {},
                 environmentalVariables: {},
                 summaryItems: this.item.config.summaryItems,
                 composeFile: this.item.config.composeFile
@@ -336,11 +335,12 @@ export class BuildDefinitionAddComponent implements OnInit {
                 };
             }
         );
-        this.item.config.externalPorts.forEach(
+        this.item.config.exposedPorts.forEach(
             function (externalPort : BuildDefinitionAddFormExternalPortFormElement) {
-                mappedItem.config.externalPorts[externalPort.id] = {
-                    ranges: [[externalPort.rangeStart, externalPort.rangeEnd]]
-                };
+                if (!mappedItem.config.exposedPorts[externalPort.id]) {
+                    mappedItem.config.exposedPorts[externalPort.id] = [];
+                }
+                mappedItem.config.exposedPorts[externalPort.id].push(externalPort.port);
             }
         );
         this.item.config.environmentalVariables.forEach(
@@ -359,7 +359,7 @@ export class BuildDefinitionAddComponent implements OnInit {
 
         var mappedJsonConfig = {
             components: [],
-            externalPorts: [],
+            exposedPorts: [],
             environmentalVariables: [],
             summaryItems: jsonConfig.summaryItems,
             composeFile: jsonConfig.composeFile
@@ -371,12 +371,13 @@ export class BuildDefinitionAddComponent implements OnInit {
             mappedJsonConfig.components.push(component);
         }
 
-        for (let id in jsonConfig.externalPorts) {
-            mappedJsonConfig.externalPorts.push({
-                id: id,
-                rangeStart: jsonConfig.externalPorts[id].ranges[0][0],
-                rangeEnd: jsonConfig.externalPorts[id].ranges[0][1]
-            });
+        for (let id in jsonConfig.exposedPorts) {
+            for (let port of jsonConfig.exposedPorts[id]) {
+                mappedJsonConfig.exposedPorts.push({
+                    id: id,
+                    port: port
+                });
+            }
         }
 
         for (let name in jsonConfig.environmentalVariables) {

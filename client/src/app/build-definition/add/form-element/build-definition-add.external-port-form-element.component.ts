@@ -8,15 +8,12 @@ import { BuildDefinitionAddFormExternalPortFormElement } from '../../build-defin
         <div class="well well-sm">
             <div class="form-group">
                 <label class="col-lg-1 control-label">Id</label>
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <input type="text" class="form-control" [(ngModel)]="item.id">
                 </div>
-                <label class="col-lg-1 control-label">Range</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" [(ngModel)]="item.rangeStart">
-                </div>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" [(ngModel)]="item.rangeEnd">
+                <label class="col-lg-1 control-label">Port</label>
+                <div class="col-lg-3">
+                    <input type="text" class="form-control" [(ngModel)]="item.port">
                 </div>
                 <div class="col-lg-3" style="text-align: right;">
                     <a

@@ -14,7 +14,7 @@ export interface BuildInstance {
     name: string;
     buildDefinition: BuildDefinitionReference;
     environmentalVariables?: Object;
-    externalPorts?: Object;
+    exposedPorts?: Object;
     summaryItems?: Object[];
 }
 
@@ -23,6 +23,6 @@ export interface MappedBuildInstance {
     name: string;
     buildDefinition: BuildDefinitionReference;
     environmentalVariables?: Object[];
-    externalPorts?: Object[];
+    exposedPorts?: Object[];
     summaryItems?: Object[];
 }

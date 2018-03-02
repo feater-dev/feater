@@ -5,11 +5,11 @@ const BUFFER_SIZE = 1048576; // 1M
 
 const BUILD_NETWORK = 'feat_build';
 
-module.exports = function (baseClasses, buildInstanceRepository) {
+module.exports = function (jobClasses, buildRepository) {
 
-    let { BuildInstanceJob, JobExecutor } = baseClasses;
+    let { BuildJob, JobExecutor } = jobClasses;
 
-    class ConnectContainersToNetworkJob extends BuildInstanceJob {}
+    class ConnectContainersToNetworkJob extends BuildJob {}
 
     class ConnectContainersToNetworkJobExecutor extends JobExecutor {
         supports(job) {
@@ -18,12 +18,12 @@ module.exports = function (baseClasses, buildInstanceRepository) {
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                let { buildInstance } = job;
+                let { build } = job;
 
-                buildInstance.log('Connecting containers to build network.');
+                build.log('Connecting containers to build network.');
 
-                for (let serviceId in buildInstance.services) {
-                    let service = buildInstance.services[serviceId];
+                for (let serviceId in build.services) {
+                    let service = build.services[serviceId];
 
                     execSync(
                         `docker network connect ${BUILD_NETWORK} ${service.containerId}`,
@@ -38,7 +38,7 @@ module.exports = function (baseClasses, buildInstanceRepository) {
                     service.ipAddress = JSON.parse(inspectStdout)[0].NetworkSettings.Networks[BUILD_NETWORK].IPAddress;
                 }
 
-                buildInstanceRepository.updateServices(buildInstance);
+                buildRepository.updateServices(build);
 
                 resolve();
             });

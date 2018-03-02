@@ -10,7 +10,7 @@ import { ProjectAddComponent } from './project/add/project-add.component';
 import { ProjectDetailComponent } from './project/detail/project-detail.component';
 import { ProjectListComponent } from './project/list/project-list.component';
 import { BuildDefinitionAddComponent } from './build-definition/add/build-definition-add.component';
-import { BuildDefinitionAddComponentFormElementComponent } from './build-definition/add/form-element/build-definition-add.component-form-element.component';
+import { BuildDefinitionAddSourceFormElementComponent } from './build-definition/add/form-element/build-definition-add.source-form-element.component';
 import { BuildDefinitionAddBeforeBuildTaskCopyFormElementComponent } from './build-definition/add/form-element/build-definition-add.before-build-task-copy-form-element.component';
 import { BuildDefinitionAddBeforeBuildTaskInterpolateFormElementComponent } from './build-definition/add/form-element/build-definition-add.before-build-task-interpolate-form-element.component';
 import { BuildDefinitionAddExposedPortFormElementComponent } from './build-definition/add/form-element/build-definition-add.exposed-port-form-element.component';
@@ -50,7 +50,7 @@ const appRoutes: Routes = [
         ProjectDetailComponent,
         ProjectListComponent,
         BuildDefinitionAddComponent,
-        BuildDefinitionAddComponentFormElementComponent,
+        BuildDefinitionAddSourceFormElementComponent,
         BuildDefinitionAddBeforeBuildTaskCopyFormElementComponent,
         BuildDefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
         BuildDefinitionAddExposedPortFormElementComponent,
@@ -74,7 +74,7 @@ const appRoutes: Routes = [
     providers: [
         {provide: 'repository.project', useClass: ProjectRepositoryService},
         {provide: 'repository.buildDefinition', useClass: BuildDefinitionRepositoryService},
-        {provide: 'repository.buildInstance', useClass: BuildInstanceRepositoryService}
+        {provide: 'repository.build', useClass: BuildInstanceRepositoryService}
     ],
     bootstrap: [AppComponent]
 })

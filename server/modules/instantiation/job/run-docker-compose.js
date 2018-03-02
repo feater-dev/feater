@@ -2,11 +2,11 @@ var _ = require('underscore');
 var path = require('path');
 var { spawn } = require('child_process');
 
-module.exports = function (baseClasses) {
+module.exports = function (jobClasses) {
 
-    var { BuildInstanceJob, JobExecutor } = baseClasses;
+    var { BuildJob, JobExecutor } = jobClasses;
 
-    class RunDockerComposeJob extends BuildInstanceJob {}
+    class RunDockerComposeJob extends BuildJob {}
 
     class RunDockerComposeJobExecutor extends JobExecutor {
         supports(job) {
@@ -15,26 +15,26 @@ module.exports = function (baseClasses) {
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                let { buildInstance } = job;
+                let { build } = job;
 
                 let dockerComposeDirectoryAbsolutePath = path.join(
-                    buildInstance.componentInstances[buildInstance.config.composeFile.componentId].fullBuildPath,
-                    path.dirname(buildInstance.config.composeFile.relativePath)
+                    build.sources[build.config.composeFile.sourceId].fullBuildPath,
+                    path.dirname(build.config.composeFile.relativePath)
                 );
 
-                let dockerComposeFileName = path.basename(buildInstance.config.composeFile.relativePath);
+                let dockerComposeFileName = path.basename(build.config.composeFile.relativePath);
 
                 let dockerComposeEnvironemntalVariables = _.extend(
                     {},
-                    buildInstance.environmentalVariables,
+                    build.environmentalVariables,
                     {
-                        COMPOSE_PROJECT_NAME: `featbuild${buildInstance.shortid}`,  // TODO Move to config.
+                        COMPOSE_PROJECT_NAME: `featbuild${build.shortid}`,  // TODO Move to config.
                         COMPOSE_HTTP_TIMEOUT: 5000,
                         PATH: '/usr/local/bin/' // TODO Move to config.
                     }
                 );
 
-                buildInstance.log('Running docker-compose.');
+                build.log('Running docker-compose.');
 
                 let dockerCompose = spawn(
                     'docker-compose', ['--file', dockerComposeFileName, 'up', '-d', '--no-color'],
@@ -44,12 +44,12 @@ module.exports = function (baseClasses) {
                     }
                 );
 
-                let stdoutLogger = buildInstance.logger.createNested('compose stdout', { splitLines: true });
+                let stdoutLogger = build.logger.createNested('compose stdout', { splitLines: true });
                 dockerCompose.stdout.on('data', data => {
                     stdoutLogger.debug(data.toString());
                 });
 
-                let stderrLogger = buildInstance.logger.createNested('compose stderr', { splitLines: true });
+                let stderrLogger = build.logger.createNested('compose stderr', { splitLines: true });
                 dockerCompose.stderr.on('data', data => {
                     stderrLogger.error(data.toString());
                 });
@@ -60,7 +60,7 @@ module.exports = function (baseClasses) {
 
                 dockerCompose.on('exit', code => {
                     if (0 !== code) {
-                        buildInstance.log('Failed to run docker-compose.');
+                        build.log('Failed to run docker-compose.');
                         reject(code);
 
                         return;
@@ -71,7 +71,7 @@ module.exports = function (baseClasses) {
 
                 dockerCompose.on('close', code => {
                     if (0 !== code) {
-                        buildInstance.log('Failed to run docker-compose.');
+                        build.log('Failed to run docker-compose.');
                         reject(code);
 
                         return;

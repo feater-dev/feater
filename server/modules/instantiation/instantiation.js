@@ -3,8 +3,8 @@ var _ = require('underscore');
 module.exports = function (
     resolveReference,
     createDirectory,
-    downloadArchive,
-    extractArchive,
+    downloadSource,
+    extractSource,
     copyBeforeBuildTask,
     interpolateBeforeBuildTask,
     prepareEnvironmentalVariables,
@@ -21,8 +21,8 @@ module.exports = function (
 
     var { ResolveReferenceJob, ResolveReferenceJobExecutor } = resolveReference;
     var { CreateDirectoryJob, CreateDirectoryJobExecutor } = createDirectory;
-    var { DownloadArchiveJob, DownloadArchiveJobExecutor } = downloadArchive;
-    var { ExtractArchiveJob, ExtractArchiveJobExecutor } = extractArchive;
+    var { DownloadSourceJob, DownloadSourceJobExecutor } = downloadSource;
+    var { ExtractSourceJob, ExtractSourceJobExecutor } = extractSource;
     var { CopyBeforeBuildTaskJob, CopyBeforeBuildTaskJobExecutor } = copyBeforeBuildTask;
     var { InterpolateBeforeBuildTaskJob, InterpolateBeforeBuildTaskJobExecutor } = interpolateBeforeBuildTask;
     var { PrepareEnvironmentalVariablesJob, PrepareEnvironmentalVariablesJobExecutor } = prepareEnvironmentalVariables;
@@ -52,34 +52,34 @@ module.exports = function (
             .add(new PreparePortDomainsJobExecutor())
             .add(new ProxyPortDomainsJobExecutor())
             .add(new ResolveReferenceJobExecutor())
-            .add(new DownloadArchiveJobExecutor())
-            .add(new ExtractArchiveJobExecutor())
+            .add(new DownloadSourceJobExecutor())
+            .add(new ExtractSourceJobExecutor())
             .add(new CopyBeforeBuildTaskJobExecutor())
             .add(new InterpolateBeforeBuildTaskJobExecutor());
 
         return jobExecutorCollection;
     }
 
-    function startBuildInstance(buildInstance) {
+    function instantiateBuild(build) {
         let jobExecutorCollection = createJobExecutorCollection();
         let stages = [];
 
         stages.push({
             jobRunners: [
                 new JobRunner(jobExecutorCollection, [
-                    new CreateDirectoryJob(buildInstance)
+                    new CreateDirectoryJob(build)
                 ])
             ]
         });
 
         stages.push({
             jobRunners: _.map(
-                buildInstance.componentInstances,
-                componentInstance => {
+                build.sources,
+                source => {
                     return new JobRunner(jobExecutorCollection, [
-                        new ResolveReferenceJob(componentInstance),
-                        new DownloadArchiveJob(componentInstance),
-                        new ExtractArchiveJob(componentInstance)
+                        new ResolveReferenceJob(source),
+                        new DownloadSourceJob(source),
+                        new ExtractSourceJob(source)
                     ]);
                 }
             )
@@ -88,41 +88,41 @@ module.exports = function (
         stages.push({
             jobRunners: [
                 new JobRunner(jobExecutorCollection, [
-                    new ParseDockerComposeJob(buildInstance),
-                    new PreparePortDomainsJob(buildInstance)
+                    new ParseDockerComposeJob(build),
+                    new PreparePortDomainsJob(build)
                 ])
             ]
         });
 
-        function mapBeforeBuildTaskToJob(beforeBuildTask, componentInstance) {
+        function mapBeforeBuildTaskToJob(beforeBuildTask, source) {
             switch (beforeBuildTask.type) {
                 case 'copy':
                     return new CopyBeforeBuildTaskJob(
-                        componentInstance,
+                        source,
                         beforeBuildTask.sourceRelativePath,
                         beforeBuildTask.destinationRelativePath
                     );
 
                 case 'interpolate':
                     return new InterpolateBeforeBuildTaskJob(
-                        componentInstance,
+                        source,
                         beforeBuildTask.relativePath
                     );
 
                 default:
-                    throw new Error(`Unknown type of before build task ${beforeBuildTask.type} for component ${componentInstance.id}.`);
+                    throw new Error(`Unknown type of before build task ${beforeBuildTask.type} for source ${source.id}.`);
             }
         }
 
         stages.push({
             jobRunners: _.map(
-                buildInstance.componentInstances,
-                componentInstance => {
+                build.sources,
+                source => {
                     return new JobRunner(
                         jobExecutorCollection,
                         _.map(
-                            componentInstance.config.beforeBuildTasks,
-                            beforeBuildTask => mapBeforeBuildTaskToJob(beforeBuildTask, componentInstance)
+                            source.config.beforeBuildTasks,
+                            beforeBuildTask => mapBeforeBuildTaskToJob(beforeBuildTask, source)
                         )
                     );
                 }
@@ -132,12 +132,12 @@ module.exports = function (
         stages.push({
             jobRunners: [
                 new JobRunner(jobExecutorCollection, [
-                    new PrepareEnvironmentalVariablesJob(buildInstance),
-                    new PrepareSummaryItemsJob(buildInstance),
-                    new RunDockerComposeJob(buildInstance),
-                    new GetContainerIdsJob(buildInstance),
-                    new ConnectContainersToNetworkJob(buildInstance),
-                    new ProxyPortDomainsJob(buildInstance)
+                    new PrepareEnvironmentalVariablesJob(build),
+                    new PrepareSummaryItemsJob(build),
+                    new RunDockerComposeJob(build),
+                    new GetContainerIdsJob(build),
+                    new ConnectContainersToNetworkJob(build),
+                    new ProxyPortDomainsJob(build)
                 ])
             ]
         });
@@ -152,7 +152,7 @@ module.exports = function (
             );
         }
         
-        let buildInstancePromiseRunner = new PromiseRunner(
+        let buildPromiseRunner = new PromiseRunner(
             _.map(stages, stage => {
                 return () => {
                     return createStagePromiseRunner(stage).runInParallel();
@@ -160,11 +160,11 @@ module.exports = function (
             })
         );
 
-        return buildInstancePromiseRunner.runInSequence();
+        return buildPromiseRunner.runInSequence();
     }
 
     return {
-        startBuildInstance
+        instantiateBuild
     };
 
 };

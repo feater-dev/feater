@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 
 import { BuildDefinition } from '../build-definition.model';
 import {
-    BuildDefinitionAddForm, BuildDefinitionAddFormComponentFormElement,
+    BuildDefinitionAddForm, BuildDefinitionAddFormSourceFormElement,
     BuildDefinitionAddFormEnvironmentalVariableFormElement, BuildDefinitionAddFormExposedPortFormElement
 } from '../build-definition-add-form.model';
 

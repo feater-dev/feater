@@ -4,11 +4,11 @@ let fs = require('fs');
 let { spawn } = require('child_process');
 let jsYaml = require('js-yaml');
 
-module.exports = function (config, baseClasses, buildInstanceRepository) {
+module.exports = function (config, jobClasses, buildRepository) {
 
-    let { BuildInstanceJob, JobExecutor } = baseClasses;
+    let { BuildJob, JobExecutor } = jobClasses;
 
-    class ParseDockerComposeJob extends BuildInstanceJob {}
+    class ParseDockerComposeJob extends BuildJob {}
 
     class ParseDockerComposeJobExecutor extends JobExecutor {
         supports(job) {
@@ -17,39 +17,39 @@ module.exports = function (config, baseClasses, buildInstanceRepository) {
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                let { buildInstance } = job;
+                let { build } = job;
 
-                buildInstance.log('Parsing compose file.');
+                build.log('Parsing compose file.');
 
                 let absoluteDir = path.join(
-                    buildInstance.componentInstances[buildInstance.config.composeFile.componentId].fullBuildPath,
-                    path.dirname(buildInstance.config.composeFile.relativePath)
+                    build.sources[build.config.composeFile.sourceId].fullBuildPath,
+                    path.dirname(build.config.composeFile.relativePath)
                 );
-                let basename = path.basename(buildInstance.config.composeFile.relativePath);
+                let basename = path.basename(build.config.composeFile.relativePath);
 
-                buildInstance.compose = jsYaml.safeLoad(
+                build.compose = jsYaml.safeLoad(
                     fs.readFileSync(path.join(absoluteDir, basename)).toString()
                 );
 
-                buildInstance.composeProjectName = `featbuild${buildInstance.shortid}`;
+                build.composeProjectName = `featbuild${build.shortid}`;
 
-                buildInstance.services = {};
+                build.services = {};
                 _.each(
-                    buildInstance.compose.services,
+                    build.compose.services,
                     (service, id) => {
                         // Keep only letters, digits and hyphens in clean name for domains.
                         let cleanId = id.replace(/[^a-zA-Z\d-]/g, '-').toLowerCase();
 
-                        buildInstance.services[id] = {
+                        build.services[id] = {
                             id,
                             cleanId,
-                            containerNamePrefix: `${buildInstance.composeProjectName}_${id}`,
+                            containerNamePrefix: `${build.composeProjectName}_${id}`,
                             exposedPorts: []
                         };
                     }
                 );
 
-                buildInstanceRepository.updateServices(buildInstance);
+                buildRepository.updateServices(build);
 
                 resolve();
 

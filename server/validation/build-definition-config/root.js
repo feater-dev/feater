@@ -1,33 +1,31 @@
 module.exports = {
     "type":"object",
     "required":[
-        "components",
+        "sources",
         "exposedPorts",
         "composeFile",
-        "environmentalVariables"
+        "environmentalVariables",
+        "summaryItems"
     ],
     "properties":{
-        "components":{
+        "sources":{
             "type":"object",
             "patternProperties":{
                 "^[_a-zA-Z\\d]+$":{
                     "required":[
-                        "source",
+                        "type",
+                        "name",
                         "reference",
                         "beforeBuildTasks"
                     ],
                     "properties":{
-                        "source":{
-                            "type":"object",
-                            "required":[
-                                "type"
-                            ],
-                            "properties":{
-                                "type":{
-                                    "type":"string",
-                                    "minLegth":1
-                                }
-                            }
+                        "type":{
+                            "type":"string",
+                            "minLegth":1
+                        },
+                        "name":{
+                            "type":"string",
+                            "minLegth":1
                         },
                         "reference":{
                             "type":"object",
@@ -100,11 +98,11 @@ module.exports = {
         "composeFile":{
             "type":"object",
             "required":[
-                "componentId",
+                "sourceId",
                 "relativePath"
             ],
             "properties":{
-                "componentId":{
+                "sourceId":{
                     "type":"string",
                     "minLength":1
                 },
@@ -122,6 +120,32 @@ module.exports = {
                 }
             },
             "additionalProperties":false
+        },
+        "summaryItems":{
+            "type":"array",
+            "items":{
+                "type": "object",
+                "required":[
+                    "name",
+                    "value",
+                    "asLink"
+                ],
+                "properties":{
+                    "name":{
+                        "type":"string",
+                        "minLength":1
+                    },
+                    "value":{
+                        "type":"string",
+                        "minLength":1
+                    },
+                    "asLink":{
+                        "type":"boolean"
+                    }
+                },
+                "additionalProperties":false
+            }
         }
-    }
+    },
+    "additionalProperties": false
 };

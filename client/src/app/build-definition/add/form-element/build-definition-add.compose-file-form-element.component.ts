@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import {
-    BuildDefinitionAddFormComponentFormElement,
+    BuildDefinitionAddFormSourceFormElement,
     BuildDefinitionAddComposeFileFormElement
 } from '../../build-definition-add-form.model';
 
@@ -10,11 +10,11 @@ import {
     template: `
         <div class="well well-sm">
             <div class="form-group">
-                <label class="col-lg-2 control-label">Component id</label>
+                <label class="col-lg-2 control-label">Source id</label>
                 <div class="col-lg-2">
-                    <select class="form-control" [(ngModel)]="item.componentId">
+                    <select class="form-control" [(ngModel)]="item.sourceId">
                         <option></option>
-                        <option *ngFor="let component of components" [value]="component.id" selected>{{ component.id }}</option>
+                        <option *ngFor="let source of sources" [value]="source.id" selected>{{ source.id }}</option>
                     </select>
                 </div>
                 <label class="col-lg-2 control-label">Relative path</label>
@@ -30,7 +30,7 @@ export class BuildDefinitionAddComposeFileFormElementComponent implements OnInit
 
     @Input() item: BuildDefinitionAddComposeFileFormElement;
 
-    @Input() components: BuildDefinitionAddFormComponentFormElement[];
+    @Input() sources: BuildDefinitionAddFormSourceFormElement[];
 
     ngOnInit() {}
 

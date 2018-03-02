@@ -1,10 +1,10 @@
 var _ = require('underscore');
 
-module.exports = function (baseClasses, interpolationHelper, buildInstanceRepository) {
+module.exports = function (jobClasses, interpolationHelper, buildRepository) {
 
-    var { BuildInstanceJob, JobExecutor } = baseClasses;
+    var { BuildJob, JobExecutor } = jobClasses;
 
-    class PrepareEnvironmentalVariablesJob extends BuildInstanceJob {}
+    class PrepareEnvironmentalVariablesJob extends BuildJob {}
 
     class PrepareEnvironmentalVariablesJobExecutor extends JobExecutor {
         supports(job) {
@@ -12,38 +12,38 @@ module.exports = function (baseClasses, interpolationHelper, buildInstanceReposi
         }
 
         execute(job) {
-            var { buildInstance } = job;
+            var { build } = job;
 
             return new Promise(resolve => {
                 _.each(
-                    buildInstance.componentInstances,
-                    (componentInstance, componentId) => {
-                        buildInstance.addEnvironmentalVariable(`FEAT__BUILD_PATH__${componentId.toUpperCase()}`, componentInstance.fullBuildPath);
-                        buildInstance.addEnvironmentalVariable(`FEAT__VOLUME_PATH__${componentId.toUpperCase()}`, componentInstance.fullBuildHostPath);
+                    build.sources,
+                    (source, sourceId) => {
+                        build.addEnvironmentalVariable(`FEAT__BUILD_PATH__${sourceId.toUpperCase()}`, source.fullBuildPath);
+                        build.addEnvironmentalVariable(`FEAT__VOLUME_PATH__${sourceId.toUpperCase()}`, source.fullBuildHostPath);
                     }
                 );
 
                 _.each(
-                    buildInstance.featVariables,
+                    build.featVariables,
                     (value, name) => {
-                        buildInstance.addEnvironmentalVariable(`FEAT__${name.replace(/\./g, '__').toUpperCase()}`, value)
+                        build.addEnvironmentalVariable(`FEAT__${name.replace(/\./g, '__').toUpperCase()}`, value)
                     }
                 );
 
                 _.each(
-                    buildInstance.config.environmentalVariables,
+                    build.config.environmentalVariables,
                     (value, name) => {
-                        buildInstance.addEnvironmentalVariable(
+                        build.addEnvironmentalVariable(
                             name,
-                            interpolationHelper.interpolateText(value, buildInstance.featVariables)
+                            interpolationHelper.interpolateText(value, build.featVariables)
                         )
                     }
                 );
 
-                buildInstance.log(`Environmental variables set to ${buildInstance.getEnvironmentalVariablesString()}`);
+                build.log(`Environmental variables set to ${build.getEnvironmentalVariablesString()}`);
 
-                buildInstanceRepository
-                    .updateEnvironmentalVariables(buildInstance)
+                buildRepository
+                    .updateEnvironmentalVariables(build)
                     .then(resolve());
             });
         }

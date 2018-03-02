@@ -30,7 +30,7 @@ module.exports = [
         module: require(__dirname + '/repositories/build-definition-repository')
     },
     {
-        name: 'mongodb.repository.buildInstance',
+        name: 'mongodb.repository.build',
         dependencies: ['mongodb.helper'],
         module: require(__dirname + '/repositories/build-instance-repository')
     },
@@ -55,20 +55,20 @@ module.exports = [
         module: require(__dirname + '/instantiation/console-logger')
     },
     {
-        name: 'instantiation.instanceClasses',
+        name: 'instantiation.buildClasses',
         dependencies: ['instantiation.consoleLogger'],
-        module: require(__dirname + '/instantiation/instance-classes')
+        module: require(__dirname + '/instantiation/build-classes')
     },
 
     {
-        name: 'instantiation.job.baseClasses',
+        name: 'instantiation.job.job-classes',
         dependencies: [],
-        module: require(__dirname + '/instantiation/job/base-classes')
+        module: require(__dirname + '/instantiation/job/job-classes')
     },
     {
         name: 'instantiation.job.resolveReference',
         dependencies: [
-            'instantiation.job.baseClasses',
+            'instantiation.job.job-classes',
             'github.apiClient'
         ],
         module: require(__dirname + '/instantiation/job/resolve-reference')
@@ -77,36 +77,36 @@ module.exports = [
         name: 'instantiation.job.createDirectory',
         dependencies: [
             'config',
-            'instantiation.job.baseClasses'
+            'instantiation.job.job-classes'
         ],
         module: require(__dirname + '/instantiation/job/create-directory')
     },
     {
-        name: 'instantiation.job.downloadArchive',
+        name: 'instantiation.job.downloadSource',
         dependencies: [
             'config',
-            'instantiation.job.baseClasses'
+            'instantiation.job.job-classes'
         ],
-        module: require(__dirname + '/instantiation/job/download-archive')
+        module: require(__dirname + '/instantiation/job/download-source')
     },
     {
-        name: 'instantiation.job.extractArchive',
+        name: 'instantiation.job.extractSource',
         dependencies: [
-            'instantiation.job.baseClasses'
+            'instantiation.job.job-classes'
         ],
-        module: require(__dirname + '/instantiation/job/extract-archive')
+        module: require(__dirname + '/instantiation/job/extract-source')
     },
     {
         name: 'instantiation.job.copyBeforeBuildTask',
         dependencies: [
-            'instantiation.job.baseClasses'
+            'instantiation.job.job-classes'
         ],
         module: require(__dirname + '/instantiation/job/copy-before-build-task')
     },
     {
         name: 'instantiation.job.interpolateBeforeBuildTask',
         dependencies: [
-            'instantiation.job.baseClasses',
+            'instantiation.job.job-classes',
             'instantiation.interpolationHelper'
         ],
         module: require(__dirname + '/instantiation/job/interpolate-before-build-task')
@@ -114,18 +114,18 @@ module.exports = [
     {
         name: 'instantiation.job.prepareEnvironmentalVariables',
         dependencies: [
-            'instantiation.job.baseClasses',
+            'instantiation.job.job-classes',
             'instantiation.interpolationHelper',
-            'mongodb.repository.buildInstance'
+            'mongodb.repository.build'
         ],
         module: require(__dirname + '/instantiation/job/prepare-environmental-variables')
     },
     {
         name: 'instantiation.job.prepareSummaryItems',
         dependencies: [
-            'instantiation.job.baseClasses',
+            'instantiation.job.job-classes',
             'instantiation.interpolationHelper',
-            'mongodb.repository.buildInstance'
+            'mongodb.repository.build'
         ],
         module: require(__dirname + '/instantiation/job/prepare-summary-items')
     },
@@ -133,31 +133,31 @@ module.exports = [
         name: 'instantiation.job.parseDockerCompose',
         dependencies: [
             'config',
-            'instantiation.job.baseClasses',
-            'mongodb.repository.buildInstance'
+            'instantiation.job.job-classes',
+            'mongodb.repository.build'
         ],
         module: require(__dirname + '/instantiation/job/parse-docker-compose')
     },
     {
         name: 'instantiation.job.runDockerCompose',
         dependencies: [
-            'instantiation.job.baseClasses'
+            'instantiation.job.job-classes'
         ],
         module: require(__dirname + '/instantiation/job/run-docker-compose')
     },
     {
         name: 'instantiation.job.getContainerIds',
         dependencies: [
-            'instantiation.job.baseClasses',
-            'mongodb.repository.buildInstance'
+            'instantiation.job.job-classes',
+            'mongodb.repository.build'
         ],
         module: require(__dirname + '/instantiation/job/get-container-ids')
     },
     {
         name: 'instantiation.job.connectContainersToNetwork',
         dependencies: [
-            'instantiation.job.baseClasses',
-            'mongodb.repository.buildInstance'
+            'instantiation.job.job-classes',
+            'mongodb.repository.build'
         ],
         module: require(__dirname + '/instantiation/job/connect-containers-to-network')
     },
@@ -165,8 +165,8 @@ module.exports = [
         name: 'instantiation.job.preparePortDomains',
         dependencies: [
             'config',
-            'instantiation.job.baseClasses',
-            'mongodb.repository.buildInstance'
+            'instantiation.job.job-classes',
+            'mongodb.repository.build'
         ],
         module: require(__dirname + '/instantiation/job/prepare-port-domains')
     },
@@ -174,8 +174,8 @@ module.exports = [
         name: 'instantiation.job.proxyPortDomains',
         dependencies: [
             'config',
-            'instantiation.job.baseClasses',
-            'mongodb.repository.buildInstance'
+            'instantiation.job.job-classes',
+            'mongodb.repository.build'
         ],
         module: require(__dirname + '/instantiation/job/proxy-port-domains')
     },
@@ -193,12 +193,12 @@ module.exports = [
     },
 
     {
-        name: 'instantiation.jobs',
+        name: 'instantiation.instantiation',
         dependencies: [
             'instantiation.job.resolveReference',
             'instantiation.job.createDirectory',
-            'instantiation.job.downloadArchive',
-            'instantiation.job.extractArchive',
+            'instantiation.job.downloadSource',
+            'instantiation.job.extractSource',
             'instantiation.job.copyBeforeBuildTask',
             'instantiation.job.interpolateBeforeBuildTask',
             'instantiation.job.prepareEnvironmentalVariables',
@@ -212,12 +212,12 @@ module.exports = [
             'instantiation.job.executor',
             'instantiation.job.runners'
         ],
-        module: require(__dirname + '/instantiation/jobs')
+        module: require(__dirname + '/instantiation/instantiation')
     },
 
     {
         name: 'instantiation.sourceCodeFetcher',
-        dependencies: ['config', 'instantiation.instanceClasses', 'instantiation.jobs'],
+        dependencies: ['config', 'instantiation.buildClasses', 'instantiation.instantiation'],
         module: require(__dirname + '/instantiation/source-code-fetcher')
     },
     {
@@ -242,11 +242,11 @@ module.exports = [
         module: require(__dirname + '/routes/api/build-definition')
     },
     {
-        name: 'routes.api.buildInstance',
+        name: 'routes.api.build',
         dependencies: [
             'steps.mapBuilder',
             'steps.mapRunner',
-            'mongodb.repository.buildInstance',
+            'mongodb.repository.build',
             'mongodb.repository.buildDefinition',
             'mongodb.repository.project',
             'instantiation.sourceCodeFetcher',
@@ -259,7 +259,7 @@ module.exports = [
         dependencies: [
             'mongodb.repository.project',
             'mongodb.repository.buildDefinition',
-            'mongodb.repository.buildInstance'
+            'mongodb.repository.build'
         ],
         module: require(__dirname + '/routes/api/steps-map-builder')
     },

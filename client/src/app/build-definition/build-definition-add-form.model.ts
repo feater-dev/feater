@@ -5,27 +5,23 @@ export interface BuildDefinitionAddForm {
 }
 
 export interface BuildDefinitionAddFormConfigFormElement {
-    components: BuildDefinitionAddFormComponentFormElement[];
+    sources: BuildDefinitionAddFormSourceFormElement[];
     exposedPorts: BuildDefinitionAddFormExposedPortFormElement[];
     environmentalVariables: BuildDefinitionAddFormEnvironmentalVariableFormElement[];
     composeFile: BuildDefinitionAddComposeFileFormElement;
     summaryItems: BuildDefinitionAddFormSummaryItemFormElement[];
 }
 
-export interface BuildDefinitionAddFormComponentFormElement {
+export interface BuildDefinitionAddFormSourceFormElement {
     id: string;
-    source: BuildDefinitionAddFormComponentSourceFormElement;
+    type: string;
+    name: string;
     reference: BuildDefinitionAddFormComponentReferenceFormElement;
     beforeBuildTasks: Array<
         BuildDefinitionAddFormBeforeBuildTaskFormElement|
         BuildDefinitionAddFormBeforeBuildCopyTaskFormElement|
         BuildDefinitionAddFormBeforeBuildInterpolateTaskFormElement
     >;
-}
-
-export interface BuildDefinitionAddFormComponentSourceFormElement {
-    type: string;
-    name: string;
 }
 
 export interface BuildDefinitionAddFormComponentReferenceFormElement {
@@ -51,7 +47,7 @@ export interface BuildDefinitionAddFormSummaryItemFormElement {
 }
 
 export interface BuildDefinitionAddComposeFileFormElement {
-    componentId: string;
+    sourceId: string;
     relativePath: string;
 }
 

@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import {
-    BuildDefinitionAddFormComponentFormElement,
+    BuildDefinitionAddFormSourceFormElement,
     BuildDefinitionAddFormBeforeBuildTaskFormElement,
     BuildDefinitionAddFormBeforeBuildCopyTaskFormElement,
     BuildDefinitionAddFormBeforeBuildInterpolateTaskFormElement
 } from '../../build-definition-add-form.model';
 
 @Component({
-    selector: 'app-build-definition-add-component-form-element',
+    selector: 'app-build-definition-add-source-form-element',
     template: `
         <div class="well well-sm">
             <div class="form-group">
@@ -22,14 +22,14 @@ import {
                         style="position: relative; top: 8px;"
                         (click)="onDeleteItem()"
                     >
-                        Delete component
+                        Delete source
                     </a>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-2 control-label">GitHub repository</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" [(ngModel)]="item.source.name">
+                    <input type="text" class="form-control" [(ngModel)]="item.name">
                 </div>
             </div>
             <div class="form-group">
@@ -75,11 +75,11 @@ import {
     `,
     styles: []
 })
-export class BuildDefinitionAddComponentFormElementComponent implements OnInit {
+export class BuildDefinitionAddSourceFormElementComponent implements OnInit {
 
-    @Input() item: BuildDefinitionAddFormComponentFormElement;
+    @Input() item: BuildDefinitionAddFormSourceFormElement;
 
-    @Output() deleteItem: EventEmitter<BuildDefinitionAddFormComponentFormElement> = new EventEmitter<BuildDefinitionAddFormComponentFormElement>();
+    @Output() deleteItem: EventEmitter<BuildDefinitionAddFormSourceFormElement> = new EventEmitter<BuildDefinitionAddFormSourceFormElement>();
 
     ngOnInit() {}
 

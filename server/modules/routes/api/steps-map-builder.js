@@ -55,10 +55,10 @@ module.exports = function (projectRepository, buildDefinitionRepository, buildIn
 
         addFindBuildDefinitionByBuildInstanceStep: stepsMap => {
             stepsMap.buildDefinition = {
-                dependsOn: ['buildInstance'],
+                dependsOn: ['build'],
                 callback: resolutions => {
                     return buildDefinitionRepository
-                        .get(resolutions.buildInstance.buildDefinitionId)
+                        .get(resolutions.build.buildDefinitionId)
                         .then(buildDefinition => {
                             if (null === buildDefinition) {
                                 throw new Error('Build definition not found.');
@@ -71,7 +71,7 @@ module.exports = function (projectRepository, buildDefinitionRepository, buildIn
         },
 
         addFindBuildInstanceByIdStep: (stepsMap, id) => {
-            stepsMap.buildInstance = {
+            stepsMap.build = {
                 dependsOn: [],
                 callback: () => {
                     return buildInstanceRepository

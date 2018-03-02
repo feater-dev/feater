@@ -3,7 +3,7 @@ var _ = require('underscore');
 
 module.exports = function (consoleLogger) {
 
-    class BuildInstance {
+    class Build {
         constructor(id, shortid, config) {
             this.id = id;
             this.shortid = shortid;
@@ -11,10 +11,9 @@ module.exports = function (consoleLogger) {
 
             this.logger = consoleLogger.createNested(`build ${this.shortid}`);
 
-            this.componentInstances = {};
+            this.sources = {};
             this.featVariables = {};
             this.exposedPorts = {};
-            this.interpolatedTokens = {};
             this.environmentalVariables = {};
             this.summaryItems = [];
         }
@@ -22,8 +21,8 @@ module.exports = function (consoleLogger) {
         // fullBuildPath
         // fullBuildHostPath
 
-        addComponentInstance(componentInstance) {
-            this.componentInstances[componentInstance.id] = componentInstance;
+        addSource(source) {
+            this.sources[source.id] = source;
 
             return this;
         }
@@ -38,10 +37,6 @@ module.exports = function (consoleLogger) {
             this.exposedPorts[id] = exposedPort;
 
             return this;
-        }
-
-        addInterpolatedToken(name, value) {
-            this.interpolatedTokens[name] = value;
         }
 
         addEnvironmentalVariable(name, value) {
@@ -68,14 +63,14 @@ module.exports = function (consoleLogger) {
         }
     }
 
-    class ComponentInstance {
-        constructor(id, buildInstance, config) {
+    class Source {
+        constructor(id, build, config) {
             this.id = id;
-            this.buildInstance = buildInstance;
-            this.buildInstance.addComponentInstance(this);
+            this.build = build;
+            this.build.addSource(this);
             this.config = config;
 
-            this.logger = this.buildInstance.logger.createNested(`component ${this.id}`);
+            this.logger = this.build.logger.createNested(`source ${this.id}`);
         }
 
         // resolvedReference
@@ -88,16 +83,16 @@ module.exports = function (consoleLogger) {
         }
 
         get fullBuildPath() {
-            return path.join(this.buildInstance.fullBuildPath, this.relativePath);
+            return path.join(this.build.fullBuildPath, this.relativePath);
         }
 
         get fullBuildHostPath() {
-            return path.join(this.buildInstance.fullBuildHostPath, this.relativePath);
+            return path.join(this.build.fullBuildHostPath, this.relativePath);
         }
     }
 
     return {
-        BuildInstance,
-        ComponentInstance
+        Build: Build,
+        Source: Source
     };
 };

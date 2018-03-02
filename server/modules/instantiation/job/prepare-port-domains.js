@@ -1,8 +1,8 @@
-module.exports = function (config, baseClasses, buildInstanceRepository) {
+module.exports = function (config, jobClasses, buildRepository) {
 
-    let { BuildInstanceJob, JobExecutor } = baseClasses;
+    let { BuildJob, JobExecutor } = jobClasses;
 
-    class PreparePortDomainsJob extends BuildInstanceJob {}
+    class PreparePortDomainsJob extends BuildJob {}
 
     class PreparePortDomainsJobExecutor extends JobExecutor {
         supports(job) {
@@ -11,26 +11,26 @@ module.exports = function (config, baseClasses, buildInstanceRepository) {
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                let { buildInstance } = job;
+                let { build } = job;
 
-                buildInstance.log('Preparing port domains.');
+                build.log('Preparing port domains.');
 
-                for (let serviceId in buildInstance.config.exposedPorts) {
-                    let service = buildInstance.services[serviceId];
+                for (let serviceId in build.config.exposedPorts) {
+                    let service = build.services[serviceId];
 
                     if (!service) {
-                        buildInstance.log(`Unknown service ${serviceId}.`);
+                        build.log(`Unknown service ${serviceId}.`);
                         reject();
 
                         return;
                     }
 
-                    for (let exposedPort of buildInstance.config.exposedPorts[serviceId]) {
-                        let longDomain = `build-${buildInstance.shortid}-${service.cleanId}-${exposedPort.port}.${config.web.host}`;
-                        let shortDomain = `build-${buildInstance.shortid}-${exposedPort.id}.${config.web.host}`;
+                    for (let exposedPort of build.config.exposedPorts[serviceId]) {
+                        let longDomain = `build-${build.shortid}-${service.cleanId}-${exposedPort.port}.${config.web.host}`;
+                        let shortDomain = `build-${build.shortid}-${exposedPort.id}.${config.web.host}`;
 
-                        buildInstance.addFeatVariable(`exposed_port_domain_long__${exposedPort.id}`, longDomain);
-                        buildInstance.addFeatVariable(`exposed_port_domain__${exposedPort.id}`, shortDomain);
+                        build.addFeatVariable(`exposed_port_domain_long__${exposedPort.id}`, longDomain);
+                        build.addFeatVariable(`exposed_port_domain__${exposedPort.id}`, shortDomain);
 
                         service.exposedPorts.push({
                             serviceId,
@@ -42,7 +42,7 @@ module.exports = function (config, baseClasses, buildInstanceRepository) {
                     }
                 }
 
-                buildInstanceRepository.updateServices(buildInstance);
+                buildRepository.updateServices(build);
 
                 resolve();
             });

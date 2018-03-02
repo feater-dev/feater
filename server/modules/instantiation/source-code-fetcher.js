@@ -1,9 +1,9 @@
 var path = require('path');
 var _ = require('underscore');
 
-module.exports = function (config, instanceClasses, jobs) {
+module.exports = function (config, buildClasses, instantiation) {
 
-    let { BuildInstance, ComponentInstance } = instanceClasses;
+    let { Build, Source } = buildClasses;
 
     let featVariables = {
         'scheme': config.web.scheme,
@@ -13,52 +13,44 @@ module.exports = function (config, instanceClasses, jobs) {
         'composer_cache': config.hostPaths.composerCache
     };
 
-    function createBuildInstance(id, shortid, buildDefinition) {
-        let buildInstance = new BuildInstance(
-            id,
-            shortid,
-            buildDefinition.config
-        );
+    function createBuild(id, shortid, buildDefinition) {
+        let build = new Build(id, shortid, buildDefinition.config);
 
-        buildInstance.log('Setting up build instance.');
+        build.log('Setting up build.');
 
-        let componentIds = _.keys(buildDefinition.config.components);
+        build.log('Setting up sources.');
 
-        buildInstance.log('Setting basic Feat variables.');
+        _.map(_.keys(buildDefinition.config.sources), sourceId => {
+            new Source(sourceId, build, buildDefinition.config.sources[sourceId]);
+        });
+
+        build.log('Setting basic Feat variables.');
 
         _.each(featVariables, (value, name) => {
-            buildInstance.addFeatVariable(name, value);
+            build.addFeatVariable(name, value);
         });
 
-        _.map(componentIds, componentId => {
-            var componentInstance = new ComponentInstance(
-                componentId,
-                buildInstance,
-                buildDefinition.config.components[componentId]
-            );
-        });
-
-        return buildInstance;
+        return build;
     }
 
-    function executeJobsForBuildInstance(buildInstance) {
-        buildInstance.log('About to execute jobs.');
+    function instantiateBuild(build) {
+        build.log('Instantiating build.');
 
-        return jobs
-            .startBuildInstance(buildInstance)
+        return instantiation
+            .instantiateBuild(build)
             .then(
                 () => {
-                    buildInstance.log('Build instance started.');
+                    build.log('Build instantiated and started.');
                 },
                 error => {
-                    buildInstance.log('Build instance failed to start.');
+                    build.log('Failed to instantiate and start build.');
                 }
             );
     }
 
     return {
-        createBuildInstance,
-        executeJobsForBuildInstance
+        createBuild,
+        instantiateBuild
     };
 
 };

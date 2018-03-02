@@ -5,7 +5,7 @@ import 'rxjs/add/operator/switchMap';
 
 import {
     BuildDefinitionAddForm,
-    BuildDefinitionAddFormComponentFormElement,
+    BuildDefinitionAddFormSourceFormElement,
     BuildDefinitionAddFormExposedPortFormElement,
     BuildDefinitionAddFormEnvironmentalVariableFormElement,
     BuildDefinitionAddFormSummaryItemFormElement, BuildDefinitionAddFormConfigFormElement
@@ -51,24 +51,24 @@ import { Project } from '../../project/project.model';
 
                 <div class="row form-section">
                     <div class="col-lg-12">
-                        <h3 style="display: inline;">Components</h3>
+                        <h3 style="display: inline;">Sources</h3>
                         <a
                             class="btn btn-success btn-sm"
-                            (click)="addComponent()"
+                            (click)="addSource()"
                             style="position: relative; bottom: 5px; margin-left: 8px;"
                         >
-                            Add component
+                            Add source
                         </a>
                     </div>
                     <div class="col-lg-12">
-                        <p *ngIf="0 === item.config.components.length">
-                            No components defined.
+                        <p *ngIf="0 === item.config.sources.length">
+                            No sources defined.
                         </p>
-                        <div *ngFor="let component of item.config.components">
-                            <app-build-definition-add-component-form-element
-                                [item]="component"
-                                (deleteItem)="deleteComponent($event)"
-                            ></app-build-definition-add-component-form-element>
+                        <div *ngFor="let source of item.config.sources">
+                            <app-build-definition-add-source-form-element
+                                [item]="source"
+                                (deleteItem)="deleteSource($event)"
+                            ></app-build-definition-add-source-form-element>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ import { Project } from '../../project/project.model';
                     <div class="col-lg-12">
                         <app-build-definition-add-compose-file-form-element
                             [item]="this.item.config.composeFile"
-                            [components]="this.item.config.components"
+                            [sources]="this.item.config.sources"
                         ></app-build-definition-add-compose-file-form-element>
                     </div>
                 </div>
@@ -208,11 +208,11 @@ export class BuildDefinitionAddComponent implements OnInit {
             projectId: '',
             name: '',
             config: {
-                components: [],
+                sources: [],
                 exposedPorts: [],
                 environmentalVariables: [],
                 composeFile: {
-                    componentId: '',
+                    sourceId: '',
                     relativePath: ''
                 },
                 summaryItems: []
@@ -236,13 +236,11 @@ export class BuildDefinitionAddComponent implements OnInit {
             );
     }
 
-    addComponent() : void {
-        this.item.config.components.push({
+    addSource() : void {
+        this.item.config.sources.push({
             id: '',
-            source: {
-                type: 'github',
-                name: ''
-            },
+            type: 'github',
+            name: '',
             reference: {
                 type: '',
                 name: ''
@@ -251,10 +249,10 @@ export class BuildDefinitionAddComponent implements OnInit {
         });
     }
 
-    deleteComponent(component: BuildDefinitionAddFormComponentFormElement) : void {
-        var index = this.item.config.components.indexOf(component);
+    deleteSource(source: BuildDefinitionAddFormSourceFormElement) : void {
+        var index = this.item.config.sources.indexOf(source);
         if (-1 !== index) {
-            this.item.config.components.splice(index, 1);
+            this.item.config.sources.splice(index, 1);
         }
     }
 
@@ -320,7 +318,7 @@ export class BuildDefinitionAddComponent implements OnInit {
             projectId: this.item.projectId,
             name: this.item.name,
             config: {
-                components: {},
+                sources: {},
                 exposedPorts: {},
                 environmentalVariables: {},
                 summaryItems: this.item.config.summaryItems,
@@ -328,12 +326,13 @@ export class BuildDefinitionAddComponent implements OnInit {
             }
         };
 
-        this.item.config.components.forEach(
-            function (component : BuildDefinitionAddFormComponentFormElement) {
-                mappedItem.config.components[component.id] = {
-                    source: component.source,
-                    reference: component.reference,
-                    beforeBuildTasks: component.beforeBuildTasks
+        this.item.config.sources.forEach(
+            function (source : BuildDefinitionAddFormSourceFormElement) {
+                mappedItem.config.sources[source.id] = {
+                    type: source.type,
+                    name: source.name,
+                    reference: source.reference,
+                    beforeBuildTasks: source.beforeBuildTasks
                 };
             }
         );
@@ -364,17 +363,17 @@ export class BuildDefinitionAddComponent implements OnInit {
         jsonConfig = JSON.parse(jsonConfig);
 
         var mappedJsonConfig = {
-            components: [],
+            sources: [],
             exposedPorts: [],
             environmentalVariables: [],
             summaryItems: jsonConfig.summaryItems,
             composeFile: jsonConfig.composeFile
         };
 
-        for (let id in jsonConfig.components) {
-            let component = jsonConfig.components[id];
-            component.id = id;
-            mappedJsonConfig.components.push(component);
+        for (let id in jsonConfig.sources) {
+            let source = jsonConfig.sources[id];
+            source.id = id;
+            mappedJsonConfig.sources.push(source);
         }
 
         for (let serviceId in jsonConfig.exposedPorts) {

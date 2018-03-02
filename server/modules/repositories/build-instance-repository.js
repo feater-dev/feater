@@ -9,7 +9,7 @@ module.exports = function (mongodbHelper) {
             .then(mongo => {
                 return new Promise((resolve, reject) => {
                     mongo
-                        .collection('buildInstance')
+                        .collection('build')
                         .find(query, (err, result) => {
                             if (err) {
                                 reject(err);
@@ -29,7 +29,7 @@ module.exports = function (mongodbHelper) {
             .then(mongo  => {
                 return new Promise((resolve, reject) => {
                     mongo
-                        .collection('buildInstance')
+                        .collection('build')
                         .findOne({ _id: mongodb.ObjectID(buildInstanceId) }, (err, buildInstance) => {
                             if (err) {
                                 reject(err);
@@ -60,7 +60,7 @@ module.exports = function (mongodbHelper) {
             .then(mongo => {
                 return new Promise((resolve, reject) => {
                     mongo
-                        .collection('buildInstance')
+                        .collection('build')
                         .insertOne(buildInstance, null, (err, result) => {
                             if (err) {
                                 reject(err);
@@ -74,10 +74,10 @@ module.exports = function (mongodbHelper) {
             });
     }
 
-    // function updateFeatVariables(buildInstance) {
+    // function updateFeatVariables(build) {
     //     return update(
-    //         buildInstance,
-    //         { '$set': { featVariables: buildInstance.featVariables } }
+    //         build,
+    //         { '$set': { featVariables: build.featVariables } }
     //     );
     // }
 
@@ -108,7 +108,7 @@ module.exports = function (mongodbHelper) {
             .then(mongo => {
                 return new Promise((resolve, reject) => {
                     mongo
-                        .collection('buildInstance')
+                        .collection('build')
                         .updateOne(
                             { _id: ObjectID(buildInstance.id) },
                             updateContents,

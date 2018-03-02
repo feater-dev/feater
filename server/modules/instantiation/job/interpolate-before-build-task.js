@@ -1,12 +1,12 @@
 var path = require('path');
 
-module.exports = function (baseClasses, interpolationHelper) {
+module.exports = function (jobClasses, interpolationHelper) {
 
-    var { ComponentInstanceJob, JobExecutor } = baseClasses;
+    var { SourceJob, JobExecutor } = jobClasses;
 
-    class InterpolateBeforeBuildTaskJob extends ComponentInstanceJob {
-        constructor(componentInstance, relativePath) {
-            super(componentInstance);
+    class InterpolateBeforeBuildTaskJob extends SourceJob {
+        constructor(source, relativePath) {
+            super(source);
             this.relativePath = relativePath;
         }
     }
@@ -17,13 +17,13 @@ module.exports = function (baseClasses, interpolationHelper) {
         }
 
         execute(job) {
-            let { componentInstance } = job;
+            let { source } = job;
 
             return new Promise(resolve => {
-                let fullPath = path.join(componentInstance.fullBuildPath, job.relativePath);
-                let { featVariables } = componentInstance.buildInstance;
+                let fullPath = path.join(source.fullBuildPath, job.relativePath);
+                let { featVariables } = source.build;
 
-                componentInstance.log(`Interpolating Feat variables in ${job.relativePath}.`);
+                source.log(`Interpolating Feat variables in ${job.relativePath}.`);
                 interpolationHelper.interpolateFile(fullPath, featVariables);
 
                 resolve();

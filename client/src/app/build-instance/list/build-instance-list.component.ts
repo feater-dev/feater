@@ -42,7 +42,7 @@ export class BuildInstanceListComponent implements OnInit {
 
     constructor(
         private router: Router,
-        @Inject('repository.buildInstance') private repository
+        @Inject('repository.build') private repository
     ) {}
 
     ngOnInit() {

@@ -32,7 +32,7 @@ module.exports = function (stepsMapBuilder, stepsMapRunner, buildInstanceReposit
                         .run(stepsMap)
                         .then(resolutions => {
                             let data = JSON.parse(
-                                JSON.stringify(resolutions.buildInstance)
+                                JSON.stringify(resolutions.build)
                             );
                             delete data.buildDefinitionId;
                             data.buildDefinition = {
@@ -91,12 +91,12 @@ module.exports = function (stepsMapBuilder, stepsMapRunner, buildInstanceReposit
 
                     function executeBuildInstanceJobs() {
                         process.nextTick(() => {
-                            var buildInstance = sourceCodeFetcher.createBuildInstance(
+                            var build = sourceCodeFetcher.createBuild(
                                 scope.buildInstanceId,
                                 nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 8),
                                 scope.buildDefinition
                             );
-                            sourceCodeFetcher.executeJobsForBuildInstance(buildInstance);
+                            sourceCodeFetcher.instantiateBuild(build);
                         });
                     }
 

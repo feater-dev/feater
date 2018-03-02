@@ -107,7 +107,7 @@ module.exports = (function () {
                 container.getModule('routes.auth.google'),
                 container.getModule('routes.api.project'),
                 container.getModule('routes.api.buildDefinition'),
-                container.getModule('routes.api.buildInstance')
+                container.getModule('routes.api.build')
             ],
             true
         );

@@ -1,8 +1,8 @@
-module.exports = function (baseClasses, githubApiClient) {
+module.exports = function (jobClasses, githubApiClient) {
 
-    var { ComponentInstanceJob, JobExecutor } = baseClasses;
+    let { SourceJob, JobExecutor } = jobClasses;
 
-    class ResolveReferenceJob extends ComponentInstanceJob {}
+    class ResolveReferenceJob extends SourceJob {}
 
     class ResolveReferenceJobExecutor extends JobExecutor {
         supports(job) {
@@ -11,38 +11,34 @@ module.exports = function (baseClasses, githubApiClient) {
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                var { componentInstance } = job;
-                var { source, reference } = componentInstance.config;
-                if (!source || !reference) {
-                    reject(Error('Missing source or reference.'));
+                let { source } = job;
+                let { type, name, reference } = source.config;
 
-                    return;
-                }
-                if (source.type !== 'github') {
-                    reject(new Error(`Source type ${source.type} not supported.`));
+                if (type !== 'github') {
+                    reject(new Error(`Source type ${type} not supported.`));
 
                     return;
                 }
 
-                componentInstance.log(`Resolving reference to source ${source.name} of type ${reference.name} and name ${reference.name}.`);
+                source.log(`Resolving reference to source ${name} of type ${reference.type} and name ${reference.name}.`);
 
                 githubApiClient
-                    .getRepo(source.name)
+                    .getRepo(name)
                     .then(
                         () => {
                             var commitPromise;
 
                             switch (reference.type) {
                                 case 'tag':
-                                    commitPromise = githubApiClient.getTagCommit(source.name, reference.name);
+                                    commitPromise = githubApiClient.getTagCommit(name, reference.name);
                                     break;
 
                                 case 'branch':
-                                    commitPromise = githubApiClient.getBranchCommit(source.name, reference.name);
+                                    commitPromise = githubApiClient.getBranchCommit(name, reference.name);
                                     break;
 
                                 case 'commit':
-                                    commitPromise = githubApiClient.getCommit(source.name, reference.name);
+                                    commitPromise = githubApiClient.getCommit(name, reference.name);
                                     break;
 
                                 default:
@@ -55,10 +51,10 @@ module.exports = function (baseClasses, githubApiClient) {
                                 commit => {
                                     var resolvedReference = {
                                         type: 'commit',
-                                        repository: source.name,
+                                        repository: name,
                                         commit: commit
                                     };
-                                    job.componentInstance.resolvedReference = resolvedReference;
+                                    job.source.resolvedReference = resolvedReference;
                                     job.setResult({ resolvedReference });
 
                                     resolve();

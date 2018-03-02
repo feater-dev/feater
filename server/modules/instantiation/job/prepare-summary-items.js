@@ -1,10 +1,10 @@
 var _ = require('underscore');
 
-module.exports = function (baseClasses, interpolationHelper, buildInstanceRepository) {
+module.exports = function (jobClasses, interpolationHelper, buildRepository) {
 
-    var { BuildInstanceJob, JobExecutor } = baseClasses;
+    var { BuildJob, JobExecutor } = jobClasses;
 
-    class PrepareSummaryItemsJob extends BuildInstanceJob {}
+    class PrepareSummaryItemsJob extends BuildJob {}
 
     class PrepareSummaryItemsJobExecutor extends JobExecutor {
         supports(job) {
@@ -12,23 +12,23 @@ module.exports = function (baseClasses, interpolationHelper, buildInstanceReposi
         }
 
         execute(job) {
-            var { buildInstance } = job;
+            var { build } = job;
+
+            build.log(`Setting summary items.`);
 
             return new Promise(resolve => {
                 _.each(
-                    buildInstance.config.summaryItems,
+                    build.config.summaryItems,
                     summaryItem => {
-                        buildInstance.addSummaryItem(
+                        build.addSummaryItem(
                             summaryItem.name,
-                            interpolationHelper.interpolateText(summaryItem.value, buildInstance.featVariables, buildInstance.exposedPorts)
+                            interpolationHelper.interpolateText(summaryItem.value, build.featVariables, build.exposedPorts)
                         )
                     }
                 );
 
-                buildInstance.log(`Summary items set.`);
-
-                buildInstanceRepository
-                    .updateSummaryItems(buildInstance)
+                buildRepository
+                    .updateSummaryItems(build)
                     .then(resolve());
             });
         }

@@ -3,11 +3,11 @@ let { execSync } = require('child_process');
 
 const BUFFER_SIZE = 1048576; // 1M
 
-module.exports = function (baseClasses, buildInstanceRepository) {
+module.exports = function (jobClasses, buildRepository) {
 
-    let { BuildInstanceJob, JobExecutor } = baseClasses;
+    let { BuildJob, JobExecutor } = jobClasses;
 
-    class GetContainerIdsJob extends BuildInstanceJob {}
+    class GetContainerIdsJob extends BuildJob {}
 
     class GetContainerIdsJobExecutor extends JobExecutor {
         supports(job) {
@@ -16,11 +16,11 @@ module.exports = function (baseClasses, buildInstanceRepository) {
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                let { buildInstance } = job;
+                let { build } = job;
 
-                buildInstance.log('Determining container ids.');
+                build.log('Determining container ids.');
 
-                let serviceIds = _.keys(buildInstance.services)
+                let serviceIds = _.keys(build.services)
                     .sort((serviceId1, serviceId2) => {
                         return serviceId2.length - serviceId1.length;
                     });
@@ -29,7 +29,7 @@ module.exports = function (baseClasses, buildInstanceRepository) {
 
                 for (let serviceId of serviceIds) {
                     let stdout = execSync(
-                        `docker ps -q --no-trunc --filter name=${buildInstance.services[serviceId].containerNamePrefix}`,
+                        `docker ps -q --no-trunc --filter name=${build.services[serviceId].containerNamePrefix}`,
                         {maxBuffer: BUFFER_SIZE}
                     ).toString();
 
@@ -39,14 +39,14 @@ module.exports = function (baseClasses, buildInstanceRepository) {
                     );
 
                     if (containerIds.length < 1) {
-                        buildInstance.log(`No running container for service ${serviceId}.`);
+                        build.log(`No running container for service ${serviceId}.`);
                         reject();
 
                         return;
                     }
 
                     if (containerIds.length > 1) {
-                        buildInstance.log(`Too many running containers for service ${serviceId}.`);
+                        build.log(`Too many running containers for service ${serviceId}.`);
                         reject();
 
                         return;
@@ -55,17 +55,17 @@ module.exports = function (baseClasses, buildInstanceRepository) {
                     let containerId = containerIds[0];
 
                     if (!/^[a-f\d]+$/.test(containerId)) {
-                        buildInstance.log(`Invalid container id for service ${serviceId}.`);
+                        build.log(`Invalid container id for service ${serviceId}.`);
                         reject();
 
                         return;
                     }
 
                     matchedContainerIds.push(containerId);
-                    buildInstance.services[serviceId].containerId = containerId;
+                    build.services[serviceId].containerId = containerId;
                 }
 
-                buildInstanceRepository.updateServices(buildInstance);
+                buildRepository.updateServices(build);
 
                 resolve();
             });

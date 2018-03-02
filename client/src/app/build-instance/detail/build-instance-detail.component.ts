@@ -82,7 +82,7 @@ export class BuildInstanceDetailComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.buildInstance') private repository
+        @Inject('repository.build') private repository
     ) {}
 
     ngOnInit() {

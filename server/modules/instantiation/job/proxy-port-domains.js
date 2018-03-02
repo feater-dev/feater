@@ -27,18 +27,18 @@ module.exports = function (config, jobClasses, buildRepository) {
                     let service = build.services[serviceId];
 
                     for (let exposedPort of service.exposedPorts) {
-                        for (let domain of exposedPort.domains) {
+                        for (let domainId in exposedPort.domains) {
 
                             nginxConfs.push(
                                 `
 # Proxy domain for port ${exposedPort.port} of ${serviceId} running at ${service.ipAddress}
 server {
     listen 80;
-    server_name ${domain};
+    server_name ${exposedPort.domains[domainId]};
 
     location / {
         proxy_pass http://${service.ipAddress}:${exposedPort.port};
-        proxy_set_header Host $host:${config.web.port};
+        proxy_set_header Host $host:${config.app.port};
     }
 }
 `

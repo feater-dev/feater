@@ -26,8 +26,8 @@ module.exports = function (config, jobClasses, buildRepository) {
                     }
 
                     for (let exposedPort of build.config.exposedPorts[serviceId]) {
-                        let longDomain = `build-${build.shortid}-${service.cleanId}-${exposedPort.port}.${config.web.host}`;
-                        let shortDomain = `build-${build.shortid}-${exposedPort.id}.${config.web.host}`;
+                        let longDomain = `build-${build.shortid}-${service.cleanId}-${exposedPort.port}.${config.app.host}`;
+                        let shortDomain = `build-${build.shortid}-${exposedPort.id}.${config.app.host}`;
 
                         build.addFeatVariable(`exposed_port_domain_long__${exposedPort.id}`, longDomain);
                         build.addFeatVariable(`exposed_port_domain__${exposedPort.id}`, shortDomain);
@@ -37,7 +37,10 @@ module.exports = function (config, jobClasses, buildRepository) {
                             id: exposedPort.id,
                             name: exposedPort.name,
                             port: exposedPort.port,
-                            domains: [longDomain, shortDomain]
+                            domains: {
+                                long: longDomain,
+                                short: shortDomain
+                            }
                         });
                     }
                 }

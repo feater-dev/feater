@@ -46,7 +46,9 @@ module.exports = [
     },
     {
         name: 'instantiation.interpolationHelper',
-        dependencies: [],
+        dependencies: [
+            'config'
+        ],
         module: require(__dirname + '/instantiation/interpolation-helper')
     },
     {

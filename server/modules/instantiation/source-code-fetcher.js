@@ -6,9 +6,9 @@ module.exports = function (config, buildClasses, instantiation) {
     let { Build, Source } = buildClasses;
 
     let featVariables = {
-        'scheme': config.web.scheme,
-        'host': config.web.host,
-        'port': config.web.port,
+        'scheme': config.app.scheme,
+        'host': config.app.host,
+        'port': config.app.port,
         'npm_cache': config.hostPaths.npmCache,
         'composer_cache': config.hostPaths.composerCache
     };

@@ -22,7 +22,7 @@ module.exports = function (jobClasses, interpolationHelper, buildRepository) {
                     summaryItem => {
                         build.addSummaryItem(
                             summaryItem.name,
-                            interpolationHelper.interpolateText(summaryItem.value, build.featVariables, build.exposedPorts)
+                            interpolationHelper.interpolateText(summaryItem.value, build)
                         )
                     }
                 );

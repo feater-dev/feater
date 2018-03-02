@@ -52,7 +52,7 @@ module.exports = (function () {
             {
                 clientID: config.googleOAuth2.clientId,
                 clientSecret: config.googleOAuth2.clientSecret,
-                callbackURL: config.web.baseUrl + '/auth/google/callback'
+                callbackURL: config.app.baseUrl + '/auth/google/callback'
             },
             function(accessToken, refreshToken, profile, done) {
 

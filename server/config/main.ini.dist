@@ -1,10 +1,11 @@
 [app]
 versionNumber = 0.0.1
-
-[web]
 scheme = https
 host = feat.local
 port = 443
+
+[ports]
+translation = 0
 
 [mongo]
 dsn = mongodb://user:password@host:27017/feat

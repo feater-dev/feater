@@ -9,12 +9,13 @@ module.exports = function (app, rawConfig, modules) {
     container.register('config', [], function () {
         var config = {
             app: {
-                versionNumber: rawConfig.app.versionNumber
+                versionNumber: rawConfig.app.versionNumber,
+                scheme: rawConfig.app.scheme,
+                host: rawConfig.app.host,
+                port: parseInt(rawConfig.app.port, 10)
             },
-            web: {
-                scheme: rawConfig.web.scheme,
-                host: rawConfig.web.host,
-                port: parseInt(rawConfig.web.port, 10)
+            ports: {
+                translation: parseInt(rawConfig.ports.translation, 10)
             },
             mongo: {
                 dsn: rawConfig.mongo.dsn
@@ -40,14 +41,14 @@ module.exports = function (app, rawConfig, modules) {
             }
         };
 
-        config.web.baseUrl = config.web.scheme + '://' + config.web.host + ':' + config.web.port;
+        config.app.baseUrl = config.app.scheme + '://' + config.app.host + ':' + config.app.port;
 
-        config.web.hostAndPort = config.web.host;
+        config.app.hostAndPort = config.app.host;
         if (
-            'http' === config.web.scheme && 80 !== config.web.port
-            || 'https' === config.web.scheme && 443 !== config.web.port
+            'http' === config.app.scheme && 80 !== config.app.port
+            || 'https' === config.app.scheme && 443 !== config.app.port
         ) {
-            config.web.hostAndPort += `:${config.web.port}`;
+            config.app.hostAndPort += `:${config.app.port}`;
         }
 
         return config;

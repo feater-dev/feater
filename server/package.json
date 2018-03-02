@@ -16,6 +16,7 @@
     "cookie-parser": "^1.4.3",
     "decompress": "^4.2.0",
     "escape-string-regexp": "^1.0.5",
+    "esprima": "^4.0.0",
     "express": "^4.14.0",
     "fs-extra": "^2.0.0",
     "gift": "^0.10.0",
@@ -37,6 +38,7 @@
     "pug": "^2.0.0-beta6",
     "rand-token": "^0.3.0",
     "serve-favicon": "^2.3.2",
+    "static-eval": "^2.0.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

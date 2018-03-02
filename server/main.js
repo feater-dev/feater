@@ -5,11 +5,9 @@ let container = require('./bootstrap')();
 let app = container.getModule('app');
 let config = container.getModule('config');
 
-app.listen(config.web.port, function () {
-    console.log(`XSolve Feat app listening on port ${config.web.port}.`);
+app.listen(config.app.port, function () {
+    console.log(`XSolve Feat app listening on port ${config.app.port}.`);
 });
-
-
 
 //// Token example.
 //

@@ -1,7 +1,6 @@
 let _ = require('underscore');
 let path = require('path');
 let fs = require('fs');
-let { spawn } = require('child_process');
 let jsYaml = require('js-yaml');
 
 module.exports = function (config, jobClasses, buildRepository) {
@@ -38,11 +37,11 @@ module.exports = function (config, jobClasses, buildRepository) {
                     build.compose.services,
                     (service, id) => {
                         // Keep only letters, digits and hyphens in clean name for domains.
-                        let cleanId = id.replace(/[^a-zA-Z\d-]/g, '-').toLowerCase();
+                        // Replace other characters with hyphens.
 
                         build.services[id] = {
                             id,
-                            cleanId,
+                            cleanId: id.replace(/[^a-zA-Z\d-]/g, '-').toLowerCase(),
                             containerNamePrefix: `${build.composeProjectName}_${id}`,
                             exposedPorts: []
                         };

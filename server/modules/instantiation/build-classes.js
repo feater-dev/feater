@@ -89,6 +89,16 @@ module.exports = function (consoleLogger) {
         get fullBuildHostPath() {
             return path.join(this.build.fullBuildHostPath, this.relativePath);
         }
+
+        get containerIds() {
+            let containerIds = [];
+
+            for (let serviceId in this.services) {
+                containerIds.push(this.services[serviceId].containerId);
+            }
+
+            return containerIds;
+        }
     }
 
     return {

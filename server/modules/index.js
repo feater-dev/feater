@@ -189,12 +189,6 @@ module.exports = [
     },
 
     {
-        name: 'instantiation.job.runners',
-        dependencies: [],
-        module: require(__dirname + '/instantiation/job/runners')
-    },
-
-    {
         name: 'instantiation.instantiation',
         dependencies: [
             'instantiation.job.resolveReference',
@@ -211,8 +205,7 @@ module.exports = [
             'instantiation.job.connectContainersToNetwork',
             'instantiation.job.preparePortDomains',
             'instantiation.job.proxyPortDomains',
-            'instantiation.job.executor',
-            'instantiation.job.runners'
+            'instantiation.job.executor'
         ],
         module: require(__dirname + '/instantiation/instantiation')
     },

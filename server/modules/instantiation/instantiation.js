@@ -15,152 +15,215 @@ module.exports = function (
     connectContainersToNetwork,
     preparePortDomains,
     proxyPortDomains,
-    executor,
-    runners
+    executor
 ) {
 
-    var { ResolveReferenceJob, ResolveReferenceJobExecutor } = resolveReference;
-    var { CreateDirectoryJob, CreateDirectoryJobExecutor } = createDirectory;
-    var { DownloadSourceJob, DownloadSourceJobExecutor } = downloadSource;
-    var { ExtractSourceJob, ExtractSourceJobExecutor } = extractSource;
-    var { CopyBeforeBuildTaskJob, CopyBeforeBuildTaskJobExecutor } = copyBeforeBuildTask;
-    var { InterpolateBeforeBuildTaskJob, InterpolateBeforeBuildTaskJobExecutor } = interpolateBeforeBuildTask;
-    var { PrepareEnvironmentalVariablesJob, PrepareEnvironmentalVariablesJobExecutor } = prepareEnvironmentalVariables;
-    var { PrepareSummaryItemsJob, PrepareSummaryItemsJobExecutor } = prepareSummaryItems;
-    var { ParseDockerComposeJob, ParseDockerComposeJobExecutor } = parseDockerCompose;
-    var { RunDockerComposeJob, RunDockerComposeJobExecutor } = runDockerCompose;
-    var { GetContainerIdsJob, GetContainerIdsJobExecutor } = getContainerIds;
-    var { ConnectContainersToNetworkJob, ConnectContainersToNetworkJobExecutor } = connectContainersToNetwork;
-    var { PreparePortDomainsJob, PreparePortDomainsJobExecutor } = preparePortDomains;
-    var { ProxyPortDomainsJob, ProxyPortDomainsJobExecutor } = proxyPortDomains;
+    let { ResolveReferenceJob, ResolveReferenceJobExecutor } = resolveReference;
+    let { CreateDirectoryJob, CreateDirectoryJobExecutor } = createDirectory;
+    let { DownloadSourceJob, DownloadSourceJobExecutor } = downloadSource;
+    let { ExtractSourceJob, ExtractSourceJobExecutor } = extractSource;
+    let { CopyBeforeBuildTaskJob, CopyBeforeBuildTaskJobExecutor } = copyBeforeBuildTask;
+    let { InterpolateBeforeBuildTaskJob, InterpolateBeforeBuildTaskJobExecutor } = interpolateBeforeBuildTask;
+    let { PrepareEnvironmentalVariablesJob, PrepareEnvironmentalVariablesJobExecutor } = prepareEnvironmentalVariables;
+    let { PrepareSummaryItemsJob, PrepareSummaryItemsJobExecutor } = prepareSummaryItems;
+    let { ParseDockerComposeJob, ParseDockerComposeJobExecutor } = parseDockerCompose;
+    let { RunDockerComposeJob, RunDockerComposeJobExecutor } = runDockerCompose;
+    let { GetContainerIdsJob, GetContainerIdsJobExecutor } = getContainerIds;
+    let { ConnectContainersToNetworkJob, ConnectContainersToNetworkJobExecutor } = connectContainersToNetwork;
+    let { PreparePortDomainsJob, PreparePortDomainsJobExecutor } = preparePortDomains;
+    let { ProxyPortDomainsJob, ProxyPortDomainsJobExecutor } = proxyPortDomains;
 
-    var { JobExecutorCollection } = executor;
+    let { JobExecutorCollection } = executor;
 
-    var { PromiseRunner, JobRunner } = runners;
+    let jobExecutorCollection = new JobExecutorCollection();
 
-    function createJobExecutorCollection() {
-        var jobExecutorCollection = new JobExecutorCollection();
+    jobExecutorCollection
+        .add(new CreateDirectoryJobExecutor())
+        .add(new PrepareEnvironmentalVariablesJobExecutor())
+        .add(new PrepareSummaryItemsJobExecutor())
+        .add(new ParseDockerComposeJobExecutor())
+        .add(new RunDockerComposeJobExecutor())
+        .add(new GetContainerIdsJobExecutor())
+        .add(new ConnectContainersToNetworkJobExecutor())
+        .add(new PreparePortDomainsJobExecutor())
+        .add(new ProxyPortDomainsJobExecutor())
+        .add(new ResolveReferenceJobExecutor())
+        .add(new DownloadSourceJobExecutor())
+        .add(new ExtractSourceJobExecutor())
+        .add(new CopyBeforeBuildTaskJobExecutor())
+        .add(new InterpolateBeforeBuildTaskJobExecutor());
 
-        jobExecutorCollection
-            .add(new CreateDirectoryJobExecutor())
-            .add(new PrepareEnvironmentalVariablesJobExecutor())
-            .add(new PrepareSummaryItemsJobExecutor())
-            .add(new ParseDockerComposeJobExecutor())
-            .add(new RunDockerComposeJobExecutor())
-            .add(new GetContainerIdsJobExecutor())
-            .add(new ConnectContainersToNetworkJobExecutor())
-            .add(new PreparePortDomainsJobExecutor())
-            .add(new ProxyPortDomainsJobExecutor())
-            .add(new ResolveReferenceJobExecutor())
-            .add(new DownloadSourceJobExecutor())
-            .add(new ExtractSourceJobExecutor())
-            .add(new CopyBeforeBuildTaskJobExecutor())
-            .add(new InterpolateBeforeBuildTaskJobExecutor());
+    class JobsList {
+        constructor() {
+            this.stages = [];
+        }
 
-        return jobExecutorCollection;
-    }
-
-    function instantiateBuild(build) {
-        let jobExecutorCollection = createJobExecutorCollection();
-        let stages = [];
-
-        stages.push({
-            jobRunners: [
-                new JobRunner(jobExecutorCollection, [
-                    new CreateDirectoryJob(build)
-                ])
-            ]
-        });
-
-        stages.push({
-            jobRunners: _.map(
-                build.sources,
-                source => {
-                    return new JobRunner(jobExecutorCollection, [
-                        new ResolveReferenceJob(source),
-                        new DownloadSourceJob(source),
-                        new ExtractSourceJob(source)
-                    ]);
-                }
-            )
-        });
-
-        stages.push({
-            jobRunners: [
-                new JobRunner(jobExecutorCollection, [
-                    new ParseDockerComposeJob(build),
-                    new PreparePortDomainsJob(build)
-                ])
-            ]
-        });
-
-        function mapBeforeBuildTaskToJob(beforeBuildTask, source) {
-            switch (beforeBuildTask.type) {
-                case 'copy':
-                    return new CopyBeforeBuildTaskJob(
-                        source,
-                        beforeBuildTask.sourceRelativePath,
-                        beforeBuildTask.destinationRelativePath
-                    );
-
-                case 'interpolate':
-                    return new InterpolateBeforeBuildTaskJob(
-                        source,
-                        beforeBuildTask.relativePath
-                    );
-
-                default:
-                    throw new Error(`Unknown type of before build task ${beforeBuildTask.type} for source ${source.id}.`);
+        addParallelStage(id, precedingStageIdPrefixes, jobs) {
+            let index = 0;
+            let jobId;
+            for (let job of jobs) {
+                jobId = `${id}_${index}`;
+                this.stages.push({
+                    id: jobId,
+                    precedingStageIdPrefixes: extendedPrecedingStageIdPrefixes.slice(),
+                    job
+                });
+                index += 1;
+            }
+        }
+        
+        addSequentialStage(id, precedingStageIdPrefixes, jobs) {
+            let index = 0;
+            let jobId;
+            let extendedPrecedingStageIdPrefixes = precedingStageIdPrefixes.slice();
+            for (let job of jobs) {
+                jobId = `${id}_${index}`;
+                this.stages.push({
+                    id: jobId,
+                    precedingStageIdPrefixes: extendedPrecedingStageIdPrefixes.slice(),
+                    job
+                });
+                index += 1;
+                extendedPrecedingStageIdPrefixes.push(jobId);
             }
         }
 
-        stages.push({
-            jobRunners: _.map(
-                build.sources,
-                source => {
-                    return new JobRunner(
-                        jobExecutorCollection,
-                        _.map(
-                            source.config.beforeBuildTasks,
-                            beforeBuildTask => mapBeforeBuildTaskToJob(beforeBuildTask, source)
-                        )
+        run(jobExecutorCollection) {
+            let resolutionsMap = {};
+            let runningStageFlags = {};
+
+            let notResolvedStageFlags = {};
+            for (let stage of this.stages) {
+                notResolvedStageFlags[stage.id] = true;
+            }
+
+            function isIdPrefixMatching(id, idPrefix) {
+                return (
+                    id.length >= idPrefix.length
+                    && id.substr(0, idPrefix.length) === idPrefix
+                );
+            }
+
+            return new Promise((resolve, reject) => {
+
+                let tick = () => {
+                    if (_.isEmpty(notResolvedStageFlags)) {
+                        resolve(resolutionsMap);
+
+                        return;
+                    }
+
+                    let noStageRunThisTick = true;
+                    _.each(
+                        this.stages,
+                        stage => {
+                            let {id, precedingStageIdPrefixes, job} = stage;
+
+                            if (!notResolvedStageFlags[id]) {
+                                return;
+                            }
+
+                            for (let precedingStageIdPrefix of precedingStageIdPrefixes) {
+                                for (let notResolvedStageId in notResolvedStageFlags) {
+                                    if (isIdPrefixMatching(notResolvedStageId, precedingStageIdPrefix)) {
+                                        // Not able to run job, some required job is not resolved yet.
+
+                                        return;
+                                    }
+                                }
+                            }
+
+                            noStageRunThisTick = false;
+                            runningStageFlags[id] = true;
+
+                            jobExecutorCollection
+                                .getSupporting(job)
+                                .execute(job, resolutionsMap)
+                                .then(
+                                    resolution => {
+                                        resolutionsMap[id] = resolution;
+                                        delete runningStageFlags[id];
+                                        delete notResolvedStageFlags[id];
+                                        setTimeout(tick, 0);
+                                    },
+                                    error => {
+                                        reject(error);
+                                    }
+                                );
+                        }
                     );
-                }
-            )
-        });
 
-        stages.push({
-            jobRunners: [
-                new JobRunner(jobExecutorCollection, [
-                    new PrepareEnvironmentalVariablesJob(build),
-                    new PrepareSummaryItemsJob(build),
-                    new RunDockerComposeJob(build),
-                    new GetContainerIdsJob(build),
-                    new ConnectContainersToNetworkJob(build),
-                    new ProxyPortDomainsJob(build)
-                ])
-            ]
-        });
-        
-        function createStagePromiseRunner({ jobRunners }) {
-            return new PromiseRunner(
-                _.map(jobRunners, jobRunner => {
-                    return () => {
-                        return jobRunner.runInSequence();
-                    };
-                })
-            );
-        }
-        
-        let buildPromiseRunner = new PromiseRunner(
-            _.map(stages, stage => {
-                return () => {
-                    return createStagePromiseRunner(stage).runInParallel();
+                    if (noStageRunThisTick && _.isEmpty(runningStageFlags)) {
+                        reject(new Error('Inconsistent job dependencies.'));
+                    }
                 };
-            })
-        );
 
-        return buildPromiseRunner.runInSequence();
+                setTimeout(tick, 0);
+            });
+        }
+    }
+
+
+    function mapBeforeBuildTaskToJob(beforeBuildTask, source) {
+        switch (beforeBuildTask.type) {
+            case 'copy':
+                return new CopyBeforeBuildTaskJob(
+                    source,
+                    beforeBuildTask.sourceRelativePath,
+                    beforeBuildTask.destinationRelativePath
+                );
+
+            case 'interpolate':
+                return new InterpolateBeforeBuildTaskJob(
+                    source,
+                    beforeBuildTask.relativePath
+                );
+
+            default:
+                throw new Error(`Unknown type of before build task ${beforeBuildTask.type} for source ${source.id}.`);
+        }
+    }
+
+    function instantiateBuild(build) {
+        let jobsList = new JobsList();
+
+        jobsList.addSequentialStage('createDirectory', [], [new CreateDirectoryJob(build)]);
+
+        for (let sourceId in build.sources) {
+            let source = build.sources[sourceId];
+            jobsList.addSequentialStage(`prepareSource_${sourceId}`, ['createDirectory'], [
+                new ResolveReferenceJob(source),
+                new DownloadSourceJob(source),
+                new ExtractSourceJob(source)
+            ]);
+        }
+
+        jobsList.addSequentialStage('parseCompose', ['prepareSource_'], [
+            new ParseDockerComposeJob(build),
+            new PreparePortDomainsJob(build)
+        ]);
+
+        let beforeBuildJobs = [];
+        for (let sourceId in build.sources) {
+            let source = build.sources[sourceId];
+            for (let beforeBuildTask of source.config.beforeBuildTasks) {
+                beforeBuildJobs.push(
+                    mapBeforeBuildTaskToJob(beforeBuildTask, source)
+                );
+            }
+        }
+        jobsList.addSequentialStage('beforeBuildTasks', ['parseCompose'], beforeBuildJobs);
+
+        jobsList.addSequentialStage('buildAndRun', ['beforeBuildTasks'], [
+            new PrepareEnvironmentalVariablesJob(build),
+            new PrepareSummaryItemsJob(build),
+            new RunDockerComposeJob(build),
+            new GetContainerIdsJob(build),
+            new ConnectContainersToNetworkJob(build),
+            new ProxyPortDomainsJob(build)
+        ]);
+
+        return jobsList.run(jobExecutorCollection);
     }
 
     return {

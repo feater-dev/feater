@@ -1,0 +1,48 @@
+{
+  "name": "xsolve-feat",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "npm run serve:dev",
+    "lint": "eslint modules validation",
+    "lint:fix": "eslint modules validation --fix",
+    "serve:dev": "NODE_ENV=development nodemon main.js --config nodemon.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "decompress": "^4.2.0",
+    "escape-string-regexp": "^1.0.5",
+    "esprima": "^4.0.0",
+    "express": "^4.14.0",
+    "fs-extra": "^2.0.0",
+    "gift": "^0.10.0",
+    "github": "^7.2.0",
+    "ini-config": "https://github.com/mariusz-bak-xsolve-pl/node-ini-config/tarball/master",
+    "js-yaml": "^3.10.0",
+    "jsonschema": "^1.1.1",
+    "kontainer-di": "^0.9.9",
+    "method-override": "^2.3.7",
+    "mkdir-recursive": "^0.4.0",
+    "moment": "^2.17.1",
+    "mongodb": "^2.2.16",
+    "morgan": "^1.7.0",
+    "nanoid": "^1.0.2",
+    "node-validator": "^0.1.26",
+    "nodegit-clone": "<1.2.0 || >1.2.0 ^1.0.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth": "^1.0.0",
+    "pug": "^2.0.0-beta6",
+    "rand-token": "^0.3.0",
+    "static-eval": "^2.0.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.1",
+    "nodemon": "^1.11.0"
+  }
+}

@@ -1,4 +1,3 @@
-let _ = require('underscore');
 let { execSync } = require('child_process');
 
 const BUFFER_SIZE = 1048576; // 1M
@@ -17,7 +16,7 @@ module.exports = function (jobClasses, buildRepository) {
         }
 
         execute(job) {
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 let { build } = job;
 
                 console.log('Connecting containers to build network.');
@@ -25,14 +24,14 @@ module.exports = function (jobClasses, buildRepository) {
                 for (let serviceId in build.services) {
                     let service = build.services[serviceId];
 
-                    let dockerNetworkConnectStdout = execSync(
+                    execSync(
                         `docker network connect ${BUILD_NETWORK} ${service.containerId}`,
-                        {maxBuffer: BUFFER_SIZE}
+                        { maxBuffer: BUFFER_SIZE }
                     );
 
                     let dockerInspectStdout = execSync(
                         `docker inspect ${service.containerId}`,
-                        {maxBuffer: BUFFER_SIZE}
+                        { maxBuffer: BUFFER_SIZE }
                     ).toString();
 
                     service.ipAddress = JSON.parse(dockerInspectStdout)[0].NetworkSettings.Networks[BUILD_NETWORK].IPAddress;

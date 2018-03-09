@@ -1,4 +1,3 @@
-var path = require('path');
 var _ = require('underscore');
 
 module.exports = function (config, buildClasses, instantiation) {
@@ -43,6 +42,7 @@ module.exports = function (config, buildClasses, instantiation) {
                     console.log('Build instantiated and started.');
                 },
                 error => {
+                    console.log(error);
                     console.log('Failed to instantiate and start build.');
                 }
             );

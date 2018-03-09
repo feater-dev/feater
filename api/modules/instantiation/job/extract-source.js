@@ -1,4 +1,3 @@
-let fs = require('fs-extra');
 let decompress = require('decompress');
 
 module.exports = function (jobClasses) {

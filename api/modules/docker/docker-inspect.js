@@ -7,7 +7,7 @@ module.exports = () => {
     function inspectBuild(build) {
         let inspectContainersStdout = execSync(
             `docker inspect ${build.containerIds.join(' ')}`,
-            {maxBuffer: BUFFER_SIZE}
+            { maxBuffer: BUFFER_SIZE }
         );
 
         let containerDetails = {};
@@ -31,9 +31,10 @@ module.exports = () => {
         return new Promise((resolve, reject) => {
             exec(
                 command,
-                {maxBuffer: BUFFER_SIZE},
+                { maxBuffer: BUFFER_SIZE },
                 (error, stdout, stderr) => {
                     if (error) {
+                        console.log(stderr);
                         reject(error);
 
                         return;

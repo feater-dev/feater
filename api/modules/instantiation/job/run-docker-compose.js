@@ -1,11 +1,10 @@
-let _ = require('underscore');
-let path = require('path');
-let { spawn } = require('child_process');
-let { EnvironmentalVariablesSet } = require('./../environmental-variables-set');
+const path = require('path');
+const { spawn } = require('child_process');
+const { EnvironmentalVariablesSet } = require('./../environmental-variables-set');
 
 module.exports = function (jobClasses) {
 
-    var { BuildJob, JobExecutor } = jobClasses;
+    let { BuildJob, JobExecutor } = jobClasses;
 
     class RunDockerComposeJob extends BuildJob {}
 

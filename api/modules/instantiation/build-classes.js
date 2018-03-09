@@ -1,7 +1,6 @@
-let path = require('path');
-let _ = require('underscore');
-let { EnvironmentalVariablesSet } = require('./environmental-variables-set');
-let { SummaryItemsSet } = require('./summary-items-set');
+const path = require('path');
+const { EnvironmentalVariablesSet } = require('./environmental-variables-set');
+const { SummaryItemsSet } = require('./summary-items-set');
 
 module.exports = function () {
 

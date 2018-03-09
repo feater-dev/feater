@@ -5,7 +5,7 @@ class SummaryItemsSet {
     }
 
     add(name, value) {
-        this.items.push({name, value});
+        this.items.push({ name, value });
     }
 
 }

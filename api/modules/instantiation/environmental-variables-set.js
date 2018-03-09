@@ -5,13 +5,13 @@ class EnvironmentalVariablesSet {
     }
 
     add(key, value) {
-        this.items.push({key, value});
+        this.items.push({ key, value });
     }
 
     static merge() {
         let merged = new EnvironmentalVariablesSet();
         for (const set of arguments) {
-            for (const {key, value} of set.getAll()) {
+            for (const { key, value } of set.getAll()) {
                 merged.add(key, value);
             }
         }

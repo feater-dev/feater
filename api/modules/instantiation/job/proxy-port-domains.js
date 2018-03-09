@@ -16,7 +16,7 @@ module.exports = function (config, jobClasses, buildRepository) {
         }
 
         execute(job) {
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 let { build } = job;
 
                 console.log('Proxying port domains.');
@@ -55,7 +55,7 @@ server {
 
                 execSync(
                     `docker exec -t feat_nginx /etc/init.d/nginx restart`,
-                    {maxBuffer: BUFFER_SIZE}
+                    { maxBuffer: BUFFER_SIZE }
                 );
 
                 buildRepository.updateServices(build);

@@ -18,7 +18,7 @@ module.exports = function (config, jobClasses) {
 
         execute(job) {
             return new Promise((resolve, reject) => {
-                let { source, source: { build } } = job;
+                let { source } = job;
 
                 console.log('Preparing source.');
 

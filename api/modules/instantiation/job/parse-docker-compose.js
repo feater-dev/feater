@@ -15,7 +15,7 @@ module.exports = function (config, jobClasses, buildRepository) {
         }
 
         execute(job) {
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 let { build } = job;
 
                 console.log('Parsing compose file.');

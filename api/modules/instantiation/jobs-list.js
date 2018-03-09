@@ -1,4 +1,4 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
 module.exports = function () {
 
@@ -15,7 +15,7 @@ module.exports = function () {
                 jobId = `${id}_${index}`;
                 this.stages.push({
                     id: jobId,
-                    precedingStageIdPrefixes: extendedPrecedingStageIdPrefixes.slice(),
+                    precedingStageIdPrefixes: precedingStageIdPrefixes.slice(),
                     job
                 });
                 index += 1;
@@ -67,7 +67,7 @@ module.exports = function () {
                     _.each(
                         this.stages,
                         stage => {
-                            let {id, precedingStageIdPrefixes, job} = stage;
+                            let { id, precedingStageIdPrefixes, job } = stage;
 
                             if (!notResolvedStageFlags[id]) {
                                 return;

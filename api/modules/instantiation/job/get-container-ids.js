@@ -30,7 +30,7 @@ module.exports = function (jobClasses, buildRepository) {
                 for (let serviceId of serviceIds) {
                     let stdout = execSync(
                         `docker ps -q --no-trunc --filter name=${build.services[serviceId].containerNamePrefix}`,
-                        {maxBuffer: BUFFER_SIZE}
+                        { maxBuffer: BUFFER_SIZE }
                     ).toString();
 
                     let containerIds = _.difference(

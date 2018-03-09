@@ -1,4 +1,4 @@
-let _ = require('underscore');
+let _ = require('lodash');
 let path = require('path');
 let fs = require('fs');
 let jsYaml = require('js-yaml');

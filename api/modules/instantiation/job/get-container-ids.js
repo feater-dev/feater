@@ -1,4 +1,4 @@
-let _ = require('underscore');
+let _ = require('lodash');
 let { execSync } = require('child_process');
 
 const BUFFER_SIZE = 1048576; // 1M

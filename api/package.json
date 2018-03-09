@@ -26,6 +26,7 @@
     "js-yaml": "^3.10.0",
     "jsonschema": "^1.1.1",
     "kontainer-di": "^0.9.9",
+    "lodash": "^4.17.5",
     "method-override": "^2.3.7",
     "mkdir-recursive": "^0.4.0",
     "moment": "^2.17.1",
@@ -38,8 +39,7 @@
     "passport-google-oauth": "^1.0.0",
     "pug": "^2.0.0-beta6",
     "rand-token": "^0.3.0",
-    "static-eval": "^2.0.0",
-    "underscore": "^1.8.3"
+    "static-eval": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^3.17.1",

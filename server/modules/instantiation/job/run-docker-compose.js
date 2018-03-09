@@ -1,6 +1,7 @@
-var _ = require('underscore');
-var path = require('path');
-var { spawn } = require('child_process');
+let _ = require('underscore');
+let path = require('path');
+let { spawn } = require('child_process');
+let { EnvironmentalVariablesSet } = require('./../environmental-variables-set');
 
 module.exports = function (jobClasses) {
 
@@ -24,43 +25,43 @@ module.exports = function (jobClasses) {
 
                 let dockerComposeFileName = path.basename(build.config.composeFile.relativePath);
 
-                let dockerComposeEnvironemntalVariables = _.extend(
-                    {},
-                    build.environmentalVariables,
-                    {
-                        COMPOSE_PROJECT_NAME: `featbuild${build.shortid}`,  // TODO Move to config.
-                        COMPOSE_HTTP_TIMEOUT: 5000,
-                        PATH: '/usr/local/bin/' // TODO Move to config.
-                    }
-                );
+                let commonEnvironmentalVariables = new EnvironmentalVariablesSet();
+                commonEnvironmentalVariables.add('COMPOSE_PROJECT_NAME', `featbuild${build.hash}`);  // TODO Move pattern to config. Move value to build class.
+                commonEnvironmentalVariables.add('COMPOSE_HTTP_TIMEOUT', 5000);
+                commonEnvironmentalVariables.add('PATH', '/usr/local/bin/'); // TODO Move to config.
 
-                build.log('Running docker-compose.');
+                console.log('Running docker-compose.');
+
+                EnvironmentalVariablesSet.merge(build.environmentalVariables, commonEnvironmentalVariables).toObject();
 
                 let dockerCompose = spawn(
                     'docker-compose', ['--file', dockerComposeFileName, 'up', '-d', '--no-color'],
                     {
                         cwd: dockerComposeDirectoryAbsolutePath,
-                        env: dockerComposeEnvironemntalVariables
+                        env: EnvironmentalVariablesSet.merge(build.environmentalVariables, commonEnvironmentalVariables).toObject()
                     }
                 );
 
-                let stdoutLogger = build.logger.createNested('compose stdout', { splitLines: true });
+                // let stdoutLogger = build.logger.createNested('compose stdout', { splitLines: true });
                 dockerCompose.stdout.on('data', data => {
-                    stdoutLogger.debug(data.toString());
+                    console.log(data.toString());
+                    // stdoutLogger.debug(data.toString());
                 });
 
-                let stderrLogger = build.logger.createNested('compose stderr', { splitLines: true });
+                // let stderrLogger = build.logger.createNested('compose stderr', { splitLines: true });
                 dockerCompose.stderr.on('data', data => {
-                    stderrLogger.error(data.toString());
+                    console.log(data.toString());
+                    // stderrLogger.error(data.toString());
                 });
 
                 dockerCompose.on('error', error => {
+                    console.log(error);
                     reject(error);
                 });
 
                 dockerCompose.on('exit', code => {
                     if (0 !== code) {
-                        build.log('Failed to run docker-compose.');
+                        console.log('Failed to run docker-compose.');
                         reject(code);
 
                         return;
@@ -71,7 +72,7 @@ module.exports = function (jobClasses) {
 
                 dockerCompose.on('close', code => {
                     if (0 !== code) {
-                        build.log('Failed to run docker-compose.');
+                        console.log('Failed to run docker-compose.');
                         reject(code);
 
                         return;

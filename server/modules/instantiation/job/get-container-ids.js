@@ -18,7 +18,7 @@ module.exports = function (jobClasses, buildRepository) {
             return new Promise((resolve, reject) => {
                 let { build } = job;
 
-                build.log('Determining container ids.');
+                console.log('Determining container ids.');
 
                 let serviceIds = _.keys(build.services)
                     .sort((serviceId1, serviceId2) => {
@@ -39,14 +39,14 @@ module.exports = function (jobClasses, buildRepository) {
                     );
 
                     if (containerIds.length < 1) {
-                        build.log(`No running container for service ${serviceId}.`);
+                        console.log(`No running container for service ${serviceId}.`);
                         reject();
 
                         return;
                     }
 
                     if (containerIds.length > 1) {
-                        build.log(`Too many running containers for service ${serviceId}.`);
+                        console.log(`Too many running containers for service ${serviceId}.`);
                         reject();
 
                         return;
@@ -55,7 +55,7 @@ module.exports = function (jobClasses, buildRepository) {
                     let containerId = containerIds[0];
 
                     if (!/^[a-f\d]+$/.test(containerId)) {
-                        build.log(`Invalid container id for service ${serviceId}.`);
+                        console.log(`Invalid container id for service ${serviceId}.`);
                         reject();
 
                         return;

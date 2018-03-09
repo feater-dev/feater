@@ -16,13 +16,13 @@ module.exports = function (jobClasses) {
             return new Promise((resolve, reject) => {
                 let { source } = job;
 
-                source.log('Extracting source.');
+                console.log('Extracting source.');
 
                 source.relativePath = source.id;
                 decompress(source.zipFileFullPath, source.fullBuildPath, { strip: 1 })
                     .then(resolve)
                     .catch(error => {
-                        source.log('Failed to extract source.');
+                        console.log('Failed to extract source.');
                         reject(error)
                     });
             });

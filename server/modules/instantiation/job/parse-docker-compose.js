@@ -18,7 +18,7 @@ module.exports = function (config, jobClasses, buildRepository) {
             return new Promise((resolve, reject) => {
                 let { build } = job;
 
-                build.log('Parsing compose file.');
+                console.log('Parsing compose file.');
 
                 let absoluteDir = path.join(
                     build.sources[build.config.composeFile.sourceId].fullBuildPath,
@@ -30,7 +30,7 @@ module.exports = function (config, jobClasses, buildRepository) {
                     fs.readFileSync(path.join(absoluteDir, basename)).toString()
                 );
 
-                build.composeProjectName = `featbuild${build.shortid}`;
+                build.composeProjectName = `featbuild${build.hash}`;
 
                 build.services = {};
                 _.each(

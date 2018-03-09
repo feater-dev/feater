@@ -14,13 +14,13 @@ module.exports = function (jobClasses, interpolationHelper, buildRepository) {
         execute(job) {
             var { build } = job;
 
-            build.log(`Setting summary items.`);
+            console.log(`Setting summary items.`);
 
             return new Promise(resolve => {
                 _.each(
                     build.config.summaryItems,
                     summaryItem => {
-                        build.addSummaryItem(
+                        build.summaryItems.add(
                             summaryItem.name,
                             interpolationHelper.interpolateText(summaryItem.value, build)
                         )

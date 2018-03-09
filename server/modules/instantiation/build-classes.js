@@ -1,21 +1,21 @@
-var path = require('path');
-var _ = require('underscore');
+let path = require('path');
+let _ = require('underscore');
+let { EnvironmentalVariablesSet } = require('./environmental-variables-set');
+let { SummaryItemsSet } = require('./summary-items-set');
 
-module.exports = function (consoleLogger) {
+module.exports = function () {
 
     class Build {
-        constructor(id, shortid, config) {
+        constructor(id, hash, config) {
             this.id = id;
-            this.shortid = shortid;
+            this.hash = hash;
             this.config = config;
 
-            this.logger = consoleLogger.createNested(`build ${this.shortid}`);
-
             this.sources = {};
+            this.services = {};
             this.featVariables = {};
-            this.exposedPorts = {};
-            this.environmentalVariables = {};
-            this.summaryItems = [];
+            this.environmentalVariables = new EnvironmentalVariablesSet();
+            this.summaryItems = new SummaryItemsSet();
         }
 
         // fullBuildPath
@@ -33,33 +33,15 @@ module.exports = function (consoleLogger) {
             return this;
         }
 
-        addExternalPort(exposedPort) {
-            this.exposedPorts[id] = exposedPort;
-
-            return this;
-        }
-
-        addEnvironmentalVariable(name, value) {
-            this.environmentalVariables[name] = value;
-
-            return this;
-        }
-
-        getEnvironmentalVariablesString() {
-            return _.map(
-                this.environmentalVariables,
-                (value, name) => `${name}=${value}`
-            ).join(' ');
-        }
-
-        addSummaryItem(name, value) {
-            this.summaryItems.push({ name, value });
-
-            return this;
-        }
-
-        log(message) {
-            this.logger.info(message);
+        toDocument() {
+            return {
+                hash: this.hash,
+                sources: this.sources,
+                services: this.services,
+                featVariables: this.featVariables,
+                environmentalVariables: this.environmentalVariables.items,
+                summaryItems: this.summaryItems.items
+            }
         }
     }
 
@@ -69,18 +51,12 @@ module.exports = function (consoleLogger) {
             this.build = build;
             this.build.addSource(this);
             this.config = config;
-
-            this.logger = this.build.logger.createNested(`source ${this.id}`);
         }
 
         // resolvedReference
         // relativePath
         // zipFileUrl
         // zipFileFullPath
-
-        log(message) {
-            this.logger.info(message);
-        }
 
         get fullBuildPath() {
             return path.join(this.build.fullBuildPath, this.relativePath);

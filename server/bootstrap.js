@@ -15,6 +15,7 @@ module.exports = (function () {
 
         app.use(express.static(__dirname + '/public'));
         app.use(serveFavicon(__dirname + '/public/favicon.ico'));
+
         app.use(morgan('dev'));
 
         app.use(cookieParser());
@@ -29,20 +30,20 @@ module.exports = (function () {
     }
 
     function createContainer(app) {
-        var rawConfig = require('ini-config')(__dirname);
+        let rawConfig = require('ini-config')(__dirname);
 
         rawConfig.apply('dev'); // TODO Use some env variable.
 
-        var modules = require(__dirname + '/modules/index');
-        var container = require(__dirname + '/container')(app, rawConfig, modules);
+        let modules = require('./modules/index');
+        let container = require('./container')(app, rawConfig, modules);
 
         return container;
     }
 
     function initializeAuth(app, container) {
-        var passport = require('passport');
-        var GoogleOAuth2Strategy = require('passport-google-oauth').OAuth2Strategy;
-        var config = container.getModule('config');
+        let passport = require('passport');
+        let GoogleOAuth2Strategy = require('passport-google-oauth').OAuth2Strategy;
+        let config = container.getModule('config');
 
         app.use(passport.initialize());
 

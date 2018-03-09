@@ -4,38 +4,46 @@ let escapeStringRegexp = require('escape-string-regexp');
 let parse = require('esprima').parse;
 let evaluate = require('static-eval');
 
+const tokenDelimiters = ['{{{', '}}}'];
+const expressionDelimiters = ['{{@', '@}}'];
+
 module.exports = function (config) {
 
-    function interpolateText(text, build) {
-        let exposedPorts = {};
+    function getExposedPort(allExposedPorts, id) {
+        let exposedPort = allExposedPorts[id];
+
+        if (!exposedPort) {
+            throw new Error(`Exposed port ${id} not found.`);
+        }
+
+        return exposedPort;
+    }
+
+    function interpolateExpressions(text, build) {
+        let allExposedPorts = {};
 
         for (let serviceId in build.services) {
             for (let exposedPort of build.services[serviceId].exposedPorts) {
-                exposedPorts[exposedPort.id] = exposedPort;
+                allExposedPorts[exposedPort.id] = exposedPort;
             }
-        }
-
-        function getExposedPort(id) {
-            let exposedPort = exposedPorts[id];
-
-            if (!exposedPort) {
-                throw new Error(`Exposed port ${id} not found.`);
-            }
-
-            return exposedPort;
         }
 
         let interpolatedFunctions = {
-            exposed_port_url: id => {
-                return `http://${getExposedPort(id).domains.short}:${config.app.port}`;
+            proxy_url: id => {
+                return `http://${getExposedPort(allExposedPorts, id).proxyDomains.short}:${config.app.port}`;
             },
-            exposed_port_domain: id => {
-                return getExposedPort(id).domains.short;
+            proxy_domain: id => {
+                return getExposedPort(allExposedPorts, id).proxyDomains.short;
             }
         };
 
-        text = text.replace(
-            new RegExp(`${escapeStringRegexp('{{@')}(.+?)${escapeStringRegexp('@}}')}`, 'g'),
+        let expressionRegExp = new RegExp(
+            `${escapeStringRegexp(expressionDelimiters[0])}(.+?)${escapeStringRegexp(expressionDelimiters[1])}`,
+            'g'
+        );
+
+        return text.replace(
+            expressionRegExp,
             match => {
                 return evaluate(
                     parse(match.substr(3, match.length - 6)).body[0].expression,
@@ -43,27 +51,40 @@ module.exports = function (config) {
                 );
             }
         );
+    }
 
-        text = _.reduce(
+    function interpolateTokens(text, build) {
+        return _.reduce(
             _.keys(build.featVariables),
             (text, name) => {
+                let tokenRegExp = new RegExp(
+                    escapeStringRegexp(`${tokenDelimiters[0]}${name}${tokenDelimiters[1]}`),
+                    'g'
+                );
+
                 return text.replace(
-                    new RegExp(escapeStringRegexp(`{{{${name}}}}`), 'g'),
+                    tokenRegExp,
                     build.featVariables[name]
                 )
             },
             text
         );
+    }
+
+    function interpolateText(text, build) {
+        text = interpolateExpressions(text, build);
+        text = interpolateTokens(text, build);
 
         return text;
     }
 
     function interpolateFile(fullPath, build) {
-        let contents = fs.readFileSync(fullPath).toString();
+        let text = fs.readFileSync(fullPath).toString();
 
-        contents = interpolateText(contents, build);
+        text = interpolateText(text, build);
+
         fs.truncateSync(fullPath);
-        fs.writeFileSync(fullPath, contents);
+        fs.writeFileSync(fullPath, text);
     }
 
     return {

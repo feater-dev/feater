@@ -14,10 +14,10 @@ dsn = mongodb://user:password@host:27017/feat
 debugMode = false
 personalAccessToken = personalAccessToken
 
-[paths]
+[guestPaths]
 repositoryCache = /cache/repository/
 build = /cache/build/
-domain = /cache/domain/
+proxyDomain = /cache/proxyDomain/
 
 [dev.hostPaths]
 build = /home/me/feat/cache/build/

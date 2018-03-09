@@ -1,6 +1,8 @@
 var _ = require('underscore');
 
 module.exports = function (
+    jobExecutorsCollection,
+    JobsList,
     resolveReference,
     createDirectory,
     downloadSource,
@@ -14,155 +16,23 @@ module.exports = function (
     getContainerIds,
     connectContainersToNetwork,
     preparePortDomains,
-    proxyPortDomains,
-    executor
+    proxyPortDomains
 ) {
 
-    let { ResolveReferenceJob, ResolveReferenceJobExecutor } = resolveReference;
-    let { CreateDirectoryJob, CreateDirectoryJobExecutor } = createDirectory;
-    let { DownloadSourceJob, DownloadSourceJobExecutor } = downloadSource;
-    let { ExtractSourceJob, ExtractSourceJobExecutor } = extractSource;
-    let { CopyBeforeBuildTaskJob, CopyBeforeBuildTaskJobExecutor } = copyBeforeBuildTask;
-    let { InterpolateBeforeBuildTaskJob, InterpolateBeforeBuildTaskJobExecutor } = interpolateBeforeBuildTask;
-    let { PrepareEnvironmentalVariablesJob, PrepareEnvironmentalVariablesJobExecutor } = prepareEnvironmentalVariables;
-    let { PrepareSummaryItemsJob, PrepareSummaryItemsJobExecutor } = prepareSummaryItems;
-    let { ParseDockerComposeJob, ParseDockerComposeJobExecutor } = parseDockerCompose;
-    let { RunDockerComposeJob, RunDockerComposeJobExecutor } = runDockerCompose;
-    let { GetContainerIdsJob, GetContainerIdsJobExecutor } = getContainerIds;
-    let { ConnectContainersToNetworkJob, ConnectContainersToNetworkJobExecutor } = connectContainersToNetwork;
-    let { PreparePortDomainsJob, PreparePortDomainsJobExecutor } = preparePortDomains;
-    let { ProxyPortDomainsJob, ProxyPortDomainsJobExecutor } = proxyPortDomains;
-
-    let { JobExecutorCollection } = executor;
-
-    let jobExecutorCollection = new JobExecutorCollection();
-
-    jobExecutorCollection
-        .add(new CreateDirectoryJobExecutor())
-        .add(new PrepareEnvironmentalVariablesJobExecutor())
-        .add(new PrepareSummaryItemsJobExecutor())
-        .add(new ParseDockerComposeJobExecutor())
-        .add(new RunDockerComposeJobExecutor())
-        .add(new GetContainerIdsJobExecutor())
-        .add(new ConnectContainersToNetworkJobExecutor())
-        .add(new PreparePortDomainsJobExecutor())
-        .add(new ProxyPortDomainsJobExecutor())
-        .add(new ResolveReferenceJobExecutor())
-        .add(new DownloadSourceJobExecutor())
-        .add(new ExtractSourceJobExecutor())
-        .add(new CopyBeforeBuildTaskJobExecutor())
-        .add(new InterpolateBeforeBuildTaskJobExecutor());
-
-    class JobsList {
-        constructor() {
-            this.stages = [];
-        }
-
-        addParallelStage(id, precedingStageIdPrefixes, jobs) {
-            let index = 0;
-            let jobId;
-            for (let job of jobs) {
-                jobId = `${id}_${index}`;
-                this.stages.push({
-                    id: jobId,
-                    precedingStageIdPrefixes: extendedPrecedingStageIdPrefixes.slice(),
-                    job
-                });
-                index += 1;
-            }
-        }
-        
-        addSequentialStage(id, precedingStageIdPrefixes, jobs) {
-            let index = 0;
-            let jobId;
-            let extendedPrecedingStageIdPrefixes = precedingStageIdPrefixes.slice();
-            for (let job of jobs) {
-                jobId = `${id}_${index}`;
-                this.stages.push({
-                    id: jobId,
-                    precedingStageIdPrefixes: extendedPrecedingStageIdPrefixes.slice(),
-                    job
-                });
-                index += 1;
-                extendedPrecedingStageIdPrefixes.push(jobId);
-            }
-        }
-
-        run(jobExecutorCollection) {
-            let resolutionsMap = {};
-            let runningStageFlags = {};
-
-            let notResolvedStageFlags = {};
-            for (let stage of this.stages) {
-                notResolvedStageFlags[stage.id] = true;
-            }
-
-            function isIdPrefixMatching(id, idPrefix) {
-                return (
-                    id.length >= idPrefix.length
-                    && id.substr(0, idPrefix.length) === idPrefix
-                );
-            }
-
-            return new Promise((resolve, reject) => {
-
-                let tick = () => {
-                    if (_.isEmpty(notResolvedStageFlags)) {
-                        resolve(resolutionsMap);
-
-                        return;
-                    }
-
-                    let noStageRunThisTick = true;
-                    _.each(
-                        this.stages,
-                        stage => {
-                            let {id, precedingStageIdPrefixes, job} = stage;
-
-                            if (!notResolvedStageFlags[id]) {
-                                return;
-                            }
-
-                            for (let precedingStageIdPrefix of precedingStageIdPrefixes) {
-                                for (let notResolvedStageId in notResolvedStageFlags) {
-                                    if (isIdPrefixMatching(notResolvedStageId, precedingStageIdPrefix)) {
-                                        // Not able to run job, some required job is not resolved yet.
-
-                                        return;
-                                    }
-                                }
-                            }
-
-                            noStageRunThisTick = false;
-                            runningStageFlags[id] = true;
-
-                            jobExecutorCollection
-                                .getSupporting(job)
-                                .execute(job, resolutionsMap)
-                                .then(
-                                    resolution => {
-                                        resolutionsMap[id] = resolution;
-                                        delete runningStageFlags[id];
-                                        delete notResolvedStageFlags[id];
-                                        setTimeout(tick, 0);
-                                    },
-                                    error => {
-                                        reject(error);
-                                    }
-                                );
-                        }
-                    );
-
-                    if (noStageRunThisTick && _.isEmpty(runningStageFlags)) {
-                        reject(new Error('Inconsistent job dependencies.'));
-                    }
-                };
-
-                setTimeout(tick, 0);
-            });
-        }
-    }
-
+    let { ResolveReferenceJob } = resolveReference;
+    let { CreateDirectoryJob } = createDirectory;
+    let { DownloadSourceJob } = downloadSource;
+    let { ExtractSourceJob } = extractSource;
+    let { CopyBeforeBuildTaskJob } = copyBeforeBuildTask;
+    let { InterpolateBeforeBuildTaskJob } = interpolateBeforeBuildTask;
+    let { PrepareEnvironmentalVariablesJob } = prepareEnvironmentalVariables;
+    let { PrepareSummaryItemsJob } = prepareSummaryItems;
+    let { ParseDockerComposeJob } = parseDockerCompose;
+    let { RunDockerComposeJob } = runDockerCompose;
+    let { GetContainerIdsJob } = getContainerIds;
+    let { ConnectContainersToNetworkJob } = connectContainersToNetwork;
+    let { PreparePortDomainsJob } = preparePortDomains;
+    let { ProxyPortDomainsJob } = proxyPortDomains;
 
     function mapBeforeBuildTaskToJob(beforeBuildTask, source) {
         switch (beforeBuildTask.type) {
@@ -203,6 +73,8 @@ module.exports = function (
             new PreparePortDomainsJob(build)
         ]);
 
+        // Here we could save build to Mongo. All sources and services are ready. All paths are set.
+
         let beforeBuildJobs = [];
         for (let sourceId in build.sources) {
             let source = build.sources[sourceId];
@@ -223,7 +95,9 @@ module.exports = function (
             new ProxyPortDomainsJob(build)
         ]);
 
-        return jobsList.run(jobExecutorCollection);
+        // Or maybe we should only save here?
+
+        return jobsList.run(jobExecutorsCollection);
     }
 
     return {

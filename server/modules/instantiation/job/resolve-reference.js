@@ -20,7 +20,7 @@ module.exports = function (jobClasses, githubApiClient) {
                     return;
                 }
 
-                source.log(`Resolving reference to source ${name} of type ${reference.type} and name ${reference.name}.`);
+                console.log(`Resolving reference to source ${name} of type ${reference.type} and name ${reference.name}.`);
 
                 githubApiClient
                     .getRepo(name)

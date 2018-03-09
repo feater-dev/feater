@@ -19,10 +19,11 @@ module.exports = function (jobClasses, interpolationHelper) {
         execute(job) {
             let { source } = job;
 
-            return new Promise(resolve => {
-                let fullPath = path.join(source.fullBuildPath, job.relativePath);
+            let fullPath = path.join(source.fullBuildPath, job.relativePath);
+            console.log(`Interpolating Feat variables in ${job.relativePath}.`);
 
-                source.log(`Interpolating Feat variables in ${job.relativePath}.`);
+            return new Promise(resolve => {
+
                 interpolationHelper.interpolateFile(fullPath, source.build);
 
                 resolve();

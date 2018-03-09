@@ -62,6 +62,10 @@
       "module": false,
       "pipe": true,
       "service": true
+    },
+    "serve": {
+      "port": 4200,
+      "host": "app"
     }
   }
 }

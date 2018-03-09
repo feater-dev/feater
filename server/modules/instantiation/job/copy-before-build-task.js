@@ -22,7 +22,7 @@ module.exports = function (jobClasses) {
             let { source, sourceRelativePath, destinationRelativePath } = job;
 
             return new Promise(resolve => {
-                source.log(`Copying ${sourceRelativePath} to ${destinationRelativePath}.`);
+                console.log(`Copying ${sourceRelativePath} to ${destinationRelativePath}.`);
                 fs.copySync(
                     path.join(source.fullBuildPath, sourceRelativePath),
                     path.join(source.fullBuildPath, destinationRelativePath)

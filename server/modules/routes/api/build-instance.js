@@ -73,8 +73,10 @@ module.exports = function (stepsMapBuilder, stepsMapRunner, buildInstanceReposit
                     }
 
                     function persistDocument() {
+                        let buildInstanceHash = nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 8);
                         var buildInstanceDocument = {
                             buildDefinitionId: req.body.buildDefinitionId,
+                            hash: buildInstanceHash,
                             name: req.body.name
                         };
 

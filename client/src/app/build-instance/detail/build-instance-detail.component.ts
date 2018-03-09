@@ -31,35 +31,23 @@ import { BuildInstance, MappedBuildInstance } from '../build-instance.model';
                             </div>
                         </div>
 
-                        <div class="form-group" [hidden]="!item?.exposedPorts?.length">
-                            <label class="col-lg-2 control-label">External ports</label>
-                            <div class="col-lg-10">
-                                <div
-                                    *ngFor="let exposedPort of item?.exposedPorts"
-                                    class="form-control-static"
-                                >
-                                    <strong>{{ exposedPort.id }}</strong><br>{{ exposedPort.value }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group" [hidden]="!item?.environmentalVariables?.length">
+                        <div class="form-group" [hidden]="!item?.environmentalVariables?.items?.length">
                             <label class="col-lg-2 control-label">Environmental variables</label>
                             <div class="col-lg-10">
                                 <div
-                                    *ngFor="let environmentalVariable of item?.environmentalVariables"
+                                    *ngFor="let environmentalVariable of item?.environmentalVariables?.items"
                                     class="form-control-static"
                                 >
-                                    <strong>{{ environmentalVariable.name }}</strong><br>{{ environmentalVariable.value }}
+                                    <strong>{{ environmentalVariable.key }}</strong><br>{{ environmentalVariable.value }}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group" [hidden]="!item?.summaryItems?.length">
+                        <div class="form-group" [hidden]="!item?.summaryItems?.items?.length">
                             <label class="col-lg-2 control-label">Summary</label>
                             <div class="col-lg-10">
                                 <div
-                                    *ngFor="let summaryItem of item?.summaryItems"
+                                    *ngFor="let summaryItem of item?.summaryItems?.items"
                                     class="form-control-static"
                                 >
                                     <strong>{{ summaryItem.name }}</strong><br>{{ summaryItem.value }}
@@ -118,27 +106,8 @@ export class BuildInstanceDetailComponent implements OnInit {
             name: item.name,
             buildDefinition: item.buildDefinition,
             environmentalVariables: [],
-            exposedPorts: [],
             summaryItems: item.summaryItems
         };
-
-        if (item.exposedPorts && 0 < Object.keys(item.exposedPorts).length) {
-            Object.keys(item.exposedPorts).forEach(function (id) {
-                mappedItem.exposedPorts.push({
-                    id,
-                    value: item.exposedPorts[id]
-                });
-            });
-        }
-
-        if (item.environmentalVariables && 0 < Object.keys(item.environmentalVariables).length) {
-            Object.keys(item.environmentalVariables).forEach(function (name) {
-                mappedItem.environmentalVariables.push({
-                    name,
-                    value: item.environmentalVariables[name]
-                });
-            });
-        }
 
         return mappedItem;
     }

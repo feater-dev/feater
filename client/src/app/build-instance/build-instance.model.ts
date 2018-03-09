@@ -33,6 +33,5 @@ export interface MappedBuildInstance {
     name: string;
     buildDefinition: BuildDefinitionReference;
     environmentalVariables?: Object[];
-    exposedPorts?: Object[];
     summaryItems?: Object[];
 }

@@ -17,10 +17,10 @@ module.exports = function (config, jobClasses) {
             return new Promise(resolve => {
                 let { build } = job;
 
-                build.log('Creating build directory.');
+                console.log('Creating build directory.');
 
-                build.fullBuildPath = path.join(config.paths.build, build.shortid);
-                build.fullBuildHostPath = path.join(config.hostPaths.build, build.shortid);
+                build.fullBuildPath = path.join(config.guestPaths.build, build.hash);
+                build.fullBuildHostPath = path.join(config.hostPaths.build, build.hash);
 
                 fs.mkdirSync(build.fullBuildPath);
 

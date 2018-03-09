@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 # Install basic tools.
 RUN apt-get update
-RUN apt-get install -y sudo curl python vim nano xterm unzip
+RUN apt-get install -y sudo curl python vim nano xterm unzip supervisor
 
 # Install Node.js and NPM.
 RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
@@ -25,6 +25,9 @@ RUN curl -o /usr/local/bin/docker-compose -L https://github.com/docker/compose/r
 
 WORKDIR /app
 
+RUN mkdir /var/log/supervisord
+
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD entrypoint.sh /entrypoint.sh
 
 CMD ["/entrypoint.sh"]

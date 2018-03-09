@@ -19,7 +19,7 @@ module.exports = function (config, jobClasses, buildRepository) {
             return new Promise((resolve, reject) => {
                 let { build } = job;
 
-                build.log('Proxying port domains.');
+                console.log('Proxying port domains.');
 
                 let nginxConfs = [];
 
@@ -27,14 +27,14 @@ module.exports = function (config, jobClasses, buildRepository) {
                     let service = build.services[serviceId];
 
                     for (let exposedPort of service.exposedPorts) {
-                        for (let domainId in exposedPort.domains) {
+                        for (let domainType in exposedPort.proxyDomains) {
 
                             nginxConfs.push(
                                 `
 # Proxy domain for port ${exposedPort.port} of ${serviceId} running at ${service.ipAddress}
 server {
     listen 80;
-    server_name ${exposedPort.domains[domainId]};
+    server_name ${exposedPort.proxyDomains[domainType]};
 
     location / {
         proxy_pass http://${service.ipAddress}:${exposedPort.port};
@@ -43,12 +43,13 @@ server {
 }
 `
                             );
+
                         }
                     }
                 }
 
                 fs.writeFileSync(
-                    path.join(config.paths.domain, `build-${build.shortid}.conf`),
+                    path.join(config.guestPaths.proxyDomain, `build-${build.hash}.conf`),
                     nginxConfs.join('\n\n')
                 );
 

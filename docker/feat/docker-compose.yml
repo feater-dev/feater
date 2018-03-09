@@ -8,7 +8,7 @@ services:
       - ../../:/app
       - ../../../cache/repository:/cache/repository
       - ../../../cache/build:/cache/build
-      - ../../../cache/domain:/cache/domain
+      - ../../../cache/proxyDomain:/cache/proxyDomain
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - internal
@@ -25,7 +25,7 @@ services:
   nginx:
     build: nginx
     volumes:
-      - ../../../cache/domain:/etc/nginx/conf.d/feat
+      - ../../../cache/proxyDomain:/etc/nginx/conf.d/proxyDomain
     ports:
       - '${FEAT_NGINX_PORT}:80'
     networks:

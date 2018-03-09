@@ -20,22 +20,22 @@ module.exports = function (jobClasses, buildRepository) {
             return new Promise((resolve, reject) => {
                 let { build } = job;
 
-                build.log('Connecting containers to build network.');
+                console.log('Connecting containers to build network.');
 
                 for (let serviceId in build.services) {
                     let service = build.services[serviceId];
 
-                    execSync(
+                    let dockerNetworkConnectStdout = execSync(
                         `docker network connect ${BUILD_NETWORK} ${service.containerId}`,
                         {maxBuffer: BUFFER_SIZE}
                     );
 
-                    let inspectStdout = execSync(
+                    let dockerInspectStdout = execSync(
                         `docker inspect ${service.containerId}`,
                         {maxBuffer: BUFFER_SIZE}
                     ).toString();
 
-                    service.ipAddress = JSON.parse(inspectStdout)[0].NetworkSettings.Networks[BUILD_NETWORK].IPAddress;
+                    service.ipAddress = JSON.parse(dockerInspectStdout)[0].NetworkSettings.Networks[BUILD_NETWORK].IPAddress;
                 }
 
                 buildRepository.updateServices(build);

@@ -13,33 +13,33 @@ module.exports = function (config, jobClasses, buildRepository) {
             return new Promise((resolve, reject) => {
                 let { build } = job;
 
-                build.log('Preparing port domains.');
+                console.log('Preparing port domains.');
 
                 for (let serviceId in build.config.exposedPorts) {
                     let service = build.services[serviceId];
 
                     if (!service) {
-                        build.log(`Unknown service ${serviceId}.`);
+                        console.log(`Unknown service ${serviceId}.`);
                         reject();
 
                         return;
                     }
 
                     for (let exposedPort of build.config.exposedPorts[serviceId]) {
-                        let longDomain = `build-${build.shortid}-${service.cleanId}-${exposedPort.port}.${config.app.host}`;
-                        let shortDomain = `build-${build.shortid}-${exposedPort.id}.${config.app.host}`;
+                        let shortProxyDomain = `build-${build.hash}-${exposedPort.id}.${config.app.host}`;
+                        let longProxyDomain = `build-${build.hash}-${service.cleanId}-${exposedPort.port}.${config.app.host}`;
 
-                        build.addFeatVariable(`exposed_port_domain_long__${exposedPort.id}`, longDomain);
-                        build.addFeatVariable(`exposed_port_domain__${exposedPort.id}`, shortDomain);
+                        build.addFeatVariable(`proxy_domain__${exposedPort.id}`, shortProxyDomain);
+                        build.addFeatVariable(`proxy_domain_long__${exposedPort.id}`, longProxyDomain);
 
                         service.exposedPorts.push({
                             serviceId,
                             id: exposedPort.id,
                             name: exposedPort.name,
                             port: exposedPort.port,
-                            domains: {
-                                long: longDomain,
-                                short: shortDomain
+                            proxyDomains: {
+                                short: shortProxyDomain,
+                                long: longProxyDomain
                             }
                         });
                     }

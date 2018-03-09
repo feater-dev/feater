@@ -18,29 +18,27 @@ module.exports = function (jobClasses, interpolationHelper, buildRepository) {
                 _.each(
                     build.sources,
                     (source, sourceId) => {
-                        build.addEnvironmentalVariable(`FEAT__BUILD_PATH__${sourceId.toUpperCase()}`, source.fullBuildPath);
-                        build.addEnvironmentalVariable(`FEAT__VOLUME_PATH__${sourceId.toUpperCase()}`, source.fullBuildHostPath);
+                        build.environmentalVariables.add(`FEAT__BUILD_PATH__${sourceId.toUpperCase()}`, source.fullBuildPath);
+                        build.environmentalVariables.add(`FEAT__VOLUME_PATH__${sourceId.toUpperCase()}`, source.fullBuildHostPath);
                     }
                 );
 
                 _.each(
                     build.featVariables,
                     (value, name) => {
-                        build.addEnvironmentalVariable(`FEAT__${name.replace(/\./g, '__').toUpperCase()}`, value)
+                        build.environmentalVariables.add(`FEAT__${name.replace(/\./g, '__').toUpperCase()}`, value)
                     }
                 );
 
                 _.each(
                     build.config.environmentalVariables,
                     (value, name) => {
-                        build.addEnvironmentalVariable(
+                        build.environmentalVariables.add(
                             name,
                             interpolationHelper.interpolateText(value, build.featVariables)
                         )
                     }
                 );
-
-                build.log(`Environmental variables set to ${build.getEnvironmentalVariablesString()}`);
 
                 buildRepository
                     .updateEnvironmentalVariables(build)

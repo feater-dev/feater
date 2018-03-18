@@ -3,6 +3,8 @@
 ## Requirements
 - Yarn
 - NodeJS v8.10
+- Docker CE v17.12.1
+- Docker Compose v1.19.0
 
 ## Installation
 - `yarn install`

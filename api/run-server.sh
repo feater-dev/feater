@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-yarn start
+
+yarn start:dev:watch

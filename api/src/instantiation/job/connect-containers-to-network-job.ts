@@ -52,9 +52,9 @@ export class ConnectContainersToNetworkJobExecutor implements JobExecutorInterfa
                 service.ipAddress = JSON.parse(dockerInspectStdout)[0].NetworkSettings.Networks[BUILD_NETWORK].IPAddress;
             }
 
-            this.buildInstanceRepository.updateServices(build);
-
-            resolve();
+            this.buildInstanceRepository
+                .updateServices(build)
+                .then(resolve);
         });
     }
 

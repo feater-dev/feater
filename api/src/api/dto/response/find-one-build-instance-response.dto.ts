@@ -11,4 +11,13 @@ export class FindOneBuildInstanceResponseDto {
             readonly name: string;
         };
     };
+    readonly services: any;
+    readonly summaryItems: {
+        readonly key: string;
+        readonly value: string;
+    }[];
+    readonly environmentalVariables: {
+        readonly name: string;
+        readonly value: string;
+    }[];
 }

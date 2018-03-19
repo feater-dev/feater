@@ -48,13 +48,13 @@ interface GoogleOAuth2ConfigInterface {
 @Component()
 export class Config {
 
-    public readonly app: AppConfigInterface;
-    public readonly ports: PortsConfigInterface;
-    public readonly mongo: MongoConfigInterface;
-    public readonly github: GithubConfigInterface;
-    public readonly guestPaths: GuestPathsConfigInterface;
-    public readonly hostPaths: HostPathsConfigInterface;
-    public readonly googleOAuth2: GoogleOAuth2ConfigInterface;
+    readonly app: AppConfigInterface;
+    readonly ports: PortsConfigInterface;
+    readonly mongo: MongoConfigInterface;
+    readonly github: GithubConfigInterface;
+    readonly guestPaths: GuestPathsConfigInterface;
+    readonly hostPaths: HostPathsConfigInterface;
+    readonly googleOAuth2: GoogleOAuth2ConfigInterface;
 
     constructor() {
         const rawConfig = iniConfig(configFullPath);

@@ -1,6 +1,21 @@
-import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
-export const BuildInstanceSchema = new mongoose.Schema({
-    buildDefinitionId: String,
+const SummaryItemSchema = new Schema({
     name: String,
-}, {strict: false});
+    value: String,
+});
+
+const EnvironmentalVariableSchema = new Schema({
+    key: String,
+    value: String,
+});
+
+export const BuildInstanceSchema = new Schema({
+    buildDefinitionId: String,
+    hash: String,
+    name: String,
+    config: Schema.Types.Mixed,
+    services: Schema.Types.Mixed,
+    summaryItems: [SummaryItemSchema],
+    environmentalVariables: [EnvironmentalVariableSchema],
+});

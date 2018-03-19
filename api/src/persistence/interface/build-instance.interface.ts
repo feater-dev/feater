@@ -5,4 +5,13 @@ export interface BuildInstanceInterface extends Document {
     readonly buildDefinitionId: string;
     readonly hash: string;
     readonly name: string;
+    readonly services: any;
+    readonly summaryItems: {
+        readonly name: string;
+        readonly value: string;
+    }[];
+    readonly environmentalVariables: {
+        readonly name: string;
+        readonly value: string;
+    }[];
 }

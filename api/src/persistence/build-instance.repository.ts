@@ -39,14 +39,29 @@ export class BuildInstanceRepository {
     }
 
     async updateServices(build: any): Promise<any> {
-        // TODO
+        const persistentBuild = await this.findById(build.id);
+        if (null === persistentBuild) {
+            throw new Error();
+        }
+        persistentBuild.set({services: build.services});
+        await persistentBuild.save();
     }
 
     async updateSummaryItems(build: any): Promise<any> {
-        // TODO
+        const persistentBuild = await this.findById(build.id);
+        if (null === persistentBuild) {
+            throw new Error();
+        }
+        persistentBuild.set({summaryItems: build.summaryItems.toList()});
+        await persistentBuild.save();
     }
 
     async updateEnvironmentalVariables(build: any): Promise<any> {
-        // TODO
+        const persistentBuild = await this.findById(build.id);
+        if (null === persistentBuild) {
+            throw new Error();
+        }
+        persistentBuild.set({environmentalVariables: build.environmentalVariables.toList()});
+        await persistentBuild.save();
     }
 }

@@ -30,7 +30,11 @@ export class EnvironmentalVariablesSet {
         return merged;
     }
 
-    toMap(): object {
+    toList(): EnvironmentalVariablesSetItem[] {
+        return this.items.slice();
+    }
+
+    toMap(): {[key: string]: string} {
         const map = {};
         for (const item of this.items) {
             map[item.key] = item.value;

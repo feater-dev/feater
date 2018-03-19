@@ -13,9 +13,9 @@ export interface BuildInstance {
     _id: string;
     name: string;
     buildDefinition: BuildDefinitionReference;
-    environmentalVariables?: Object;
+    summaryItems?: SummaryItem[];
+    environmentalVariables: EnvironmentalVariable[];
     exposedPorts?: ExposedPortsByServiceId;
-    summaryItems?: Object[];
 }
 
 type ExposedPortsByServiceId = {
@@ -28,10 +28,20 @@ export interface ExposedPort {
     port: number;
 }
 
+type EnvironmentalVariable = {
+    key: string;
+    value: string;
+}
+
+type SummaryItem = {
+    name: string;
+    value: string;
+}
+
 export interface MappedBuildInstance {
     _id: string;
     name: string;
     buildDefinition: BuildDefinitionReference;
-    environmentalVariables?: Object[];
-    summaryItems?: Object[];
+    environmentalVariables?: EnvironmentalVariable[];
+    summaryItems?: SummaryItem[];
 }

@@ -1,7 +1,7 @@
 class SummaryItemsSetItem {
 
     constructor(
-        readonly key: string,
+        readonly name: string,
         readonly value: string,
     ) {}
 
@@ -15,25 +15,29 @@ export class SummaryItemsSet {
         this.items = [];
     }
 
-    add(key: string, value: string) {
-        this.items.push(new SummaryItemsSetItem(key, value));
+    add(name: string, value: string) {
+        this.items.push(new SummaryItemsSetItem(name, value));
     }
 
     static merge(...sets: SummaryItemsSet[]): SummaryItemsSet {
         const merged = new SummaryItemsSet();
         for (const set of sets) {
             for (const item of set.items) {
-                merged.add(item.key, item.value);
+                merged.add(item.name, item.value);
             }
         }
 
         return merged;
     }
 
-    toMap(): object {
+    toList(): SummaryItemsSetItem[] {
+        return this.items.slice();
+    }
+
+    toMap(): {[name: string]: string} {
         const map = {};
         for (const item of this.items) {
-            map[item.key] = item.value;
+            map[item.name] = item.value;
         }
 
         return map;

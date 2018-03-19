@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
-export const BuildDefinitionSchema = new mongoose.Schema({
+export const BuildDefinitionSchema = new Schema({
     projectId: String,
     name: String,
-}, {strict: false});
+});

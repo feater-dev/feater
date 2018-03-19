@@ -31,11 +31,11 @@ import { BuildInstance, MappedBuildInstance } from '../build-instance.model';
                             </div>
                         </div>
 
-                        <div class="form-group" [hidden]="!item?.environmentalVariables?.items?.length">
+                        <div class="form-group" [hidden]="!item?.environmentalVariables?.length">
                             <label class="col-lg-2 control-label">Environmental variables</label>
                             <div class="col-lg-10">
                                 <div
-                                    *ngFor="let environmentalVariable of item?.environmentalVariables?.items"
+                                    *ngFor="let environmentalVariable of item?.environmentalVariables"
                                     class="form-control-static"
                                 >
                                     <strong>{{ environmentalVariable.key }}</strong><br>{{ environmentalVariable.value }}
@@ -43,11 +43,11 @@ import { BuildInstance, MappedBuildInstance } from '../build-instance.model';
                             </div>
                         </div>
 
-                        <div class="form-group" [hidden]="!item?.summaryItems?.items?.length">
+                        <div class="form-group" [hidden]="!item?.summaryItems?.length">
                             <label class="col-lg-2 control-label">Summary</label>
                             <div class="col-lg-10">
                                 <div
-                                    *ngFor="let summaryItem of item?.summaryItems?.items"
+                                    *ngFor="let summaryItem of item?.summaryItems"
                                     class="form-control-static"
                                 >
                                     <strong>{{ summaryItem.name }}</strong><br>{{ summaryItem.value }}
@@ -105,7 +105,7 @@ export class BuildInstanceDetailComponent implements OnInit {
             _id: item._id,
             name: item.name,
             buildDefinition: item.buildDefinition,
-            environmentalVariables: [],
+            environmentalVariables: item.environmentalVariables,
             summaryItems: item.summaryItems
         };
 

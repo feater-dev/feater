@@ -48,41 +48,60 @@ export class BuildInstanceController {
 
             return;
         }
-        const buildInstance = await this.buildInstanceRepository.findById(id);
-        if (null === buildInstance) {
+        const persistentBuildInstance = await this.buildInstanceRepository.findById(id);
+        if (null === persistentBuildInstance) {
             res.status(HttpStatus.NOT_FOUND).send();
 
             return;
         }
 
-        const buildDefiniton = await this.buildDefinitionRepository.findById(buildInstance.buildDefinitionId);
-        if (null === buildDefiniton) {
+        const persistentBuildDefiniton = await this.buildDefinitionRepository.findById(persistentBuildInstance.buildDefinitionId);
+        if (null === persistentBuildDefiniton) {
             res.status(HttpStatus.CONFLICT).send();
 
             return;
         }
 
-        const project = await this.projectRepository.findById(buildDefiniton.projectId);
-        if (null === project) {
+        const persistentProject = await this.projectRepository.findById(persistentBuildDefiniton.projectId);
+        if (null === persistentProject) {
             res.status(HttpStatus.CONFLICT).send();
 
             return;
+        }
+
+        const mappedSummaryItems = [];
+        for (const summaryItem of persistentBuildInstance.summaryItems) {
+            mappedSummaryItems.push({
+                name: summaryItem.name,
+                value: summaryItem.value,
+            });
+        }
+
+        const mappedEnvironmentalVariables = [];
+        for (const environmentalVariable of persistentBuildInstance.environmentalVariables) {
+            mappedEnvironmentalVariables.push({
+                key: environmentalVariable.key,
+                value: environmentalVariable.value,
+            });
         }
 
         res.status(HttpStatus.OK).json({
             data: {
-                _id: buildInstance._id,
-                name: buildInstance.name,
-                hash: buildInstance.hash,
+                _id: persistentBuildInstance._id,
+                name: persistentBuildInstance.name,
+                hash: persistentBuildInstance.hash,
                 buildDefinition: {
-                    _id: buildDefiniton._id,
-                    name: buildDefiniton.name,
-                    config: buildDefiniton.config,
+                    _id: persistentBuildDefiniton._id,
+                    name: persistentBuildDefiniton.name,
+                    config: persistentBuildDefiniton.config,
                     project: {
-                        _id: project._id,
-                        name: project.name,
+                        _id: persistentProject._id,
+                        name: persistentProject.name,
                     },
                 },
+                services: persistentBuildInstance.services,
+                summaryItems: mappedSummaryItems,
+                environmentalVariables: mappedEnvironmentalVariables,
             } as FindOneBuildInstanceResponseDto,
         });
     }

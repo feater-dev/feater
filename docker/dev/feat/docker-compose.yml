@@ -27,7 +27,7 @@ services:
     container_name: feat_spa
 
   mongo:
-    image: mongo:3.0
+    image: mongo:3.6
     ports:
       - '${FEAT_MONGO_PORT}:27017'
     networks:

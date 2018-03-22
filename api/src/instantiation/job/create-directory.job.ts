@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import { Component } from '@nestjs/common';
 import { Config } from '../../config/config.component';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { BuildJobInterface, JobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
 
@@ -18,6 +19,7 @@ export class CreateDirectoryJobExecutor implements JobExecutorInterface {
 
     constructor(
         private readonly config: Config,
+        private readonly jobLoggerFactory: JobLoggerFactory,
     ) {}
 
     supports(job: JobInterface): boolean {
@@ -30,10 +32,11 @@ export class CreateDirectoryJobExecutor implements JobExecutorInterface {
         }
 
         const buildJob = job as CreateDirectoryJob;
+        const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const { build } = buildJob;
 
         return new Promise(resolve => {
-            console.log('Creating build directory.');
+            logger.info('Creating build directory.');
 
             build.fullBuildPath = path.join(this.config.guestPaths.build, build.hash);
             build.fullBuildHostPath = path.join(this.config.hostPaths.build, build.hash);

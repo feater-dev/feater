@@ -45,6 +45,23 @@ services:
       - build
     container_name: feat_nginx
 
+  elasticsearch:
+    build:
+      context: ./elasticsearch
+    ports:
+      - '${ELASTICSEARCH_PORT}:9200'
+    networks:
+      - internal
+    container_name: feat_elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.3
+    ports:
+      - '${KIBANA_PORT}:5601'
+    networks:
+      - internal
+    container_name: feat_kibana
+
 networks:
   internal:
   build:

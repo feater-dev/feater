@@ -16,11 +16,11 @@ export class ProjectRepository {
         return this.projectModel.find(query).exec();
     }
 
-    findById(id): Promise<ProjectInterface> {
+    findById(id: string): Promise<ProjectInterface> {
         return this.projectModel.findById(id).exec();
     }
 
-    async findByIdOrFail(id): Promise<ProjectInterface> {
+    async findByIdOrFail(id: string): Promise<ProjectInterface> {
         const project = await this.findById(id);
         if (null === project) {
             throw new Error(`Project document with id ${id} not found.`);

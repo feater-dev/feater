@@ -16,11 +16,15 @@ export class BuildInstanceRepository {
         return this.buildInstanceModel.find(query).exec();
     }
 
-    findById(id): Promise<BuildInstanceInterface> {
+    findById(id: string): Promise<BuildInstanceInterface> {
         return this.buildInstanceModel.findById(id).exec();
     }
 
-    async findByIdOrFail(id): Promise<BuildInstanceInterface> {
+    findByHash(hash: string): Promise<BuildInstanceInterface> {
+        return this.buildInstanceModel.find({ hash }).exec();
+    }
+
+    async findByIdOrFail(id: string): Promise<BuildInstanceInterface> {
         const buildInstance = await this.findById(id);
         if (null === buildInstance) {
             throw new Error(`BuildInstance document with id ${id} not found.`);

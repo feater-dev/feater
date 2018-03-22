@@ -4,6 +4,7 @@ import { mkdirSync } from 'mkdir-recursive';
 import { exec } from 'child_process';
 import { Component } from '@nestjs/common';
 import { Config } from '../../config/config.component';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { JobInterface, SourceJobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
 
@@ -22,6 +23,7 @@ export class DownloadSourceJobExecutor implements JobExecutorInterface {
 
     constructor(
         private readonly config: Config,
+        private readonly jobLoggerFactory: JobLoggerFactory,
     ) {}
 
     supports(job: JobInterface): boolean {
@@ -34,6 +36,7 @@ export class DownloadSourceJobExecutor implements JobExecutorInterface {
         }
 
         const sourceJob = job as DownloadSourceJob;
+        const logger = this.jobLoggerFactory.createForSourceJob(sourceJob);
         const { source } = sourceJob;
 
         return new Promise((resolve, reject) => {
@@ -52,20 +55,27 @@ export class DownloadSourceJobExecutor implements JobExecutorInterface {
             // Check if given source is already cached.
             // If so no need to download, just resolve this job.
             if (fs.existsSync(source.zipFileFullPath)) {
-                console.log('Source already cached.');
+                // TODO Improve loggers.
+                logger.info(
+                    'Source already cached.',
+                    {
+                        zipFileUrl: source.zipFileUrl,
+                        zipFileFullPath: source.zipFileFullPath,
+                    },
+                );
                 resolve();
 
                 return;
             }
 
             // Otherwise download source and keep it in cache.
-            console.log('Downloading source.');
+            logger.info('Downloading source.');
             exec(
                 `curl -s -H "Authorization: token ${this.config.github.personalAccessToken}" -L ${source.zipFileUrl} > ${source.zipFileFullPath}`,
                 { maxBuffer: BUFFER_SIZE },
                 error => {
                     if (error) {
-                        console.log(`Failed to download source from GitHub repository ${repository} at commit ${commit.sha}.`);
+                        logger.info(`Failed to download source from GitHub repository ${repository} at commit ${commit.sha}.`);
                         reject(error);
 
                         return;
@@ -75,4 +85,5 @@ export class DownloadSourceJobExecutor implements JobExecutorInterface {
             );
         });
     }
+
 }

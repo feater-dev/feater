@@ -11,7 +11,7 @@ export interface BuildInstanceInterface extends Document {
         readonly value: string;
     }[];
     readonly environmentalVariables: {
-        readonly name: string;
+        readonly key: string;
         readonly value: string;
     }[];
 }

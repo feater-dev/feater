@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import { Component } from '@nestjs/common';
 import { Config } from '../../config/config.component';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
 import { InterpolationHelper } from '../interpolation-helper.component';
 import { BuildJobInterface, JobInterface } from './job';
@@ -19,6 +20,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
 
     constructor(
         private readonly config: Config,
+        private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly buildInstanceRepository: BuildInstanceRepository,
         private readonly interpolationHelper: InterpolationHelper,
     ) {}
@@ -33,6 +35,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
         }
 
         const buildJob = job as PrepareEnvironmentalVariablesJob;
+        const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const { build } = buildJob;
 
         return new Promise(resolve => {

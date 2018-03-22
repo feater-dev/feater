@@ -1,13 +1,18 @@
-import { Component } from '@nestjs/common';
+import * as _ from 'lodash';
 import * as OctokitRest from '@octokit/rest';
+import { Component } from '@nestjs/common';
 import { Config } from '../config/config.component';
+import {BaseLogger} from '../logger/base-logger';
 
 @Component()
 export class GithubClient {
 
     private readonly ocktokit;
 
-    constructor(private readonly config: Config) {
+    constructor(
+        private readonly config: Config,
+        private readonly logger: BaseLogger,
+    ) {
         this.ocktokit = new OctokitRest({
             headers: {
                 'user-agent': 'XSolve Feat',
@@ -66,7 +71,7 @@ export class GithubClient {
 
     private handleError(error): void {
         // TODO Handle error.
-        console.log('GitHub communication failed.', error);
+        this.logger.error('GitHub communication failed.', {error: _.toString(error)});
 
         throw new Error('GitHub communication failed.');
     }

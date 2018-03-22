@@ -71,7 +71,6 @@ export class ProjectController {
                     });
                 },
                 (error) => {
-                    console.log(error);
                     res.status(HttpStatus.BAD_REQUEST).send();
                 },
             );

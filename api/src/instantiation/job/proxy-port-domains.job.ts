@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { execSync } from 'child_process';
 import { Component } from '@nestjs/common';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { Config } from '../../config/config.component';
 import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
 import { BuildJobInterface, JobInterface } from './job';
@@ -22,6 +23,7 @@ export class ProxyPortDomainsJobExecutor implements JobExecutorInterface {
 
     constructor(
         private readonly config: Config,
+        private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly buildInstanceRepository: BuildInstanceRepository,
     ) {}
 
@@ -35,10 +37,11 @@ export class ProxyPortDomainsJobExecutor implements JobExecutorInterface {
         }
 
         const buildJob = job as ProxyPortDomainsJob;
+        const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const { build } = buildJob;
 
         return new Promise(resolve => {
-            console.log('Proxying port domains.');
+            logger.info('Proxying port domains.');
 
             const nginxConfs = [];
 

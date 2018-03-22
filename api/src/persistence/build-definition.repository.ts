@@ -16,11 +16,11 @@ export class BuildDefinitionRepository {
         return this.buildDefinitionModel.find(query).exec();
     }
 
-    findById(id): Promise<BuildDefinitionInterface> {
+    findById(id: string): Promise<BuildDefinitionInterface> {
         return this.buildDefinitionModel.findById(id).exec();
     }
 
-    async findByIdOrFail(id): Promise<BuildDefinitionInterface> {
+    async findByIdOrFail(id: string): Promise<BuildDefinitionInterface> {
         const buildDefinition = await this.findById(id);
         if (null === buildDefinition) {
             throw new Error(`BuildDefinition document with id ${id} not found.`);

@@ -101,13 +101,11 @@ export class BuildDefinitionController {
                                 });
                             },
                             (error) => {
-                                console.log(error);
                                 res.status(HttpStatus.BAD_REQUEST).send();
                             },
                         );
                 },
                 (error) => {
-                    console.log(error);
                     res.status(HttpStatus.BAD_REQUEST).send();
                 },
             );

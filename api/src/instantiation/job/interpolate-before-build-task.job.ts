@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { Component } from '@nestjs/common';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { InterpolationHelper } from '../interpolation-helper.component';
 import { JobInterface, SourceJobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
@@ -17,6 +18,7 @@ export class InterpolateBeforeBuildTaskJob implements SourceJobInterface {
 export class InterpolateBeforeBuildTaskJobExecutor implements JobExecutorInterface {
 
     constructor(
+        private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly interpolationHelper: InterpolationHelper,
     ) {}
 
@@ -30,10 +32,11 @@ export class InterpolateBeforeBuildTaskJobExecutor implements JobExecutorInterfa
         }
 
         const sourceJob = job as InterpolateBeforeBuildTaskJob;
+        const logger = this.jobLoggerFactory.createForSourceJob(sourceJob);
         const { source } = sourceJob;
 
         return new Promise(resolve => {
-            console.log(`Interpolating Feat variables in ${sourceJob.relativePath}.`);
+            logger.info(`Interpolating Feat variables in ${sourceJob.relativePath}.`);
 
             const fullPath = path.join(source.fullBuildPath, sourceJob.relativePath);
 

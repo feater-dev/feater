@@ -1,5 +1,6 @@
 import { Component } from '@nestjs/common';
 import { Config } from '../../config/config.component';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
 import { BuildJobInterface, JobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
@@ -17,6 +18,7 @@ export class PreparePortDomainsJobExecutor implements JobExecutorInterface {
 
     constructor(
         private readonly config: Config,
+        private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly buildInstanceRepository: BuildInstanceRepository,
     ) {}
 
@@ -30,16 +32,17 @@ export class PreparePortDomainsJobExecutor implements JobExecutorInterface {
         }
 
         const buildJob = job as PreparePortDomainsJob;
+        const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const { build } = buildJob;
 
         return new Promise((resolve, reject) => {
-            console.log('Preparing port domains.');
+            logger.info('Preparing port domains.');
 
             for (const serviceId of Object.keys(build.config.exposedPorts)) {
                 const service = build.services[serviceId];
 
                 if (!service) {
-                    console.log(`Unknown service ${serviceId}.`);
+                    logger.error(`Unknown service ${serviceId}.`);
                     reject();
 
                     return;

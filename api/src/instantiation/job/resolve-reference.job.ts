@@ -1,4 +1,5 @@
 import { Component } from '@nestjs/common';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { GithubClient } from '../github-client.component';
 import { JobInterface, SourceJobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
@@ -15,6 +16,7 @@ export class ResolveReferenceJob implements SourceJobInterface {
 export class ResolveReferenceJobExecutor implements JobExecutorInterface {
 
     constructor(
+        private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly githubClient: GithubClient,
     ) {}
 
@@ -28,12 +30,13 @@ export class ResolveReferenceJobExecutor implements JobExecutorInterface {
         }
 
         const sourceJob = job as ResolveReferenceJob;
+        const logger = this.jobLoggerFactory.createForSourceJob(sourceJob);
         const {source} = sourceJob;
 
         return new Promise((resolve, reject) => {
             const {type, name, reference} = source.config;
 
-            console.log(`Resolving reference to source ${name} of type ${reference.type} and name ${reference.name}.`);
+            logger.info(`Resolving reference to source ${name} of type ${reference.type} and name ${reference.name}.`);
 
             if (type !== 'github') {
                 reject(new Error(`Source type ${type} not supported.`));
@@ -61,6 +64,7 @@ export class ResolveReferenceJobExecutor implements JobExecutorInterface {
                                 break;
 
                             default:
+                                logger.error(`Reference type ${reference.type} not supported.`);
                                 reject(new Error(`Reference type ${reference.type} not supported.`));
 
                                 return;

@@ -19,7 +19,9 @@
     "@octokit/rest": "^15.2.3",
     "cors": "^2.8.4",
     "decompress": "^4.2.0",
+    "elasticsearch": "^14.2.1",
     "escape-string-regexp": "^1.0.5",
+    "eslint": "^4.19.0",
     "esprima": "^4.0.0",
     "fs-extra": "^5.0.0",
     "ini-config": "https://github.com/mariusz-bak-xsolve-pl/node-ini-config/tarball/master",
@@ -28,12 +30,14 @@
     "lodash": "^4.17.5",
     "mkdir-recursive": "^0.4.0",
     "mongoose": "^5.0.10",
+    "morgan": "^1.9.0",
     "nanoid": "^1.0.2",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^5.5.7",
     "static-eval": "^2.0.0",
     "typescript": "^2.7.2",
-    "winston": "^2.4.1"
+    "winston": "^2.4.1",
+    "winston-elasticsearch": "vanthome/winston-elasticsearch"
   },
   "devDependencies": {
     "@types/node": "^9.4.7",

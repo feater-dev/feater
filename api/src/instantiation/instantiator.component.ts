@@ -19,26 +19,28 @@ import { RunDockerComposeJob } from './job/run-docker-compose.job';
 import { GetContainerIdsJob } from './job/get-container-ids.job';
 import { ConnectContainersToNetworkJob } from './job/connect-containers-to-network-job';
 import { ProxyPortDomainsJob } from './job/proxy-port-domains.job';
+import {BaseLogger} from '../logger/base-logger';
 
 @Component()
 export class Instantiator {
 
     constructor(
         private readonly config: Config,
+        private readonly logger: BaseLogger,
         private readonly stagesListFactory: StagesListFactory,
     ) {}
 
     createBuild(id: string, hash: string, buildDefinition: any) {
-        console.log('Setting up build.');
+        this.logger.info('Setting up build.');
         const buildDefinitionConfig = buildDefinition._doc.config;
         const build = new Build(id, hash, buildDefinitionConfig);
 
-        console.log('Setting up sources.');
+        this.logger.info('Setting up sources.');
         _.map(_.keys(buildDefinitionConfig.sources), sourceId => {
             new Source(sourceId, build, buildDefinitionConfig.sources[sourceId]);
         });
 
-        console.log('Setting basic Feat variables.');
+        this.logger.info('Setting basic Feat variables.');
         const featVariables = {
             scheme: this.config.app.scheme,
             host: this.config.app.host,
@@ -99,11 +101,10 @@ export class Instantiator {
             .execute()
             .then(
                 () => {
-                    console.log('Build instantiated and started.');
+                    this.logger.info('Build instantiated and started.');
                 },
                 error => {
-                    console.log('Failed to instantiate and start build.');
-                    console.log(error);
+                    this.logger.error('Failed to instantiate and start build.', {error: _.toString(error)});
                 },
             );
     }

@@ -1,9 +1,11 @@
+import * as _ from 'lodash';
 import * as path from 'path';
 import { spawn } from 'child_process';
 import { Component } from '@nestjs/common';
 import { EnvironmentalVariablesSet } from '../environmental-variables-set';
 import { JobInterface, BuildJobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 
 export class RunDockerComposeJob implements BuildJobInterface {
 
@@ -16,6 +18,10 @@ export class RunDockerComposeJob implements BuildJobInterface {
 @Component()
 export class RunDockerComposeJobExecutor implements JobExecutorInterface {
 
+    constructor(
+        private readonly jobLoggerFactory: JobLoggerFactory,
+    ) {}
+
     supports(job: JobInterface): boolean {
         return (job instanceof RunDockerComposeJob);
     }
@@ -26,10 +32,11 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
         }
 
         const buildJob = job as RunDockerComposeJob;
+        const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const { build } = buildJob;
 
         return new Promise((resolve, reject) => {
-            console.log('Running docker-compose.');
+            logger.info('Running docker-compose.');
 
             const dockerComposeDirectoryAbsolutePath = path.join(
                 build.sources[build.config.composeFile.sourceId].fullBuildPath,
@@ -57,26 +64,22 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
                 },
             );
 
-            // let stdoutLogger = build.logger.createNested('compose stdout', { splitLines: true });
             dockerCompose.stdout.on('data', stdoutData => {
-                console.log(stdoutData.toString());
-                // stdoutLogger.debug(stdoutData.toString());
+                logger.info(stdoutData.toString());
             });
 
-            // let stderrLogger = build.logger.createNested('compose stderr', { splitLines: true });
             dockerCompose.stderr.on('data', stderrData => {
-                console.log(stderrData.toString());
-                // stderrLogger.error(stderrData.toString());
+                logger.info(stderrData.toString());
             });
 
             dockerCompose.on('error', error => {
-                console.log(error);
+                logger.error(_.toLocaleString(error));
                 reject(error);
             });
 
             dockerCompose.on('exit', code => {
                 if (0 !== code) {
-                    console.log('Failed to run docker-compose.');
+                    logger.error('Failed to run docker-compose.');
                     reject(code);
 
                     return;
@@ -87,7 +90,7 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
 
             dockerCompose.on('close', code => {
                 if (0 !== code) {
-                    console.log('Failed to run docker-compose.');
+                    logger.error('Failed to run docker-compose.');
                     reject(code);
 
                     return;

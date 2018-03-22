@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import { Component } from '@nestjs/common';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
 import { InterpolationHelper } from '../interpolation-helper.component';
 import { BuildJobInterface, JobInterface } from './job';
@@ -17,6 +18,7 @@ export class PrepareSummaryItemsJob implements BuildJobInterface {
 export class PrepareSummaryItemsJobExecutor implements JobExecutorInterface{
 
     constructor(
+        private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly buildInstanceRepository: BuildInstanceRepository,
         private readonly interpolationHelper: InterpolationHelper,
     ) {}
@@ -31,10 +33,11 @@ export class PrepareSummaryItemsJobExecutor implements JobExecutorInterface{
         }
 
         const buildJob = job as PrepareSummaryItemsJob;
+        const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const { build } = buildJob;
 
         return new Promise(resolve => {
-            console.log(`Setting summary items.`);
+            logger.info(`Setting summary items.`);
 
             _.each(
                 build.config.summaryItems,

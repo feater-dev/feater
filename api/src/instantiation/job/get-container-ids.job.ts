@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import { execSync } from 'child_process';
 import { Component } from '@nestjs/common';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
 import { BuildJobInterface, JobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
@@ -19,6 +20,7 @@ export class GetContainerIdsJob implements BuildJobInterface {
 export class GetContainerIdsJobExecutor implements JobExecutorInterface {
 
     constructor(
+        private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly buildInstanceRepository: BuildInstanceRepository,
     ) {}
 
@@ -32,10 +34,11 @@ export class GetContainerIdsJobExecutor implements JobExecutorInterface {
         }
 
         const buildJob = job as BuildJobInterface;
+        const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const {build} = buildJob;
 
         return new Promise((resolve, reject) => {
-            console.log('Determining container ids.');
+            logger.info('Determining container ids.');
 
             const serviceIds = Object.keys(build.services)
                 .sort((serviceId1, serviceId2) => {
@@ -56,14 +59,14 @@ export class GetContainerIdsJobExecutor implements JobExecutorInterface {
                 );
 
                 if (containerIds.length < 1) {
-                    console.log(`No running container for service ${serviceId}.`);
+                    logger.error(`No running container for service ${serviceId}.`);
                     reject();
 
                     return;
                 }
 
                 if (containerIds.length > 1) {
-                    console.log(`Too many running containers for service ${serviceId}.`);
+                    logger.error(`Too many running containers for service ${serviceId}.`);
                     reject();
 
                     return;
@@ -72,7 +75,7 @@ export class GetContainerIdsJobExecutor implements JobExecutorInterface {
                 const containerId = containerIds[0];
 
                 if (!/^[a-f\d]+$/.test(containerId)) {
-                    console.log(`Invalid container id for service ${serviceId}.`);
+                    logger.error(`Invalid container id for service ${serviceId}.`);
                     reject();
 
                     return;

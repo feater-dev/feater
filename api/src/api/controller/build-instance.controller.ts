@@ -158,7 +158,6 @@ export class BuildInstanceController {
         };
 
         const respondWithErrors = (errors) => {
-            console.log( errors);
             res.status(HttpStatus.BAD_REQUEST).send();
         };
 

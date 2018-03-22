@@ -49,8 +49,7 @@
         ],
         "one-variable-per-declaration": [
             false
-        ],
-        "no-console": false
+        ]
     },
     "rulesDirectory": []
 }

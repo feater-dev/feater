@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
 import { Component } from '@nestjs/common';
+import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
 import { BuildJobInterface, JobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
@@ -18,6 +19,7 @@ export class ConnectContainersToNetworkJob implements BuildJobInterface {
 export class ConnectContainersToNetworkJobExecutor implements JobExecutorInterface {
 
     constructor(
+        private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly buildInstanceRepository: BuildInstanceRepository,
     ) {}
 
@@ -31,10 +33,11 @@ export class ConnectContainersToNetworkJobExecutor implements JobExecutorInterfa
         }
 
         const buildJob = job as ConnectContainersToNetworkJob;
+        const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const build  = buildJob.build;
 
         return new Promise(resolve => {
-            console.log('Connecting containers to build network.');
+            logger.info('Connecting containers to build network.');
 
             for (const serviceId of Object.keys(build.services)) {
                 const service = build.services[serviceId];

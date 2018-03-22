@@ -20,10 +20,12 @@ import { Instantiator } from './instantiator.component';
 import { InterpolationHelper } from './interpolation-helper.component';
 import { JobExecutorsCollection } from './job-executors-collection.component';
 import { StagesListFactory } from './stages-list-factory.component';
+import {LoggerModule} from '../logger/logger.module';
 
 @Module({
   imports: [
       ConfigModule,
+      LoggerModule,
       PersistenceModule,
   ],
   controllers: [],

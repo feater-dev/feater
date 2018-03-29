@@ -1,20 +1,14 @@
 import * as _ from 'lodash';
-import {Build} from '../instantiation/build';
-import {LoggerInterface} from './logger-interface';
-import {BaseLogger} from './base-logger';
+import { LoggerInterface } from './logger-interface';
+import { BaseLogger } from './base-logger';
+import { BuildJobInterface } from '../instantiation/job/job';
 
 export class BuildJobLogger implements LoggerInterface {
 
-    protected readonly baseLogger: BaseLogger;
-    protected readonly build: Build;
-
     constructor(
-        baseLogger: BaseLogger,
-        build: Build,
-    ) {
-        this.baseLogger = baseLogger;
-        this.build = build;
-    }
+        private readonly baseLogger: BaseLogger,
+        private readonly buildJob: BuildJobInterface,
+    ) {}
 
     emerg(message: string, meta: object = {}) {
         this.baseLogger.emerg(message, this.getExtendedMeta(meta));
@@ -48,14 +42,18 @@ export class BuildJobLogger implements LoggerInterface {
         this.baseLogger.debug(message, this.getExtendedMeta(meta));
     }
 
-    protected getExtendedMeta(meta: object): object {
+    private getExtendedMeta(meta: object): object {
         return _.extend(
             {},
-            meta,
+            _.isEmpty(meta)
+                ? {}
+                : { [this.buildJob.constructor.name]: meta }
+            ,
             {
+                job: this.buildJob.constructor.name,
                 build: {
-                    id: this.build.id,
-                    hash: this.build.hash,
+                    id: this.buildJob.build.id,
+                    hash: this.buildJob.build.hash,
                 },
             },
         );

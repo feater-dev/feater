@@ -1,8 +1,7 @@
-import * as _ from 'lodash';
 import { Controller, Get, Post, Response, Param, HttpStatus, Body } from '@nestjs/common';
 import { Validator } from '../validation/validator.component';
-import { BuildDefinitionRepository } from '../../persistence/build-definition.repository';
-import { ProjectRepository } from '../../persistence/project.repository';
+import { BuildDefinitionRepository } from '../../persistence/repository/build-definition.repository';
+import { ProjectRepository } from '../../persistence/repository/project.repository';
 import { CreateBuildDefinitionRequestDto } from '../dto/request/create-build-definition-request.dto';
 import { CreateBuildDefinitionResponseDto } from '../dto/response/create-build-definition-response.dto';
 import { FindOneBuildDefinitionResponseDto } from '../dto/response/find-one-build-definition-response.dto';

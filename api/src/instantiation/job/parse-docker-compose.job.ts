@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as jsYaml from 'js-yaml';
 import { Component } from '@nestjs/common';
 import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
+import { BuildInstanceRepository } from '../../persistence/repository/build-instance.repository';
 import { JobInterface, BuildJobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
 

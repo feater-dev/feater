@@ -43,6 +43,13 @@ interface GoogleOAuth2ConfigInterface {
     readonly clientId: string;
     readonly clientSecret: string;
     readonly allowedDomains: string[];
+    readonly baseUrl: string;
+}
+
+interface GithubOAuth2ConfigInterface {
+    readonly clientId: string;
+    readonly clientSecret: string;
+    readonly baseUrl: string;
 }
 
 @Component()
@@ -55,6 +62,7 @@ export class Config {
     readonly guestPaths: GuestPathsConfigInterface;
     readonly hostPaths: HostPathsConfigInterface;
     readonly googleOAuth2: GoogleOAuth2ConfigInterface;
+    readonly githubOAuth2: GithubOAuth2ConfigInterface;
 
     constructor() {
         const rawConfig = iniConfig(configFullPath);
@@ -112,7 +120,14 @@ export class Config {
             clientId: rawConfig.googleOAuth2.clientId,
             clientSecret: rawConfig.googleOAuth2.clientSecret,
             allowedDomains: rawConfig.googleOAuth2.allowedDomains,
+            baseUrl: rawConfig.googleOAuth2.baseUrl,
         } as GoogleOAuth2ConfigInterface;
+
+        this.githubOAuth2 = {
+            clientId: rawConfig.githubOAuth2.clientId,
+            clientSecret: rawConfig.githubOAuth2.clientSecret,
+            baseUrl: rawConfig.githubOAuth2.baseUrl,
+        } as GithubOAuth2ConfigInterface;
     }
 
 }

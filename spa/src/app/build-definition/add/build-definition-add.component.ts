@@ -224,11 +224,11 @@ export class BuildDefinitionAddComponent implements OnInit {
         this.getProject();
     }
 
-    goToList() : void {
+    goToList(): void {
         this.router.navigate(['/build-definitions']);
     }
 
-    addItem() : void {
+    addItem(): void {
         this.repository
             .addItem(this.mapItem())
             .subscribe(
@@ -236,7 +236,7 @@ export class BuildDefinitionAddComponent implements OnInit {
             );
     }
 
-    addSource() : void {
+    addSource(): void {
         this.item.config.sources.push({
             id: '',
             type: 'github',
@@ -249,14 +249,14 @@ export class BuildDefinitionAddComponent implements OnInit {
         });
     }
 
-    deleteSource(source: BuildDefinitionAddFormSourceFormElement) : void {
+    deleteSource(source: BuildDefinitionAddFormSourceFormElement): void {
         var index = this.item.config.sources.indexOf(source);
         if (-1 !== index) {
             this.item.config.sources.splice(index, 1);
         }
     }
 
-    addExposedPort() : void {
+    addExposedPort(): void {
         this.item.config.exposedPorts.push({
             serviceId: '',
             id: '',
@@ -265,42 +265,42 @@ export class BuildDefinitionAddComponent implements OnInit {
         });
     }
 
-    deleteExposedPort(exposedPort: BuildDefinitionAddFormExposedPortFormElement) : void {
+    deleteExposedPort(exposedPort: BuildDefinitionAddFormExposedPortFormElement): void {
         var index = this.item.config.exposedPorts.indexOf(exposedPort);
         if (-1 !== index) {
             this.item.config.exposedPorts.splice(index, 1);
         }
     }
 
-    addEnvironmentalVariable() : void {
+    addEnvironmentalVariable(): void {
         this.item.config.environmentalVariables.push({
             name: '',
             value: ''
         });
     }
 
-    deleteEnvironmentalVariable(environmentalVariable: BuildDefinitionAddFormEnvironmentalVariableFormElement) : void {
+    deleteEnvironmentalVariable(environmentalVariable: BuildDefinitionAddFormEnvironmentalVariableFormElement): void {
         var index = this.item.config.environmentalVariables.indexOf(environmentalVariable);
         if (-1 !== index) {
             this.item.config.environmentalVariables.splice(index, 1);
         }
     }
 
-    addSummaryItem() : void {
+    addSummaryItem(): void {
         this.item.config.summaryItems.push({
             name: '',
             value: ''
         });
     }
 
-    deleteSummaryItem(summaryItem: BuildDefinitionAddFormSummaryItemFormElement) : void {
+    deleteSummaryItem(summaryItem: BuildDefinitionAddFormSummaryItemFormElement): void {
         var index = this.item.config.summaryItems.indexOf(summaryItem);
         if (-1 !== index) {
             this.item.config.summaryItems.splice(index, 1);
         }
     }
 
-    switchMode(mode: string) : void {
+    switchMode(mode: string): void {
         this.mode = mode;
     }
 
@@ -308,12 +308,12 @@ export class BuildDefinitionAddComponent implements OnInit {
         this.switchMode('json' === this.mode ? 'form' : 'json');
     }
 
-    importJsonConfig(jsonConfig) : void {
+    importJsonConfig(jsonConfig): void {
         this.item.config = this.mapJsonConfig(jsonConfig);
         this.switchMode('form');
     }
 
-    mapItem() : Object {
+    mapItem(): Object {
         var mappedItem = {
             projectId: this.item.projectId,
             name: this.item.name,
@@ -357,7 +357,7 @@ export class BuildDefinitionAddComponent implements OnInit {
         return mappedItem;
     }
 
-    mapJsonConfig(jsonConfig : any) : BuildDefinitionAddFormConfigFormElement {
+    mapJsonConfig(jsonConfig : any): BuildDefinitionAddFormConfigFormElement {
         // TODO Check schema validity of jsonConfig.
 
         jsonConfig = JSON.parse(jsonConfig);
@@ -397,7 +397,7 @@ export class BuildDefinitionAddComponent implements OnInit {
         return mappedJsonConfig;
     }
 
-    private getProject() : void {
+    private getProject(): void {
         this.route.params
             .switchMap(
                 (params: Params) => this.projectRepository.getItem(params['id'])

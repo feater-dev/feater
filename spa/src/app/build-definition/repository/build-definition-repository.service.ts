@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -10,32 +10,35 @@ import {
     BuildDefinitionAddForm, BuildDefinitionAddFormSourceFormElement,
     BuildDefinitionAddFormEnvironmentalVariableFormElement, BuildDefinitionAddFormExposedPortFormElement
 } from '../build-definition-add-form.model';
+import {AuthHttp} from '../../api/auth-http';
 
 @Injectable()
 export class BuildDefinitionRepositoryService {
 
     private itemsUrl = 'http://localhost:3001/api/build-definition';
 
-    constructor(private http: Http) {}
+    constructor(
+        @Inject('authHttp') private http: AuthHttp,
+    ) {}
 
-    getItems() : Observable<BuildDefinition[]> {
+    getItems(): Observable<BuildDefinition[]> {
         return this.http
             .get(this.itemsUrl)
-            .map((res) : BuildDefinition[] => res.json().data)
+            .map((res): BuildDefinition[] => res.json().data)
             .catch(this.handleError);
     }
 
-    getItem(id : string) : Observable<BuildDefinition> {
+    getItem(id : string): Observable<BuildDefinition> {
         return this.http
             .get([this.itemsUrl, id].join('/'))
-            .map((res) : BuildDefinition => res.json().data)
+            .map((res): BuildDefinition => res.json().data)
             .catch(this.handleError);
     }
 
-    addItem(item : Object) : Observable<string> {
+    addItem(item : Object): Observable<string> {
         return this.http
             .post(this.itemsUrl, item)
-            .map((res) : string => res.json().data.id)
+            .map((res): string => res.json().data.id)
             .catch(this.handleError);
     }
 

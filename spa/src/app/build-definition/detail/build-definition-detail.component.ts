@@ -48,7 +48,7 @@ export class BuildDefinitionDetailComponent implements OnInit {
 
     item: BuildDefinition;
 
-    errorMeessage: string;
+    errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -79,7 +79,7 @@ export class BuildDefinitionDetailComponent implements OnInit {
             )
             .subscribe(
                 (item: BuildDefinition) => { this.item = item },
-                (error) => { this.errorMeessage = <any>error; }
+                (error) => { this.errorMessage = <any>error; }
             );
     }
 }

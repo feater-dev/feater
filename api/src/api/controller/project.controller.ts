@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Response, Param, HttpStatus, Body } from '@nestjs/common';
+import { Controller, Get, Post, Response, Param, HttpStatus, Body, Request } from '@nestjs/common';
 import { Validator } from '../validation/validator.component';
-import { ProjectRepository } from '../../persistence/project.repository';
+import { ProjectRepository } from '../../persistence/repository/project.repository';
 import { CreateProjectRequestDto } from '../dto/request/create-project-request.dto';
 import { CreateProjectResponseDto } from '../dto/response/create-project-response.dto';
 import { FindAllProjectResponseDto } from '../dto/response/find-all-project-response.dto';
@@ -16,6 +16,7 @@ export class ProjectController {
 
     @Get()
     async findAll(
+        @Request() req,
         @Response() res,
     ): Promise<any> {
         const projects = await this.projectRepository.find({});

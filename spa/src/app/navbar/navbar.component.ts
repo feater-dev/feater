@@ -17,6 +17,9 @@ import { Router } from '@angular/router';
                 <div class="navbar-collapse collapse" id="navbar-main">
                     <ul class="nav navbar-nav">
                         <li>
+                            <a style="cursor: pointer;" (click)="goToUserList()">Users</a>
+                        </li>
+                        <li>
                             <a style="cursor: pointer;" (click)="goToProjectList()">Projects</a>
                         </li>
                         <li>
@@ -27,6 +30,12 @@ import { Router } from '@angular/router';
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="http://localhost:3001/signin">Sign in</a>
+                        </li>
+                        <li>
+                            <a href="http://localhost:3001/signout">Sign out</a>
+                        </li>
                         <li>
                             <a>Signed in as <em>Mariusz Bąk</em></a>
                         </li>
@@ -47,6 +56,10 @@ export class NavbarComponent implements OnInit {
 
     goToHomepage() {
         this.router.navigate(['/']);
+    }
+
+    goToUserList() {
+        this.router.navigate(['/users']);
     }
 
     goToProjectList() {

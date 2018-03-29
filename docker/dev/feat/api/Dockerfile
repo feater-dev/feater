@@ -2,7 +2,11 @@ FROM ubuntu:16.04
 
 # Install basic tools.
 RUN apt-get update
-RUN apt-get install -y sudo curl python vim nano xterm unzip
+RUN apt-get install -y sudo curl python vim nano xterm unzip software-properties-common
+RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test
+RUN apt-get update
+RUN apt-get install -y build-essential libstdc++-4.9-dev libssl-dev
+RUN apt-get clean
 
 # Install Node.js and NPM.
 RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -

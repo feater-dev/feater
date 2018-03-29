@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
+import { MiddlewaresConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { PersistenceModule } from '../persistence/persistence.module';
+import { InstantiationModule } from '../instantiation/instantiation.module';
+import { UserController } from './controller/user.controller';
 import { ProjectController } from './controller/project.controller';
 import { BuildDefinitionController } from './controller/build-definition.controller';
 import { BuildInstanceController } from './controller/build-instance.controller';
-import { PersistenceModule } from '../persistence/persistence.module';
-import { InstantiationModule } from '../instantiation/instantiation.module';
 import { Validator } from './validation/validator.component';
+import { EnsureAuthenticatedMiddleware } from './middleware/ensure-authenticated.middleware';
 
 @Module({
   imports: [
@@ -12,6 +14,7 @@ import { Validator } from './validation/validator.component';
       InstantiationModule,
   ],
   controllers: [
+      UserController,
       ProjectController,
       BuildDefinitionController,
       BuildInstanceController,
@@ -20,4 +23,12 @@ import { Validator } from './validation/validator.component';
       Validator,
   ],
 })
-export class ApiModule {}
+export class ApiModule implements NestModule {
+
+    configure(consumer: MiddlewaresConsumer): void {
+        consumer.apply(EnsureAuthenticatedMiddleware).forRoutes({
+            path: '/api/*', method: RequestMethod.ALL,
+        });
+    }
+
+}

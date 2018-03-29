@@ -4,7 +4,7 @@ import { execSync } from 'child_process';
 import { Component } from '@nestjs/common';
 import { JobLoggerFactory } from '../../logger/job-logger-factory';
 import { Config } from '../../config/config.component';
-import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
+import { BuildInstanceRepository } from '../../persistence/repository/build-instance.repository';
 import { BuildJobInterface, JobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
 

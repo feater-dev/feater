@@ -38,7 +38,7 @@ export class BuildDefinitionListComponent implements OnInit {
 
     items: BuildDefinition[];
 
-    errorMeessage: string;
+    errorMessage: string;
 
     constructor(
             private router: Router,
@@ -59,7 +59,7 @@ export class BuildDefinitionListComponent implements OnInit {
                 .getItems()
                 .subscribe(
                         (items: BuildDefinition[]) => { this.items = items; },
-                        (error) => { this.errorMeessage = <any>error; }
+                        (error) => { this.errorMessage = <any>error; }
                 );
     }
 }

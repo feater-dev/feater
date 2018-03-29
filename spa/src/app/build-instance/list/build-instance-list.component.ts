@@ -38,7 +38,7 @@ export class BuildInstanceListComponent implements OnInit {
 
     items: BuildInstance[];
 
-    errorMeessage: string;
+    errorMessage: string;
 
     constructor(
         private router: Router,
@@ -59,7 +59,7 @@ export class BuildInstanceListComponent implements OnInit {
                 .getItems()
                 .subscribe(
                         (items: BuildInstance[]) => { this.items = items; },
-                        (error) => { this.errorMeessage = <any>error; }
+                        (error) => { this.errorMessage = <any>error; }
                 );
     }
 }

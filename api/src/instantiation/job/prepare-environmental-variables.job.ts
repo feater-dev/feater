@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Component } from '@nestjs/common';
 import { Config } from '../../config/config.component';
 import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
+import { BuildInstanceRepository } from '../../persistence/repository/build-instance.repository';
 import { InterpolationHelper } from '../interpolation-helper.component';
 import { BuildJobInterface, JobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
@@ -39,6 +39,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
         const { build } = buildJob;
 
         return new Promise(resolve => {
+            logger.info('Setting environmental variables for build path and volume paths.');
             _.each(
                 build.sources,
                 (source, sourceId) => {
@@ -47,6 +48,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
                 },
             );
 
+            logger.info('Setting environmental variables for Feat variables.');
             _.each(
                 build.featVariables,
                 (value, name) => {
@@ -54,6 +56,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
                 },
             );
 
+            logger.info('Setting environmental variables passed throuh build definition configuration.');
             _.each(
                 build.config.environmentalVariables,
                 (value, name) => {
@@ -64,6 +67,12 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
                 },
             );
 
+            logger.debug(
+                'Environmental variables set.',
+                { environmentalVariablesList: JSON.stringify(build.environmentalVariables.toMap()) },
+            );
+
+            logger.info('Persisting environmental variables.');
             this.buildInstanceRepository
                 .updateEnvironmentalVariables(build)
                 .then(resolve);

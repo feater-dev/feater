@@ -1,8 +1,8 @@
 import { Component } from '@nestjs/common';
-import {BuildJobInterface, SourceJobInterface} from '../instantiation/job/job';
-import {BaseLogger} from './base-logger';
-import {BuildJobLogger} from './build-job-logger';
-import {SourceJobLogger} from './source-job-logger';
+import { BuildJobInterface, SourceJobInterface } from '../instantiation/job/job';
+import { BaseLogger } from './base-logger';
+import { BuildJobLogger } from './build-job-logger';
+import { SourceJobLogger } from './source-job-logger';
 
 @Component()
 export class JobLoggerFactory {
@@ -12,11 +12,11 @@ export class JobLoggerFactory {
     ) {}
 
     createForBuildJob(buildJob: BuildJobInterface): BuildJobLogger {
-        return new BuildJobLogger(this.baseLogger, buildJob.build);
+        return new BuildJobLogger(this.baseLogger, buildJob);
     }
 
     createForSourceJob(sourceJob: SourceJobInterface): SourceJobLogger {
-        return new SourceJobLogger(this.baseLogger, sourceJob.source);
+        return new SourceJobLogger(this.baseLogger, sourceJob);
     }
 
 }

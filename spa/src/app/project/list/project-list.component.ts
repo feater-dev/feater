@@ -39,7 +39,7 @@ export class ProjectListComponent implements OnInit {
 
     items: Project[];
 
-    errorMeessage: string;
+    errorMessage: string;
 
     constructor(
             private router: Router,
@@ -64,7 +64,7 @@ export class ProjectListComponent implements OnInit {
                 .getItems()
                 .subscribe(
                         (items: Project[]) => { this.items = items; },
-                        (error) => { this.errorMeessage = <any>error; }
+                        (error) => { this.errorMessage = <any>error; }
                 );
     }
 }

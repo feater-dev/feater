@@ -65,7 +65,7 @@ export class BuildInstanceDetailComponent implements OnInit {
 
     item: MappedBuildInstance;
 
-    errorMeessage: string;
+    errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -96,11 +96,11 @@ export class BuildInstanceDetailComponent implements OnInit {
             )
             .subscribe(
                 (item: BuildInstance) => { this.item = this.mapItem(item); },
-                (error) => { this.errorMeessage = <any>error; }
+                (error) => { this.errorMessage = <any>error; }
             );
     }
 
-    private mapItem(item : BuildInstance) : MappedBuildInstance {
+    private mapItem(item : BuildInstance): MappedBuildInstance {
         var mappedItem : MappedBuildInstance = {
             _id: item._id,
             name: item.name,

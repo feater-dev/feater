@@ -7,4 +7,13 @@ if (environment.production) {
     enableProdMode();
 }
 
+// Capture and store authentication token sent via URL.
+const parser = document.createElement('a');
+parser.href = window.location.href;
+const token = parser.hash.replace(/^#/, '');
+if (token) {
+    localStorage.setItem('token', token);
+    window.location.replace(parser.href.substr(0, -token.length - 1));
+}
+
 platformBrowserDynamic().bootstrapModule(AppModule);

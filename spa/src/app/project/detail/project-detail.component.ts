@@ -41,7 +41,7 @@ export class ProjectDetailComponent implements OnInit {
 
     item: Project;
 
-    errorMeessage: string;
+    errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -68,7 +68,7 @@ export class ProjectDetailComponent implements OnInit {
             )
             .subscribe(
                 (item: Project) => { this.item = item },
-                (error) => { this.errorMeessage = <any>error; }
+                (error) => { this.errorMessage = <any>error; }
             );
     }
 }

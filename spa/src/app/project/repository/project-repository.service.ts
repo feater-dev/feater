@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -7,32 +7,35 @@ import 'rxjs/add/operator/map';
 
 import { Project } from '../project.model';
 import { ProjectAddForm } from '../project-add-form.model';
+import {AuthHttp} from '../../api/auth-http';
 
 @Injectable()
 export class ProjectRepositoryService {
 
     private itemsUrl = 'http://localhost:3001/api/project';
 
-    constructor(private http: Http) {}
+    constructor(
+        @Inject('authHttp') private http: AuthHttp
+    ) {}
 
-    getItems() : Observable<Project[]> {
+    getItems(): Observable<Project[]> {
         return this.http
             .get(this.itemsUrl)
-            .map((res) : Project[] => res.json().data)
+            .map((res): Project[] => res.json().data)
             .catch(this.handleError);
     }
 
-    getItem(id : string) : Observable<Project> {
+    getItem(id : string): Observable<Project> {
         return this.http
             .get([this.itemsUrl, id].join('/'))
-            .map((res) : Project => res.json().data)
+            .map((res): Project => res.json().data)
             .catch(this.handleError);
     }
 
-    addItem(item : ProjectAddForm) : Observable<string> {
+    addItem(item : ProjectAddForm): Observable<string> {
         return this.http
             .post(this.itemsUrl, item)
-            .map((res) : string => res.json().data.id)
+            .map((res): string => res.json().data.id)
             .catch(this.handleError);
     }
 

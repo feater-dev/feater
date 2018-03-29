@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '../config/config.module';
+import { LoggerModule } from '../logger/logger.module';
 import { PersistenceModule } from '../persistence/persistence.module';
 import { RunDockerComposeJobExecutor } from './job/run-docker-compose.job';
 import { ResolveReferenceJobExecutor } from './job/resolve-reference.job';
@@ -20,7 +21,6 @@ import { Instantiator } from './instantiator.component';
 import { InterpolationHelper } from './interpolation-helper.component';
 import { JobExecutorsCollection } from './job-executors-collection.component';
 import { StagesListFactory } from './stages-list-factory.component';
-import {LoggerModule} from '../logger/logger.module';
 
 @Module({
   imports: [

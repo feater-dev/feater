@@ -1,7 +1,7 @@
 import { Component } from '@nestjs/common';
 import { Config } from '../../config/config.component';
 import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { BuildInstanceRepository } from '../../persistence/build-instance.repository';
+import { BuildInstanceRepository } from '../../persistence/repository/build-instance.repository';
 import { BuildJobInterface, JobInterface } from './job';
 import { JobExecutorInterface } from './job-executor';
 

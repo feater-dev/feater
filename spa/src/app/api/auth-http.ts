@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Headers, RequestOptions, RequestOptionsArgs, Response, RequestMethod, Request, } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from  'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 
 export enum Action { QueryStart, QueryStop };

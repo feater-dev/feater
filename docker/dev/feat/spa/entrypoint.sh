@@ -2,4 +2,4 @@
 
 cd /app
 yarn install
-/app/serve-dev.sh
+yarn run start-dev

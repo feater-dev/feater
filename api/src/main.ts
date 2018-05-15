@@ -12,7 +12,7 @@ async function bootstrap() {
     const app: INestApplication = await NestFactory.create(ApplicationModule);
 
     app.use(cors({
-        allowedHeaders: [apiTokenHeader],
+        allowedHeaders: [apiTokenHeader, 'content-type'],
     }));
 
     app.use(morgan('dev', {

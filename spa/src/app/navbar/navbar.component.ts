@@ -1,3 +1,5 @@
+import { environment } from './../../environments/environment';
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -31,13 +33,13 @@ import { Router } from '@angular/router';
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="http://localhost:3001/signin">Sign in</a>
+                            <a href="${environment.signinUrl}">Sign in</a>
                         </li>
                         <li>
-                            <a href="http://localhost:3001/signout">Sign out</a>
+                            <a href="${environment.signoutUrl}">Sign out</a>
                         </li>
                         <li>
-                            <a>Signed in as <em>Mariusz Bąk</em></a>
+                            <a>Signed in as <em>Anonymous</em></a>
                         </li>
                     </ul>
                 </div>

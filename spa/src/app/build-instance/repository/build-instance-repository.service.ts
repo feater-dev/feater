@@ -1,4 +1,6 @@
-import {Inject, Injectable} from '@angular/core';
+import { environment } from './../../../environments/environment';
+
+import { Inject, Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -12,7 +14,7 @@ import {AuthHttp} from '../../api/auth-http';
 @Injectable()
 export class BuildInstanceRepositoryService {
 
-    private itemsUrl = 'http://localhost:3001/api/build-instance';
+    private itemsUrl = `${environment.apiBaseUrl}/build-instance`;
 
     constructor(
         @Inject('authHttp') private http: AuthHttp,

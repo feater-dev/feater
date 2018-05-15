@@ -1,4 +1,6 @@
-import {Inject, Injectable} from '@angular/core';
+import { environment } from './../../../environments/environment';
+
+import { Inject, Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -7,12 +9,12 @@ import 'rxjs/add/operator/map';
 
 import { Project } from '../project.model';
 import { ProjectAddForm } from '../project-add-form.model';
-import {AuthHttp} from '../../api/auth-http';
+import { AuthHttp } from '../../api/auth-http';
 
 @Injectable()
 export class ProjectRepositoryService {
 
-    private itemsUrl = 'http://localhost:3001/api/project';
+    private itemsUrl = `${environment.apiBaseUrl}/project`;
 
     constructor(
         @Inject('authHttp') private http: AuthHttp

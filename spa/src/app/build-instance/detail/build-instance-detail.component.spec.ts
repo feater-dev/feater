@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {DebugElement} from '@angular/core';
 
-import { BuildInstanceDetailComponent } from './build-instance-detail.component';
+import {BuildInstanceDetailComponent} from './build-instance-detail.component';
 
 describe('BuildInstanceDetailComponent', () => {
     let component: BuildInstanceDetailComponent;

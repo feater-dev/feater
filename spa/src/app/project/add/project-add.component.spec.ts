@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {DebugElement} from '@angular/core';
 
-import { ProjectAddComponent } from './project-add.component';
+import {ProjectAddComponent} from './project-add.component';
 
 describe('ProjectAddComponent', () => {
     let component: ProjectAddComponent;

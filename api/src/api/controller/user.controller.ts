@@ -24,6 +24,7 @@ export class UserController {
     ): Promise<any> {
         const users = await this.userRepository.find({});
         const data: FindAllUserResponseDto[] = [];
+
         for (const user of users) {
             const mappedUser = {
                 _id: user._id,
@@ -44,7 +45,8 @@ export class UserController {
 
             data.push(mappedUser);
         }
-        res.status(HttpStatus.OK).json({ data });
+
+        res.status(HttpStatus.OK).json(data);
     }
 
     @Get(':id')
@@ -64,12 +66,12 @@ export class UserController {
 
             return;
         }
-        res.status(HttpStatus.OK).json({
-            data: {
+        res.status(HttpStatus.OK).json(
+            {
                 _id: user._id,
                 name: user.name,
-            } as FindOneUserResponseDto,
-        });
+            } as FindOneUserResponseDto
+        );
     }
 
 }

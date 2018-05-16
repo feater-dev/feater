@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {DebugElement} from '@angular/core';
 
-import { BuildInstanceListComponent } from './build-instance-list.component';
+import {BuildInstanceListComponent} from './build-instance-list.component';
 
 describe('BuildInstanceListComponent', () => {
     let component: BuildInstanceListComponent;

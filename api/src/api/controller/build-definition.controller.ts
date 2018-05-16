@@ -22,13 +22,15 @@ export class BuildDefinitionController {
     ): Promise<any> {
         const buildDefinitions = await this.buildDefinitionRepository.find({});
         const data: FindAllBuildDefinitionResponseDto[] = [];
+
         for (const buildDefinition of buildDefinitions) {
             data.push({
                 _id: buildDefinition._id,
                 name: buildDefinition.name,
             } as FindAllBuildDefinitionResponseDto);
         }
-        res.status(HttpStatus.OK).json({ data });
+
+        res.status(HttpStatus.OK).json(data);
     }
 
     @Get(':id')
@@ -58,17 +60,15 @@ export class BuildDefinitionController {
         }
 
         res.status(HttpStatus.OK).json({
-            data: {
-                _id: buildDefinition._id,
-                name: buildDefinition.name,
-                // TODO This is not properly mapped in schema and hence not directly accessible.
-                config: buildDefinition._doc.config,
-                project: {
-                    _id: project._id,
-                    name: project.name,
-                },
-            } as FindOneBuildDefinitionResponseDto,
-        });
+            _id: buildDefinition._id,
+            name: buildDefinition.name,
+            // TODO This is not properly mapped in schema and hence not directly accessible.
+            config: buildDefinition._doc.config,
+            project: {
+                _id: project._id,
+                name: project.name,
+            },
+        } as FindOneBuildDefinitionResponseDto);
     }
 
     @Post()
@@ -94,10 +94,8 @@ export class BuildDefinitionController {
                                 const buildDefinition = await this.buildDefinitionRepository.create(createBuildDefinitionDto);
 
                                 res.status(HttpStatus.CREATED).json({
-                                    data: {
-                                        id: buildDefinition._id,
-                                    } as CreateBuildDefinitionResponseDto,
-                                });
+                                    id: buildDefinition._id,
+                                } as CreateBuildDefinitionResponseDto);
                             },
                             (error) => {
                                 res.status(HttpStatus.BAD_REQUEST).send();

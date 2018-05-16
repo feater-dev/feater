@@ -1,15 +1,12 @@
-import { environment } from './../../../environments/environment';
+import {environment} from './../../../environments/environment';
 
-import { Inject, Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs/Observable';
 
-import { BuildInstance } from '../build-instance.model';
-import { BuildInstanceAddForm } from '../build-instance-add-form.model';
-import {AuthHttp} from '../../api/auth-http';
+import {GetBuildInstanceResponseDto, AddBuildInstanceResponseDto} from '../build-instance-response-dtos.model';
+import {BuildInstanceAddForm} from '../build-instance-add-form.model';
 
 @Injectable()
 export class BuildInstanceRepositoryService {
@@ -17,34 +14,41 @@ export class BuildInstanceRepositoryService {
     private itemsUrl = `${environment.apiBaseUrl}/build-instance`;
 
     constructor(
-        @Inject('authHttp') private http: AuthHttp,
+        private httpClient: HttpClient
     ) {}
 
-    getItems(): Observable<BuildInstance[]> {
-        return this.http
-            .get(this.itemsUrl)
-            .map((res): BuildInstance[] => res.json().data)
-            .catch(this.handleError);
+    getItems(): Observable<GetBuildInstanceResponseDto[]> {
+        return this.httpClient
+            .get<GetBuildInstanceResponseDto[]>(
+                this.itemsUrl,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    getItem(id): Observable<BuildInstance> {
-        return this.http
-            .get([this.itemsUrl, id].join('/'))
-            .map((res): BuildInstance => res.json().data)
-            .catch(this.handleError);
+    getItem(id: string): Observable<GetBuildInstanceResponseDto> {
+        return this.httpClient
+            .get<GetBuildInstanceResponseDto>(
+                `${this.itemsUrl}/${id}`,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    addItem(addForm: BuildInstanceAddForm): Observable<string> {
-        return this.http
-            .post(this.itemsUrl, addForm)
-            .map((res): string => res.json().data.id)
-            .catch(this.handleError);
+    addItem(item: BuildInstanceAddForm): Observable<AddBuildInstanceResponseDto> {
+        return this.httpClient
+            .post<AddBuildInstanceResponseDto>(
+                this.itemsUrl,
+                item,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    private handleError(error: Response | any) {
-        // TODO
-        console.log('Error in build instance repository', error);
-
-        return Observable.throw('Error in build instance repository');
-    }
 }

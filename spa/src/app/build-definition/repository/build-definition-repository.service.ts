@@ -1,18 +1,12 @@
-import { environment } from './../../../environments/environment';
+import {environment} from './../../../environments/environment';
 
-import { Inject, Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs/Observable';
 
-import { BuildDefinition } from '../build-definition.model';
-import {
-    BuildDefinitionAddForm, BuildDefinitionAddFormSourceFormElement,
-    BuildDefinitionAddFormEnvironmentalVariableFormElement, BuildDefinitionAddFormExposedPortFormElement
-} from '../build-definition-add-form.model';
-import {AuthHttp} from '../../api/auth-http';
+import {GetBuildDefinitionResponseDto, AddBuildDefinitionResponseDto} from '../build-definition-response-dtos.model';
+import {BuildDefinitionAddForm} from '../build-definition-add-form.model';
 
 @Injectable()
 export class BuildDefinitionRepositoryService {
@@ -20,34 +14,41 @@ export class BuildDefinitionRepositoryService {
     private itemsUrl = `${environment.apiBaseUrl}/build-definition`;
 
     constructor(
-        @Inject('authHttp') private http: AuthHttp,
+        private httpClient: HttpClient
     ) {}
 
-    getItems(): Observable<BuildDefinition[]> {
-        return this.http
-            .get(this.itemsUrl)
-            .map((res): BuildDefinition[] => res.json().data)
-            .catch(this.handleError);
+    getItems(): Observable<GetBuildDefinitionResponseDto[]> {
+        return this.httpClient
+            .get<GetBuildDefinitionResponseDto[]>(
+                this.itemsUrl,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    getItem(id : string): Observable<BuildDefinition> {
-        return this.http
-            .get([this.itemsUrl, id].join('/'))
-            .map((res): BuildDefinition => res.json().data)
-            .catch(this.handleError);
+    getItem(id: string): Observable<GetBuildDefinitionResponseDto> {
+        return this.httpClient
+            .get<GetBuildDefinitionResponseDto>(
+                `${this.itemsUrl}/${id}`,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    addItem(item : Object): Observable<string> {
-        return this.http
-            .post(this.itemsUrl, item)
-            .map((res): string => res.json().data.id)
-            .catch(this.handleError);
+    addItem(item: BuildDefinitionAddForm): Observable<AddBuildDefinitionResponseDto> {
+        return this.httpClient
+            .post<AddBuildDefinitionResponseDto>(
+                this.itemsUrl,
+                item,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    private handleError(error: Response | any) {
-        // TODO
-        console.log('Error in build definition repository', error);
-
-        return Observable.throw('Error in build definition repository');
-    }
 }

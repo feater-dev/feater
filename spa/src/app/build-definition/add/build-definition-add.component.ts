@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Router, ActivatedRoute, Params } from "@angular/router";
+import {Component, OnInit, Inject} from '@angular/core';
+import {Router, ActivatedRoute, Params} from '@angular/router';
 
 import 'rxjs/add/operator/switchMap';
 
@@ -11,190 +11,19 @@ import {
     BuildDefinitionAddFormSummaryItemFormElement, BuildDefinitionAddFormConfigFormElement
 } from '../../build-definition/build-definition-add-form.model';
 
-import { Project } from '../../project/project.model';
+import {GetProjectResponseDto} from '../../project/project-response-dtos.model';
+import {AddBuildDefinitionResponseDto} from '../build-definition-response-dtos.model';
 
 @Component({
     selector: 'app-build-definition-add',
-    template: `
-        <div class="row">
-            <div class="col-lg-12">
-                <h2>Add build definition for project <em>{{ project?.name}}</em></h2>
-            </div>
-        </div>
-        <form class="form-horizontal build-defintion-add-form">
-
-            <div class="row form-section">
-                <div class="col-lg-12">
-                    <h3 style="display: inline;">Basic information</h3>
-                </div>
-                <div class="col-lg-12">
-                    <div class="well well-sm">
-                        <div class="form-group">
-                            <label class="col-lg-2 control-label">Name</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" name="addBuildDefinition_name" [(ngModel)]="item.name">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row form-section">
-                <div class="col-lg-12">
-                    <a class="btn btn-primary btn-sm" (click)="toggleMode()">
-                        {{ 'json' === mode ? 'Back to form': 'Import from JSON file' }}
-                    </a>
-                </div>
-            </div>
-
-            <div [hidden]="'form' !== mode">
-
-                <div class="row form-section">
-                    <div class="col-lg-12">
-                        <h3 style="display: inline;">Sources</h3>
-                        <a
-                            class="btn btn-success btn-sm"
-                            (click)="addSource()"
-                            style="position: relative; bottom: 5px; margin-left: 8px;"
-                        >
-                            Add source
-                        </a>
-                    </div>
-                    <div class="col-lg-12">
-                        <p *ngIf="0 === item.config.sources.length">
-                            No sources defined.
-                        </p>
-                        <div *ngFor="let source of item.config.sources">
-                            <app-build-definition-add-source-form-element
-                                [item]="source"
-                                (deleteItem)="deleteSource($event)"
-                            ></app-build-definition-add-source-form-element>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row form-section">
-                    <div class="col-lg-12">
-                        <h3 style="display: inline;">External ports</h3>
-                        <a
-                            class="btn btn-success btn-sm"
-                            (click)="addExposedPort()"
-                            style="position: relative; bottom: 5px; margin-left: 8px;"
-                        >
-                            Add external port
-                        </a>
-                    </div>
-                    <div class="col-lg-12">
-                        <p *ngIf="0 === item.config.exposedPorts.length">
-                            No external ports defined.
-                        </p>
-                        <div *ngFor="let exposedPort of item.config.exposedPorts">
-                            <app-build-definition-add-external-port-form-element
-                                [item]="exposedPort"
-                                (deleteItem)="deleteExposedPort($event)"
-                            ></app-build-definition-add-external-port-form-element>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row form-section">
-                    <div class="col-lg-12">
-                        <h3 style="display: inline;">Environmental variables</h3>
-                        <a
-                            class="btn btn-success btn-sm"
-                            (click)="addEnvironmentalVariable()"
-                            style="position: relative; bottom: 5px; margin-left: 8px;"
-                        >
-                            Add environmental variable
-                        </a>
-                    </div>
-                    <div class="col-lg-12">
-                        <p *ngIf="0 === item.config.environmentalVariables.length">
-                            No environmental variables defined.
-                        </p>
-                        <div *ngFor="let environmentalVariable of item.config.environmentalVariables">
-                            <app-build-definition-add-environmental-variable-form-element
-                                [item]="environmentalVariable"
-                                (deleteItem)="deleteEnvironmentalVariable($event)"
-                            ></app-build-definition-add-environmental-variable-form-element>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row form-section">
-                    <div class="col-lg-12">
-                        <h3 style="display: inline;">Compose file</h3>
-                    </div>
-                    <div class="col-lg-12">
-                        <app-build-definition-add-compose-file-form-element
-                            [item]="this.item.config.composeFile"
-                            [sources]="this.item.config.sources"
-                        ></app-build-definition-add-compose-file-form-element>
-                    </div>
-                </div>
-
-                <div class="row form-section">
-                    <div class="col-lg-12">
-                        <h3 style="display: inline;">Summary items</h3>
-                        <a
-                            class="btn btn-success btn-sm"
-                            (click)="addSummaryItem()"
-                            style="position: relative; bottom: 5px; margin-left: 8px;"
-                        >
-                            Add summary item
-                        </a>
-                    </div>
-                    <div class="col-lg-12">
-                        <p *ngIf="0 === item.config.summaryItems.length">
-                            No summary items defined.
-                        </p>
-                        <div *ngFor="let summaryItem of item.config.summaryItems">
-                            <app-build-definition-add-summary-item-form-element
-                                [item]="summaryItem"
-                                (deleteItem)="deleteSummaryItem($event)"
-                            ></app-build-definition-add-summary-item-form-element>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div [hidden]="'json' !== mode">
-
-                <div class="row form-section">
-                    <div class="col-lg-12">
-                        <div class="well well-sm">
-                            <div class="form-group">
-                                <label class="col-lg-2 control-label">JSON config</label>
-                                <div class="col-lg-10">
-                                    <textarea class="form-control" rows="60" #jsonConfig name="addBuildDefinition_jsonConfig" [ngModel]="item.config | json"></textarea>
-                                    <div style="text-align: right; margin-top: 6px;">
-                                        <button type="submit" class="btn btn-success" (click)="importJsonConfig(jsonConfig.value)">Import</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row form-section">
-                <div class="col-lg-12" style="text-align: right;">
-                    <button type="reset" class="btn btn-default" (click)="goToList()">Cancel</button>
-                    <button type="submit" class="btn btn-success" (click)="addItem()">Submit</button>
-                </div>
-            </div>
-
-        </form>
-    `,
+    templateUrl: './build-definition-add.component.html',
     styles: []
 })
 export class BuildDefinitionAddComponent implements OnInit {
 
     item: BuildDefinitionAddForm;
 
-    project: Project;
+    project: GetProjectResponseDto;
 
     mode: String = 'form';
 
@@ -232,7 +61,9 @@ export class BuildDefinitionAddComponent implements OnInit {
         this.repository
             .addItem(this.mapItem())
             .subscribe(
-                (id: string) => { this.router.navigate(['/build-definition', id]); }
+                (addBuildDefinitionResponseDto: AddBuildDefinitionResponseDto) => {
+                    this.router.navigate(['/build-definition', addBuildDefinitionResponseDto.id]);
+                }
             );
     }
 
@@ -304,7 +135,7 @@ export class BuildDefinitionAddComponent implements OnInit {
         this.mode = mode;
     }
 
-    toggleMode()  : void {
+    toggleMode(): void {
         this.switchMode('json' === this.mode ? 'form' : 'json');
     }
 
@@ -403,7 +234,7 @@ export class BuildDefinitionAddComponent implements OnInit {
                 (params: Params) => this.projectRepository.getItem(params['id'])
             )
             .subscribe(
-                (item: Project) => {
+                (item: GetProjectResponseDto) => {
                     this.project = item;
                     this.item.projectId = item._id;
                 }

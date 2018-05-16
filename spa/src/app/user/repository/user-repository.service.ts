@@ -1,14 +1,12 @@
-import { environment } from './../../../environments/environment';
+import {environment} from './../../../environments/environment';
 
-import { Inject, Injectable } from '@angular/core';
-import { Response } from '@angular/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs/Observable';
 
-import { AuthHttp } from '../../api/auth-http';
-import { User } from '../user.model';
+import {Injectable} from '@angular/core';
+
+import {GetUserResponseDto} from '../user-response-dtos';
 
 @Injectable()
 export class UserRepositoryService {
@@ -16,27 +14,28 @@ export class UserRepositoryService {
     private itemsUrl = `${environment.apiBaseUrl}/user`;
 
     constructor(
-        @Inject('authHttp') private http: AuthHttp,
+        private httpClient: HttpClient,
     ) {}
 
-    getItems(): Observable<User[]> {
-        return this.http
-            .get(this.itemsUrl)
-            .map((res): User[] => res.json().data)
-            .catch(this.handleError);
+    getItems(): Observable<GetUserResponseDto[]> {
+        return this.httpClient
+            .get<GetUserResponseDto[]>(
+                this.itemsUrl,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    getItem(id: string): Observable<User> {
-        return this.http
-            .get([this.itemsUrl, id].join('/'))
-            .map((res): User => res.json().data)
-            .catch(this.handleError);
-    }
-
-    private handleError(error: Response | any) {
-        // TODO
-        console.log('Error in user repository', error);
-
-        return Observable.throw('Error in user repository');
+    getItem(id: string): Observable<GetUserResponseDto> {
+        return this.httpClient
+            .get<GetUserResponseDto>(
+                `${this.itemsUrl}/${id}`,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 }

@@ -14,7 +14,6 @@ services:
       - '${FEAT_API_PORT}:3000'
     networks:
       - internal
-    container_name: feat_api
 
   spa:
     build: spa
@@ -24,7 +23,6 @@ services:
       - '${FEAT_SPA_PORT}:4200'
     networks:
       - internal
-    container_name: feat_spa
 
   mongo:
     image: mongo:3.6
@@ -32,7 +30,6 @@ services:
       - '${FEAT_MONGO_PORT}:27017'
     networks:
       - internal
-    container_name: feat_mongo
 
   nginx:
     build: nginx
@@ -43,7 +40,6 @@ services:
     networks:
       - internal
       - build
-    container_name: feat_nginx
 
   elasticsearch:
     build:
@@ -52,7 +48,6 @@ services:
       - '${ELASTICSEARCH_PORT}:9200'
     networks:
       - internal
-    container_name: feat_elasticsearch
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.2.3
@@ -60,7 +55,6 @@ services:
       - '${KIBANA_PORT}:5601'
     networks:
       - internal
-    container_name: feat_kibana
 
 networks:
   internal:

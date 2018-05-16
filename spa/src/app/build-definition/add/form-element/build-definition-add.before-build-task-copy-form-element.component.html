@@ -1,0 +1,19 @@
+<div class="form-group">
+    <label class="col-lg-2 control-label">Copy source</label>
+    <div class="col-lg-3">
+        <input type="text" class="form-control" [(ngModel)]="item.sourceRelativePath">
+    </div>
+    <label class="col-lg-2 control-label">to destination</label>
+    <div class="col-lg-3">
+        <input type="text" class="form-control" [(ngModel)]="item.destinationRelativePath">
+    </div>
+    <div class="col-lg-2">
+        <a
+            class="btn btn-danger btn-sm pull-right"
+            style="position: relative; top: 8px;"
+            (click)="onDeleteItem()"
+        >
+            Delete before build task
+        </a>
+    </div>
+</div>

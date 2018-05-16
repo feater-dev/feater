@@ -1,15 +1,11 @@
-import { environment } from './../../../environments/environment';
+import {environment} from './../../../environments/environment';
 
-import { Inject, Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
-import { Project } from '../project.model';
-import { ProjectAddForm } from '../project-add-form.model';
-import { AuthHttp } from '../../api/auth-http';
+import {GetProjectResponseDto, AddProjectResponseDto} from '../project-response-dtos.model';
+import {ProjectAddForm} from '../project-add-form.model';
 
 @Injectable()
 export class ProjectRepositoryService {
@@ -17,34 +13,41 @@ export class ProjectRepositoryService {
     private itemsUrl = `${environment.apiBaseUrl}/project`;
 
     constructor(
-        @Inject('authHttp') private http: AuthHttp
+        private httpClient: HttpClient
     ) {}
 
-    getItems(): Observable<Project[]> {
-        return this.http
-            .get(this.itemsUrl)
-            .map((res): Project[] => res.json().data)
-            .catch(this.handleError);
+    getItems(): Observable<GetProjectResponseDto[]> {
+        return this.httpClient
+            .get<GetProjectResponseDto[]>(
+                this.itemsUrl,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    getItem(id : string): Observable<Project> {
-        return this.http
-            .get([this.itemsUrl, id].join('/'))
-            .map((res): Project => res.json().data)
-            .catch(this.handleError);
+    getItem(id: string): Observable<GetProjectResponseDto> {
+        return this.httpClient
+            .get<GetProjectResponseDto>(
+                `${this.itemsUrl}/${id}`,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    addItem(item : ProjectAddForm): Observable<string> {
-        return this.http
-            .post(this.itemsUrl, item)
-            .map((res): string => res.json().data.id)
-            .catch(this.handleError);
+    addItem(item: ProjectAddForm): Observable<AddProjectResponseDto> {
+        return this.httpClient
+            .post<AddProjectResponseDto>(
+                this.itemsUrl,
+                item,
+                {
+                    headers: (new HttpHeaders())
+                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
+                }
+            );
     }
 
-    private handleError(error: Response | any) {
-        // TODO
-        console.log('Error in project repository', error);
-
-        return Observable.throw('Error in project repository');
-    }
 }

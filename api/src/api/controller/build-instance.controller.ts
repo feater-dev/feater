@@ -28,13 +28,15 @@ export class BuildInstanceController {
     ): Promise<any> {
         const buildInstances = await this.buildInstanceRepository.find({});
         const data: FindAllBuildInstanceResponseDto[] = [];
+
         for (const buildInstance of buildInstances) {
             data.push({
                 _id: buildInstance._id,
                 name: buildInstance.name,
             } as FindAllBuildInstanceResponseDto);
         }
-        res.status(HttpStatus.OK).json({ data });
+
+        res.status(HttpStatus.OK).json(data);
     }
 
     @Get(':id')
@@ -86,24 +88,22 @@ export class BuildInstanceController {
         }
 
         res.status(HttpStatus.OK).json({
-            data: {
-                _id: persistentBuildInstance._id,
-                name: persistentBuildInstance.name,
-                hash: persistentBuildInstance.hash,
-                buildDefinition: {
-                    _id: persistentBuildDefiniton._id,
-                    name: persistentBuildDefiniton.name,
-                    config: persistentBuildDefiniton.config,
-                    project: {
-                        _id: persistentProject._id,
-                        name: persistentProject.name,
-                    },
+            _id: persistentBuildInstance._id,
+            name: persistentBuildInstance.name,
+            hash: persistentBuildInstance.hash,
+            buildDefinition: {
+                _id: persistentBuildDefiniton._id,
+                name: persistentBuildDefiniton.name,
+                config: persistentBuildDefiniton.config,
+                project: {
+                    _id: persistentProject._id,
+                    name: persistentProject.name,
                 },
-                services: persistentBuildInstance.services,
-                summaryItems: mappedSummaryItems,
-                environmentalVariables: mappedEnvironmentalVariables,
-            } as FindOneBuildInstanceResponseDto,
-        });
+            },
+            services: persistentBuildInstance.services,
+            summaryItems: mappedSummaryItems,
+            environmentalVariables: mappedEnvironmentalVariables,
+        } as FindOneBuildInstanceResponseDto);
     }
 
     @Post()
@@ -140,10 +140,8 @@ export class BuildInstanceController {
 
         const respondWithId = () => {
             res.status(HttpStatus.CREATED).json({
-                data: {
-                    id: scope.buildInstance._id,
-                } as CreateBuildInstanceResponseDto,
-            });
+                id: scope.buildInstance._id,
+            } as CreateBuildInstanceResponseDto);
         };
 
         const executeBuildInstanceJobs = () => {

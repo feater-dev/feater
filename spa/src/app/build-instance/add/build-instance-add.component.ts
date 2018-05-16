@@ -1,49 +1,22 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Router, ActivatedRoute, Params } from "@angular/router";
+import {Component, OnInit, Inject} from '@angular/core';
+import {Router, ActivatedRoute, Params} from '@angular/router';
 
 import 'rxjs/add/operator/switchMap';
 
-import { BuildInstanceAddForm } from '../../build-instance/build-instance-add-form.model';
-import { BuildDefinition } from '../../build-definition/build-definition.model';
+import {BuildInstanceAddForm} from '../../build-instance/build-instance-add-form.model';
+import {GetBuildDefinitionResponseDto} from '../../build-definition/build-definition-response-dtos.model';
+import {AddBuildInstanceResponseDto} from '../build-instance-response-dtos.model';
 
 @Component({
     selector: 'app-build-instance-add',
-    template: `
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="page-header">
-                    <h2>Add build instance for build definition <em>{{ buildDefinition?.name }}</em></h2>
-                </div>
-            </div>
-        </div>
-        <form class="form-horizontal">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="well bs-component">
-                        <div class="form-group">
-                            <label for="inputBuildInstanceName" class="col-lg-2 control-label">Name</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="inputBuildInstanceName" placeholder="Name" name="name" [(ngModel)]="item.name">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12" style="text-align: right;">
-                    <button type="reset" class="btn btn-default" (click)="goToList()">Cancel</button>
-                    <button type="submit" class="btn btn-success" (click)="addItem()">Submit</button>
-                </div>
-            </div>
-        </form>
-    `,
+    templateUrl: './build-instance-add.component.html',
     styles: []
 })
 export class BuildInstanceAddComponent implements OnInit {
 
     item: BuildInstanceAddForm;
 
-    buildDefinition: BuildDefinition;
+    buildDefinition: GetBuildDefinitionResponseDto;
 
     constructor(
         private route: ActivatedRoute,
@@ -69,7 +42,9 @@ export class BuildInstanceAddComponent implements OnInit {
         this.repository
             .addItem(this.item)
             .subscribe(
-                (id: string) => { this.router.navigate(['/build-instance', id]); }
+                (addBuildInstanceResponseDto: AddBuildInstanceResponseDto) => {
+                    this.router.navigate(['/build-instance', addBuildInstanceResponseDto.id]);
+                }
             );
     }
 
@@ -79,7 +54,7 @@ export class BuildInstanceAddComponent implements OnInit {
                 (params: Params) => this.buildDefinitionRepository.getItem(params['id'])
             )
             .subscribe(
-                (item: BuildDefinition) => {
+                (item: GetBuildDefinitionResponseDto) => {
                     this.buildDefinition = item;
                     this.item.buildDefinitionId = item._id;
                 }

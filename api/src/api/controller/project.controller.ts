@@ -21,13 +21,15 @@ export class ProjectController {
     ): Promise<any> {
         const projects = await this.projectRepository.find({});
         const data: FindAllProjectResponseDto[] = [];
+
         for (const project of projects) {
             data.push({
                 _id: project._id,
                 name: project.name,
             } as FindAllProjectResponseDto);
         }
-        res.status(HttpStatus.OK).json({ data });
+
+        res.status(HttpStatus.OK).json(data);
     }
 
     @Get(':id')
@@ -48,11 +50,9 @@ export class ProjectController {
             return;
         }
         res.status(HttpStatus.OK).json({
-            data: {
-                _id: project._id,
-                name: project.name,
-            } as FindOneProjectResponseDto,
-        });
+            _id: project._id,
+            name: project.name,
+        } as FindOneProjectResponseDto);
     }
 
     @Post()
@@ -66,10 +66,8 @@ export class ProjectController {
                 async () => {
                     const project = await this.projectRepository.create(createProjectDto);
                     res.status(HttpStatus.CREATED).json({
-                        data: {
-                            id: project._id,
-                        } as CreateProjectResponseDto,
-                    });
+                        id: project._id,
+                    } as CreateProjectResponseDto);
                 },
                 (error) => {
                     res.status(HttpStatus.BAD_REQUEST).send();

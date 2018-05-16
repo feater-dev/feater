@@ -2,11 +2,11 @@ import {environment} from './../../../environments/environment';
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-
 import {Observable} from 'rxjs/Observable';
 
 import {GetBuildInstanceResponseDto, AddBuildInstanceResponseDto} from '../build-instance-response-dtos.model';
 import {BuildInstanceAddForm} from '../build-instance-add-form.model';
+
 
 @Injectable()
 export class BuildInstanceRepositoryService {

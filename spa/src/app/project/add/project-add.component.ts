@@ -1,7 +1,7 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 
-import 'rxjs/add/operator/switchMap';
+
 
 import {ProjectAddForm} from '../project-add-form.model';
 import {AddProjectResponseDto} from '../project-response-dtos.model';

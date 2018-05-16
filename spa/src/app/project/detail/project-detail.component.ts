@@ -1,9 +1,9 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-
-import 'rxjs/add/operator/switchMap';
+import {switchMap} from 'rxjs/operators';
 
 import {GetProjectResponseDto} from '../project-response-dtos.model';
+
 
 @Component({
     selector: 'app-project-detail',
@@ -35,10 +35,10 @@ export class ProjectDetailComponent implements OnInit {
     }
 
     private getItem() {
-        this.route.params
-            .switchMap(
+        this.route.params.pipe(
+            switchMap(
                 (params: Params) => this.repository.getItem(params['id'])
-            )
+            ))
             .subscribe(
                 (item: GetProjectResponseDto) => { this.item = item },
                 (error) => { this.errorMessage = <any>error; }

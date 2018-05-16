@@ -1,7 +1,6 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-
-import 'rxjs/add/operator/switchMap';
+import {switchMap} from 'rxjs/operators';
 
 import {
     BuildDefinitionAddForm,
@@ -10,9 +9,9 @@ import {
     BuildDefinitionAddFormEnvironmentalVariableFormElement,
     BuildDefinitionAddFormSummaryItemFormElement, BuildDefinitionAddFormConfigFormElement
 } from '../../build-definition/build-definition-add-form.model';
-
 import {GetProjectResponseDto} from '../../project/project-response-dtos.model';
 import {AddBuildDefinitionResponseDto} from '../build-definition-response-dtos.model';
+
 
 @Component({
     selector: 'app-build-definition-add',
@@ -229,10 +228,10 @@ export class BuildDefinitionAddComponent implements OnInit {
     }
 
     private getProject(): void {
-        this.route.params
-            .switchMap(
+        this.route.params.pipe(
+            switchMap(
                 (params: Params) => this.projectRepository.getItem(params['id'])
-            )
+            ))
             .subscribe(
                 (item: GetProjectResponseDto) => {
                     this.project = item;

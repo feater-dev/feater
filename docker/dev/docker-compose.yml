@@ -5,7 +5,7 @@ services:
   api:
     build: api
     volumes:
-      - ../../../api:/app
+      - ../../api:/app
       - ${FEAT_DATA_PATH}/repository:/data/repository
       - ${FEAT_DATA_PATH}/build:/data/build
       - ${FEAT_DATA_PATH}/proxyDomain:/data/proxyDomain
@@ -18,7 +18,7 @@ services:
   spa:
     build: spa
     volumes:
-      - ../../../spa:/app
+      - ../../spa:/app
     ports:
       - '${FEAT_SPA_PORT}:4200'
     networks:

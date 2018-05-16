@@ -1,11 +1,11 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-
-import 'rxjs/add/operator/switchMap';
+import {switchMap} from 'rxjs/operators';
 
 import {BuildInstanceAddForm} from '../../build-instance/build-instance-add-form.model';
 import {GetBuildDefinitionResponseDto} from '../../build-definition/build-definition-response-dtos.model';
 import {AddBuildInstanceResponseDto} from '../build-instance-response-dtos.model';
+
 
 @Component({
     selector: 'app-build-instance-add',
@@ -49,10 +49,10 @@ export class BuildInstanceAddComponent implements OnInit {
     }
 
     private getBuildDefinition() {
-        this.route.params
-            .switchMap(
+        this.route.params.pipe(
+            switchMap(
                 (params: Params) => this.buildDefinitionRepository.getItem(params['id'])
-            )
+            ))
             .subscribe(
                 (item: GetBuildDefinitionResponseDto) => {
                     this.buildDefinition = item;

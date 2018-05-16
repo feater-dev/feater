@@ -1,7 +1,8 @@
 import {Injectable, EventEmitter} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Observable} from  'rxjs/Observable';
-import 'rxjs/add/operator/finally';
+import {finalize} from 'rxjs/operators';
+import {Observable} from 'rxjs/Observable';
+
 
 export enum Action { QueryStart, QueryStop };
 
@@ -51,10 +52,10 @@ export class AuthHttpClient {
 
         return Observable.create((observer) => {
             this.process.next(Action.QueryStart);
-            this._httpClient.request(httpRequest)
-                .finally(() => {
+            this._httpClient.request(httpRequest).pipe(
+                finalize(() => {
                     this.process.next(Action.QueryStop);
-                })
+                }))
                 .subscribe(
                     (res) => {
                         observer.next(res);

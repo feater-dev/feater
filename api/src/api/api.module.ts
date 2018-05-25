@@ -21,6 +21,7 @@ import { EnsureAuthenticatedMiddleware } from './middleware/ensure-authenticated
   ],
   components: [
       Validator,
+      EnsureAuthenticatedMiddleware,
   ],
 })
 export class ApiModule implements NestModule {

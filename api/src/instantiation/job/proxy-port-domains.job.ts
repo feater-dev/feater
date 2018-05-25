@@ -55,13 +55,13 @@ export class ProxyPortDomainsJobExecutor implements JobExecutorInterface {
 `
 # Proxy domain for port ${exposedPort.port} of ${serviceId} running at ${service.ipAddress}
 server {
-listen 80;
-server_name ${exposedPort.proxyDomains[domainType]};
+    listen 80;
+    server_name ${exposedPort.proxyDomains[domainType]};
 
-location / {
-    proxy_pass http://${service.ipAddress}:${exposedPort.port};
-    proxy_set_header Host $host:${this.config.app.proxyPort};
-}
+    location / {
+        proxy_pass http://${service.ipAddress}:${exposedPort.port};
+        proxy_set_header Host $host:${this.config.app.proxyPort};
+    }
 }
 `,
                         );

@@ -11,7 +11,7 @@ import { GithubPassportStrategyConfigurationComponent } from './signin-strategy/
 import { PassportUserSerializationConfigurationComponent } from './base/component/passport-user-serialization-configurator.component';
 import { CustomBearerPassportStrategyConfiguratorComponent } from './api-strategy/custom-bearer/component/custom-bearer-passport-strategy-configurator.component';
 import { CustomBearerAuthenticationMiddleware } from './api-strategy/custom-bearer/middleware/custom-bearer-authentication.middleware';
-import {SpaRedirectorComponent} from './base/component/spa-redirector.component';
+import { SpaRedirectorComponent } from './base/component/spa-redirector.component';
 
 export const apiTokenHeader = 'x-feat-api-token';
 

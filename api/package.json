@@ -13,7 +13,7 @@
     "@nestjs/common": "^4.6.6",
     "@nestjs/core": "^4.6.6",
     "@nestjs/microservices": "^4.6.6",
-    "@nestjs/mongoose": "^3.0.1",
+    "@nestjs/mongoose": "3.0.1",
     "@nestjs/testing": "^4.6.6",
     "@nestjs/websockets": "^4.6.6",
     "@octokit/rest": "^15.2.3",

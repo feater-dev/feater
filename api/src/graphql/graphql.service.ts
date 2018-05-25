@@ -1,13 +1,13 @@
 import {Component, HttpStatus, Inject} from '@nestjs/common';
-import { GraphQLSchema } from 'graphql';
+import {GraphQLSchema} from 'graphql';
 import * as GraphQLJSON from 'graphql-type-json';
-import { makeExecutableSchema } from 'graphql-tools';
-import { ProjectInterface } from '../persistence/interface/project.interface';
-import { ProjectRepository } from '../persistence/repository/project.repository';
+import {makeExecutableSchema} from 'graphql-tools';
+import {ProjectRepository} from '../persistence/repository/project.repository';
+import {BuildDefinitionRepository} from '../persistence/repository/build-definition.repository';
+import {BuildInstanceRepository} from '../persistence/repository/build-instance.repository';
 import {FindAllProjectResponseDto} from '../api/dto/response/find-all-project-response.dto';
 import {FindAllBuildDefinitionResponseDto} from '../api/dto/response/find-all-build-definition-response.dto';
-import {BuildDefinitionRepository} from '../persistence/repository/build-definition.repository';
-import {async} from 'rxjs/scheduler/async';
+import {FindAllBuildInstanceResponseDto} from '../api/dto/response/find-all-build-instance-response.dto';
 
 @Component()
 export class GraphqlService {
@@ -15,6 +15,7 @@ export class GraphqlService {
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,
         private readonly projectRepository: ProjectRepository,
         private readonly buildDefinitionRepository: BuildDefinitionRepository,
+        private readonly buildInstanceRepository: BuildInstanceRepository,
     ) { }
 
     public get schema(): GraphQLSchema {
@@ -31,12 +32,17 @@ export class GraphqlService {
                 hello: this.hello,
                 projects: this.projects,
                 buildDefinitions: this.buildDefinitions,
+                buildInstances: this.buildInstances,
             },
             Project: {
                 buildDefinitions: this.getProjectBuildDefinitionsResolver(),
             },
             BuildDefinition: {
                 project: this.getBuildDefinitionProjectResolver(),
+                buildInstances: this.getBuildDefinitionBuildInstancesResolver(),
+            },
+            BuildInstance: {
+                buildDefinition: this.getBuildInstanceBuildDefinitionResolver(),
             },
         };
     }
@@ -80,6 +86,23 @@ export class GraphqlService {
         };
     }
 
+    public get buildInstances(): () => Promise<Array<FindAllBuildInstanceResponseDto>> {
+        return async (): Promise<Array<FindAllBuildInstanceResponseDto>> => {
+            const buildInstances = await this.buildInstanceRepository.find({});
+            const data: FindAllBuildInstanceResponseDto[] = [];
+
+            for (const buildInstance of buildInstances) {
+                data.push({
+                    _id: buildInstance._id,
+                    name: buildInstance.name,
+                    buildDefinitionId: buildInstance.buildDefinitionId,
+                } as FindAllBuildInstanceResponseDto);
+            }
+
+            return data;
+        };
+    }
+
     public getBuildDefinitionProjectResolver(): (buildDefinition: FindAllBuildDefinitionResponseDto) => Promise<FindAllProjectResponseDto> {
         return async (buildDefinition: FindAllBuildDefinitionResponseDto): Promise<FindAllProjectResponseDto> => {
             const project = await this.projectRepository.findById(buildDefinition.projectId);
@@ -91,8 +114,8 @@ export class GraphqlService {
         };
     }
 
-    public getProjectBuildDefinitionsResolver(): (project: FindAllProjectResponseDto) => Promise<FindAllBuildDefinitionResponseDto> {
-        return async (project: FindAllProjectResponseDto): Promise<FindAllBuildDefinitionResponseDto> => {
+    public getProjectBuildDefinitionsResolver(): (project: FindAllProjectResponseDto) => Promise<Array<FindAllBuildDefinitionResponseDto>> {
+        return async (project: FindAllProjectResponseDto): Promise<Array<FindAllBuildDefinitionResponseDto>> => {
             const buildDefinitions = await this.buildDefinitionRepository.find({projectId: project._id});
             const data: FindAllBuildDefinitionResponseDto[] = [];
 
@@ -102,6 +125,35 @@ export class GraphqlService {
                     name: buildDefinition.name,
                     projectId: buildDefinition.projectId,
                 } as FindAllBuildDefinitionResponseDto);
+            }
+
+            return data;
+        };
+    }
+
+    public getBuildInstanceBuildDefinitionResolver(): (buildInstance: FindAllBuildInstanceResponseDto) => Promise<FindAllBuildDefinitionResponseDto> {
+        return async (buildInstance: FindAllBuildInstanceResponseDto): Promise<FindAllBuildDefinitionResponseDto> => {
+            const buildDefinition = await this.buildDefinitionRepository.findById(buildInstance.buildDefinitionId);
+
+            return {
+                _id: buildDefinition._id,
+                name: buildDefinition.name,
+                projectId: buildDefinition.projectId,
+            } as FindAllBuildDefinitionResponseDto;
+        };
+    }
+
+    public getBuildDefinitionBuildInstancesResolver(): (buildDefinition: FindAllBuildDefinitionResponseDto) => Promise<Array<FindAllBuildInstanceResponseDto>> {
+        return async (buildDefinition: FindAllBuildDefinitionResponseDto): Promise<Array<FindAllBuildInstanceResponseDto>> => {
+            const buildInstances = await this.buildInstanceRepository.find({buildDefinitionId: buildDefinition._id});
+            const data: FindAllBuildInstanceResponseDto[] = [];
+
+            for (const buildInstance of buildInstances) {
+                data.push({
+                    _id: buildInstance._id,
+                    name: buildInstance.name,
+                    buildDefinitionId: buildInstance.buildDefinitionId,
+                } as FindAllBuildInstanceResponseDto);
             }
 
             return data;

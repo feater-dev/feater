@@ -1,13 +1,11 @@
-'use strict';
-
-import { Module } from '@nestjs/common';
-import { MiddlewaresConsumer } from '@nestjs/common/interfaces/middlewares';
-import { GraphqlController } from './graphql.controller';
-import { GraphqlService } from './graphql.service';
-import { typeDefsProvider } from './typeDefs.provider';
-import { EnsureAuthenticatedMiddleware } from '../api/middleware/ensure-authenticated.middleware';
-import { ApiModule } from '../api/api.module';
-import { PersistenceModule } from '../persistence/persistence.module';
+import {Module} from '@nestjs/common';
+import {MiddlewaresConsumer} from '@nestjs/common/interfaces/middlewares';
+import {GraphqlController} from './graphql.controller';
+import {GraphqlService} from './graphql.service';
+import {typeDefsProvider} from './typeDefs.provider';
+import {EnsureAuthenticatedMiddleware} from '../api/middleware/ensure-authenticated.middleware';
+import {ApiModule} from '../api/api.module';
+import {PersistenceModule} from '../persistence/persistence.module';
 
 @Module({
     imports: [

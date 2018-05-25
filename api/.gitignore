@@ -2,3 +2,4 @@
 /config/env.ini
 /public/
 /node_modules/
+/*.log

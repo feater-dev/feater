@@ -10,7 +10,6 @@ import {PersistenceModule} from '../persistence/persistence.module';
 @Module({
     imports: [
         PersistenceModule,
-        ApiModule,
     ],
     controllers: [
         GraphqlController,

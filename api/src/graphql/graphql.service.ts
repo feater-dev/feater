@@ -5,9 +5,9 @@ import {makeExecutableSchema} from 'graphql-tools';
 import {ProjectRepository} from '../persistence/repository/project.repository';
 import {BuildDefinitionRepository} from '../persistence/repository/build-definition.repository';
 import {BuildInstanceRepository} from '../persistence/repository/build-instance.repository';
-import {FindAllProjectResponseDto} from '../api/dto/response/find-all-project-response.dto';
-import {FindAllBuildDefinitionResponseDto} from '../api/dto/response/find-all-build-definition-response.dto';
-import {FindAllBuildInstanceResponseDto} from '../api/dto/response/find-all-build-instance-response.dto';
+import {ProjectTypeInterface} from './interfaces/project-type.interface';
+import {BuildDefinitionTypeInterface} from './interfaces/build-definition-type.interface';
+import {BuildInstanceTypeInterface} from './interfaces/build-instance-type.interface';
 
 @Component()
 export class GraphqlService {
@@ -53,107 +53,107 @@ export class GraphqlService {
         };
     }
 
-    public get projects(): () => Promise<Array<FindAllProjectResponseDto>> {
-        return async (): Promise<Array<FindAllProjectResponseDto>> => {
+    public get projects(): () => Promise<Array<ProjectTypeInterface>> {
+        return async (): Promise<Array<ProjectTypeInterface>> => {
             const projects = await this.projectRepository.find({});
-            const data: FindAllProjectResponseDto[] = [];
+            const data: ProjectTypeInterface[] = [];
 
             for (const project of projects) {
                 data.push({
-                    _id: project._id,
+                    id: project._id,
                     name: project.name,
-                } as FindAllProjectResponseDto);
+                } as ProjectTypeInterface);
             }
 
             return data;
         };
     }
 
-    public get buildDefinitions(): () => Promise<Array<FindAllBuildDefinitionResponseDto>> {
-        return async (): Promise<Array<FindAllBuildDefinitionResponseDto>> => {
+    public get buildDefinitions(): () => Promise<Array<BuildDefinitionTypeInterface>> {
+        return async (): Promise<Array<BuildDefinitionTypeInterface>> => {
             const buildDefinitions = await this.buildDefinitionRepository.find({});
-            const data: FindAllBuildDefinitionResponseDto[] = [];
+            const data: BuildDefinitionTypeInterface[] = [];
 
             for (const buildDefinition of buildDefinitions) {
                 data.push({
-                    _id: buildDefinition._id,
+                    id: buildDefinition._id,
                     name: buildDefinition.name,
                     projectId: buildDefinition.projectId,
-                } as FindAllBuildDefinitionResponseDto);
+                } as BuildDefinitionTypeInterface);
             }
 
             return data;
         };
     }
 
-    public get buildInstances(): () => Promise<Array<FindAllBuildInstanceResponseDto>> {
-        return async (): Promise<Array<FindAllBuildInstanceResponseDto>> => {
+    public get buildInstances(): () => Promise<Array<BuildInstanceTypeInterface>> {
+        return async (): Promise<Array<BuildInstanceTypeInterface>> => {
             const buildInstances = await this.buildInstanceRepository.find({});
-            const data: FindAllBuildInstanceResponseDto[] = [];
+            const data: BuildInstanceTypeInterface[] = [];
 
             for (const buildInstance of buildInstances) {
                 data.push({
-                    _id: buildInstance._id,
+                    id: buildInstance._id,
                     name: buildInstance.name,
                     buildDefinitionId: buildInstance.buildDefinitionId,
-                } as FindAllBuildInstanceResponseDto);
+                } as BuildInstanceTypeInterface);
             }
 
             return data;
         };
     }
 
-    public getBuildDefinitionProjectResolver(): (buildDefinition: FindAllBuildDefinitionResponseDto) => Promise<FindAllProjectResponseDto> {
-        return async (buildDefinition: FindAllBuildDefinitionResponseDto): Promise<FindAllProjectResponseDto> => {
+    public getBuildDefinitionProjectResolver(): (buildDefinition: BuildDefinitionTypeInterface) => Promise<ProjectTypeInterface> {
+        return async (buildDefinition: BuildDefinitionTypeInterface): Promise<ProjectTypeInterface> => {
             const project = await this.projectRepository.findById(buildDefinition.projectId);
 
             return {
-                _id: project._id,
+                id: project._id,
                 name: project.name,
-            } as FindAllProjectResponseDto;
+            } as ProjectTypeInterface;
         };
     }
 
-    public getProjectBuildDefinitionsResolver(): (project: FindAllProjectResponseDto) => Promise<Array<FindAllBuildDefinitionResponseDto>> {
-        return async (project: FindAllProjectResponseDto): Promise<Array<FindAllBuildDefinitionResponseDto>> => {
-            const buildDefinitions = await this.buildDefinitionRepository.find({projectId: project._id});
-            const data: FindAllBuildDefinitionResponseDto[] = [];
+    public getProjectBuildDefinitionsResolver(): (project: ProjectTypeInterface) => Promise<Array<BuildDefinitionTypeInterface>> {
+        return async (project: ProjectTypeInterface): Promise<Array<BuildDefinitionTypeInterface>> => {
+            const buildDefinitions = await this.buildDefinitionRepository.find({projectId: project.id});
+            const data: BuildDefinitionTypeInterface[] = [];
 
             for (const buildDefinition of buildDefinitions) {
                 data.push({
-                    _id: buildDefinition._id,
+                    id: buildDefinition._id,
                     name: buildDefinition.name,
                     projectId: buildDefinition.projectId,
-                } as FindAllBuildDefinitionResponseDto);
+                } as BuildDefinitionTypeInterface);
             }
 
             return data;
         };
     }
 
-    public getBuildInstanceBuildDefinitionResolver(): (buildInstance: FindAllBuildInstanceResponseDto) => Promise<FindAllBuildDefinitionResponseDto> {
-        return async (buildInstance: FindAllBuildInstanceResponseDto): Promise<FindAllBuildDefinitionResponseDto> => {
+    public getBuildInstanceBuildDefinitionResolver(): (buildInstance: BuildInstanceTypeInterface) => Promise<BuildDefinitionTypeInterface> {
+        return async (buildInstance: BuildInstanceTypeInterface): Promise<BuildDefinitionTypeInterface> => {
             const buildDefinition = await this.buildDefinitionRepository.findById(buildInstance.buildDefinitionId);
 
             return {
-                _id: buildDefinition._id,
+                id: buildDefinition._id,
                 name: buildDefinition.name,
                 projectId: buildDefinition.projectId,
-            } as FindAllBuildDefinitionResponseDto;
+            } as BuildDefinitionTypeInterface;
         };
     }
 
-    public getBuildDefinitionBuildInstancesResolver(): (buildDefinition: FindAllBuildDefinitionResponseDto) => Promise<Array<FindAllBuildInstanceResponseDto>> {
-        return async (buildDefinition: FindAllBuildDefinitionResponseDto): Promise<Array<FindAllBuildInstanceResponseDto>> => {
-            const buildInstances = await this.buildInstanceRepository.find({buildDefinitionId: buildDefinition._id});
-            const data: FindAllBuildInstanceResponseDto[] = [];
+    public getBuildDefinitionBuildInstancesResolver(): (buildDefinition: BuildDefinitionTypeInterface) => Promise<Array<BuildInstanceTypeInterface>> {
+        return async (buildDefinition: BuildDefinitionTypeInterface): Promise<Array<BuildInstanceTypeInterface>> => {
+            const buildInstances = await this.buildInstanceRepository.find({buildDefinitionId: buildDefinition.id});
+            const data: BuildInstanceTypeInterface[] = [];
 
             for (const buildInstance of buildInstances) {
                 data.push({
-                    _id: buildInstance._id,
+                    id: buildInstance._id,
                     name: buildInstance.name,
                     buildDefinitionId: buildInstance.buildDefinitionId,
-                } as FindAllBuildInstanceResponseDto);
+                } as BuildInstanceTypeInterface);
             }
 
             return data;

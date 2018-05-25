@@ -15,20 +15,20 @@ export const typeDefsProvider = {
         }
 
         type Project {
-            _id: String!
+            id: String!
             name: String!
             buildDefinitions: [BuildDefinition!]!
         }
 
         type BuildDefinition {
-            _id: String!
+            id: String!
             name: String!
             project: Project!
             buildInstances: [BuildInstance!]!
         }
 
         type BuildInstance {
-            _id: String!
+            id: String!
             name: String!
             buildDefinition: BuildDefinition!
         }

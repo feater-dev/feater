@@ -8,6 +8,11 @@ import {BuildInstanceRepository} from '../persistence/repository/build-instance.
 import {ProjectTypeInterface} from './interfaces/project-type.interface';
 import {BuildDefinitionTypeInterface} from './interfaces/build-definition-type.interface';
 import {BuildInstanceTypeInterface} from './interfaces/build-instance-type.interface';
+import {BuildDefinitionConfigTypeInterface} from './interfaces/build-definition-config-type.interface';
+import {BuildDefinitionSourceTypeInterface} from './interfaces/build-definition-source-type.interface';
+import {BuildDefinitionSourceReferenceTypeInterface} from './interfaces/build-definition-source-reference-type.interface';
+import {BuildDefinitionProxiedPortTypeInterface} from './interfaces/build-definition-proxied-port-type.interface';
+import {BuildDefinitionSummaryItemTypeInterface} from './interfaces/build-definition-summary-item-type.interface';
 
 @Component()
 export class GraphqlService {
@@ -44,6 +49,11 @@ export class GraphqlService {
             BuildInstance: {
                 buildDefinition: this.getBuildInstanceBuildDefinitionResolver(),
             },
+            BuildDefinitionConfig: {},
+            BuildDefinitionSource: {},
+            BuildDefinitionSourceReference: {},
+            BuildDefinitionProxiedPort: {},
+            BuildDefinitionSummaryItem: {},
         };
     }
 
@@ -79,10 +89,22 @@ export class GraphqlService {
                     id: buildDefinition._id,
                     name: buildDefinition.name,
                     projectId: buildDefinition.projectId,
+                    config: this.mapBundleDefinitionConfig(buildDefinition.config),
                 } as BuildDefinitionTypeInterface);
             }
 
             return data;
+        };
+    }
+
+    public getBuildDefinitionConfigResolver(): (buildDefinition: BuildDefinitionTypeInterface) => Promise<BuildDefinitionConfigTypeInterface> {
+        return async (buildDefinition: BuildDefinitionTypeInterface): Promise<ProjectTypeInterface> => {
+            const project = await this.projectRepository.findById(buildDefinition.projectId);
+
+            return {
+                id: project._id,
+                name: project.name,
+            } as ProjectTypeInterface;
         };
     }
 
@@ -158,5 +180,70 @@ export class GraphqlService {
 
             return data;
         };
+    }
+
+    protected mapBundleDefinitionConfig(config: any): BuildDefinitionConfigTypeInterface {
+        const mappedSources: BuildDefinitionSourceTypeInterface[] = [];
+        for (const sourceId of Object.keys(config.sources)) {
+            mappedSources.push(this.mapBundleDefinitionSource(sourceId, config.sources[sourceId]));
+        }
+
+        let mappedProxiedPorts: BuildDefinitionProxiedPortTypeInterface[] = [];
+        for (const containerName of Object.keys(config.exposedPorts)) {
+            mappedProxiedPorts = mappedProxiedPorts.concat(this.mapBundleDefinitionProxiedPorts(containerName, config.exposedPorts[containerName]));
+        }
+
+        const mappedSummaryItems: BuildDefinitionSummaryItemTypeInterface[] = [];
+        for (const summaryItem of config.summaryItems) {
+            mappedSummaryItems.push(this.mapBundleDefinitionSummaryItem(summaryItem));
+        }
+
+        return {
+            sources: mappedSources,
+            proxiedPorts: mappedProxiedPorts,
+            summaryItems: mappedSummaryItems,
+        } as BuildDefinitionConfigTypeInterface;
+    }
+
+    protected mapBundleDefinitionSource(sourceId: string, source: any): BuildDefinitionSourceTypeInterface {
+        return {
+            id: sourceId,
+            type: source.type,
+            name: source.name,
+            reference: this.mapBundleDefinitionSourceReference(source.reference),
+        } as BuildDefinitionSourceTypeInterface;
+    }
+
+    protected mapBundleDefinitionSourceReference(reference: any): BuildDefinitionSourceReferenceTypeInterface {
+        return {
+            type: reference.type,
+            name: reference.name,
+        } as BuildDefinitionSourceReferenceTypeInterface;
+    }
+
+    protected mapBundleDefinitionProxiedPorts(containerName: string, proxiedPorts: any[]): BuildDefinitionProxiedPortTypeInterface[] {
+        const mappedProxiedPorts: BuildDefinitionProxiedPortTypeInterface[] = [];
+
+        for (const proxiedPort of proxiedPorts) {
+            mappedProxiedPorts.push(this.mapBundleDefinitionProxiedPort(containerName, proxiedPort));
+        }
+
+        return mappedProxiedPorts;
+    }
+
+    protected mapBundleDefinitionProxiedPort(containerName: string, proxiedPort: any): BuildDefinitionProxiedPortTypeInterface {
+        return {
+            id: proxiedPort.id,
+            containerName,
+            port: proxiedPort.port,
+            name: proxiedPort.name,
+        } as BuildDefinitionProxiedPortTypeInterface;
+    }
+
+    protected mapBundleDefinitionSummaryItem(summaryItem: any): BuildDefinitionSummaryItemTypeInterface {
+        return {
+            name: summaryItem.name,
+            text: summaryItem.value,
+        } as BuildDefinitionSummaryItemTypeInterface;
     }
 }

@@ -8,16 +8,21 @@ import {BuildInstanceRepository} from '../../persistence/repository/build-instan
 import {ProjectTypeInterface} from '../type/project-type.interface';
 import {BuildDefinitionTypeInterface} from '../type/build-definition-type.interface';
 import {BuildInstanceTypeInterface} from '../type/build-instance-type.interface';
-import {BundleDefinitionConfigMapper} from './bundle-definition-config-mapper.component';
+import {ProjectsResolverFactory} from './projects-resolver-factory.component';
+import {BuildDefinitionResolverFactory} from './build-definition-resolver-factory.component';
+import {BuildInstanceResolverFactory} from './build-instance-resolver-factory.component';
 
 @Component()
 export class GraphqlService {
     constructor(
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,
+        private readonly projectsResolverFactory: ProjectsResolverFactory,
+        private readonly buildDefinitionResolverFactory: BuildDefinitionResolverFactory,
+        private readonly buildInstanceResolverFactory: BuildInstanceResolverFactory,
+
         private readonly projectRepository: ProjectRepository,
         private readonly buildDefinitionRepository: BuildDefinitionRepository,
         private readonly buildInstanceRepository: BuildInstanceRepository,
-        private readonly bundleDefinitionConfigMapper: BundleDefinitionConfigMapper,
     ) { }
 
     public get schema(): GraphQLSchema {
@@ -31,9 +36,9 @@ export class GraphqlService {
         return {
             JSON: GraphQLJSON,
             Query: {
-                projects: this.projects,
-                buildDefinitions: this.buildDefinitions,
-                buildInstances: this.buildInstances,
+                projects: this.projectsResolverFactory.createResolver(),
+                buildDefinitions: this.buildDefinitionResolverFactory.createResolver(),
+                buildInstances: this.buildInstanceResolverFactory.createResolver(),
             },
             Project: {
                 buildDefinitions: this.getProjectBuildDefinitionsResolver(),
@@ -52,57 +57,6 @@ export class GraphqlService {
             BuildDefinitionSummaryItem: {},
             BuildDefinitionEnvironmentalVariable: {},
             BuildDefinitionComposeFile: {},
-        };
-    }
-
-    public get projects(): () => Promise<Array<ProjectTypeInterface>> {
-        return async (): Promise<Array<ProjectTypeInterface>> => {
-            const projects = await this.projectRepository.find({});
-            const data: ProjectTypeInterface[] = [];
-
-            for (const project of projects) {
-                data.push({
-                    id: project._id,
-                    name: project.name,
-                } as ProjectTypeInterface);
-            }
-
-            return data;
-        };
-    }
-
-    public get buildDefinitions(): () => Promise<Array<BuildDefinitionTypeInterface>> {
-        return async (): Promise<Array<BuildDefinitionTypeInterface>> => {
-            const buildDefinitions = await this.buildDefinitionRepository.find({});
-            const data: BuildDefinitionTypeInterface[] = [];
-
-            for (const buildDefinition of buildDefinitions) {
-                data.push({
-                    id: buildDefinition._id,
-                    name: buildDefinition.name,
-                    projectId: buildDefinition.projectId,
-                    config: this.bundleDefinitionConfigMapper.map(buildDefinition.config),
-                } as BuildDefinitionTypeInterface);
-            }
-
-            return data;
-        };
-    }
-
-    public get buildInstances(): () => Promise<Array<BuildInstanceTypeInterface>> {
-        return async (): Promise<Array<BuildInstanceTypeInterface>> => {
-            const buildInstances = await this.buildInstanceRepository.find({});
-            const data: BuildInstanceTypeInterface[] = [];
-
-            for (const buildInstance of buildInstances) {
-                data.push({
-                    id: buildInstance._id,
-                    name: buildInstance.name,
-                    buildDefinitionId: buildInstance.buildDefinitionId,
-                } as BuildInstanceTypeInterface);
-            }
-
-            return data;
         };
     }
 

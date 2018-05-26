@@ -1,6 +1,6 @@
 import {Controller, Post, Request, Response, Next} from '@nestjs/common';
 import {graphqlExpress} from 'apollo-server-express';
-import {GraphqlService} from './service/graphql.service';
+import {GraphqlService} from './component/graphql.service';
 
 @Controller()
 export class GraphqlController {

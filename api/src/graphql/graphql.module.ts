@@ -1,11 +1,14 @@
 import {Module} from '@nestjs/common';
 import {MiddlewaresConsumer} from '@nestjs/common/interfaces/middlewares';
 import {GraphqlController} from './graphql.controller';
-import {GraphqlService} from './service/graphql.service';
+import {GraphqlService} from './component/graphql.service';
 import {typeDefsProvider} from './typeDefs.provider';
 import {EnsureAuthenticatedMiddleware} from '../api/middleware/ensure-authenticated.middleware';
 import {PersistenceModule} from '../persistence/persistence.module';
-import {BundleDefinitionConfigMapper} from './service/bundle-definition-config-mapper.component';
+import {BuildDefinitionConfigMapper} from './component/build-definition-config-mapper.component';
+import {ProjectsResolverFactory} from './component/projects-resolver-factory.component';
+import {BuildDefinitionResolverFactory} from './component/build-definition-resolver-factory.component';
+import {BuildInstanceResolverFactory} from './component/build-instance-resolver-factory.component';
 
 @Module({
     imports: [
@@ -15,8 +18,11 @@ import {BundleDefinitionConfigMapper} from './service/bundle-definition-config-m
         GraphqlController,
     ],
     components: [
-        BundleDefinitionConfigMapper,
+        BuildDefinitionConfigMapper,
         GraphqlService,
+        ProjectsResolverFactory,
+        BuildDefinitionResolverFactory,
+        BuildInstanceResolverFactory,
         typeDefsProvider,
     ],
 })

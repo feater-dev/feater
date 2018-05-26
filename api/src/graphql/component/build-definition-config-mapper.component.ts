@@ -8,7 +8,7 @@ import {BuildDefinitionComposeFileTypeInterface} from '../type/build-definition-
 import {BuildDefinitionEnvironmentalVariableTypeInterface} from '../type/build-definition-environmental-variable-type.interface';
 
 @Component()
-export class BundleDefinitionConfigMapper {
+export class BuildDefinitionConfigMapper {
     public map(config: any): BuildDefinitionConfigTypeInterface {
         const mappedSources: BuildDefinitionSourceTypeInterface[] = [];
         for (const sourceId of Object.keys(config.sources)) {

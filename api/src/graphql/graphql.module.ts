@@ -1,11 +1,11 @@
 import {Module} from '@nestjs/common';
 import {MiddlewaresConsumer} from '@nestjs/common/interfaces/middlewares';
 import {GraphqlController} from './graphql.controller';
-import {GraphqlService} from './graphql.service';
+import {GraphqlService} from './service/graphql.service';
 import {typeDefsProvider} from './typeDefs.provider';
 import {EnsureAuthenticatedMiddleware} from '../api/middleware/ensure-authenticated.middleware';
-import {ApiModule} from '../api/api.module';
 import {PersistenceModule} from '../persistence/persistence.module';
+import {BundleDefinitionConfigMapper} from './service/bundle-definition-config-mapper.component';
 
 @Module({
     imports: [
@@ -15,6 +15,7 @@ import {PersistenceModule} from '../persistence/persistence.module';
         GraphqlController,
     ],
     components: [
+        BundleDefinitionConfigMapper,
         GraphqlService,
         typeDefsProvider,
     ],

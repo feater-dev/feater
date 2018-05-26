@@ -8,7 +8,6 @@ export const typeDefsProvider = {
         }
 
         type Query {
-            hello: String!
             projects: [Project!]!
             buildDefinitions: [BuildDefinition!]!
             buildInstances: [BuildInstance!]!

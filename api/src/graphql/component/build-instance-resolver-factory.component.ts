@@ -8,7 +8,7 @@ export class BuildInstanceResolverFactory {
         private readonly buildInstanceRepository: BuildInstanceRepository,
     ) { }
 
-    public createResolver(): () => Promise<Array<BuildInstanceTypeInterface>> {
+    public createRootListResolver(): () => Promise<Array<BuildInstanceTypeInterface>> {
         return async (): Promise<Array<BuildInstanceTypeInterface>> => {
             const buildInstances = await this.buildInstanceRepository.find({});
             const data: BuildInstanceTypeInterface[] = [];

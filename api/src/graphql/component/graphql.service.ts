@@ -35,21 +35,30 @@ export class GraphqlService {
     public get resolvers(): any {
         return {
             JSON: GraphQLJSON,
+
             Query: {
-                projects: this.projectsResolverFactory.createResolver(),
-                buildDefinitions: this.buildDefinitionResolverFactory.createResolver(),
-                buildInstances: this.buildInstanceResolverFactory.createResolver(),
+                projects: this.projectsResolverFactory.createRootListResolver(),
+                buildDefinitions: this.buildDefinitionResolverFactory.createRootListResolver(),
+                buildInstances: this.buildInstanceResolverFactory.createRootListResolver(),
             },
+
             Project: {
                 buildDefinitions: this.getProjectBuildDefinitionsResolver(),
             },
+
             BuildDefinition: {
-                project: this.getBuildDefinitionProjectResolver(),
+                project: this.projectsResolverFactory.createItemResolver(
+                    (buildDefinitionType: BuildDefinitionTypeInterface) => {
+                        return buildDefinitionType.projectId;
+                    },
+                ),
                 buildInstances: this.getBuildDefinitionBuildInstancesResolver(),
             },
+
             BuildInstance: {
                 buildDefinition: this.getBuildInstanceBuildDefinitionResolver(),
             },
+
             BuildDefinitionConfig: {},
             BuildDefinitionSource: {},
             BuildDefinitionSourceReference: {},
@@ -57,17 +66,6 @@ export class GraphqlService {
             BuildDefinitionSummaryItem: {},
             BuildDefinitionEnvironmentalVariable: {},
             BuildDefinitionComposeFile: {},
-        };
-    }
-
-    public getBuildDefinitionProjectResolver(): (buildDefinition: BuildDefinitionTypeInterface) => Promise<ProjectTypeInterface> {
-        return async (buildDefinition: BuildDefinitionTypeInterface): Promise<ProjectTypeInterface> => {
-            const project = await this.projectRepository.findById(buildDefinition.projectId);
-
-            return {
-                id: project._id,
-                name: project.name,
-            } as ProjectTypeInterface;
         };
     }
 

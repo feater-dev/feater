@@ -10,7 +10,7 @@ export class BuildDefinitionResolverFactory {
         private readonly buildDefinitionConfigMapper: BuildDefinitionConfigMapper,
     ) { }
 
-    public createResolver(): () => Promise<Array<BuildDefinitionTypeInterface>> {
+    public createRootListResolver(): () => Promise<Array<BuildDefinitionTypeInterface>> {
         return async (): Promise<Array<BuildDefinitionTypeInterface>> => {
             const buildDefinitions = await this.buildDefinitionRepository.find({});
             const data: BuildDefinitionTypeInterface[] = [];

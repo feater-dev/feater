@@ -13,6 +13,8 @@ import {BuildDefinitionSourceTypeInterface} from './interfaces/build-definition-
 import {BuildDefinitionSourceReferenceTypeInterface} from './interfaces/build-definition-source-reference-type.interface';
 import {BuildDefinitionProxiedPortTypeInterface} from './interfaces/build-definition-proxied-port-type.interface';
 import {BuildDefinitionSummaryItemTypeInterface} from './interfaces/build-definition-summary-item-type.interface';
+import {BuildDefinitionComposeFileTypeInterface} from './interfaces/build-definition-compose-file-type.interface';
+import {BuildDefinitionEnvironmentalVariableTypeInterface} from './interfaces/build-definition-environmental-variable-type.interface';
 
 @Component()
 export class GraphqlService {
@@ -54,6 +56,8 @@ export class GraphqlService {
             BuildDefinitionSourceReference: {},
             BuildDefinitionProxiedPort: {},
             BuildDefinitionSummaryItem: {},
+            BuildDefinitionEnvironmentalVariable: {},
+            BuildDefinitionComposeFile: {},
         };
     }
 
@@ -94,17 +98,6 @@ export class GraphqlService {
             }
 
             return data;
-        };
-    }
-
-    public getBuildDefinitionConfigResolver(): (buildDefinition: BuildDefinitionTypeInterface) => Promise<BuildDefinitionConfigTypeInterface> {
-        return async (buildDefinition: BuildDefinitionTypeInterface): Promise<ProjectTypeInterface> => {
-            const project = await this.projectRepository.findById(buildDefinition.projectId);
-
-            return {
-                id: project._id,
-                name: project.name,
-            } as ProjectTypeInterface;
         };
     }
 
@@ -190,7 +183,9 @@ export class GraphqlService {
 
         let mappedProxiedPorts: BuildDefinitionProxiedPortTypeInterface[] = [];
         for (const containerName of Object.keys(config.exposedPorts)) {
-            mappedProxiedPorts = mappedProxiedPorts.concat(this.mapBundleDefinitionProxiedPorts(containerName, config.exposedPorts[containerName]));
+            mappedProxiedPorts = mappedProxiedPorts.concat(
+                this.mapBundleDefinitionProxiedPorts(containerName, config.exposedPorts[containerName]),
+            );
         }
 
         const mappedSummaryItems: BuildDefinitionSummaryItemTypeInterface[] = [];
@@ -198,10 +193,33 @@ export class GraphqlService {
             mappedSummaryItems.push(this.mapBundleDefinitionSummaryItem(summaryItem));
         }
 
+        const mappedEnvironmentalVariables: BuildDefinitionEnvironmentalVariableTypeInterface[] = [];
+        if (config.environmentalVariables) {
+            for (const environmentalVariableName of Object.keys(config.environmentalVariables)) {
+                mappedEnvironmentalVariables.push(
+                    this.mapBundleDefinitionEnvironmentalVariable(
+                        environmentalVariableName,
+                        config.environmentalVariables[environmentalVariableName],
+                    ),
+                );
+            }
+        }
+
+        const mappedComposeFiles: BuildDefinitionComposeFileTypeInterface[] = [];
+        if (config.composeFiles) {
+            for (const composeFile of config.composeFiles) {
+                mappedComposeFiles.push(this.mapBundleDefinitionComposeFile(composeFile));
+            }
+        } else {
+            mappedComposeFiles.push(this.mapBundleDefinitionComposeFile(config.composeFile));
+        }
+
         return {
             sources: mappedSources,
             proxiedPorts: mappedProxiedPorts,
             summaryItems: mappedSummaryItems,
+            environmentalVariables: mappedEnvironmentalVariables,
+            composeFiles: mappedComposeFiles,
         } as BuildDefinitionConfigTypeInterface;
     }
 
@@ -245,5 +263,19 @@ export class GraphqlService {
             name: summaryItem.name,
             text: summaryItem.value,
         } as BuildDefinitionSummaryItemTypeInterface;
+    }
+
+    protected mapBundleDefinitionEnvironmentalVariable(name: string, value: string): BuildDefinitionEnvironmentalVariableTypeInterface {
+        return {
+            name,
+            value,
+        } as BuildDefinitionEnvironmentalVariableTypeInterface;
+    }
+
+    protected mapBundleDefinitionComposeFile(composeFile: any): BuildDefinitionComposeFileTypeInterface {
+        return {
+            sourceId: composeFile.sourceId,
+            relativePaths: composeFile.relativePaths || [composeFile.relativePath],
+        } as BuildDefinitionComposeFileTypeInterface;
     }
 }

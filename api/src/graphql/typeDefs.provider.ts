@@ -32,6 +32,8 @@ export const typeDefsProvider = {
             sources: [BuildDefinitionSource!]!
             proxiedPorts: [BuildDefinitionProxiedPort!]!
             summaryItems: [BuildDefinitionSummaryItem!]!
+            environmentalVariables: [BuildDefinitionEnvironmentalVariable!]!
+            composeFiles: [BuildDefinitionComposeFile!]!
         }
 
         type BuildDefinitionSource {
@@ -56,6 +58,16 @@ export const typeDefsProvider = {
         type BuildDefinitionSummaryItem {
             name: String!
             text: String!
+        }
+
+        type BuildDefinitionEnvironmentalVariable {
+            name: String!
+            value: String!
+        }
+
+        type BuildDefinitionComposeFile {
+            sourceId: String!
+            relativePaths: [String!]!
         }
 
         type BuildInstance {

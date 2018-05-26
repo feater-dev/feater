@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import * as fs from 'fs-extra';
 import * as escapeStringRegexp from 'escape-string-regexp';
-import { parse } from 'esprima';
+import {parse} from 'esprima';
 import * as evaluate from 'static-eval';
-import { Component } from '@nestjs/common';
-import { Config } from '../config/config.component';
+import {Component} from '@nestjs/common';
+import {Config} from '../config/config.component';
 
 @Component()
 export class InterpolationHelper {

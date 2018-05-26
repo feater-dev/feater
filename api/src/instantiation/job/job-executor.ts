@@ -1,4 +1,4 @@
-import { JobInterface } from './job';
+import {JobInterface} from './job';
 
 export interface JobExecutorInterface {
 

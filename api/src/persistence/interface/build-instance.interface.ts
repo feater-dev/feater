@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import {Document} from 'mongoose';
 
 export interface BuildInstanceInterface extends Document {
     readonly _id: string;

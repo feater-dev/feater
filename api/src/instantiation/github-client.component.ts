@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as OctokitRest from '@octokit/rest';
-import { Component } from '@nestjs/common';
-import { Config } from '../config/config.component';
+import {Component} from '@nestjs/common';
+import {Config} from '../config/config.component';
 import {BaseLogger} from '../logger/base-logger';
 
 @Component()

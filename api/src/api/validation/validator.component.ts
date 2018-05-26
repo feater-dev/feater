@@ -1,12 +1,12 @@
-import { Component } from '@nestjs/common';
+import {Component} from '@nestjs/common';
 import { Validator as JsonSchemaValidator} from 'jsonschema';
-import { CreateBuildDefinitionRequestDto } from '../dto/request/create-build-definition-request.dto';
-import { CreateProjectRequestDto } from '../dto/request/create-project-request.dto';
-import { CreateBuildInstanceRequestDto } from '../dto/request/create-build-instance-request.dto';
-import { createProjectDtoJsonSchema } from './schema/api/create-project-dto.json-schema';
-import { createBuildDefinitionDtoJsonSchema } from './schema/api/create-build-definition-dto.json-schema';
-import { createBuildInstanceDtoJsonSchema } from './schema/api/create-build-instance-dto.json-schema';
-import { buildDefinitionConfigJsonSchema } from './schema/build-definition-config.json-schema';
+import {CreateBuildDefinitionRequestDto} from '../dto/request/create-build-definition-request.dto';
+import {CreateProjectRequestDto} from '../dto/request/create-project-request.dto';
+import {CreateBuildInstanceRequestDto} from '../dto/request/create-build-instance-request.dto';
+import {createProjectDtoJsonSchema} from './schema/api/create-project-dto.json-schema';
+import {createBuildDefinitionDtoJsonSchema} from './schema/api/create-build-definition-dto.json-schema';
+import {createBuildInstanceDtoJsonSchema} from './schema/api/create-build-instance-dto.json-schema';
+import {buildDefinitionConfigJsonSchema} from './schema/build-definition-config.json-schema';
 
 @Component()
 export class Validator {

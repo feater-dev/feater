@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
-import { Controller, Get, Post, Response, Param, HttpStatus, Body, Request } from '@nestjs/common';
-import { Validator } from '../validation/validator.component';
-import { UserRepository } from '../../persistence/repository/user.repository';
+import {Controller, Get, Post, Response, Param, HttpStatus, Body, Request} from '@nestjs/common';
+import {Validator} from '../validation/validator.component';
+import {UserRepository} from '../../persistence/repository/user.repository';
 import {
     FindAllUserGithubProfileResponseDto,
     FindAllUserGoogleProfileResponseDto,
     FindAllUserResponseDto,
 } from '../dto/response/find-all-user-response.dto';
-import { FindOneUserResponseDto } from '../dto/response/find-one-user-response.dto';
+import {FindOneUserResponseDto} from '../dto/response/find-one-user-response.dto';
 
 @Controller('/api/user')
 export class UserController {

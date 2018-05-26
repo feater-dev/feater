@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import {Schema} from 'mongoose';
 
 const SummaryItemSchema = new Schema({
     name: String,

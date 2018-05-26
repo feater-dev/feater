@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import { BaseLogger } from './base-logger';
-import { SourceJobInterface } from '../instantiation/job/job';
-import { LoggerInterface } from './logger-interface';
+import {BaseLogger} from './base-logger';
+import {SourceJobInterface} from '../instantiation/job/job';
+import {LoggerInterface} from './logger-interface';
 
 export class SourceJobLogger implements LoggerInterface {
 

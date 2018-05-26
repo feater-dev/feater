@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { Config } from './config.component';
+import {Module} from '@nestjs/common';
+import {Config} from './config.component';
 
 @Module({
   imports: [],

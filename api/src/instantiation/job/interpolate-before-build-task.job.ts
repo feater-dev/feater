@@ -1,9 +1,9 @@
 import * as path from 'path';
-import { Component } from '@nestjs/common';
-import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { InterpolationHelper } from '../interpolation-helper.component';
-import { JobInterface, SourceJobInterface } from './job';
-import { JobExecutorInterface } from './job-executor';
+import {Component} from '@nestjs/common';
+import {JobLoggerFactory} from '../../logger/job-logger-factory';
+import {InterpolationHelper} from '../interpolation-helper.component';
+import {JobInterface, SourceJobInterface} from './job';
+import {JobExecutorInterface} from './job-executor';
 
 export class InterpolateBeforeBuildTaskJob implements SourceJobInterface {
 

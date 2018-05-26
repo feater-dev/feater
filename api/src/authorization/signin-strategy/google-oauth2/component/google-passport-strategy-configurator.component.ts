@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import * as passport from 'passport';
-import { Component } from '@nestjs/common';
-import { OAuth2Strategy as Strategy } from 'passport-google-oauth';
-import { Config } from '../../../../config/config.component';
-import { GoogleUserProfileInterface } from '../google-user-profile.interface';
+import {Component} from '@nestjs/common';
+import {OAuth2Strategy as Strategy} from 'passport-google-oauth';
+import {Config} from '../../../../config/config.component';
+import {GoogleUserProfileInterface} from '../google-user-profile.interface';
 import {UserRepository} from '../../../../persistence/repository/user.repository';
 
 @Component()

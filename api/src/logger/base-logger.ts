@@ -1,7 +1,7 @@
 import * as winston from 'winston';
 import * as elasticsearch from 'elasticsearch';
 import * as winstonElasticsearchTransport from 'winston-elasticsearch';
-import { Component } from '@nestjs/common';
+import {Component} from '@nestjs/common';
 import {LoggerInterface} from './logger-interface';
 
 @Component()

@@ -1,10 +1,10 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { Component } from '@nestjs/common';
-import { Config } from '../../config/config.component';
-import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { BuildJobInterface, JobInterface } from './job';
-import { JobExecutorInterface } from './job-executor';
+import {Component} from '@nestjs/common';
+import {Config} from '../../config/config.component';
+import {JobLoggerFactory} from '../../logger/job-logger-factory';
+import {BuildJobInterface, JobInterface} from './job';
+import {JobExecutorInterface} from './job-executor';
 
 export class CreateDirectoryJob implements BuildJobInterface {
 

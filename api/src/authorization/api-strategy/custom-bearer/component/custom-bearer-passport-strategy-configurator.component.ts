@@ -1,10 +1,10 @@
 import * as passport from 'passport';
 import * as Strategy from 'passport-http-custom-bearer';
-import { Component } from '@nestjs/common';
-import { Config } from '../../../../config/config.component';
-import { ApiTokenRepository } from '../../../../persistence/repository/api-token.repository';
-import { UserRepository } from '../../../../persistence/repository/user.repository';
-import { apiTokenHeader } from '../../../authorization.module';
+import {Component} from '@nestjs/common';
+import {Config} from '../../../../config/config.component';
+import {ApiTokenRepository} from '../../../../persistence/repository/api-token.repository';
+import {UserRepository} from '../../../../persistence/repository/user.repository';
+import {apiTokenHeader} from '../../../authorization.module';
 
 @Component()
 export class CustomBearerPassportStrategyConfiguratorComponent {

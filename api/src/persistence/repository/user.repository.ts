@@ -1,10 +1,10 @@
-import { Model } from 'mongoose';
-import { Component } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { UserSchema } from '../schema/user.schema';
-import { UserInterface } from '../interface/user.interface';
-import { GithubUserProfileInterface } from '../../authorization/signin-strategy/github-oauth2/github-user-profile.interface';
-import { GoogleUserProfileInterface } from '../../authorization/signin-strategy/google-oauth2/google-user-profile.interface';
+import {Model} from 'mongoose';
+import {Component} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {UserSchema} from '../schema/user.schema';
+import {UserInterface} from '../interface/user.interface';
+import {GithubUserProfileInterface} from '../../authorization/signin-strategy/github-oauth2/github-user-profile.interface';
+import {GoogleUserProfileInterface} from '../../authorization/signin-strategy/google-oauth2/google-user-profile.interface';
 import {ProjectInterface} from '../interface/project.interface';
 
 @Component()

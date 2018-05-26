@@ -1,9 +1,9 @@
-import { Component } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { BuildDefinitionSchema } from '../schema/build-definition.schema';
-import { BuildDefinitionInterface } from '../interface/build-definition.interface';
-import { CreateBuildDefinitionRequestDto } from '../../api/dto/request/create-build-definition-request.dto';
+import {Component} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {BuildDefinitionSchema} from '../schema/build-definition.schema';
+import {BuildDefinitionInterface} from '../interface/build-definition.interface';
+import {CreateBuildDefinitionRequestDto} from '../../api/dto/request/create-build-definition-request.dto';
 
 @Component()
 export class BuildDefinitionRepository {

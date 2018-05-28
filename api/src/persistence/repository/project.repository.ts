@@ -1,9 +1,9 @@
-import { Model } from 'mongoose';
-import { Component } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { ProjectSchema } from '../schema/project.schema';
-import { ProjectInterface } from '../interface/project.interface';
-import { CreateProjectRequestDto } from '../../api/dto/request/create-project-request.dto';
+import {Model} from 'mongoose';
+import {Component} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {ProjectSchema} from '../schema/project.schema';
+import {ProjectInterface} from '../interface/project.interface';
+import {CreateProjectRequestDto} from '../../api/dto/request/create-project-request.dto';
 
 @Component()
 export class ProjectRepository {

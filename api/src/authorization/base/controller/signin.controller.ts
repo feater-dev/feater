@@ -1,4 +1,4 @@
-import { Controller, Get, Response } from '@nestjs/common';
+import {Controller, Get, Response} from '@nestjs/common';
 
 @Controller('/signin')
 export class SigninController {

@@ -2,11 +2,11 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as jsYaml from 'js-yaml';
-import { Component } from '@nestjs/common';
-import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { BuildInstanceRepository } from '../../persistence/repository/build-instance.repository';
-import { JobInterface, BuildJobInterface } from './job';
-import { JobExecutorInterface } from './job-executor';
+import {Component} from '@nestjs/common';
+import {JobLoggerFactory} from '../../logger/job-logger-factory';
+import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
+import {JobInterface, BuildJobInterface} from './job';
+import {JobExecutorInterface} from './job-executor';
 
 export class ParseDockerComposeJob implements BuildJobInterface {
 

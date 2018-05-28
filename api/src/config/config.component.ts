@@ -1,7 +1,7 @@
 import * as iniConfig from 'ini-config';
 import * as path from 'path';
-import { ApplicationConfig } from '@nestjs/core/application-config';
-import { Component } from '@nestjs/common';
+import {ApplicationConfig} from '@nestjs/core/application-config';
+import {Component} from '@nestjs/common';
 
 const configFullPath = path.join(__dirname, '..', '..');
 

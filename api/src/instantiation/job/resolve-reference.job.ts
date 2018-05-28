@@ -1,8 +1,8 @@
-import { Component } from '@nestjs/common';
-import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { GithubClient } from '../github-client.component';
-import { JobInterface, SourceJobInterface } from './job';
-import { JobExecutorInterface } from './job-executor';
+import {Component} from '@nestjs/common';
+import {JobLoggerFactory} from '../../logger/job-logger-factory';
+import {GithubClient} from '../github-client.component';
+import {JobInterface, SourceJobInterface} from './job';
+import {JobExecutorInterface} from './job-executor';
 
 export class ResolveReferenceJob implements SourceJobInterface {
 

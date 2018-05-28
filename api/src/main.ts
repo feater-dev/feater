@@ -2,11 +2,11 @@ import * as cors from 'cors';
 import * as morgan from 'morgan';
 import * as passport from 'passport';
 import * as expressHandlebars from 'express-handlebars';
-import { NestFactory } from '@nestjs/core';
-import { ApplicationModule } from './app.module';
-import { OAuth2Strategy as GoogleOAuth2Strategy } from 'passport-google-oauth';
-import { INestApplication } from '@nestjs/common';
-import { apiTokenHeader } from './authorization/authorization.module';
+import {NestFactory} from '@nestjs/core';
+import {ApplicationModule} from './app.module';
+import {OAuth2Strategy as GoogleOAuth2Strategy} from 'passport-google-oauth';
+import {INestApplication} from '@nestjs/common';
+import {apiTokenHeader} from './authorization/authorization.module';
 
 async function bootstrap() {
     const app: INestApplication = await NestFactory.create(ApplicationModule);

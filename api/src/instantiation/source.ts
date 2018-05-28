@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Build } from './build';
+import {Build} from './build';
 
 export class Source {
 

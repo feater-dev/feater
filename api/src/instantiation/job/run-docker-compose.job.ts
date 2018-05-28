@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
 import * as path from 'path';
-import { spawn } from 'child_process';
-import { Component } from '@nestjs/common';
-import { EnvironmentalVariablesSet } from '../environmental-variables-set';
-import { JobInterface, BuildJobInterface } from './job';
-import { JobExecutorInterface } from './job-executor';
-import { JobLoggerFactory } from '../../logger/job-logger-factory';
+import {spawn} from 'child_process';
+import {Component} from '@nestjs/common';
+import {EnvironmentalVariablesSet} from '../environmental-variables-set';
+import {JobInterface, BuildJobInterface} from './job';
+import {JobExecutorInterface} from './job-executor';
+import {JobLoggerFactory} from '../../logger/job-logger-factory';
 
 export class RunDockerComposeJob implements BuildJobInterface {
 

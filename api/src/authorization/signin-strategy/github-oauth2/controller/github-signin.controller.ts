@@ -1,7 +1,7 @@
 import * as passport from 'passport';
-import { Controller, Get, Next, Request, Response } from '@nestjs/common';
-import { Config } from '../../../../config/config.component';
-import { SpaRedirectorComponent } from '../../../base/component/spa-redirector.component';
+import {Controller, Get, Next, Request, Response} from '@nestjs/common';
+import {Config} from '../../../../config/config.component';
+import {SpaRedirectorComponent} from '../../../base/component/spa-redirector.component';
 
 @Controller('/signin/github')
 export class GithubSigninController {

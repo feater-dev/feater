@@ -1,12 +1,12 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { mkdirSync } from 'mkdir-recursive';
-import { exec } from 'child_process';
-import { Component } from '@nestjs/common';
-import { Config } from '../../config/config.component';
-import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { JobInterface, SourceJobInterface } from './job';
-import { JobExecutorInterface } from './job-executor';
+import {mkdirSync} from 'mkdir-recursive';
+import {exec} from 'child_process';
+import {Component} from '@nestjs/common';
+import {Config} from '../../config/config.component';
+import {JobLoggerFactory} from '../../logger/job-logger-factory';
+import {JobInterface, SourceJobInterface} from './job';
+import {JobExecutorInterface} from './job-executor';
 
 const BUFFER_SIZE = 268435456; // 256M
 

@@ -1,9 +1,9 @@
-import { Model } from 'mongoose';
-import { Component } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { BuildInstanceSchema } from '../schema/build-instance.schema';
-import { BuildInstanceInterface } from '../interface/build-instance.interface';
-import { CreateBuildInstanceRequestDto } from '../../api/dto/request/create-build-instance-request.dto';
+import {Model} from 'mongoose';
+import {Component} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {BuildInstanceSchema} from '../schema/build-instance.schema';
+import {BuildInstanceInterface} from '../interface/build-instance.interface';
+import {CreateBuildInstanceRequestDto} from '../../api/dto/request/create-build-instance-request.dto';
 
 @Component()
 export class BuildInstanceRepository {

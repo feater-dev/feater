@@ -1,6 +1,6 @@
-import { EnvironmentalVariablesSet } from './environmental-variables-set';
-import { SummaryItemsSet } from './summary-items-set';
-import { Source } from './source';
+import {EnvironmentalVariablesSet} from './environmental-variables-set';
+import {SummaryItemsSet} from './summary-items-set';
+import {Source} from './source';
 
 export class Build {
 

@@ -1,15 +1,15 @@
 import * as _ from 'lodash';
 import * as nanoidGenerate from 'nanoid/generate';
-import { Controller, Get, Post, Response, Param, HttpStatus, Body } from '@nestjs/common';
-import { BuildInstanceRepository } from '../../persistence/repository/build-instance.repository';
-import { CreateBuildInstanceRequestDto } from '../dto/request/create-build-instance-request.dto';
-import { BuildDefinitionRepository } from '../../persistence/repository/build-definition.repository';
-import { Validator } from '../validation/validator.component';
-import { Instantiator } from '../../instantiation/instantiator.component';
-import { ProjectRepository } from '../../persistence/repository/project.repository';
-import { FindAllBuildInstanceResponseDto } from '../dto/response/find-all-build-instance-response.dto';
-import { FindOneBuildInstanceResponseDto } from '../dto/response/find-one-build-instance-response.dto';
-import { CreateBuildInstanceResponseDto } from '../dto/response/create-build-instance-response.dto';
+import {Controller, Get, Post, Response, Param, HttpStatus, Body} from '@nestjs/common';
+import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
+import {CreateBuildInstanceRequestDto} from '../dto/request/create-build-instance-request.dto';
+import {BuildDefinitionRepository} from '../../persistence/repository/build-definition.repository';
+import {Validator} from '../validation/validator.component';
+import {Instantiator} from '../../instantiation/instantiator.component';
+import {ProjectRepository} from '../../persistence/repository/project.repository';
+import {FindAllBuildInstanceResponseDto} from '../dto/response/find-all-build-instance-response.dto';
+import {FindOneBuildInstanceResponseDto} from '../dto/response/find-one-build-instance-response.dto';
+import {CreateBuildInstanceResponseDto} from '../dto/response/create-build-instance-response.dto';
 
 @Controller('/api/build-instance')
 export class BuildInstanceController {

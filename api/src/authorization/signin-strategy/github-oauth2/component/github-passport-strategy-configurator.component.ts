@@ -1,9 +1,9 @@
 import * as passport from 'passport';
-import { Component } from '@nestjs/common';
-import { Strategy } from 'passport-github';
-import { Config } from '../../../../config/config.component';
-import { UserRepository } from '../../../../persistence/repository/user.repository';
-import { GithubUserProfileInterface } from '../github-user-profile.interface';
+import {Component} from '@nestjs/common';
+import {Strategy} from 'passport-github';
+import {Config} from '../../../../config/config.component';
+import {UserRepository} from '../../../../persistence/repository/user.repository';
+import {GithubUserProfileInterface} from '../github-user-profile.interface';
 
 @Component()
 export class GithubPassportStrategyConfigurationComponent {

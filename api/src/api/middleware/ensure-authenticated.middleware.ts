@@ -1,16 +1,18 @@
-import { HttpStatus, NestMiddleware, ExpressMiddleware, Middleware } from '@nestjs/common';
+import {HttpStatus, NestMiddleware, ExpressMiddleware, Middleware} from '@nestjs/common';
 
 @Middleware()
 export class EnsureAuthenticatedMiddleware implements NestMiddleware {
 
     resolve(): ExpressMiddleware {
         return (req, res, next) => {
-            if (!req.user) {
-                res.status(HttpStatus.FORBIDDEN).send();
-
-                return;
-            }
             next();
+
+            // if (!req.user) {
+            //     res.status(HttpStatus.FORBIDDEN).send();
+            //
+            //     return;
+            // }
+            // next();
         };
     }
 

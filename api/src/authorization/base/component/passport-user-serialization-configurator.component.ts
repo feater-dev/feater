@@ -1,5 +1,5 @@
 import * as passport from 'passport';
-import { Component } from '@nestjs/common';
+import {Component} from '@nestjs/common';
 
 @Component()
 export class PassportUserSerializationConfigurationComponent {

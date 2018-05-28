@@ -1,5 +1,5 @@
-import { Build } from '../build';
-import { Source } from '../source';
+import {Build} from '../build';
+import {Source} from '../source';
 
 export interface JobInterface {}
 

@@ -1,9 +1,9 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { Component } from '@nestjs/common';
-import { JobLoggerFactory } from '../../logger/job-logger-factory';
-import { JobInterface, SourceJobInterface } from './job';
-import { JobExecutorInterface } from './job-executor';
+import {Component} from '@nestjs/common';
+import {JobLoggerFactory} from '../../logger/job-logger-factory';
+import {JobInterface, SourceJobInterface} from './job';
+import {JobExecutorInterface} from './job-executor';
 
 export class CopyBeforeBuildTaskJob implements SourceJobInterface {
 

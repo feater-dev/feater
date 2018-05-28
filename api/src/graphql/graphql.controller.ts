@@ -10,6 +10,6 @@ export class GraphqlController {
 
     @Post('graphql-api')
     public async create(@Request() req, @Response() res, @Next() next) {
-        return graphqlExpress({ schema: this.graphqlService.schema })(req, res, next);
+        return graphqlExpress({schema: this.graphqlService.createSchema()})(req, res, next);
     }
 }

@@ -1,6 +1,9 @@
 import {Component} from '@nestjs/common';
 import {BuildInstanceTypeInterface} from '../type/build-instance-type.interface';
 import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
+import {BuildDefinitionInterface} from '../../persistence/interface/build-definition.interface';
+import {BuildDefinitionTypeInterface} from '../type/build-definition-type.interface';
+import {BuildInstanceInterface} from '../../persistence/interface/build-instance.interface';
 
 @Component()
 export class BuildInstanceResolverFactory {
@@ -23,5 +26,34 @@ export class BuildInstanceResolverFactory {
 
             return data;
         };
+    }
+
+    public createListResolver(queryExtractor: (any) => object): (object) => Promise<BuildInstanceTypeInterface[]> {
+        return async (object: any): Promise<BuildInstanceTypeInterface[]> => {
+            const buildInstances = await this.buildInstanceRepository.find(queryExtractor(object));
+            const data: BuildInstanceTypeInterface[] = [];
+
+            for (const buildInstance of buildInstances) {
+                data.push(this.mapPersistentModelToTypeModel(buildInstance));
+            }
+
+            return data;
+        };
+    }
+
+    public createItemResolver(idExtractor: (any) => string): (string) => Promise<BuildInstanceTypeInterface> {
+        return async (object: any): Promise<BuildInstanceTypeInterface> => {
+            return this.mapPersistentModelToTypeModel(
+                await this.buildInstanceRepository.findById(idExtractor(object)),
+            );
+        };
+    }
+
+    protected mapPersistentModelToTypeModel(buildInstance: BuildInstanceInterface): BuildInstanceTypeInterface {
+        return {
+            id: buildInstance._id,
+            name: buildInstance.name,
+            buildDefinitionId: buildInstance.buildDefinitionId,
+        } as BuildInstanceTypeInterface;
     }
 }

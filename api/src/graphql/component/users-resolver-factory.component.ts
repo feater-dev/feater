@@ -35,8 +35,12 @@ export class UsersResolverFactory {
         return {
             id: user._id,
             name: user.name,
-            githubProfile: user.githubProfile.id ? user.githubProfile as GithubProfileTypeInterface : null,
-            googleProfile: user.googleProfile.id ? user.googleProfile as GoogleProfileTypeInterface : null,
+            githubProfile: user.githubProfile.id
+                ? user.githubProfile as GithubProfileTypeInterface
+                : null,
+            googleProfile: user.googleProfile.id
+                ? user.googleProfile as GoogleProfileTypeInterface
+                : null,
         } as UserTypeInterface;
     }
 }

@@ -2,6 +2,7 @@ import {Component} from '@nestjs/common';
 import {ProjectRepository} from '../../persistence/repository/project.repository';
 import {ProjectTypeInterface} from '../type/project-type.interface';
 import {ProjectInterface} from '../../persistence/interface/project.interface';
+import {BuildInstanceTypeInterface} from '../type/build-instance-type.interface';
 
 @Component()
 export class ProjectsResolverFactory {
@@ -18,6 +19,19 @@ export class ProjectsResolverFactory {
                     return this.mapPersistentModelToTypeModel(project);
                 },
             );
+        };
+    }
+
+    public createListResolver(queryExtractor: (any) => object): (object) => Promise<ProjectTypeInterface[]> {
+        return async (object: any): Promise<ProjectTypeInterface[]> => {
+            const projects = await this.projectRepository.find(queryExtractor(object));
+            const data: ProjectTypeInterface[] = [];
+
+            for (const project of projects) {
+                data.push(this.mapPersistentModelToTypeModel(project));
+            }
+
+            return data;
         };
     }
 

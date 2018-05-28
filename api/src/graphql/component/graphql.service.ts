@@ -22,20 +22,16 @@ export class GraphqlService {
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly buildDefinitionResolverFactory: BuildDefinitionResolverFactory,
         private readonly buildInstanceResolverFactory: BuildInstanceResolverFactory,
-
-        private readonly projectRepository: ProjectRepository,
-        private readonly buildDefinitionRepository: BuildDefinitionRepository,
-        private readonly buildInstanceRepository: BuildInstanceRepository,
     ) { }
 
-    public get schema(): GraphQLSchema {
+    public createSchema(): GraphQLSchema {
         return makeExecutableSchema({
             typeDefs: this.typeDefsProvider,
-            resolvers: this.resolvers,
+            resolvers: this.createResolvers(),
         });
     }
 
-    public get resolvers(): any {
+    protected createResolvers(): any {
         return {
             JSON: GraphQLJSON,
 
@@ -46,47 +42,27 @@ export class GraphqlService {
                 buildInstances: this.buildInstanceResolverFactory.createRootListResolver(),
             },
 
-            User: {},
-
-            GithubProfile: {},
-            GoogleProfile: {},
-
             Project: {
-                buildDefinitions: this.getProjectBuildDefinitionsResolver(),
+                buildDefinitions: this.buildDefinitionResolverFactory.createListResolver(
+                    (project: ProjectTypeInterface) => ({projectId: project.id}),
+                ),
             },
 
             BuildDefinition: {
                 project: this.projectsResolverFactory.createItemResolver(
-                    (buildDefinitionType: BuildDefinitionTypeInterface) => {
-                        return buildDefinitionType.projectId;
-                    },
+                    (buildDefinitionType: BuildDefinitionTypeInterface) => buildDefinitionType.projectId,
                 ),
-                buildInstances: this.getBuildDefinitionBuildInstancesResolver(),
+                buildInstances: this.buildInstanceResolverFactory.createListResolver(
+                    (buildDefinition: BuildDefinitionTypeInterface) => ({buildDefinitionId: buildDefinition.id}),
+                ),
             },
 
             BuildInstance: {
-                buildDefinition: this.getBuildInstanceBuildDefinitionResolver(),
+                buildDefinition: this.buildDefinitionResolverFactory.createItemResolver(
+                    (buildInstance: BuildInstanceTypeInterface) => buildInstance.buildDefinitionId,
+                ),
             },
 
-            BuildDefinitionConfig: {},
-            BuildDefinitionSource: {
-                beforeBuildTasks: {
-                    __resolveType: (beforeBuildTask: BeforeBuildTaskTypeInterface): string => {
-                        if ('copy' === beforeBuildTask.type) {
-                            return 'CopyBeforeBuildTask';
-                        }
-                        if ('interpolate' === beforeBuildTask.type) {
-                            return 'InterpolateBeforeBuildTask';
-                        }
-                        throw new Error();
-                    },
-                },
-            },
-            BuildDefinitionSourceReference: {},
-            BuildDefinitionProxiedPort: {},
-            BuildDefinitionSummaryItem: {},
-            BuildDefinitionEnvironmentalVariable: {},
-            BuildDefinitionComposeFile: {},
             BeforeBuildTask: {
                 __resolveType: (beforeBuildTask: BeforeBuildTaskTypeInterface): string => {
                     if ('copy' === beforeBuildTask.type) {
@@ -98,54 +74,6 @@ export class GraphqlService {
                     throw new Error();
                 },
             },
-            CopyBeforeBuildTask: {},
-            InterpolateBeforeBuildTask: {},
-        };
-    }
-
-    public getProjectBuildDefinitionsResolver(): (project: ProjectTypeInterface) => Promise<Array<BuildDefinitionTypeInterface>> {
-        return async (project: ProjectTypeInterface): Promise<Array<BuildDefinitionTypeInterface>> => {
-            const buildDefinitions = await this.buildDefinitionRepository.find({projectId: project.id});
-            const data: BuildDefinitionTypeInterface[] = [];
-
-            for (const buildDefinition of buildDefinitions) {
-                data.push({
-                    id: buildDefinition._id,
-                    name: buildDefinition.name,
-                    projectId: buildDefinition.projectId,
-                } as BuildDefinitionTypeInterface);
-            }
-
-            return data;
-        };
-    }
-
-    public getBuildInstanceBuildDefinitionResolver(): (buildInstance: BuildInstanceTypeInterface) => Promise<BuildDefinitionTypeInterface> {
-        return async (buildInstance: BuildInstanceTypeInterface): Promise<BuildDefinitionTypeInterface> => {
-            const buildDefinition = await this.buildDefinitionRepository.findById(buildInstance.buildDefinitionId);
-
-            return {
-                id: buildDefinition._id,
-                name: buildDefinition.name,
-                projectId: buildDefinition.projectId,
-            } as BuildDefinitionTypeInterface;
-        };
-    }
-
-    public getBuildDefinitionBuildInstancesResolver(): (buildDefinition: BuildDefinitionTypeInterface) => Promise<Array<BuildInstanceTypeInterface>> {
-        return async (buildDefinition: BuildDefinitionTypeInterface): Promise<Array<BuildInstanceTypeInterface>> => {
-            const buildInstances = await this.buildInstanceRepository.find({buildDefinitionId: buildDefinition.id});
-            const data: BuildInstanceTypeInterface[] = [];
-
-            for (const buildInstance of buildInstances) {
-                data.push({
-                    id: buildInstance._id,
-                    name: buildInstance.name,
-                    buildDefinitionId: buildInstance.buildDefinitionId,
-                } as BuildInstanceTypeInterface);
-            }
-
-            return data;
         };
     }
 }

@@ -33,29 +33,34 @@ export class GraphqlService {
             JSON: GraphQLJSON,
 
             Query: {
-                users: this.usersResolverFactory.createListResolver(),
-                projects: this.projectsResolverFactory.createListResolver(),
-                buildDefinitions: this.buildDefinitionResolverFactory.createListResolver(),
-                buildInstances: this.buildInstanceResolverFactory.createListResolver(),
+                users: this.usersResolverFactory.getListResolver(),
+                projects: this.projectsResolverFactory.getListResolver(),
+                buildDefinitions: this.buildDefinitionResolverFactory.getListResolver(),
+                buildInstances: this.buildInstanceResolverFactory.getListResolver(),
+            },
+
+            Mutation: {
+                createProject: this.projectsResolverFactory.getCreateItemResolver(),
+                createBuildDefinition: this.buildDefinitionResolverFactory.getCreateItemResolver(),
             },
 
             Project: {
-                buildDefinitions: this.buildDefinitionResolverFactory.createListResolver(
+                buildDefinitions: this.buildDefinitionResolverFactory.getListResolver(
                     (project: ProjectTypeInterface) => ({projectId: project.id}),
                 ),
             },
 
             BuildDefinition: {
-                project: this.projectsResolverFactory.createItemResolver(
+                project: this.projectsResolverFactory.getItemResolver(
                     (buildDefinitionType: BuildDefinitionTypeInterface) => buildDefinitionType.projectId,
                 ),
-                buildInstances: this.buildInstanceResolverFactory.createListResolver(
+                buildInstances: this.buildInstanceResolverFactory.getListResolver(
                     (buildDefinition: BuildDefinitionTypeInterface) => ({buildDefinitionId: buildDefinition.id}),
                 ),
             },
 
             BuildInstance: {
-                buildDefinition: this.buildDefinitionResolverFactory.createItemResolver(
+                buildDefinition: this.buildDefinitionResolverFactory.getItemResolver(
                     (buildInstance: BuildInstanceTypeInterface) => buildInstance.buildDefinitionId,
                 ),
             },

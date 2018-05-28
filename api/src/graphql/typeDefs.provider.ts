@@ -5,6 +5,7 @@ export const typeDefsProvider = {
 
         schema {
             query: Query
+            mutation: Mutation
         }
 
         type Query {
@@ -12,6 +13,67 @@ export const typeDefsProvider = {
             projects: [Project!]!
             buildDefinitions: [BuildDefinition!]!
             buildInstances: [BuildInstance!]!
+        }
+
+        input BuildDefinitionConfigInput {
+            sources: [BuildDefinitionSourceInput!]!
+            proxiedPorts: [BuildDefinitionProxiedPortInput!]!
+            summaryItems: [BuildDefinitionSummaryItemInput!]!
+            environmentalVariables: [BuildDefinitionEnvironmentalVariableInput!]!
+            composeFiles: [BuildDefinitionComposeFileInput!]!
+        }
+
+        input BuildDefinitionSourceInput {
+            id: String!
+            type: String!
+            name: String!
+            reference: BuildDefinitionSourceReferenceInput!
+            beforeBuildTasks: [BeforeBuildTaskInput!]!
+        }
+
+        input BeforeBuildTaskInput {
+            type: String!
+            sourceRelativePath: String
+            destinationRelativePath: String
+            relativePath: String
+        }
+
+        input BuildDefinitionSourceReferenceInput {
+            type: String!
+            name: String!
+        }
+
+        input BuildDefinitionProxiedPortInput {
+            id: String!
+            containerName: String!
+            port: Int!
+            name: String!
+        }
+
+        input BuildDefinitionSummaryItemInput {
+            name: String!
+            text: String!
+        }
+
+        input BuildDefinitionEnvironmentalVariableInput {
+            name: String!
+            value: String!
+        }
+
+        input BuildDefinitionComposeFileInput {
+            sourceId: String!
+            relativePaths: [String!]!
+        }
+
+        type Mutation {
+            createProject(
+                name: String!
+            ): Project!
+            createBuildDefinition(
+                projectId: String!
+                name: String!
+                config: BuildDefinitionConfigInput!
+            ): BuildDefinition!
         }
 
         type User {

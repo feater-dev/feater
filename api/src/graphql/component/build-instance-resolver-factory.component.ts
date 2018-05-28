@@ -9,7 +9,7 @@ export class BuildInstanceResolverFactory {
         private readonly buildInstanceRepository: BuildInstanceRepository,
     ) { }
 
-    public createListResolver(queryExtractor: (any) => object): (object) => Promise<BuildInstanceTypeInterface[]> {
+    public getListResolver(queryExtractor?: (any) => object): (object) => Promise<BuildInstanceTypeInterface[]> {
         return async (object: any): Promise<BuildInstanceTypeInterface[]> => {
             const buildInstances = await this.buildInstanceRepository.find(
                 queryExtractor ? queryExtractor(object) : {},

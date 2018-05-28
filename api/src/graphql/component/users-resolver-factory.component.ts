@@ -11,7 +11,7 @@ export class UsersResolverFactory {
         private readonly userRepository: UserRepository,
     ) { }
 
-    public createListResolver(queryExtractor?: (any) => object): (object) => Promise<UserTypeInterface[]> {
+    public getListResolver(queryExtractor?: (any) => object): (object) => Promise<UserTypeInterface[]> {
         return async (object: any): Promise<UserTypeInterface[]> => {
             const users = await this.userRepository.find(
                 queryExtractor ? queryExtractor(object) : {},

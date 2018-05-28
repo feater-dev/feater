@@ -11,22 +11,11 @@ export class BuildDefinitionResolverFactory {
         private readonly buildDefinitionConfigMapper: BuildDefinitionConfigMapper,
     ) { }
 
-    public createRootListResolver(): () => Promise<Array<BuildDefinitionTypeInterface>> {
-        return async (): Promise<Array<BuildDefinitionTypeInterface>> => {
-            const buildDefinitions = await this.buildDefinitionRepository.find({});
-            const data: BuildDefinitionTypeInterface[] = [];
-
-            for (const buildDefinition of buildDefinitions) {
-                data.push(this.mapPersistentModelToTypeModel(buildDefinition));
-            }
-
-            return data;
-        };
-    }
-
     public createListResolver(queryExtractor: (any) => object): (object) => Promise<BuildDefinitionTypeInterface[]> {
         return async (object: any): Promise<BuildDefinitionTypeInterface[]> => {
-            const buildDefinitions = await this.buildDefinitionRepository.find(queryExtractor(object));
+            const buildDefinitions = await this.buildDefinitionRepository.find(
+                queryExtractor ? queryExtractor(object) : {},
+            );
             const data: BuildDefinitionTypeInterface[] = [];
 
             for (const buildDefinition of buildDefinitions) {

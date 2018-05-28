@@ -2,9 +2,6 @@ import {Component, Inject} from '@nestjs/common';
 import {GraphQLSchema} from 'graphql';
 import * as GraphQLJSON from 'graphql-type-json';
 import {makeExecutableSchema} from 'graphql-tools';
-import {ProjectRepository} from '../../persistence/repository/project.repository';
-import {BuildDefinitionRepository} from '../../persistence/repository/build-definition.repository';
-import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
 import {ProjectTypeInterface} from '../type/project-type.interface';
 import {BuildDefinitionTypeInterface} from '../type/build-definition-type.interface';
 import {BuildInstanceTypeInterface} from '../type/build-instance-type.interface';
@@ -36,10 +33,10 @@ export class GraphqlService {
             JSON: GraphQLJSON,
 
             Query: {
-                users: this.usersResolverFactory.createRootListResolver(),
-                projects: this.projectsResolverFactory.createRootListResolver(),
-                buildDefinitions: this.buildDefinitionResolverFactory.createRootListResolver(),
-                buildInstances: this.buildInstanceResolverFactory.createRootListResolver(),
+                users: this.usersResolverFactory.createListResolver(),
+                projects: this.projectsResolverFactory.createListResolver(),
+                buildDefinitions: this.buildDefinitionResolverFactory.createListResolver(),
+                buildInstances: this.buildInstanceResolverFactory.createListResolver(),
             },
 
             Project: {

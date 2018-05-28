@@ -11,15 +11,18 @@ export class UsersResolverFactory {
         private readonly userRepository: UserRepository,
     ) { }
 
-    public createRootListResolver(): () => Promise<Array<UserTypeInterface>> {
-        return async (): Promise<Array<UserTypeInterface>> => {
-            const users = await this.userRepository.find({});
-
-            return users.map(
-                (user: UserInterface): UserTypeInterface => {
-                    return this.mapPersistentModelToTypeModel(user);
-                },
+    public createListResolver(queryExtractor?: (any) => object): (object) => Promise<UserTypeInterface[]> {
+        return async (object: any): Promise<UserTypeInterface[]> => {
+            const users = await this.userRepository.find(
+                queryExtractor ? queryExtractor(object) : {},
             );
+            const data: UserTypeInterface[] = [];
+
+            for (const user of users) {
+                data.push(this.mapPersistentModelToTypeModel(user));
+            }
+
+            return data;
         };
     }
 

@@ -1,8 +1,6 @@
 import {Component} from '@nestjs/common';
 import {BuildInstanceTypeInterface} from '../type/build-instance-type.interface';
 import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
-import {BuildDefinitionInterface} from '../../persistence/interface/build-definition.interface';
-import {BuildDefinitionTypeInterface} from '../type/build-definition-type.interface';
 import {BuildInstanceInterface} from '../../persistence/interface/build-instance.interface';
 
 @Component()
@@ -11,26 +9,11 @@ export class BuildInstanceResolverFactory {
         private readonly buildInstanceRepository: BuildInstanceRepository,
     ) { }
 
-    public createRootListResolver(): () => Promise<Array<BuildInstanceTypeInterface>> {
-        return async (): Promise<Array<BuildInstanceTypeInterface>> => {
-            const buildInstances = await this.buildInstanceRepository.find({});
-            const data: BuildInstanceTypeInterface[] = [];
-
-            for (const buildInstance of buildInstances) {
-                data.push({
-                    id: buildInstance._id,
-                    name: buildInstance.name,
-                    buildDefinitionId: buildInstance.buildDefinitionId,
-                } as BuildInstanceTypeInterface);
-            }
-
-            return data;
-        };
-    }
-
     public createListResolver(queryExtractor: (any) => object): (object) => Promise<BuildInstanceTypeInterface[]> {
         return async (object: any): Promise<BuildInstanceTypeInterface[]> => {
-            const buildInstances = await this.buildInstanceRepository.find(queryExtractor(object));
+            const buildInstances = await this.buildInstanceRepository.find(
+                queryExtractor ? queryExtractor(object) : {},
+            );
             const data: BuildInstanceTypeInterface[] = [];
 
             for (const buildInstance of buildInstances) {

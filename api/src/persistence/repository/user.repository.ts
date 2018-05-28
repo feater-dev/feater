@@ -18,7 +18,7 @@ export class UserRepository {
         return this.userModel.find(query).exec();
     }
 
-    findById(id: string): Promise<ProjectInterface> {
+    findById(id: string): Promise<UserInterface> {
         return this.userModel.findById(id).exec();
     }
 

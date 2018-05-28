@@ -8,9 +8,33 @@ export const typeDefsProvider = {
         }
 
         type Query {
+            users: [User!]!
             projects: [Project!]!
             buildDefinitions: [BuildDefinition!]!
             buildInstances: [BuildInstance!]!
+        }
+
+        type User {
+            id: String!
+            name: String!
+            githubProfile: GithubProfile
+            googleProfile: GoogleProfile
+        }
+
+        type GithubProfile {
+            username: String!
+            id: String!
+            displayName: String!
+            emailAddresses: [String!]!
+        }
+
+        type GoogleProfile {
+            id: String!
+            firstName: String!
+            lastName: String!
+            displayName: String!
+            emailAddress: String!
+            domain: String!
         }
 
         type Project {
@@ -40,6 +64,20 @@ export const typeDefsProvider = {
             type: String!
             name: String!
             reference: BuildDefinitionSourceReference!
+            beforeBuildTasks: [BeforeBuildTask!]!
+        }
+
+        union BeforeBuildTask = CopyBeforeBuildTask | InterpolateBeforeBuildTask
+
+        type CopyBeforeBuildTask {
+            type: String!
+            sourceRelativePath: String!
+            destinationRelativePath: String!
+        }
+
+        type InterpolateBeforeBuildTask {
+            type: String!
+            relativePath: String!
         }
 
         type BuildDefinitionSourceReference {

@@ -6,6 +6,11 @@ import {BuildDefinitionProxiedPortTypeInterface} from '../type/build-definition-
 import {BuildDefinitionSummaryItemTypeInterface} from '../type/build-definition-summary-item-type.interface';
 import {BuildDefinitionComposeFileTypeInterface} from '../type/build-definition-compose-file-type.interface';
 import {BuildDefinitionEnvironmentalVariableTypeInterface} from '../type/build-definition-environmental-variable-type.interface';
+import {
+    BeforeBuildTaskTypeInterface,
+    CopyBeforeBuildTaskTypeInterface,
+    InterpolateBeforeBuildTaskTypeInterface
+} from '../type/before-build-task-type.interface';
 
 @Component()
 export class BuildDefinitionConfigMapper {
@@ -58,12 +63,41 @@ export class BuildDefinitionConfigMapper {
     }
 
     protected mapSource(sourceId: string, source: any): BuildDefinitionSourceTypeInterface {
+        const mappedBeforeBuildTasks: BeforeBuildTaskTypeInterface[] = [];
+
+        if (source.beforeBuildTasks) {
+            for (const beforeBuildTask of source.beforeBuildTasks) {
+                mappedBeforeBuildTasks.push(this.mapBeforeBuildTask(beforeBuildTask));
+            }
+        }
+
         return {
             id: sourceId,
             type: source.type,
             name: source.name,
             reference: this.mapSourceReference(source.reference),
+            beforeBuildTasks: mappedBeforeBuildTasks,
         } as BuildDefinitionSourceTypeInterface;
+    }
+
+    protected mapBeforeBuildTask(beforeBuildTask: any): BeforeBuildTaskTypeInterface {
+        switch (beforeBuildTask.type) {
+            case 'copy':
+                return {
+                    type: beforeBuildTask.type,
+                    sourceRelativePath: beforeBuildTask.sourceRelativePath,
+                    destinationRelativePath: beforeBuildTask.destinationRelativePath,
+                } as CopyBeforeBuildTaskTypeInterface;
+
+            case 'interpolate':
+                return {
+                    type: beforeBuildTask.type,
+                    relativePath: beforeBuildTask.relativePath,
+                } as InterpolateBeforeBuildTaskTypeInterface;
+
+            default:
+                throw new Error();
+        }
     }
 
     protected mapSourceReference(reference: any): BuildDefinitionSourceReferenceTypeInterface {

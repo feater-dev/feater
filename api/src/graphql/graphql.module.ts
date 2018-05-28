@@ -9,6 +9,7 @@ import {BuildDefinitionConfigMapper} from './component/build-definition-config-m
 import {ProjectsResolverFactory} from './component/projects-resolver-factory.component';
 import {BuildDefinitionResolverFactory} from './component/build-definition-resolver-factory.component';
 import {BuildInstanceResolverFactory} from './component/build-instance-resolver-factory.component';
+import {UsersResolverFactory} from './component/users-resolver-factory.component';
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import {BuildInstanceResolverFactory} from './component/build-instance-resolver-
     components: [
         BuildDefinitionConfigMapper,
         GraphqlService,
+        UsersResolverFactory,
         ProjectsResolverFactory,
         BuildDefinitionResolverFactory,
         BuildInstanceResolverFactory,

@@ -11,11 +11,14 @@ import {BuildInstanceTypeInterface} from '../type/build-instance-type.interface'
 import {ProjectsResolverFactory} from './projects-resolver-factory.component';
 import {BuildDefinitionResolverFactory} from './build-definition-resolver-factory.component';
 import {BuildInstanceResolverFactory} from './build-instance-resolver-factory.component';
+import {BeforeBuildTaskTypeInterface} from '../type/before-build-task-type.interface';
+import {UsersResolverFactory} from './users-resolver-factory.component';
 
 @Component()
 export class GraphqlService {
     constructor(
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,
+        private readonly usersResolverFactory: UsersResolverFactory,
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly buildDefinitionResolverFactory: BuildDefinitionResolverFactory,
         private readonly buildInstanceResolverFactory: BuildInstanceResolverFactory,
@@ -37,10 +40,16 @@ export class GraphqlService {
             JSON: GraphQLJSON,
 
             Query: {
+                users: this.usersResolverFactory.createRootListResolver(),
                 projects: this.projectsResolverFactory.createRootListResolver(),
                 buildDefinitions: this.buildDefinitionResolverFactory.createRootListResolver(),
                 buildInstances: this.buildInstanceResolverFactory.createRootListResolver(),
             },
+
+            User: {},
+
+            GithubProfile: {},
+            GoogleProfile: {},
 
             Project: {
                 buildDefinitions: this.getProjectBuildDefinitionsResolver(),
@@ -60,12 +69,37 @@ export class GraphqlService {
             },
 
             BuildDefinitionConfig: {},
-            BuildDefinitionSource: {},
+            BuildDefinitionSource: {
+                beforeBuildTasks: {
+                    __resolveType: (beforeBuildTask: BeforeBuildTaskTypeInterface): string => {
+                        if ('copy' === beforeBuildTask.type) {
+                            return 'CopyBeforeBuildTask';
+                        }
+                        if ('interpolate' === beforeBuildTask.type) {
+                            return 'InterpolateBeforeBuildTask';
+                        }
+                        throw new Error();
+                    },
+                },
+            },
             BuildDefinitionSourceReference: {},
             BuildDefinitionProxiedPort: {},
             BuildDefinitionSummaryItem: {},
             BuildDefinitionEnvironmentalVariable: {},
             BuildDefinitionComposeFile: {},
+            BeforeBuildTask: {
+                __resolveType: (beforeBuildTask: BeforeBuildTaskTypeInterface): string => {
+                    if ('copy' === beforeBuildTask.type) {
+                        return 'CopyBeforeBuildTask';
+                    }
+                    if ('interpolate' === beforeBuildTask.type) {
+                        return 'InterpolateBeforeBuildTask';
+                    }
+                    throw new Error();
+                },
+            },
+            CopyBeforeBuildTask: {},
+            InterpolateBeforeBuildTask: {},
         };
     }
 

@@ -1,8 +1,8 @@
-import {BuildDefinitionConfigTypeInterface} from './build-definition-config-type.interface';
+import {ConfigTypeInterface} from './nested/build-definition-config/config-type.interface';
 
 export interface BuildDefinitionTypeInterface {
     readonly id: string;
     readonly name: string;
     readonly projectId: string;
-    readonly config: BuildDefinitionConfigTypeInterface;
+    readonly config: ConfigTypeInterface;
 }

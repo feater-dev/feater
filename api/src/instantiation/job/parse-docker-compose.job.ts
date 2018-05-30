@@ -40,11 +40,13 @@ export class ParseDockerComposeJobExecutor implements JobExecutorInterface {
         return new Promise(resolve => {
             logger.info('Parsing compose file.');
 
+            const composeFile = build.config.composeFiles[0]; // TODO Handle multiple compose files.
+
             const absoluteDir = path.join(
-                build.sources[build.config.composeFile.sourceId].fullBuildPath,
-                path.dirname(build.config.composeFile.relativePath),
+                build.sources[composeFile.sourceId].fullBuildPath,
+                path.dirname(composeFile.relativePaths[0]), // TODO Handle multiple relative paths.
             );
-            const basename = path.basename(build.config.composeFile.relativePath);
+            const basename = path.basename(composeFile.relativePaths[0]); // TODO Handle multiple relative paths.
 
             build.compose = jsYaml.safeLoad(
                 fs.readFileSync(path.join(absoluteDir, basename)).toString(),
@@ -64,7 +66,7 @@ export class ParseDockerComposeJobExecutor implements JobExecutorInterface {
                         id,
                         cleanId: id.replace(/[^a-zA-Z\d-]/g, '-').toLowerCase(),
                         containerNamePrefix: `${build.composeProjectName}_${id}`,
-                        exposedPorts: [],
+                        proxiedPorts: [],
                     };
                 },
             );

@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import {Controller, Get, Post, Response, Param, HttpStatus, Body, Request} from '@nestjs/common';
 import {Validator} from '../validation/validator.component';
 import {UserRepository} from '../../persistence/repository/user.repository';
@@ -26,22 +25,24 @@ export class UserController {
         const data: FindAllUserResponseDto[] = [];
 
         for (const user of users) {
+            const googleProfile = user.googleProfile
+                ? {
+                    emailAddress: user.googleProfile.emailAddress,
+                } as FindAllUserGoogleProfileResponseDto
+                : null;
+
+            const githubProfile = user.githubProfile
+                ? {
+                    username: user.githubProfile.username,
+                } as FindAllUserGithubProfileResponseDto
+                : null;
+
             const mappedUser = {
                 _id: user._id,
                 name: user.name,
+                googleProfile,
+                githubProfile,
             } as FindAllUserResponseDto;
-
-            if (user.googleProfile) {
-                mappedUser.googleProfile = {
-                    emailAddress: user.googleProfile.emailAddress,
-                } as FindAllUserGoogleProfileResponseDto;
-            }
-
-            if (user.githubProfile) {
-                mappedUser.githubProfile = {
-                    username: user.githubProfile.username,
-                } as FindAllUserGithubProfileResponseDto;
-            }
 
             data.push(mappedUser);
         }

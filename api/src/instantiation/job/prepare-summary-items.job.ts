@@ -44,7 +44,7 @@ export class PrepareSummaryItemsJobExecutor implements JobExecutorInterface{
                 summaryItem => {
                     build.summaryItems.add(
                         summaryItem.name,
-                        this.interpolationHelper.interpolateText(summaryItem.value, build),
+                        this.interpolationHelper.interpolateText(summaryItem.text, build),
                     );
                 },
             );

@@ -1,11 +1,11 @@
 import {Controller, Post, Request, Response, Next} from '@nestjs/common';
 import {graphqlExpress} from 'apollo-server-express';
-import {GraphqlService} from './component/graphql.service';
+import {GraphqlSchemaFactory} from './schema/graphql-schema-factory.component';
 
 @Controller()
 export class GraphqlController {
     constructor(
-        private readonly graphqlService: GraphqlService,
+        private readonly graphqlService: GraphqlSchemaFactory,
     ) { }
 
     @Post('graphql-api')

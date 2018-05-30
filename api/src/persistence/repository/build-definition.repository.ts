@@ -4,6 +4,7 @@ import {Model} from 'mongoose';
 import {BuildDefinitionSchema} from '../schema/build-definition.schema';
 import {BuildDefinitionInterface} from '../interface/build-definition.interface';
 import {CreateBuildDefinitionRequestDto} from '../../api/dto/request/create-build-definition-request.dto';
+import {CreateBuildDefinitionInputTypeInterface} from '../../graphql/input-type/create-build-definition-input-type.interface';
 
 @Component()
 export class BuildDefinitionRepository {
@@ -29,13 +30,11 @@ export class BuildDefinitionRepository {
         return buildDefinition;
     }
 
-    create(createBuildDefinitionRequestDto: CreateBuildDefinitionRequestDto): Promise<BuildDefinitionInterface> {
-        const createdBuildDefinition = new this.buildDefinitionModel(createBuildDefinitionRequestDto);
-
+    create(createBuildDefinitionInputType: CreateBuildDefinitionInputTypeInterface): Promise<BuildDefinitionInterface> {
+        const createdBuildDefinition = new this.buildDefinitionModel(createBuildDefinitionInputType);
         return new Promise(resolve => {
             createdBuildDefinition.save();
             resolve(createdBuildDefinition);
         });
     }
-
 }

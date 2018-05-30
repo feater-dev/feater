@@ -33,20 +33,20 @@ export class InterpolationHelper {
     }
 
     private interpolateExpressions(text: string, build: any): string {
-        const allExposedPorts = {};
+        const allProxiedPorts = {};
 
         for (const serviceId of Object.keys(build.services)) {
-            for (const exposedPort of build.services[serviceId].exposedPorts) {
-                allExposedPorts[exposedPort.id] = exposedPort;
+            for (const proxiedPort of build.services[serviceId].proxiedPorts) {
+                allProxiedPorts[proxiedPort.id] = proxiedPort;
             }
         }
 
         const interpolatedFunctions = {
             proxy_url: id => {
-                return `http://${this.getExposedPort(allExposedPorts, id).proxyDomains.short}:${this.config.app.port}`;
+                return `http://${this.getProxiedPort(allProxiedPorts, id).proxyDomains.short}:${this.config.app.port}`;
             },
             proxy_domain: id => {
-                return this.getExposedPort(allExposedPorts, id).proxyDomains.short;
+                return this.getProxiedPort(allProxiedPorts, id).proxyDomains.short;
             },
         };
 
@@ -84,14 +84,14 @@ export class InterpolationHelper {
         );
     }
 
-    private getExposedPort(allExposedPorts: any, id: string): any {
-        const exposedPort = allExposedPorts[id];
+    private getProxiedPort(allProxiedPorts: any, id: string): any {
+        const proxiedPort = allProxiedPorts[id];
 
-        if (!exposedPort) {
-            throw new Error(`Exposed port ${id} not found.`);
+        if (!proxiedPort) {
+            throw new Error(`Proxied port ${id} not found.`);
         }
 
-        return exposedPort;
+        return proxiedPort;
     }
 
 }

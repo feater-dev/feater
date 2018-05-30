@@ -32,19 +32,19 @@ export class Instantiator {
 
     createBuild(id: string, hash: string, buildDefinition: any) {
         this.logger.info('Setting up build.');
-        const buildDefinitionConfig = buildDefinition._doc.config;
+        const {config: buildDefinitionConfig} = buildDefinition.toObject();
         const build = new Build(id, hash, buildDefinitionConfig);
 
         this.logger.info('Setting up sources.');
-        _.map(_.keys(buildDefinitionConfig.sources), sourceId => {
-            new Source(sourceId, build, buildDefinitionConfig.sources[sourceId]);
-        });
+        for (const source of buildDefinitionConfig.sources) {
+            new Source(source.id, build, source);
+        }
 
         this.logger.info('Setting basic Feat variables.');
         const featVariables = {
             scheme: this.config.app.scheme,
             host: this.config.app.host,
-            port: this.config.app.port,
+            port: <string> <any> this.config.app.port,
             npm_cache: this.config.hostPaths.npmCache,
             composer_cache: this.config.hostPaths.composerCache,
         };

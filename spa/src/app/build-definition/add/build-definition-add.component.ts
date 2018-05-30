@@ -5,7 +5,7 @@ import {switchMap} from 'rxjs/operators';
 import {
     BuildDefinitionAddForm,
     BuildDefinitionAddFormSourceFormElement,
-    BuildDefinitionAddFormExposedPortFormElement,
+    BuildDefinitionAddFormProxiedPortFormElement,
     BuildDefinitionAddFormEnvironmentalVariableFormElement,
     BuildDefinitionAddFormSummaryItemFormElement, BuildDefinitionAddFormConfigFormElement
 } from '../../build-definition/build-definition-add-form.model';
@@ -37,7 +37,7 @@ export class BuildDefinitionAddComponent implements OnInit {
             name: '',
             config: {
                 sources: [],
-                exposedPorts: [],
+                proxiedPorts: [],
                 environmentalVariables: [],
                 composeFile: {
                     sourceId: '',
@@ -86,8 +86,8 @@ export class BuildDefinitionAddComponent implements OnInit {
         }
     }
 
-    addExposedPort(): void {
-        this.item.config.exposedPorts.push({
+    addProxiedPort(): void {
+        this.item.config.proxiedPorts.push({
             serviceId: '',
             id: '',
             name: '',
@@ -95,10 +95,10 @@ export class BuildDefinitionAddComponent implements OnInit {
         });
     }
 
-    deleteExposedPort(exposedPort: BuildDefinitionAddFormExposedPortFormElement): void {
-        var index = this.item.config.exposedPorts.indexOf(exposedPort);
+    deleteProxiedPort(proxiedPort: BuildDefinitionAddFormProxiedPortFormElement): void {
+        var index = this.item.config.proxiedPorts.indexOf(proxiedPort);
         if (-1 !== index) {
-            this.item.config.exposedPorts.splice(index, 1);
+            this.item.config.proxiedPorts.splice(index, 1);
         }
     }
 
@@ -148,81 +148,55 @@ export class BuildDefinitionAddComponent implements OnInit {
             projectId: this.item.projectId,
             name: this.item.name,
             config: {
-                sources: {},
-                exposedPorts: {},
-                environmentalVariables: {},
+                sources: this.item.config.sources,
+                proxiedPorts: this.item.config.proxiedPorts,
+                environmentalVariables: this.item.config.environmentalVariables,
                 summaryItems: this.item.config.summaryItems,
-                composeFile: this.item.config.composeFile
+                composeFiles: [
+                    {
+                        sourceId: this.item.config.composeFile.sourceId,
+                        relativePaths: [this.item.config.composeFile.relativePath],
+                    }
+                ]
             }
         };
-
-        this.item.config.sources.forEach(
-            function (source : BuildDefinitionAddFormSourceFormElement) {
-                mappedItem.config.sources[source.id] = {
-                    type: source.type,
-                    name: source.name,
-                    reference: source.reference,
-                    beforeBuildTasks: source.beforeBuildTasks
-                };
-            }
-        );
-        this.item.config.exposedPorts.forEach(
-            function (exposedPort : BuildDefinitionAddFormExposedPortFormElement) {
-                if (!mappedItem.config.exposedPorts[exposedPort.serviceId]) {
-                    mappedItem.config.exposedPorts[exposedPort.serviceId] = [];
-                }
-                mappedItem.config.exposedPorts[exposedPort.serviceId].push({
-                    id: exposedPort.id,
-                    name: exposedPort.name,
-                    port: exposedPort.port,
-                });
-            }
-        );
-        this.item.config.environmentalVariables.forEach(
-            function (environmentalVariable : BuildDefinitionAddFormEnvironmentalVariableFormElement) {
-                mappedItem.config.environmentalVariables[environmentalVariable.name] = environmentalVariable.value;
-            }
-        );
 
         return mappedItem;
     }
 
-    mapJsonConfig(jsonConfig : any): BuildDefinitionAddFormConfigFormElement {
+    mapJsonConfig(jsonConfig: any): BuildDefinitionAddFormConfigFormElement {
         // TODO Check schema validity of jsonConfig.
 
         jsonConfig = JSON.parse(jsonConfig);
 
-        var mappedJsonConfig = {
+        const mappedJsonConfig = {
             sources: [],
-            exposedPorts: [],
+            proxiedPorts: [],
             environmentalVariables: [],
-            summaryItems: jsonConfig.summaryItems,
-            composeFile: jsonConfig.composeFile
+            summaryItems: [],
+            composeFile: null
         };
 
-        for (let id in jsonConfig.sources) {
-            let source = jsonConfig.sources[id];
-            source.id = id;
+        for (const source of jsonConfig.sources) {
             mappedJsonConfig.sources.push(source);
         }
 
-        for (let serviceId in jsonConfig.exposedPorts) {
-            for (let exposedPort of jsonConfig.exposedPorts[serviceId]) {
-                mappedJsonConfig.exposedPorts.push({
-                    serviceId: serviceId,
-                    id: exposedPort.id,
-                    name: exposedPort.name,
-                    port: exposedPort.port
-                });
-            }
+        for (const proxiedPort of jsonConfig.proxiedPorts) {
+            mappedJsonConfig.proxiedPorts.push(proxiedPort);
         }
 
-        for (let name in jsonConfig.environmentalVariables) {
-            mappedJsonConfig.environmentalVariables.push({
-                name: name,
-                value: jsonConfig.environmentalVariables[name]
-            });
+        for (const environmentalVariable of jsonConfig.environmentalVariables) {
+            mappedJsonConfig.environmentalVariables.push(environmentalVariable);
         }
+
+        for (const summaryItem of jsonConfig.summaryItems) {
+            mappedJsonConfig.summaryItems.push(summaryItem);
+        }
+
+        mappedJsonConfig.composeFile = {
+            sourceId: jsonConfig.composeFiles[0].sourceId,
+            relativePath: jsonConfig.composeFiles[0].relativePaths[0],
+        };
 
         return mappedJsonConfig;
     }

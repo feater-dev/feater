@@ -5,14 +5,14 @@ import {makeExecutableSchema} from 'graphql-tools';
 import {ProjectTypeInterface} from '../type/project-type.interface';
 import {BuildDefinitionTypeInterface} from '../type/build-definition-type.interface';
 import {BuildInstanceTypeInterface} from '../type/build-instance-type.interface';
-import {ProjectsResolverFactory} from './projects-resolver-factory.component';
-import {BuildDefinitionResolverFactory} from './build-definition-resolver-factory.component';
-import {BuildInstanceResolverFactory} from './build-instance-resolver-factory.component';
-import {BeforeBuildTaskTypeInterface} from '../type/before-build-task-type.interface';
-import {UsersResolverFactory} from './users-resolver-factory.component';
+import {ProjectsResolverFactory} from '../resolver/projects-resolver-factory.component';
+import {BuildDefinitionResolverFactory} from '../resolver/build-definition-resolver-factory.component';
+import {BuildInstanceResolverFactory} from '../resolver/build-instance-resolver-factory.component';
+import {BeforeBuildTaskTypeInterface} from '../type/nested/build-definition-config/before-build-task-type.interface';
+import {UsersResolverFactory} from '../resolver/users-resolver-factory.component';
 
 @Component()
-export class GraphqlService {
+export class GraphqlSchemaFactory {
     constructor(
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,
         private readonly usersResolverFactory: UsersResolverFactory,
@@ -42,6 +42,8 @@ export class GraphqlService {
             Mutation: {
                 createProject: this.projectsResolverFactory.getCreateItemResolver(),
                 createBuildDefinition: this.buildDefinitionResolverFactory.getCreateItemResolver(),
+                createBuildInstance: this.buildInstanceResolverFactory.getCreateItemResolver(),
+                removeBuildInstance: this.buildInstanceResolverFactory.getRemoveItemResolver(),
             },
 
             Project: {

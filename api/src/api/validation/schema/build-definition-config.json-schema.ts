@@ -2,7 +2,7 @@ export const buildDefinitionConfigJsonSchema = {
     type: 'object',
     required: [
         'sources',
-        'exposedPorts',
+        'proxiedPorts',
         'composeFile',
         'environmentalVariables',
         'summaryItems',
@@ -64,36 +64,35 @@ export const buildDefinitionConfigJsonSchema = {
             },
             additionalProperties: false,
         },
-        exposedPorts: {
-            type: 'object',
-            patternProperties: {
-                '^[_a-zA-Z\\d]+$': {
-                    type: 'array',
-                    items: {
-                        type: 'object',
-                        required: [
-                            'id',
-                            'name',
-                            'port',
-                        ],
-                        properties: {
-                            id: {
-                                type: 'string',
-                                minLength: 1,
-                            },
-                            name: {
-                                type: 'string',
-                                minLength: 1,
-                            },
-                            port: {
-                                type: 'number',
-                            },
-                        },
-                        additionalProperties: false,
+        proxiedPorts: {
+            type: 'array',
+            items: {
+                type: 'object',
+                required: [
+                    'id',
+                    'serviceId',
+                    'name',
+                    'port',
+                ],
+                properties: {
+                    id: {
+                        type: 'string',
+                        minLength: 1,
+                    },
+                    serviced: {
+                        type: 'string',
+                        minLength: 1,
+                    },
+                    name: {
+                        type: 'string',
+                        minLength: 1,
+                    },
+                    port: {
+                        type: 'number',
                     },
                 },
+                additionalProperties: false,
             },
-            additionalProperties: false,
         },
         composeFile: {
             type: 'object',

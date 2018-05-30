@@ -45,7 +45,7 @@ export const typeDefsProvider = {
 
         input BuildDefinitionProxiedPortInput {
             id: String!
-            containerName: String!
+            serviceId: String!
             port: Int!
             name: String!
         }
@@ -69,11 +69,21 @@ export const typeDefsProvider = {
             createProject(
                 name: String!
             ): Project!
+
             createBuildDefinition(
                 projectId: String!
                 name: String!
                 config: BuildDefinitionConfigInput!
             ): BuildDefinition!
+
+            createBuildInstance(
+                buildDefinitionId: String!
+                name: String!
+            ): BuildInstance!
+
+            removeBuildInstance(
+                id: String!
+            ): Boolean!
         }
 
         type User {
@@ -149,7 +159,7 @@ export const typeDefsProvider = {
 
         type BuildDefinitionProxiedPort {
             id: String!
-            containerName: String!
+            serviceId: String!
             port: Int!
             name: String!
         }

@@ -76,36 +76,18 @@ export class BuildDefinitionController {
         @Response() res,
         @Body() createBuildDefinitionDto: CreateBuildDefinitionRequestDto,
     ): Promise<any> {
-        this.validator
-            .validateCreateBuildDefinitionDto(createBuildDefinitionDto)
-            .then(
-                async () => {
-                    const project = await this.projectRepository.findById(createBuildDefinitionDto.projectId);
-                    if (null === project) {
-                        res.status(HttpStatus.BAD_REQUEST).send();
+        // TODO Restore input validation.
+        const project = await this.projectRepository.findById(createBuildDefinitionDto.projectId);
+        if (null === project) {
+            res.status(HttpStatus.BAD_REQUEST).send();
 
-                        return;
-                    }
+            return;
+        }
+        const buildDefinition = await this.buildDefinitionRepository.create(createBuildDefinitionDto);
 
-                    this.validator
-                        .validateBuildDefinitionConfig(createBuildDefinitionDto.config)
-                        .then(
-                            async () => {
-                                const buildDefinition = await this.buildDefinitionRepository.create(createBuildDefinitionDto);
-
-                                res.status(HttpStatus.CREATED).json({
-                                    id: buildDefinition._id,
-                                } as CreateBuildDefinitionResponseDto);
-                            },
-                            (error) => {
-                                res.status(HttpStatus.BAD_REQUEST).send();
-                            },
-                        );
-                },
-                (error) => {
-                    res.status(HttpStatus.BAD_REQUEST).send();
-                },
-            );
+        res.status(HttpStatus.CREATED).json({
+            id: buildDefinition._id,
+        } as CreateBuildDefinitionResponseDto);
     }
 
 }

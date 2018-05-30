@@ -3,7 +3,7 @@ import {BuildDefinitionTypeInterface} from '../type/build-definition-type.interf
 import {BuildDefinitionRepository} from '../../persistence/repository/build-definition.repository';
 import {BuildDefinitionConfigMapper} from './build-definition-config-mapper.component';
 import {BuildDefinitionInterface} from '../../persistence/interface/build-definition.interface';
-import {CreateBuildDefinitionInputTypeInterface} from '../type/create-build-definition-input-type.interface';
+import {CreateBuildDefinitionInputTypeInterface} from '../input-type/create-build-definition-input-type.interface';
 import {CreateBuildDefinitionRequestDto} from '../../api/dto/request/create-build-definition-request.dto';
 
 @Component()

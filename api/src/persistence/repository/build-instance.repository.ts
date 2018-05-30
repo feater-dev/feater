@@ -1,4 +1,4 @@
-import {Model} from 'mongoose';
+import {Model, Types} from 'mongoose';
 import {Component} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {BuildInstanceSchema} from '../schema/build-instance.schema';
@@ -40,6 +40,12 @@ export class BuildInstanceRepository {
             createdBuildInstance.save();
             resolve(createdBuildInstance);
         });
+    }
+
+    async remove(id: string): Promise<boolean> {
+        const removal = await this.buildInstanceModel.findByIdAndRemove(id);
+
+        return true;
     }
 
     async updateServices(build: any): Promise<any> {

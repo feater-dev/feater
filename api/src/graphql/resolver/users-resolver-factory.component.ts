@@ -2,8 +2,8 @@ import {Component} from '@nestjs/common';
 import {UserRepository} from '../../persistence/repository/user.repository';
 import {UserTypeInterface} from '../type/user-type.interface';
 import {UserInterface} from '../../persistence/interface/user.interface';
-import {GithubProfileTypeInterface} from '../type/github-profile-type.interface';
-import {GoogleProfileTypeInterface} from '../type/google-profile-type.interface';
+import {GithubProfileTypeInterface} from '../type/nested/user-profile/github-profile-type.interface';
+import {GoogleProfileTypeInterface} from '../type/nested/user-profile/google-profile-type.interface';
 
 @Component()
 export class UsersResolverFactory {

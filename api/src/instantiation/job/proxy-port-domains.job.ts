@@ -48,18 +48,18 @@ export class ProxyPortDomainsJobExecutor implements JobExecutorInterface {
             for (const serviceId of Object.keys(build.services)) {
                 const service = build.services[serviceId];
 
-                for (const exposedPort of service.exposedPorts) {
-                    for (const domainType of Object.keys(exposedPort.proxyDomains)) {
+                for (const proxiedPorts of service.proxiedPorts) {
+                    for (const domainType of Object.keys(proxiedPorts.proxyDomains)) {
 
                         nginxConfs.push(
 `
-# Proxy domain for port ${exposedPort.port} of ${serviceId} running at ${service.ipAddress}
+# Proxy domain for port ${proxiedPorts.port} of ${serviceId} running at ${service.ipAddress}
 server {
     listen 80;
-    server_name ${exposedPort.proxyDomains[domainType]};
+    server_name ${proxiedPorts.proxyDomains[domainType]};
 
     location / {
-        proxy_pass http://${service.ipAddress}:${exposedPort.port};
+        proxy_pass http://${service.ipAddress}:${proxiedPorts.port};
         proxy_set_header Host $host:${this.config.app.proxyPort};
     }
 }

@@ -26,8 +26,8 @@ import {
     BuildDefinitionAddBeforeBuildTaskInterpolateFormElementComponent
 } from './build-definition/add/form-element/build-definition-add.before-build-task-interpolate-form-element.component';
 import {
-    BuildDefinitionAddExposedPortFormElementComponent
-} from './build-definition/add/form-element/build-definition-add.exposed-port-form-element.component';
+    BuildDefinitionAddProxiedPortFormElementComponent
+} from './build-definition/add/form-element/build-definition-add.proxied-port-form-element.component';
 import {
     BuildDefinitionAddEnvironmentalVariableFormElementComponent
 } from './build-definition/add/form-element/build-definition-add.environmental-variable-form-element.component';
@@ -80,7 +80,7 @@ const appRoutes: Routes = [
         BuildDefinitionAddSourceFormElementComponent,
         BuildDefinitionAddBeforeBuildTaskCopyFormElementComponent,
         BuildDefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
-        BuildDefinitionAddExposedPortFormElementComponent,
+        BuildDefinitionAddProxiedPortFormElementComponent,
         BuildDefinitionAddEnvironmentalVariableFormElementComponent,
         BuildDefinitionAddSummaryItemFormElementComponent,
         BuildDefinitionAddComposeFileFormElementComponent,

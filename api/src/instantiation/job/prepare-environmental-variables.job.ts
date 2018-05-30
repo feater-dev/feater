@@ -59,10 +59,10 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
             logger.info('Setting environmental variables passed throuh build definition configuration.');
             _.each(
                 build.config.environmentalVariables,
-                (value, name) => {
+                (environmentalVariable) => {
                     build.environmentalVariables.add(
-                        name,
-                        this.interpolationHelper.interpolateText(value, build.featVariables),
+                        environmentalVariable.name,
+                        this.interpolationHelper.interpolateText(environmentalVariable.value, build),
                     );
                 },
             );

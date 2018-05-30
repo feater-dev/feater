@@ -1,8 +1,8 @@
-import {Component, HttpStatus} from '@nestjs/common';
+import {Component} from '@nestjs/common';
 import {ProjectRepository} from '../../persistence/repository/project.repository';
 import {ProjectTypeInterface} from '../type/project-type.interface';
 import {ProjectInterface} from '../../persistence/interface/project.interface';
-import {CreateProjectInputTypeInterface} from '../type/create-project-input-type.interface';
+import {CreateProjectInputTypeInterface} from '../input-type/create-project-input-type.interface';
 import {CreateProjectRequestDto} from '../../api/dto/request/create-project-request.dto';
 
 @Component()

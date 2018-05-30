@@ -38,12 +38,14 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
         return new Promise((resolve, reject) => {
             logger.info('Running docker-compose.');
 
+            const composeFile = build.config.composeFiles[0]; // TODO Handle multiple compose files.
+
             const dockerComposeDirectoryAbsolutePath = path.join(
-                build.sources[build.config.composeFile.sourceId].fullBuildPath,
-                path.dirname(build.config.composeFile.relativePath),
+                build.sources[composeFile.sourceId].fullBuildPath,
+                path.dirname(composeFile.relativePaths[0]), // TODO Handle multiple relative paths.
             );
 
-            const dockerComposeFileName = path.basename(build.config.composeFile.relativePath);
+            const dockerComposeFileName = path.basename(composeFile.relativePaths[0]); // TODO Handle multiple relative paths.
 
             const commonEnvironmentalVariables = new EnvironmentalVariablesSet();
             // TODO Move pattern to config. Move value to build class.
@@ -73,7 +75,7 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
             });
 
             dockerCompose.on('error', error => {
-                logger.error(_.toLocaleString(error));
+                logger.error(error.message);
                 reject(error);
             });
 

@@ -38,34 +38,33 @@ export class PreparePortDomainsJobExecutor implements JobExecutorInterface {
         return new Promise((resolve, reject) => {
             logger.info('Preparing port domains.');
 
-            for (const serviceId of Object.keys(build.config.exposedPorts)) {
-                const service = build.services[serviceId];
+            for (const proxiedPort of build.config.proxiedPorts) {
+
+                const service = build.services[proxiedPort.serviceId];
 
                 if (!service) {
-                    logger.error(`Unknown service ${serviceId}.`);
+                    logger.error(`Unknown service ${proxiedPort.serviceId}.`);
                     reject();
 
                     return;
                 }
 
-                for (const exposedPort of build.config.exposedPorts[serviceId]) {
-                    const shortProxyDomain = `build-${build.hash}-${exposedPort.id}.${this.config.app.host}`;
-                    const longProxyDomain = `build-${build.hash}-${service.cleanId}-${exposedPort.port}.${this.config.app.host}`;
+                const shortProxyDomain = `build-${build.hash}-${proxiedPort.id}.${this.config.app.host}`;
+                const longProxyDomain = `build-${build.hash}-${service.cleanId}-${proxiedPort.port}.${this.config.app.host}`;
 
-                    build.addFeatVariable(`proxy_domain__${exposedPort.id}`, shortProxyDomain);
-                    build.addFeatVariable(`proxy_domain_long__${exposedPort.id}`, longProxyDomain);
+                build.addFeatVariable(`proxy_domain__${proxiedPort.id}`, shortProxyDomain);
+                build.addFeatVariable(`proxy_domain_long__${proxiedPort.id}`, longProxyDomain);
 
-                    service.exposedPorts.push({
-                        serviceId,
-                        id: exposedPort.id,
-                        name: exposedPort.name,
-                        port: exposedPort.port,
-                        proxyDomains: {
-                            short: shortProxyDomain,
-                            long: longProxyDomain,
-                        },
-                    });
-                }
+                service.proxiedPorts.push({
+                    serviceId: proxiedPort.serviceId,
+                    id: proxiedPort.id,
+                    name: proxiedPort.name,
+                    port: proxiedPort.port,
+                    proxyDomains: {
+                        short: shortProxyDomain,
+                        long: longProxyDomain,
+                    },
+                });
             }
 
             this.buildInstanceRepository.updateServices(build);

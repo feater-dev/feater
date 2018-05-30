@@ -9,7 +9,7 @@ export interface BuildDefinitionReference {
     project: ProjectReference;
 }
 
-interface ExposedPort {
+interface ProxiedPort {
     id: string;
     name: string;
     port: number;
@@ -31,8 +31,8 @@ export interface GetBuildInstanceResponseDto {
     buildDefinition: BuildDefinitionReference;
     summaryItems?: SummaryItem[];
     environmentalVariables: EnvironmentalVariable[];
-    exposedPorts?: {
-        [key: string]: ExposedPort
+    proxiedPorts?: {
+        [key: string]: ProxiedPort
     };
 }
 

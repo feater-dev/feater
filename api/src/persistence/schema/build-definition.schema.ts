@@ -42,7 +42,8 @@ export const BuildDefinitionSchema = new Schema({
         composeFiles: [{
             _id: false,
             sourceId: String,
-            relativePaths: [String],
+            envDirRelativePath: String,
+            composeFileRelativePaths: [String],
         }],
     },
 });

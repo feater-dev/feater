@@ -18,4 +18,15 @@ export class BuildDefinitionAddComposeFileFormElementComponent implements OnInit
 
     ngOnInit() {}
 
+    addComposeFileRelativePath(): void {
+        this.item.composeFileRelativePaths.push('');
+    }
+
+    onDeleteComposeFileRelativePath(index: number) {
+        this.item.composeFileRelativePaths.splice(index, 1);
+    }
+
+    trackByIndex(index: number, obj: any): any {
+        return index;
+    }
 }

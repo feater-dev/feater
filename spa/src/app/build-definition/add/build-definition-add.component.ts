@@ -41,7 +41,8 @@ export class BuildDefinitionAddComponent implements OnInit {
                 environmentalVariables: [],
                 composeFile: {
                     sourceId: '',
-                    relativePath: ''
+                    envDirRelativePath: '',
+                    composeFileRelativePaths: [''],
                 },
                 summaryItems: []
             }
@@ -144,7 +145,7 @@ export class BuildDefinitionAddComponent implements OnInit {
     }
 
     mapItem(): Object {
-        var mappedItem = {
+        const mappedItem = {
             projectId: this.item.projectId,
             name: this.item.name,
             config: {
@@ -155,7 +156,8 @@ export class BuildDefinitionAddComponent implements OnInit {
                 composeFiles: [
                     {
                         sourceId: this.item.config.composeFile.sourceId,
-                        relativePaths: [this.item.config.composeFile.relativePath],
+                        envDirRelativePath: this.item.config.composeFile.envDirRelativePath,
+                        composeFileRelativePaths: this.item.config.composeFile.composeFileRelativePaths,
                     }
                 ]
             }
@@ -195,7 +197,8 @@ export class BuildDefinitionAddComponent implements OnInit {
 
         mappedJsonConfig.composeFile = {
             sourceId: jsonConfig.composeFiles[0].sourceId,
-            relativePath: jsonConfig.composeFiles[0].relativePaths[0],
+            envDirRelativePath: jsonConfig.composeFiles[0].envDirRelativePath,
+            composeFileRelativePaths: jsonConfig.composeFiles[0].composeFileRelativePaths,
         };
 
         return mappedJsonConfig;

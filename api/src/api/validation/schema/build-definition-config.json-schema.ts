@@ -98,16 +98,24 @@ export const buildDefinitionConfigJsonSchema = {
             type: 'object',
             required: [
                 'sourceId',
-                'relativePath',
+                'envDirRelativePath',
+                'composeFileRelativePaths',
             ],
             properties: {
                 sourceId: {
                     type: 'string',
                     minLength: 1,
                 },
-                relativePath: {
+                envDirRelativePath: {
                     type: 'string',
                     minLength: 1,
+                },
+                composeFileRelativePaths: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        minLength: 1
+                    },
                 },
             },
         },

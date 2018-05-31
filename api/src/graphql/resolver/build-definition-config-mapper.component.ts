@@ -126,9 +126,6 @@ export class BuildDefinitionConfigMapper {
     }
 
     protected mapComposeFile(composeFile: any): ComposeFileTypeInterface {
-        return {
-            sourceId: composeFile.sourceId,
-            relativePaths: composeFile.relativePaths || [composeFile.relativePath],
-        } as ComposeFileTypeInterface;
+        return composeFile as ComposeFileTypeInterface;
     }
 }

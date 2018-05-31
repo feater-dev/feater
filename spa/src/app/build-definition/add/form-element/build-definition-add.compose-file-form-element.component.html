@@ -7,9 +7,36 @@
                 <option *ngFor="let source of sources" [value]="source.id" selected>{{ source.id }}</option>
             </select>
         </div>
-        <label class="col-lg-2 control-label">Relative path</label>
+        <label class="col-lg-2 control-label">Env directory relative path</label>
         <div class="col-lg-6">
-            <input type="text" class="form-control" [(ngModel)]="item.relativePath">
+            <input type="text" class="form-control" [(ngModel)]="item.envDirRelativePath">
+        </div>
+    </div>
+    <div *ngFor="let composeFileRelativePath of item.composeFileRelativePaths; trackBy: trackByIndex; let i = index" class="form-group">
+        <label class="col-lg-6 control-label"><span *ngIf="0 == i">Compose file relative paths</span></label>
+        <div class="col-lg-5">
+            <input type="text" class="form-control" [(ngModel)]="item.composeFileRelativePaths[i]">
+        </div>
+        <div class="col-lg-1">
+            <a
+                    class="btn btn-danger btn-sm pull-right"
+                    style="position: relative; top: 8px;"
+                    (click)="onDeleteComposeFileRelativePath(i)"
+            >
+                Delete
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-6"></div>
+        <div class="col-lg-6">
+            <a
+                    class="btn btn-success btn-sm"
+                    (click)="addComposeFileRelativePath()"
+                    style="position: relative; bottom: 5px;"
+            >
+                Add compose file relative path
+            </a>
         </div>
     </div>
 </div>

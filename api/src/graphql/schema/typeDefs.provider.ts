@@ -62,7 +62,8 @@ export const typeDefsProvider = {
 
         input BuildDefinitionComposeFileInput {
             sourceId: String!
-            relativePaths: [String!]!
+            envDirRelativePath: String!
+            composeFileRelativePaths: [String!]!
         }
 
         type Mutation {
@@ -176,7 +177,8 @@ export const typeDefsProvider = {
 
         type BuildDefinitionComposeFile {
             sourceId: String!
-            relativePaths: [String!]!
+            envDirRelativePath: String!
+            composeFileRelativePaths: [String!]!
         }
 
         type BuildInstance {

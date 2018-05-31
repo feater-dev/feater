@@ -1,4 +1,5 @@
 export interface ComposeFileTypeInterface {
     readonly sourceId: string;
-    readonly relativePaths: string[];
+    readonly envDirRelativePath: string;
+    readonly composeFileRelativePaths: string[];
 }

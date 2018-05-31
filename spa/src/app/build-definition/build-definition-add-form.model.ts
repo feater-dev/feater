@@ -48,7 +48,8 @@ export interface BuildDefinitionAddFormSummaryItemFormElement {
 
 export interface BuildDefinitionAddComposeFileFormElement {
     sourceId: string;
-    relativePath: string;
+    envDirRelativePath: string;
+    composeFileRelativePaths: string[];
 }
 
 export interface BuildDefinitionAddFormBeforeBuildTaskFormElement {

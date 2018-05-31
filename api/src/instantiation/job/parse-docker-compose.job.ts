@@ -41,36 +41,33 @@ export class ParseDockerComposeJobExecutor implements JobExecutorInterface {
             logger.info('Parsing compose file.');
 
             const composeFile = build.config.composeFiles[0]; // TODO Handle multiple compose files.
-
-            const absoluteDir = path.join(
-                build.sources[composeFile.sourceId].fullBuildPath,
-                path.dirname(composeFile.relativePaths[0]), // TODO Handle multiple relative paths.
-            );
-            const basename = path.basename(composeFile.relativePaths[0]); // TODO Handle multiple relative paths.
-
-            build.compose = jsYaml.safeLoad(
-                fs.readFileSync(path.join(absoluteDir, basename)).toString(),
-            );
-            logger.debug('Compose file parsed to Yaml.', {dockerComposeYaml: JSON.stringify(build.compose)});
+            const fullBuildPath = build.sources[composeFile.sourceId].fullBuildPath;
 
             build.composeProjectName = `featbuild${build.hash}`;
-
             build.services = {};
-            _.each(
-                build.compose.services,
-                (service, id) => {
-                    // Keep only letters, digits and hyphens in clean name for domains.
-                    // Replace other characters with hyphens.
 
-                    build.services[id] = {
-                        id,
-                        cleanId: id.replace(/[^a-zA-Z\d-]/g, '-').toLowerCase(),
-                        containerNamePrefix: `${build.composeProjectName}_${id}`,
+            for (const composeFileRelativePath of composeFile.composeFileRelativePaths) {
+                const composeFileAbsolutePath = path.join(fullBuildPath, composeFileRelativePath);
+                const compose = jsYaml.safeLoad(
+                    fs.readFileSync(composeFileAbsolutePath).toString(),
+                );
+
+                logger.debug('Compose file parsed to Yaml.', {composeFileAbsolutePath, compose: JSON.stringify(compose)});
+
+                for (const serviceId of Object.keys(compose.services)) {
+                    if (build.services[serviceId]) {
+                        continue;
+                    }
+                    build.services[serviceId] = {
+                        id: serviceId,
+                        cleanId: serviceId.replace(/[^a-zA-Z\d-]/g, '-').toLowerCase(),
+                        containerNamePrefix: `${build.composeProjectName}_${serviceId}`,
                         proxiedPorts: [],
                     };
-                },
-            );
-            logger.debug('Services found in compose file.', {dockerComposeServices: JSON.stringify(build.services)});
+                }
+            }
+
+            logger.debug('Services found in compose file.', {services: JSON.stringify(build.services)});
 
             this.buildInstanceRepository.updateServices(build);
 

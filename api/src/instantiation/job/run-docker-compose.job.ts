@@ -39,15 +39,19 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
             logger.info('Running docker-compose.');
 
             const composeFile = build.config.composeFiles[0]; // TODO Handle multiple compose files.
+            const fullBuildPath = build.sources[composeFile.sourceId].fullBuildPath;
 
-            const dockerComposeDirectoryAbsolutePath = path.join(
-                build.sources[composeFile.sourceId].fullBuildPath,
-                path.dirname(composeFile.relativePaths[0]), // TODO Handle multiple relative paths.
-            );
+            const envDirAbsolutePath = path.join(fullBuildPath, composeFile.envDirRelativePath);
 
-            const dockerComposeFileName = path.basename(composeFile.relativePaths[0]); // TODO Handle multiple relative paths.
+            const dockerComposeArgs = [];
+            for (const composeFileRelativePath of composeFile.composeFileRelativePaths) {
+                const composeFileAbsolutePath = path.join(fullBuildPath, composeFileRelativePath);
+                dockerComposeArgs.push(['--file', path.relative(envDirAbsolutePath, composeFileAbsolutePath)]);
+            }
+            dockerComposeArgs.push(['up', '-d', '--no-color']);
 
             const commonEnvironmentalVariables = new EnvironmentalVariablesSet();
+
             // TODO Move pattern to config. Move value to build class.
             commonEnvironmentalVariables.add('COMPOSE_PROJECT_NAME', `featbuild${build.hash}`);
             // TODO Move to config.
@@ -56,9 +60,10 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
             commonEnvironmentalVariables.add('PATH', '/usr/local/bin/');
 
             const dockerCompose = spawn(
-                'docker-compose', ['--file', dockerComposeFileName, 'up', '-d', '--no-color'],
+                'docker-compose',
+                _.flatten(dockerComposeArgs),
                 {
-                    cwd: dockerComposeDirectoryAbsolutePath,
+                    cwd: envDirAbsolutePath,
                     env: EnvironmentalVariablesSet.merge(
                         build.environmentalVariables,
                         commonEnvironmentalVariables,

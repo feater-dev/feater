@@ -9,10 +9,33 @@ export const typeDefsProvider = {
         }
 
         type Query {
-            users: [User!]!
-            projects: [Project!]!
-            definitions: [Definition!]!
-            instances: [Instance!]!
+            users(
+                limit: Int
+                offset: Int
+                sortKey: String
+                username: String
+            ): [User!]!
+            projects(
+                limit: Int
+                offset: Int
+                sortKey: String
+                name: String
+            ): [Project!]!
+            definitions(
+                limit: Int
+                offset: Int
+                sortKey: String
+                name: String
+                projectId: String
+            ): [Definition!]!
+            instances(
+                limit: Int
+                offset: Int
+                sortKey: String
+                name: String
+                projectId: String
+                definitionId: String
+            ): [Instance!]!
         }
 
         input DefinitionConfigInput {
@@ -113,14 +136,22 @@ export const typeDefsProvider = {
         type Project {
             id: String!
             name: String!
-            definitions: [Definition!]!
+            definitions(
+                limit: Int
+                offset: Int
+                sortKey: String
+            ): [Definition!]!
         }
 
         type Definition {
             id: String!
             name: String!
             project: Project!
-            instances: [Instance!]!
+            instances(
+                limit: Int
+                offset: Int
+                sortKey: String
+            ): [Instance!]!
             config: DefinitionConfig!
         }
 

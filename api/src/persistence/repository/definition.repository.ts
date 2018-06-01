@@ -5,6 +5,7 @@ import {DefinitionSchema} from '../schema/definition.schema';
 import {DefinitionInterface} from '../interface/definition.interface';
 import {CreateDefinitionRequestDto} from '../../api/dto/request/create-definition-request.dto';
 import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/create-definition-input-type.interface';
+import {UserInterface} from '../interface/user.interface';
 
 @Component()
 export class DefinitionRepository {
@@ -13,8 +14,14 @@ export class DefinitionRepository {
         @InjectModel(DefinitionSchema) private readonly definitionModel: Model<DefinitionInterface>,
     ) {}
 
-    find(query: any): Promise<DefinitionInterface[]> {
-        return this.definitionModel.find(query).exec();
+    find(criteria: object, offset: number, limit: number, sort?: object): Promise<DefinitionInterface[]> {
+        const query = this.definitionModel.find(criteria);
+        query.skip(offset).limit(limit);
+        if (sort) {
+            query.sort(sort);
+        }
+
+        return query.exec();
     }
 
     findById(id: string): Promise<DefinitionInterface> {

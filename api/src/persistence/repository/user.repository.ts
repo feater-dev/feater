@@ -14,8 +14,14 @@ export class UserRepository {
         @InjectModel(UserSchema) private readonly userModel: Model<UserInterface>,
     ) {}
 
-    find(query: any): Promise<UserInterface[]> {
-        return this.userModel.find(query).exec();
+    find(criteria: object, offset: number, limit: number, sort?: object): Promise<UserInterface[]> {
+        const query = this.userModel.find(criteria);
+        query.skip(offset).limit(limit);
+        if (sort) {
+            query.sort(sort);
+        }
+
+        return query.exec();
     }
 
     findById(id: string): Promise<UserInterface> {
@@ -27,7 +33,7 @@ export class UserRepository {
     }
 
     findByGoogleId(id: string): Promise<UserInterface[]> {
-        return this.userModel.find({'googleProfile.id': id}).exec();
+        return this.userModel.find({'googleProfile.id': id}, 0, 9999, {}).exec();
     }
 
     createForGithubProfile(githubProfile: GithubUserProfileInterface): Promise<UserInterface> {

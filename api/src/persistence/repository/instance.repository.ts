@@ -4,6 +4,7 @@ import {InjectModel} from '@nestjs/mongoose';
 import {InstanceSchema} from '../schema/instance.schema';
 import {InstanceInterface} from '../interface/instance.interface';
 import {CreateInstanceRequestDto} from '../../api/dto/request/create-instance-request.dto';
+import {DefinitionInterface} from '../interface/definition.interface';
 
 @Component()
 export class InstanceRepository {
@@ -12,16 +13,18 @@ export class InstanceRepository {
         @InjectModel(InstanceSchema) private readonly instanceModel: Model<InstanceInterface>,
     ) {}
 
-    find(query: any): Promise<InstanceInterface[]> {
-        return this.instanceModel.find(query).exec();
+    find(criteria: object, offset: number, limit: number, sort?: object): Promise<InstanceInterface[]> {
+        const query = this.instanceModel.find(criteria);
+        query.skip(offset).limit(limit);
+        if (sort) {
+            query.sort(sort);
+        }
+
+        return query.exec();
     }
 
     findById(id: string): Promise<InstanceInterface> {
         return this.instanceModel.findById(id).exec();
-    }
-
-    findByHash(hash: string): Promise<InstanceInterface> {
-        return this.instanceModel.find({ hash }).exec();
     }
 
     async findByIdOrFail(id: string): Promise<InstanceInterface> {

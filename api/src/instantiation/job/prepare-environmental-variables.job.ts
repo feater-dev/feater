@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {Component} from '@nestjs/common';
 import {Config} from '../../config/config.component';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
-import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
+import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {InterpolationHelper} from '../interpolation-helper.component';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
@@ -21,7 +21,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
     constructor(
         private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
-        private readonly buildInstanceRepository: BuildInstanceRepository,
+        private readonly instanceRepository: InstanceRepository,
         private readonly interpolationHelper: InterpolationHelper,
     ) {}
 
@@ -73,7 +73,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
             );
 
             logger.info('Persisting environmental variables.');
-            this.buildInstanceRepository
+            this.instanceRepository
                 .updateEnvironmentalVariables(build)
                 .then(resolve);
         });

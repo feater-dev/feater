@@ -30,13 +30,13 @@ export class Instantiator {
         private readonly stagesListFactory: StagesListFactory,
     ) {}
 
-    createBuild(id: string, hash: string, buildDefinition: any) {
+    createBuild(id: string, hash: string, definition: any) {
         this.logger.info('Setting up build.');
-        const {config: buildDefinitionConfig} = buildDefinition.toObject();
-        const build = new Build(id, hash, buildDefinitionConfig);
+        const {config: definitionConfig} = definition.toObject();
+        const build = new Build(id, hash, definitionConfig);
 
         this.logger.info('Setting up sources.');
-        for (const source of buildDefinitionConfig.sources) {
+        for (const source of definitionConfig.sources) {
             new Source(source.id, build, source);
         }
 

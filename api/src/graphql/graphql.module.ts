@@ -5,10 +5,10 @@ import {GraphqlSchemaFactory} from './schema/graphql-schema-factory.component';
 import {typeDefsProvider} from './schema/typeDefs.provider';
 import {EnsureAuthenticatedMiddleware} from '../api/middleware/ensure-authenticated.middleware';
 import {PersistenceModule} from '../persistence/persistence.module';
-import {BuildDefinitionConfigMapper} from './resolver/build-definition-config-mapper.component';
+import {DefinitionConfigMapper} from './resolver/definition-config-mapper.component';
 import {ProjectsResolverFactory} from './resolver/projects-resolver-factory.component';
-import {BuildDefinitionResolverFactory} from './resolver/build-definition-resolver-factory.component';
-import {BuildInstanceResolverFactory} from './resolver/build-instance-resolver-factory.component';
+import {DefinitionResolverFactory} from './resolver/definition-resolver-factory.component';
+import {InstanceResolverFactory} from './resolver/instance-resolver-factory.component';
 import {UsersResolverFactory} from './resolver/users-resolver-factory.component';
 import {InstantiationModule} from '../instantiation/instantiation.module';
 
@@ -21,12 +21,12 @@ import {InstantiationModule} from '../instantiation/instantiation.module';
         GraphqlController,
     ],
     components: [
-        BuildDefinitionConfigMapper,
+        DefinitionConfigMapper,
         GraphqlSchemaFactory,
         UsersResolverFactory,
         ProjectsResolverFactory,
-        BuildDefinitionResolverFactory,
-        BuildInstanceResolverFactory,
+        DefinitionResolverFactory,
+        InstanceResolverFactory,
         typeDefsProvider,
     ],
 })

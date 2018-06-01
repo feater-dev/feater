@@ -15,43 +15,43 @@ import {ProjectAddComponent} from './project/add/project-add.component';
 import {ProjectDetailComponent} from './project/detail/project-detail.component';
 import {ProjectListComponent} from './project/list/project-list.component';
 
-import {BuildDefinitionAddComponent} from './build-definition/add/build-definition-add.component';
+import {DefinitionAddComponent} from './definition/add/definition-add.component';
 import {
-    BuildDefinitionAddSourceFormElementComponent
-} from './build-definition/add/form-element/build-definition-add.source-form-element.component';
+    DefinitionAddSourceFormElementComponent
+} from './definition/add/form-element/definition-add.source-form-element.component';
 import {
-    BuildDefinitionAddBeforeBuildTaskCopyFormElementComponent
-} from './build-definition/add/form-element/build-definition-add.before-build-task-copy-form-element.component';
+    DefinitionAddBeforeBuildTaskCopyFormElementComponent
+} from './definition/add/form-element/definition-add.before-build-task-copy-form-element.component';
 import {
-    BuildDefinitionAddBeforeBuildTaskInterpolateFormElementComponent
-} from './build-definition/add/form-element/build-definition-add.before-build-task-interpolate-form-element.component';
+    DefinitionAddBeforeBuildTaskInterpolateFormElementComponent
+} from './definition/add/form-element/definition-add.before-build-task-interpolate-form-element.component';
 import {
-    BuildDefinitionAddProxiedPortFormElementComponent
-} from './build-definition/add/form-element/build-definition-add.proxied-port-form-element.component';
+    DefinitionAddProxiedPortFormElementComponent
+} from './definition/add/form-element/definition-add.proxied-port-form-element.component';
 import {
-    BuildDefinitionAddEnvironmentalVariableFormElementComponent
-} from './build-definition/add/form-element/build-definition-add.environmental-variable-form-element.component';
+    DefinitionAddEnvironmentalVariableFormElementComponent
+} from './definition/add/form-element/definition-add.environmental-variable-form-element.component';
 import {
-    BuildDefinitionAddSummaryItemFormElementComponent
-} from './build-definition/add/form-element/build-definition-add.summary-item-form-element.component';
+    DefinitionAddSummaryItemFormElementComponent
+} from './definition/add/form-element/definition-add.summary-item-form-element.component';
 import {
-    BuildDefinitionAddComposeFileFormElementComponent
-} from './build-definition/add/form-element/build-definition-add.compose-file-form-element.component';
+    DefinitionAddComposeFileFormElementComponent
+} from './definition/add/form-element/definition-add.compose-file-form-element.component';
 import {
-    BuildDefinitionDetailComponent
-} from './build-definition/detail/build-definition-detail.component';
+    DefinitionDetailComponent
+} from './definition/detail/definition-detail.component';
 import {
-    BuildDefinitionListComponent
-} from './build-definition/list/build-definition-list.component';
+    DefinitionListComponent
+} from './definition/list/definition-list.component';
 
-import {BuildInstanceAddComponent} from './build-instance/add/build-instance-add.component';
-import {BuildInstanceDetailComponent} from './build-instance/detail/build-instance-detail.component';
-import {BuildInstanceListComponent} from './build-instance/list/build-instance-list.component';
+import {InstanceAddComponent} from './instance/add/instance-add.component';
+import {InstanceDetailComponent} from './instance/detail/instance-detail.component';
+import {InstanceListComponent} from './instance/list/instance-list.component';
 
 import {UserRepositoryService} from './user/repository/user-repository.service';
 import {ProjectRepositoryService} from './project/repository/project-repository.service';
-import {BuildDefinitionRepositoryService} from './build-definition/repository/build-definition-repository.service';
-import {BuildInstanceRepositoryService} from './build-instance/repository/build-instance-repository.service';
+import {DefinitionRepositoryService} from './definition/repository/definition-repository.service';
+import {InstanceRepositoryService} from './instance/repository/instance-repository.service';
 import {AuthHttpClient} from './api/auth-http-client.service';
 
 const appRoutes: Routes = [
@@ -60,12 +60,12 @@ const appRoutes: Routes = [
     { path: 'projects', component: ProjectListComponent },
     { path: 'project/add', component: ProjectAddComponent },
     { path: 'project/:id', component: ProjectDetailComponent },
-    { path: 'project/:id/build-definition/add', component: BuildDefinitionAddComponent},
-    { path: 'build-definitions', component: BuildDefinitionListComponent },
-    { path: 'build-definition/:id', component: BuildDefinitionDetailComponent},
-    { path: 'build-definition/:id/build-instance/add', component: BuildInstanceAddComponent},
-    { path: 'build-instances', component: BuildInstanceListComponent },
-    { path: 'build-instance/:id', component: BuildInstanceDetailComponent},
+    { path: 'project/:id/definition/add', component: DefinitionAddComponent},
+    { path: 'definitions', component: DefinitionListComponent },
+    { path: 'definition/:id', component: DefinitionDetailComponent},
+    { path: 'definition/:id/instance/add', component: InstanceAddComponent},
+    { path: 'instances', component: InstanceListComponent },
+    { path: 'instance/:id', component: InstanceDetailComponent},
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
@@ -76,19 +76,19 @@ const appRoutes: Routes = [
         ProjectAddComponent,
         ProjectDetailComponent,
         ProjectListComponent,
-        BuildDefinitionAddComponent,
-        BuildDefinitionAddSourceFormElementComponent,
-        BuildDefinitionAddBeforeBuildTaskCopyFormElementComponent,
-        BuildDefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
-        BuildDefinitionAddProxiedPortFormElementComponent,
-        BuildDefinitionAddEnvironmentalVariableFormElementComponent,
-        BuildDefinitionAddSummaryItemFormElementComponent,
-        BuildDefinitionAddComposeFileFormElementComponent,
-        BuildDefinitionDetailComponent,
-        BuildDefinitionListComponent,
-        BuildInstanceAddComponent,
-        BuildInstanceDetailComponent,
-        BuildInstanceListComponent,
+        DefinitionAddComponent,
+        DefinitionAddSourceFormElementComponent,
+        DefinitionAddBeforeBuildTaskCopyFormElementComponent,
+        DefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
+        DefinitionAddProxiedPortFormElementComponent,
+        DefinitionAddEnvironmentalVariableFormElementComponent,
+        DefinitionAddSummaryItemFormElementComponent,
+        DefinitionAddComposeFileFormElementComponent,
+        DefinitionDetailComponent,
+        DefinitionListComponent,
+        InstanceAddComponent,
+        InstanceDetailComponent,
+        InstanceListComponent,
         NavbarComponent,
         AboutComponent
     ],
@@ -102,8 +102,8 @@ const appRoutes: Routes = [
         {provide: 'authHttp', useClass: AuthHttpClient},
         {provide: 'repository.user', useClass: UserRepositoryService},
         {provide: 'repository.project', useClass: ProjectRepositoryService},
-        {provide: 'repository.buildDefinition', useClass: BuildDefinitionRepositoryService},
-        {provide: 'repository.build', useClass: BuildInstanceRepositoryService}
+        {provide: 'repository.definition', useClass: DefinitionRepositoryService},
+        {provide: 'repository.build', useClass: InstanceRepositoryService}
     ],
     bootstrap: [AppComponent]
 })

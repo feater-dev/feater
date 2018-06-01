@@ -1,3 +1,3 @@
 export interface ResolverUserFilterArgumentsInterface {
-    username?: string;
+    name?: string;
 }

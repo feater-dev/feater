@@ -1,7 +1,19 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {GetInstanceResponseDto} from '../instance-response-dtos.model';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
+import gql from 'graphql-tag';
+import {Apollo} from 'apollo-angular';
+
+interface Instance {
+    id: number;
+    name: string;
+}
+
+interface Query {
+    instances: Instance[];
+}
 
 @Component({
     selector: 'app-instance-list',
@@ -10,13 +22,14 @@ import {GetInstanceResponseDto} from '../instance-response-dtos.model';
 })
 export class InstanceListComponent implements OnInit {
 
-    items: GetInstanceResponseDto[];
+    items: Observable<Instance[]>;
 
     errorMessage: string;
 
     constructor(
         private router: Router,
-        @Inject('repository.build') private repository
+        @Inject('repository.build') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -28,11 +41,13 @@ export class InstanceListComponent implements OnInit {
     }
 
     private getItems() {
-        this.repository
-            .getItems()
-            .subscribe(
-                (items: GetInstanceResponseDto[]) => { this.items = items; },
-                (error) => { this.errorMessage = <any>error; }
+        this.items = this.apollo
+            .watchQuery<Query>({
+                query: gql`query { instances { id name } }`
+            })
+            .valueChanges
+            .pipe(
+                map(result => result.data.instances)
             );
     }
 }

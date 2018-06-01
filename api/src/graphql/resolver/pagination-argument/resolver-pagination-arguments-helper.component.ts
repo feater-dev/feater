@@ -15,6 +15,9 @@ export class ResolverPaginationArgumentsHelper {
     }
 
     public getSort(defaultSortKey: string, sortMap: object, sortKey?: string): object {
+        if (!sortKey) {
+            sortKey = defaultSortKey;
+        }
         if (!sortMap[sortKey]) {
             throw new Error('Invalid sort key.');
         }

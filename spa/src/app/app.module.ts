@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule, Routes} from '@angular/router';
+import {ApolloModule, Apollo} from 'apollo-angular';
+import {HttpLinkModule, HttpLink} from 'apollo-angular-link-http';
 
 import {AppComponent} from './app.component';
 
@@ -53,6 +55,7 @@ import {ProjectRepositoryService} from './project/repository/project-repository.
 import {DefinitionRepositoryService} from './definition/repository/definition-repository.service';
 import {InstanceRepositoryService} from './instance/repository/instance-repository.service';
 import {AuthHttpClient} from './api/auth-http-client.service';
+import {InMemoryCache} from 'apollo-cache-inmemory';
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
@@ -95,7 +98,9 @@ const appRoutes: Routes = [
     imports: [
         BrowserModule,
         FormsModule,
+        ApolloModule,
         HttpClientModule,
+        HttpLinkModule,
         RouterModule.forRoot(appRoutes)
     ],
     providers: [
@@ -107,4 +112,14 @@ const appRoutes: Routes = [
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+    constructor(
+        apollo: Apollo,
+        httpLink: HttpLink
+    ) {
+        apollo.create({
+            link: httpLink.create({ uri: 'http://localhost:3001/graphql-api' }),
+            cache: new InMemoryCache()
+        });
+    }
+}

@@ -13,7 +13,7 @@ export const typeDefsProvider = {
                 limit: Int
                 offset: Int
                 sortKey: String
-                username: String
+                name: String
             ): [User!]!
             projects(
                 limit: Int

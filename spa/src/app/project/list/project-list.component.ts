@@ -1,7 +1,19 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {GetProjectResponseDto} from '../project-response-dtos.model';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
+import gql from 'graphql-tag';
+import {Apollo} from 'apollo-angular';
+
+interface Project {
+    id: number;
+    name: string;
+}
+
+interface Query {
+    projects: Project[];
+}
 
 @Component({
     selector: 'app-project-list',
@@ -10,13 +22,12 @@ import {GetProjectResponseDto} from '../project-response-dtos.model';
 })
 export class ProjectListComponent implements OnInit {
 
-    items: GetProjectResponseDto[];
-
-    errorMessage: string;
+    items: Observable<Project[]>;
 
     constructor(
         private router: Router,
-        @Inject('repository.project') private repository
+        @Inject('repository.project') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -32,11 +43,13 @@ export class ProjectListComponent implements OnInit {
     }
 
     private getItems() {
-        this.repository
-            .getItems()
-            .subscribe(
-                (items: GetProjectResponseDto[]) => { this.items = items; },
-                (error) => { this.errorMessage = <any>error; }
+        this.items = this.apollo
+            .watchQuery<Query>({
+                query: gql`query { projects { id name } }`
+            })
+            .valueChanges
+            .pipe(
+                map(result => result.data.projects)
             );
     }
 }

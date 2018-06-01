@@ -16,11 +16,11 @@ export class UsersResolverFactory {
         private readonly userRepository: UserRepository,
     ) { }
 
-    protected readonly defaultSortKey = 'username_asc';
+    protected readonly defaultSortKey = 'name_asc';
 
     protected readonly sortMap = {
-        username_asc: {username: 'asc', createdAt: 'desc', _id: 'desc'},
-        username_desc: {username: 'desc', createdAt: 'desc', _id: 'desc'},
+        name_asc: {name: 'asc', createdAt: 'desc', _id: 'desc'},
+        name_desc: {name: 'desc', createdAt: 'desc', _id: 'desc'},
         created_at_asc: {createdAt: 'asc', _id: 'desc'},
         created_at_desc: {createdAt: 'desc', _id: 'desc'},
     };
@@ -56,8 +56,8 @@ export class UsersResolverFactory {
     }
 
     protected applyFilterArgumentToCriteria(criteria: any, args: ResolverUserFilterArgumentsInterface): object {
-        if (args.username) {
-            criteria.name = new RegExp(escapeStringRegexp(args.username));
+        if (args.name) {
+            criteria.name = new RegExp(escapeStringRegexp(args.name));
         }
 
         return criteria;

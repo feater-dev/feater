@@ -1,12 +1,12 @@
 import {Component} from '@nestjs/common';
 import { Validator as JsonSchemaValidator} from 'jsonschema';
-import {CreateBuildDefinitionRequestDto} from '../dto/request/create-build-definition-request.dto';
+import {CreateDefinitionRequestDto} from '../dto/request/create-definition-request.dto';
 import {CreateProjectRequestDto} from '../dto/request/create-project-request.dto';
-import {CreateBuildInstanceRequestDto} from '../dto/request/create-build-instance-request.dto';
+import {CreateInstanceRequestDto} from '../dto/request/create-instance-request.dto';
 import {createProjectDtoJsonSchema} from './schema/api/create-project-dto.json-schema';
-import {createBuildDefinitionDtoJsonSchema} from './schema/api/create-build-definition-dto.json-schema';
-import {createBuildInstanceDtoJsonSchema} from './schema/api/create-build-instance-dto.json-schema';
-import {buildDefinitionConfigJsonSchema} from './schema/build-definition-config.json-schema';
+import {createDefinitionDtoJsonSchema} from './schema/api/create-definition-dto.json-schema';
+import {createInstanceDtoJsonSchema} from './schema/api/create-instance-dto.json-schema';
+import {definitionConfigJsonSchema} from './schema/definition-config.json-schema';
 
 @Component()
 export class Validator {
@@ -21,16 +21,16 @@ export class Validator {
         return await this.validate(createProjectDto, createProjectDtoJsonSchema);
     }
 
-    async validateCreateBuildDefinitionDto(createBuildDefinitionDto: CreateBuildDefinitionRequestDto): Promise<any> {
-        return await this.validate(createBuildDefinitionDto, createBuildDefinitionDtoJsonSchema);
+    async validateCreateDefinitionDto(createDefinitionDto: CreateDefinitionRequestDto): Promise<any> {
+        return await this.validate(createDefinitionDto, createDefinitionDtoJsonSchema);
     }
 
-    async validateCreateBuildInstanceDto(createBuildInstanceDto: CreateBuildInstanceRequestDto): Promise<any> {
-        return await this.validate(createBuildInstanceDto, createBuildInstanceDtoJsonSchema);
+    async validateCreateInstanceDto(createInstanceDto: CreateInstanceRequestDto): Promise<any> {
+        return await this.validate(createInstanceDto, createInstanceDtoJsonSchema);
     }
 
-    async validateBuildDefinitionConfig(buildDefinitionConfig: any): Promise<any> {
-        return await this.validate(buildDefinitionConfig, buildDefinitionConfigJsonSchema);
+    async validateDefinitionConfig(definitionConfig: any): Promise<any> {
+        return await this.validate(definitionConfig, definitionConfigJsonSchema);
     }
 
     private validate(data: any, schema: any): Promise<any> {

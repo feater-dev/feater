@@ -30,8 +30,8 @@ export class ProjectDetailComponent implements OnInit {
         this.router.navigate(['/projects']);
     }
 
-    goToAddBuildDefinition() {
-        this.router.navigate(['/project', this.item._id, 'build-definition', 'add']);
+    goToAddDefinition() {
+        this.router.navigate(['/project', this.item._id, 'definition', 'add']);
     }
 
     private getItem() {

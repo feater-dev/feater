@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {execSync} from 'child_process';
 import {Component} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
-import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
+import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 
@@ -21,7 +21,7 @@ export class GetContainerIdsJobExecutor implements JobExecutorInterface {
 
     constructor(
         private readonly jobLoggerFactory: JobLoggerFactory,
-        private readonly buildInstanceRepository: BuildInstanceRepository,
+        private readonly instanceRepository: InstanceRepository,
     ) {}
 
     supports(job: JobInterface) {
@@ -85,7 +85,7 @@ export class GetContainerIdsJobExecutor implements JobExecutorInterface {
                 build.services[serviceId].containerId = containerId;
             }
 
-            this.buildInstanceRepository
+            this.instanceRepository
                 .updateServices(build)
                 .then(resolve);
         });

@@ -32,12 +32,12 @@ export class NavbarComponent implements OnInit {
         this.router.navigate(['/projects']);
     }
 
-    goToBuildDefinitionList() {
-        this.router.navigate(['/build-definitions']);
+    goToDefinitionList() {
+        this.router.navigate(['/definitions']);
     }
 
-    goToBuildInstanceList() {
-        this.router.navigate(['/build-instances']);
+    goToInstanceList() {
+        this.router.navigate(['/instances']);
     }
 
 }

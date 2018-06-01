@@ -3,12 +3,12 @@ import {MongooseModule} from '@nestjs/mongoose';
 import {ApiTokenSchema} from './schema/api-token.schema';
 import {UserSchema} from './schema/user.schema';
 import {ProjectSchema} from './schema/project.schema';
-import {BuildDefinitionSchema} from './schema/build-definition.schema';
-import {BuildInstanceSchema} from './schema/build-instance.schema';
+import {DefinitionSchema} from './schema/definition.schema';
+import {InstanceSchema} from './schema/instance.schema';
 import {UserRepository} from './repository/user.repository';
 import {ProjectRepository} from './repository/project.repository';
-import {BuildDefinitionRepository} from './repository/build-definition.repository';
-import {BuildInstanceRepository} from './repository/build-instance.repository';
+import {DefinitionRepository} from './repository/definition.repository';
+import {InstanceRepository} from './repository/instance.repository';
 import {ApiTokenRepository} from './repository/api-token.repository';
 
 @Module({
@@ -17,23 +17,23 @@ import {ApiTokenRepository} from './repository/api-token.repository';
       MongooseModule.forFeature([{ name: 'ApiToken', schema: ApiTokenSchema }]),
       MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
       MongooseModule.forFeature([{ name: 'Project', schema: ProjectSchema }]),
-      MongooseModule.forFeature([{ name: 'BuildDefinition', schema: BuildDefinitionSchema }]),
-      MongooseModule.forFeature([{ name: 'BuildInstance', schema: BuildInstanceSchema }]),
+      MongooseModule.forFeature([{ name: 'Definition', schema: DefinitionSchema }]),
+      MongooseModule.forFeature([{ name: 'Instance', schema: InstanceSchema }]),
   ],
   controllers: [],
   components: [
       ApiTokenRepository,
       UserRepository,
       ProjectRepository,
-      BuildDefinitionRepository,
-      BuildInstanceRepository,
+      DefinitionRepository,
+      InstanceRepository,
   ],
   exports: [
       ApiTokenRepository,
       UserRepository,
       ProjectRepository,
-      BuildDefinitionRepository,
-      BuildInstanceRepository,
+      DefinitionRepository,
+      InstanceRepository,
   ],
 })
 export class PersistenceModule {}

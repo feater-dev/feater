@@ -4,7 +4,7 @@ import {execSync} from 'child_process';
 import {Component} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {Config} from '../../config/config.component';
-import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
+import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 
@@ -24,7 +24,7 @@ export class ProxyPortDomainsJobExecutor implements JobExecutorInterface {
     constructor(
         private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
-        private readonly buildInstanceRepository: BuildInstanceRepository,
+        private readonly instanceRepository: InstanceRepository,
     ) {}
 
     supports(job: JobInterface): boolean {
@@ -80,7 +80,7 @@ server {
                 { maxBuffer: BUFFER_SIZE },
             );
 
-            this.buildInstanceRepository
+            this.instanceRepository
                 .updateServices(build)
                 .then(resolve);
         });

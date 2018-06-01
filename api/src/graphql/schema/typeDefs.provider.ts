@@ -11,23 +11,23 @@ export const typeDefsProvider = {
         type Query {
             users: [User!]!
             projects: [Project!]!
-            buildDefinitions: [BuildDefinition!]!
-            buildInstances: [BuildInstance!]!
+            definitions: [Definition!]!
+            instances: [Instance!]!
         }
 
-        input BuildDefinitionConfigInput {
-            sources: [BuildDefinitionSourceInput!]!
-            proxiedPorts: [BuildDefinitionProxiedPortInput!]!
-            summaryItems: [BuildDefinitionSummaryItemInput!]!
-            environmentalVariables: [BuildDefinitionEnvironmentalVariableInput!]!
-            composeFiles: [BuildDefinitionComposeFileInput!]!
+        input DefinitionConfigInput {
+            sources: [DefinitionSourceInput!]!
+            proxiedPorts: [DefinitionProxiedPortInput!]!
+            summaryItems: [DefinitionSummaryItemInput!]!
+            environmentalVariables: [DefinitionEnvironmentalVariableInput!]!
+            composeFiles: [DefinitionComposeFileInput!]!
         }
 
-        input BuildDefinitionSourceInput {
+        input DefinitionSourceInput {
             id: String!
             type: String!
             name: String!
-            reference: BuildDefinitionSourceReferenceInput!
+            reference: DefinitionSourceReferenceInput!
             beforeBuildTasks: [BeforeBuildTaskInput!]!
         }
 
@@ -38,29 +38,29 @@ export const typeDefsProvider = {
             relativePath: String
         }
 
-        input BuildDefinitionSourceReferenceInput {
+        input DefinitionSourceReferenceInput {
             type: String!
             name: String!
         }
 
-        input BuildDefinitionProxiedPortInput {
+        input DefinitionProxiedPortInput {
             id: String!
             serviceId: String!
             port: Int!
             name: String!
         }
 
-        input BuildDefinitionSummaryItemInput {
+        input DefinitionSummaryItemInput {
             name: String!
             text: String!
         }
 
-        input BuildDefinitionEnvironmentalVariableInput {
+        input DefinitionEnvironmentalVariableInput {
             name: String!
             value: String!
         }
 
-        input BuildDefinitionComposeFileInput {
+        input DefinitionComposeFileInput {
             sourceId: String!
             envDirRelativePath: String!
             composeFileRelativePaths: [String!]!
@@ -71,18 +71,18 @@ export const typeDefsProvider = {
                 name: String!
             ): Project!
 
-            createBuildDefinition(
+            createDefinition(
                 projectId: String!
                 name: String!
-                config: BuildDefinitionConfigInput!
-            ): BuildDefinition!
+                config: DefinitionConfigInput!
+            ): Definition!
 
-            createBuildInstance(
-                buildDefinitionId: String!
+            createInstance(
+                definitionId: String!
                 name: String!
-            ): BuildInstance!
+            ): Instance!
 
-            removeBuildInstance(
+            removeInstance(
                 id: String!
             ): Boolean!
         }
@@ -113,30 +113,30 @@ export const typeDefsProvider = {
         type Project {
             id: String!
             name: String!
-            buildDefinitions: [BuildDefinition!]!
+            definitions: [Definition!]!
         }
 
-        type BuildDefinition {
+        type Definition {
             id: String!
             name: String!
             project: Project!
-            buildInstances: [BuildInstance!]!
-            config: BuildDefinitionConfig!
+            instances: [Instance!]!
+            config: DefinitionConfig!
         }
 
-        type BuildDefinitionConfig {
-            sources: [BuildDefinitionSource!]!
-            proxiedPorts: [BuildDefinitionProxiedPort!]!
-            summaryItems: [BuildDefinitionSummaryItem!]!
-            environmentalVariables: [BuildDefinitionEnvironmentalVariable!]!
-            composeFiles: [BuildDefinitionComposeFile!]!
+        type DefinitionConfig {
+            sources: [DefinitionSource!]!
+            proxiedPorts: [DefinitionProxiedPort!]!
+            summaryItems: [DefinitionSummaryItem!]!
+            environmentalVariables: [DefinitionEnvironmentalVariable!]!
+            composeFiles: [DefinitionComposeFile!]!
         }
 
-        type BuildDefinitionSource {
+        type DefinitionSource {
             id: String!
             type: String!
             name: String!
-            reference: BuildDefinitionSourceReference!
+            reference: DefinitionSourceReference!
             beforeBuildTasks: [BeforeBuildTask!]!
         }
 
@@ -153,38 +153,38 @@ export const typeDefsProvider = {
             relativePath: String!
         }
 
-        type BuildDefinitionSourceReference {
+        type DefinitionSourceReference {
             type: String!
             name: String!
         }
 
-        type BuildDefinitionProxiedPort {
+        type DefinitionProxiedPort {
             id: String!
             serviceId: String!
             port: Int!
             name: String!
         }
 
-        type BuildDefinitionSummaryItem {
+        type DefinitionSummaryItem {
             name: String!
             text: String!
         }
 
-        type BuildDefinitionEnvironmentalVariable {
+        type DefinitionEnvironmentalVariable {
             name: String!
             value: String!
         }
 
-        type BuildDefinitionComposeFile {
+        type DefinitionComposeFile {
             sourceId: String!
             envDirRelativePath: String!
             composeFileRelativePaths: [String!]!
         }
 
-        type BuildInstance {
+        type Instance {
             id: String!
             name: String!
-            buildDefinition: BuildDefinition!
+            definition: Definition!
         }
     `,
 };

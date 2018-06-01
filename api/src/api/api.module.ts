@@ -3,8 +3,8 @@ import {PersistenceModule} from '../persistence/persistence.module';
 import {InstantiationModule} from '../instantiation/instantiation.module';
 import {UserController} from './controller/user.controller';
 import {ProjectController} from './controller/project.controller';
-import {BuildDefinitionController} from './controller/build-definition.controller';
-import {BuildInstanceController} from './controller/build-instance.controller';
+import {DefinitionController} from './controller/definition.controller';
+import {InstanceController} from './controller/instance.controller';
 import {Validator} from './validation/validator.component';
 import {EnsureAuthenticatedMiddleware} from './middleware/ensure-authenticated.middleware';
 
@@ -16,8 +16,8 @@ import {EnsureAuthenticatedMiddleware} from './middleware/ensure-authenticated.m
   controllers: [
       UserController,
       ProjectController,
-      BuildDefinitionController,
-      BuildInstanceController,
+      DefinitionController,
+      InstanceController,
   ],
   components: [
       Validator,

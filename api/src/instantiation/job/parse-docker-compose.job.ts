@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as jsYaml from 'js-yaml';
 import {Component} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
-import {BuildInstanceRepository} from '../../persistence/repository/build-instance.repository';
+import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {JobInterface, BuildJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 
@@ -21,7 +21,7 @@ export class ParseDockerComposeJobExecutor implements JobExecutorInterface {
 
     constructor(
         private readonly jobLoggerFactory: JobLoggerFactory,
-        private readonly buildInstanceRepository: BuildInstanceRepository,
+        private readonly instanceRepository: InstanceRepository,
     ) {}
 
     supports(job: JobInterface): boolean {
@@ -69,7 +69,7 @@ export class ParseDockerComposeJobExecutor implements JobExecutorInterface {
 
             logger.debug('Services found in compose file.', {services: JSON.stringify(build.services)});
 
-            this.buildInstanceRepository.updateServices(build);
+            this.instanceRepository.updateServices(build);
 
             resolve();
 

@@ -3,12 +3,12 @@ import {GraphQLSchema} from 'graphql';
 import * as GraphQLJSON from 'graphql-type-json';
 import {makeExecutableSchema} from 'graphql-tools';
 import {ProjectTypeInterface} from '../type/project-type.interface';
-import {BuildDefinitionTypeInterface} from '../type/build-definition-type.interface';
-import {BuildInstanceTypeInterface} from '../type/build-instance-type.interface';
+import {DefinitionTypeInterface} from '../type/definition-type.interface';
+import {InstanceTypeInterface} from '../type/instance-type.interface';
 import {ProjectsResolverFactory} from '../resolver/projects-resolver-factory.component';
-import {BuildDefinitionResolverFactory} from '../resolver/build-definition-resolver-factory.component';
-import {BuildInstanceResolverFactory} from '../resolver/build-instance-resolver-factory.component';
-import {BeforeBuildTaskTypeInterface} from '../type/nested/build-definition-config/before-build-task-type.interface';
+import {DefinitionResolverFactory} from '../resolver/definition-resolver-factory.component';
+import {InstanceResolverFactory} from '../resolver/instance-resolver-factory.component';
+import {BeforeBuildTaskTypeInterface} from '../type/nested/definition-config/before-build-task-type.interface';
 import {UsersResolverFactory} from '../resolver/users-resolver-factory.component';
 
 @Component()
@@ -17,8 +17,8 @@ export class GraphqlSchemaFactory {
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,
         private readonly usersResolverFactory: UsersResolverFactory,
         private readonly projectsResolverFactory: ProjectsResolverFactory,
-        private readonly buildDefinitionResolverFactory: BuildDefinitionResolverFactory,
-        private readonly buildInstanceResolverFactory: BuildInstanceResolverFactory,
+        private readonly definitionResolverFactory: DefinitionResolverFactory,
+        private readonly instanceResolverFactory: InstanceResolverFactory,
     ) { }
 
     public createSchema(): GraphQLSchema {
@@ -35,35 +35,35 @@ export class GraphqlSchemaFactory {
             Query: {
                 users: this.usersResolverFactory.getListResolver(),
                 projects: this.projectsResolverFactory.getListResolver(),
-                buildDefinitions: this.buildDefinitionResolverFactory.getListResolver(),
-                buildInstances: this.buildInstanceResolverFactory.getListResolver(),
+                definitions: this.definitionResolverFactory.getListResolver(),
+                instances: this.instanceResolverFactory.getListResolver(),
             },
 
             Mutation: {
                 createProject: this.projectsResolverFactory.getCreateItemResolver(),
-                createBuildDefinition: this.buildDefinitionResolverFactory.getCreateItemResolver(),
-                createBuildInstance: this.buildInstanceResolverFactory.getCreateItemResolver(),
-                removeBuildInstance: this.buildInstanceResolverFactory.getRemoveItemResolver(),
+                createDefinition: this.definitionResolverFactory.getCreateItemResolver(),
+                createInstance: this.instanceResolverFactory.getCreateItemResolver(),
+                removeInstance: this.instanceResolverFactory.getRemoveItemResolver(),
             },
 
             Project: {
-                buildDefinitions: this.buildDefinitionResolverFactory.getListResolver(
+                definitions: this.definitionResolverFactory.getListResolver(
                     (project: ProjectTypeInterface) => ({projectId: project.id}),
                 ),
             },
 
-            BuildDefinition: {
+            Definition: {
                 project: this.projectsResolverFactory.getItemResolver(
-                    (buildDefinitionType: BuildDefinitionTypeInterface) => buildDefinitionType.projectId,
+                    (definitionType: DefinitionTypeInterface) => definitionType.projectId,
                 ),
-                buildInstances: this.buildInstanceResolverFactory.getListResolver(
-                    (buildDefinition: BuildDefinitionTypeInterface) => ({buildDefinitionId: buildDefinition.id}),
+                instances: this.instanceResolverFactory.getListResolver(
+                    (definition: DefinitionTypeInterface) => ({definitionId: definition.id}),
                 ),
             },
 
-            BuildInstance: {
-                buildDefinition: this.buildDefinitionResolverFactory.getItemResolver(
-                    (buildInstance: BuildInstanceTypeInterface) => buildInstance.buildDefinitionId,
+            Instance: {
+                definition: this.definitionResolverFactory.getItemResolver(
+                    (instance: InstanceTypeInterface) => instance.definitionId,
                 ),
             },
 

@@ -28,6 +28,9 @@ export const typeDefsProvider = {
                 name: String
                 projectId: String
             ): [Definition!]!
+            definition(
+                id: String!
+            ): Definition!
             instances(
                 limit: Int
                 offset: Int

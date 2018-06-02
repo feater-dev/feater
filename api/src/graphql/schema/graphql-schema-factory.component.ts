@@ -36,6 +36,9 @@ export class GraphqlSchemaFactory {
                 users: this.usersResolverFactory.getListResolver(),
                 projects: this.projectsResolverFactory.getListResolver(),
                 definitions: this.definitionResolverFactory.getListResolver(),
+                definition: this.definitionResolverFactory.getItemResolver(
+                    (obj: any, args: any): string => args.id,
+                ),
                 instances: this.instanceResolverFactory.getListResolver(),
             },
 

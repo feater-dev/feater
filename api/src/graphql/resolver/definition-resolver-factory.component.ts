@@ -50,10 +50,10 @@ export class DefinitionResolverFactory {
         };
     }
 
-    public getItemResolver(idExtractor: (any) => string): (string) => Promise<DefinitionTypeInterface> {
-        return async (object: any): Promise<DefinitionTypeInterface> => {
+    public getItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, args: any) => Promise<DefinitionTypeInterface> {
+        return async (obj: any, args: any): Promise<DefinitionTypeInterface> => {
             return this.mapPersistentModelToTypeModel(
-                await this.definitionRepository.findById(idExtractor(object)),
+                await this.definitionRepository.findById(idExtractor(obj, args)),
             );
         };
     }

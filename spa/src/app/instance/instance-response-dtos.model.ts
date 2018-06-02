@@ -1,10 +1,10 @@
 interface ProjectReference {
-    _id: string;
+    id: string;
     name: string;
 }
 
 export interface DefinitionReference {
-    _id: string;
+    id: string;
     name: string;
     project: ProjectReference;
 }
@@ -26,7 +26,7 @@ export interface SummaryItem {
 }
 
 export interface GetInstanceResponseDto {
-    _id: string;
+    id: string;
     name: string;
     definition: DefinitionReference;
     summaryItems?: SummaryItem[];
@@ -34,8 +34,4 @@ export interface GetInstanceResponseDto {
     proxiedPorts?: {
         [key: string]: ProxiedPort
     };
-}
-
-export interface AddInstanceResponseDto {
-    id: string;
 }

@@ -35,7 +35,7 @@ export class DefinitionListComponent implements OnInit {
     }
 
     goToDetail(item) {
-        this.router.navigate(['/definition', item._id]);
+        this.router.navigate(['/definition', item.id]);
     }
 
     private getItems() {

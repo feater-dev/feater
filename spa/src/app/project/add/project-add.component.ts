@@ -1,10 +1,10 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
-
-
+import gql from 'graphql-tag';
+import {Apollo} from 'apollo-angular';
 
 import {ProjectAddForm} from '../project-add-form.model';
-import {AddProjectResponseDto} from '../project-response-dtos.model';
+
 
 @Component({
     selector: 'app-project-add',
@@ -13,11 +13,20 @@ import {AddProjectResponseDto} from '../project-response-dtos.model';
 })
 export class ProjectAddComponent implements OnInit {
 
+    protected readonly createProjectMutation = gql`
+        mutation ($name: String!) {
+            createProject(name: $name) {
+                id
+            }
+        }
+    `;
+
     item: ProjectAddForm;
 
     constructor(
         private router: Router,
-        @Inject('repository.project') private repository
+        @Inject('repository.project') private repository,
+        private apollo: Apollo,
     ) {
         this.item = {
             name: ''
@@ -31,12 +40,18 @@ export class ProjectAddComponent implements OnInit {
     }
 
     addItem() {
-        this.repository
-            .addItem(this.item)
-            .subscribe(
-                (projectAddItemResponse: AddProjectResponseDto) => {
-                    this.router.navigate(['/project', projectAddItemResponse.id]);
-                }
-            );
+        this.apollo.mutate({
+            mutation: this.createProjectMutation,
+            variables: {
+                name: this.item.name,
+            },
+        }).subscribe(
+            ({data}) => {
+                this.router.navigate(['/project', data.createProject.id]);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }
 }

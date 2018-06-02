@@ -1,10 +1,11 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
+import gql from 'graphql-tag';
+import {Apollo} from 'apollo-angular';
 
 import {InstanceAddForm} from '../../instance/instance-add-form.model';
 import {GetDefinitionResponseDto} from '../../definition/definition-response-dtos.model';
-import {AddInstanceResponseDto} from '../instance-response-dtos.model';
 
 
 @Component({
@@ -14,6 +15,14 @@ import {AddInstanceResponseDto} from '../instance-response-dtos.model';
 })
 export class InstanceAddComponent implements OnInit {
 
+    protected readonly mutation = gql`
+        mutation ($name: String!) {
+            createProject(name: $name) {
+                id
+            }
+        }
+    `;
+
     item: InstanceAddForm;
 
     definition: GetDefinitionResponseDto;
@@ -22,7 +31,8 @@ export class InstanceAddComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         @Inject('repository.build') private repository,
-        @Inject('repository.definition') private definitionRepository
+        @Inject('repository.definition') private definitionRepository,
+        private apollo: Apollo,
     ) {
         this.item = {
             definitionId: '',
@@ -39,13 +49,19 @@ export class InstanceAddComponent implements OnInit {
     }
 
     addItem() {
-        this.repository
-            .addItem(this.item)
-            .subscribe(
-                (addInstanceResponseDto: AddInstanceResponseDto) => {
-                    this.router.navigate(['/instance', addInstanceResponseDto.id]);
-                }
-            );
+        this.apollo.mutate({
+            mutation: this.mutation,
+            variables: {
+                name: this.item.name,
+            },
+        }).subscribe(
+            ({data}) => {
+                this.router.navigate(['/instance', data.createInstance.id]);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }
 
     private getDefinition() {
@@ -56,7 +72,7 @@ export class InstanceAddComponent implements OnInit {
             .subscribe(
                 (item: GetDefinitionResponseDto) => {
                     this.definition = item;
-                    this.item.definitionId = item._id;
+                    this.item.definitionId = item.id;
                 }
             );
 

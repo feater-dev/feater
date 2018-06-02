@@ -9,16 +9,16 @@ import {Apollo} from 'apollo-angular';
 interface User {
     id: number;
     name: string;
-}
-
-interface Query {
-    instances: User[];
     githubProfile: {
         username: string;
     };
     googleProfile: {
         emailAddress: string;
     };
+}
+
+interface Query {
+    users: User[];
 }
 
 @Component({

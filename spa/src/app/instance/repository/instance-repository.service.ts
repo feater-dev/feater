@@ -4,8 +4,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 
-import {GetInstanceResponseDto, AddInstanceResponseDto} from '../instance-response-dtos.model';
-import {InstanceAddForm} from '../instance-add-form.model';
+import {GetInstanceResponseDto} from '../instance-response-dtos.model';
 
 
 @Injectable()
@@ -32,18 +31,6 @@ export class InstanceRepositoryService {
         return this.httpClient
             .get<GetInstanceResponseDto>(
                 `${this.itemsUrl}/${id}`,
-                {
-                    headers: (new HttpHeaders())
-                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
-                }
-            );
-    }
-
-    addItem(item: InstanceAddForm): Observable<AddInstanceResponseDto> {
-        return this.httpClient
-            .post<AddInstanceResponseDto>(
-                this.itemsUrl,
-                item,
                 {
                     headers: (new HttpHeaders())
                         .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),

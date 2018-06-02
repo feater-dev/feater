@@ -1,5 +1,5 @@
 export interface GetUserResponseDto {
-    _id: string;
+    id: string;
     name: string;
     googleProfile?: {
         emailAddress: string;

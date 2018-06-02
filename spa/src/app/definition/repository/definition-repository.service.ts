@@ -3,8 +3,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 
-import {GetDefinitionResponseDto, AddDefinitionResponseDto} from '../definition-response-dtos.model';
-import {DefinitionAddForm} from '../definition-add-form.model';
+import {GetDefinitionResponseDto} from '../definition-response-dtos.model';
 
 
 @Injectable()
@@ -31,18 +30,6 @@ export class DefinitionRepositoryService {
         return this.httpClient
             .get<GetDefinitionResponseDto>(
                 `${this.itemsUrl}/${id}`,
-                {
-                    headers: (new HttpHeaders())
-                        .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),
-                }
-            );
-    }
-
-    addItem(item: DefinitionAddForm): Observable<AddDefinitionResponseDto> {
-        return this.httpClient
-            .post<AddDefinitionResponseDto>(
-                this.itemsUrl,
-                item,
                 {
                     headers: (new HttpHeaders())
                         .set('x-feat-api-token', `Bearer ${localStorage.getItem('token')}`),

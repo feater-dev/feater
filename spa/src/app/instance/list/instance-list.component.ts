@@ -37,7 +37,7 @@ export class InstanceListComponent implements OnInit {
     }
 
     goToDetail(item) {
-        this.router.navigate(['/instance', item._id]);
+        this.router.navigate(['/instance', item.id]);
     }
 
     private getItems() {

@@ -32,11 +32,11 @@ export class InstanceDetailComponent implements OnInit {
     }
 
     goToProjectDetails() {
-        this.router.navigate(['/project', this.item.definition.project._id]);
+        this.router.navigate(['/project', this.item.definition.project.id]);
     }
 
     goToDefinitionDetails() {
-        this.router.navigate(['/definition', this.item.definition._id]);
+        this.router.navigate(['/definition', this.item.definition.id]);
     }
 
     private getItem() {
@@ -52,7 +52,7 @@ export class InstanceDetailComponent implements OnInit {
 
     private mapItem(item: GetInstanceResponseDto): MappedInstance {
         return {
-            _id: item._id,
+            id: item.id,
             name: item.name,
             definition: item.definition,
             environmentalVariables: item.environmentalVariables,

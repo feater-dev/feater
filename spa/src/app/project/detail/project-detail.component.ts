@@ -31,7 +31,7 @@ export class ProjectDetailComponent implements OnInit {
     }
 
     goToAddDefinition() {
-        this.router.navigate(['/project', this.item._id, 'definition', 'add']);
+        this.router.navigate(['/project', this.item.id, 'definition', 'add']);
     }
 
     private getItem() {

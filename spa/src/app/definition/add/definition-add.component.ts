@@ -1,6 +1,9 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
+import gql from 'graphql-tag';
+import {Apollo} from 'apollo-angular';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
 
 import {
     DefinitionAddForm,
@@ -10,7 +13,6 @@ import {
     DefinitionAddFormSummaryItemFormElement, DefinitionAddFormConfigFormElement
 } from '../../definition/definition-add-form.model';
 import {GetProjectResponseDto} from '../../project/project-response-dtos.model';
-import {AddDefinitionResponseDto} from '../definition-response-dtos.model';
 
 
 @Component({
@@ -30,7 +32,8 @@ export class DefinitionAddComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         @Inject('repository.definition') private repository,
-        @Inject('repository.project') private projectRepository
+        @Inject('repository.project') private projectRepository,
+        private apollo: Apollo,
     ) {
         this.item = {
             projectId: '',
@@ -58,13 +61,16 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     addItem(): void {
-        this.repository
-            .addItem(this.mapItem())
-            .subscribe(
-                (addDefinitionResponseDto: AddDefinitionResponseDto) => {
-                    this.router.navigate(['/definition', addDefinitionResponseDto.id]);
-                }
-            );
+        this.apollo.mutate({
+            mutation: gql`${this.getCreateDefinitionMutation()}`,
+        }).subscribe(
+            ({data}) => {
+                this.router.navigate(['/definition', data.createDefinition.id]);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }
 
     addSource(): void {
@@ -81,7 +87,7 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteSource(source: DefinitionAddFormSourceFormElement): void {
-        var index = this.item.config.sources.indexOf(source);
+        const index = this.item.config.sources.indexOf(source);
         if (-1 !== index) {
             this.item.config.sources.splice(index, 1);
         }
@@ -97,7 +103,7 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteProxiedPort(proxiedPort: DefinitionAddFormProxiedPortFormElement): void {
-        var index = this.item.config.proxiedPorts.indexOf(proxiedPort);
+        const index = this.item.config.proxiedPorts.indexOf(proxiedPort);
         if (-1 !== index) {
             this.item.config.proxiedPorts.splice(index, 1);
         }
@@ -111,7 +117,7 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteEnvironmentalVariable(environmentalVariable: DefinitionAddFormEnvironmentalVariableFormElement): void {
-        var index = this.item.config.environmentalVariables.indexOf(environmentalVariable);
+        const index = this.item.config.environmentalVariables.indexOf(environmentalVariable);
         if (-1 !== index) {
             this.item.config.environmentalVariables.splice(index, 1);
         }
@@ -125,7 +131,7 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteSummaryItem(summaryItem: DefinitionAddFormSummaryItemFormElement): void {
-        var index = this.item.config.summaryItems.indexOf(summaryItem);
+        const index = this.item.config.summaryItems.indexOf(summaryItem);
         if (-1 !== index) {
             this.item.config.summaryItems.splice(index, 1);
         }
@@ -144,7 +150,7 @@ export class DefinitionAddComponent implements OnInit {
         this.switchMode('form');
     }
 
-    mapItem(): Object {
+    mapItem(): any {
         const mappedItem = {
             projectId: this.item.projectId,
             name: this.item.name,
@@ -204,7 +210,20 @@ export class DefinitionAddComponent implements OnInit {
         return mappedJsonConfig;
     }
 
-    private getProject(): void {
+    protected getCreateDefinitionMutation(): string {
+        const mutation = {
+            mutation: {
+                createDefinition: {
+                    __args: this.mapItem(),
+                    id: true,
+                }
+            }
+        };
+
+        return jsonToGraphQLQuery(mutation);
+    }
+
+    protected getProject(): void {
         this.route.params.pipe(
             switchMap(
                 (params: Params) => this.projectRepository.getItem(params['id'])
@@ -212,7 +231,7 @@ export class DefinitionAddComponent implements OnInit {
             .subscribe(
                 (item: GetProjectResponseDto) => {
                     this.project = item;
-                    this.item.projectId = item._id;
+                    this.item.projectId = item.id;
                 }
             );
 

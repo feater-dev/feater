@@ -7,6 +7,7 @@ import {map} from 'rxjs/operators';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 
+
 interface Definition {
     id: string;
     project: {
@@ -78,6 +79,17 @@ export class DefinitionDetailComponent implements OnInit {
                                                 type
                                                 name
                                             }
+                                            beforeBuildTasks {
+                                                ... on CopyBeforeBuildTask {
+                                                        type
+                                                        sourceRelativePath
+                                                        destinationRelativePath
+                                                    }
+                                                ... on InterpolateBeforeBuildTask {
+                                                        type
+                                                        relativePath
+                                                    }
+                                            }
                                         }
                                         proxiedPorts {
                                             id
@@ -94,7 +106,7 @@ export class DefinitionDetailComponent implements OnInit {
                                             name
                                             text
                                         }
-                                        environmentalVariables {
+                                        envVariables {
                                             name
                                             value
                                         }
@@ -108,8 +120,6 @@ export class DefinitionDetailComponent implements OnInit {
                         .valueChanges
                         .pipe(
                             map(result => {
-                                console.log(result);
-
                                 return result.data.definition;
                             })
                         );
@@ -123,15 +133,3 @@ export class DefinitionDetailComponent implements OnInit {
             );
     }
 }
-
-// beforeBuildTasks {
-//     ... on CopyBeforeBuildTask {
-//             type
-//                 sourceRelativePath
-//             destinationRelativePath
-//         }
-//     ... on InterpolateBeforeBuildTask {
-//             type
-//                 relativePath
-//         }
-// }

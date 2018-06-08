@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import {spawn} from 'child_process';
 import {Component} from '@nestjs/common';
-import {EnvironmentalVariablesSet} from '../environmental-variables-set';
+import {EnvVariablesSet} from '../env-variables-set';
 import {JobInterface, BuildJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
@@ -50,23 +50,23 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
             }
             dockerComposeArgs.push(['up', '-d', '--no-color']);
 
-            const commonEnvironmentalVariables = new EnvironmentalVariablesSet();
+            const commonEnvVariables = new EnvVariablesSet();
 
             // TODO Move pattern to config. Move value to build class.
-            commonEnvironmentalVariables.add('COMPOSE_PROJECT_NAME', `featbuild${build.hash}`);
+            commonEnvVariables.add('COMPOSE_PROJECT_NAME', `featbuild${build.hash}`);
             // TODO Move to config.
-            commonEnvironmentalVariables.add('COMPOSE_HTTP_TIMEOUT', '5000');
+            commonEnvVariables.add('COMPOSE_HTTP_TIMEOUT', '5000');
             // TODO Move to config.
-            commonEnvironmentalVariables.add('PATH', '/usr/local/bin/');
+            commonEnvVariables.add('PATH', '/usr/local/bin/');
 
             const dockerCompose = spawn(
                 'docker-compose',
                 _.flatten(dockerComposeArgs),
                 {
                     cwd: envDirAbsolutePath,
-                    env: EnvironmentalVariablesSet.merge(
-                        build.environmentalVariables,
-                        commonEnvironmentalVariables,
+                    env: EnvVariablesSet.merge(
+                        build.envVariables,
+                        commonEnvVariables,
                     ).toMap(),
                 },
             );

@@ -1,8 +1,8 @@
 export interface GetDefinitionResponseDto {
-    id: string;
+    _id: string;
     name: string;
     project: {
-        id: string;
+        _id: string;
         name: string;
     };
     config: Object;

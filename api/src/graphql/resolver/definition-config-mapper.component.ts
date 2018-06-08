@@ -5,7 +5,7 @@ import {SourceReferenceTypeInterface} from '../type/nested/definition-config/sou
 import {ProxiedPortTypeInterface} from '../type/nested/definition-config/proxied-port-type.interface';
 import {SummaryItemTypeInterface} from '../type/nested/definition-config/summary-item-type.interface';
 import {ComposeFileTypeInterface} from '../type/nested/definition-config/compose-file-type.interface';
-import {EnvironmentalVariableTypeInterface} from '../type/nested/definition-config/environmental-variable-type.interface';
+import {EnvVariableTypeInterface} from '../type/nested/definition-config/env-variable-type.interface';
 import {
     BeforeBuildTaskTypeInterface,
     CopyBeforeBuildTaskTypeInterface,
@@ -32,11 +32,11 @@ export class DefinitionConfigMapper {
             mappedSummaryItems.push(this.mapSummaryItem(summaryItem));
         }
 
-        const mappedEnvironmentalVariables: EnvironmentalVariableTypeInterface[] = [];
-        if (config.environmentalVariables) {
-            for (const environmentalVariable of config.environmentalVariables) {
-                mappedEnvironmentalVariables.push(
-                    this.mapEnvironmentalVariable(environmentalVariable),
+        const mappedEnvVariables: EnvVariableTypeInterface[] = [];
+        if (config.envVariables) {
+            for (const envVariable of config.envVariables) {
+                mappedEnvVariables.push(
+                    this.mapEnvVariable(envVariable),
                 );
             }
         }
@@ -54,7 +54,7 @@ export class DefinitionConfigMapper {
             sources: mappedSources,
             proxiedPorts: mappedProxiedPorts,
             summaryItems: mappedSummaryItems,
-            environmentalVariables: mappedEnvironmentalVariables,
+            envVariables: mappedEnvVariables,
             composeFiles: mappedComposeFiles,
         } as ConfigTypeInterface;
     }
@@ -121,8 +121,8 @@ export class DefinitionConfigMapper {
         } as SummaryItemTypeInterface;
     }
 
-    protected mapEnvironmentalVariable(environmentalVariable: any): EnvironmentalVariableTypeInterface {
-        return environmentalVariable as EnvironmentalVariableTypeInterface;
+    protected mapEnvVariable(envVariable: any): EnvVariableTypeInterface {
+        return envVariable as EnvVariableTypeInterface;
     }
 
     protected mapComposeFile(composeFile: any): ComposeFileTypeInterface {

@@ -10,7 +10,7 @@ import {ExtractSourceJobExecutor} from './job/extract-source.job';
 import {GetContainerIdsJobExecutor} from './job/get-container-ids.job';
 import {InterpolateBeforeBuildTaskJobExecutor} from './job/interpolate-before-build-task.job';
 import {ParseDockerComposeJobExecutor} from './job/parse-docker-compose.job';
-import {PrepareEnvironmentalVariablesJobExecutor} from './job/prepare-environmental-variables.job';
+import {PrepareEnvVariablesJobExecutor} from './job/prepare-env-variables.job';
 import {PreparePortDomainsJobExecutor} from './job/prepare-port-domains.job';
 import {PrepareSummaryItemsJobExecutor} from './job/prepare-summary-items.job';
 import {ProxyPortDomainsJobExecutor} from './job/proxy-port-domains.job';
@@ -31,7 +31,7 @@ export class JobExecutorsCollection {
         getContainerIdsJobExecutor: GetContainerIdsJobExecutor,
         interpolateBeforeBuildTaskJobExecutor: InterpolateBeforeBuildTaskJobExecutor,
         parseDockerComposeJobExecutor: ParseDockerComposeJobExecutor,
-        prepareEnvironmentalVariablesJobExecutor: PrepareEnvironmentalVariablesJobExecutor,
+        prepareEnvVariablesJobExecutor: PrepareEnvVariablesJobExecutor,
         preparePortDomainsJobExecutor: PreparePortDomainsJobExecutor,
         prepareSummaryItemsJobExecutor: PrepareSummaryItemsJobExecutor,
         proxyPortDomainsJobExecutor: ProxyPortDomainsJobExecutor,
@@ -47,7 +47,7 @@ export class JobExecutorsCollection {
             getContainerIdsJobExecutor,
             interpolateBeforeBuildTaskJobExecutor,
             parseDockerComposeJobExecutor,
-            prepareEnvironmentalVariablesJobExecutor,
+            prepareEnvVariablesJobExecutor,
             preparePortDomainsJobExecutor,
             prepareSummaryItemsJobExecutor,
             proxyPortDomainsJobExecutor,

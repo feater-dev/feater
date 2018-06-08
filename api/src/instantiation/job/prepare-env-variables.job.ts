@@ -7,7 +7,7 @@ import {InterpolationHelper} from '../interpolation-helper.component';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 
-export class PrepareEnvironmentalVariablesJob implements BuildJobInterface {
+export class PrepareEnvVariablesJob implements BuildJobInterface {
 
     constructor(
         readonly build: any,
@@ -16,7 +16,7 @@ export class PrepareEnvironmentalVariablesJob implements BuildJobInterface {
 }
 
 @Component()
-export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInterface{
+export class PrepareEnvVariablesJobExecutor implements JobExecutorInterface{
 
     constructor(
         private readonly config: Config,
@@ -26,7 +26,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
     ) {}
 
     supports(job: JobInterface): boolean {
-        return (job instanceof PrepareEnvironmentalVariablesJob);
+        return (job instanceof PrepareEnvVariablesJob);
     }
 
     execute(job: JobInterface, data: any): Promise<any> {
@@ -34,7 +34,7 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
             throw new Error();
         }
 
-        const buildJob = job as PrepareEnvironmentalVariablesJob;
+        const buildJob = job as PrepareEnvVariablesJob;
         const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
         const { build } = buildJob;
 
@@ -43,8 +43,8 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
             _.each(
                 build.sources,
                 (source, sourceId) => {
-                    build.environmentalVariables.add(`FEAT__BUILD_PATH__${sourceId.toUpperCase()}`, source.fullBuildPath);
-                    build.environmentalVariables.add(`FEAT__VOLUME_PATH__${sourceId.toUpperCase()}`, source.fullBuildHostPath);
+                    build.envVariables.add(`FEAT__BUILD_PATH__${sourceId.toUpperCase()}`, source.fullBuildPath);
+                    build.envVariables.add(`FEAT__VOLUME_PATH__${sourceId.toUpperCase()}`, source.fullBuildHostPath);
                 },
             );
 
@@ -52,29 +52,29 @@ export class PrepareEnvironmentalVariablesJobExecutor implements JobExecutorInte
             _.each(
                 build.featVariables,
                 (value, name) => {
-                    build.environmentalVariables.add(`FEAT__${name.replace(/\./g, '__').toUpperCase()}`, value);
+                    build.envVariables.add(`FEAT__${name.replace(/\./g, '__').toUpperCase()}`, value);
                 },
             );
 
             logger.info('Setting environmental variables passed throuh build definition configuration.');
             _.each(
-                build.config.environmentalVariables,
-                (environmentalVariable) => {
-                    build.environmentalVariables.add(
-                        environmentalVariable.name,
-                        this.interpolationHelper.interpolateText(environmentalVariable.value, build),
+                build.config.envVariables,
+                (envVariable) => {
+                    build.envVariables.add(
+                        envVariable.name,
+                        this.interpolationHelper.interpolateText(envVariable.value, build),
                     );
                 },
             );
 
             logger.debug(
                 'Environmental variables set.',
-                { environmentalVariablesList: JSON.stringify(build.environmentalVariables.toMap()) },
+                { envVariablesList: JSON.stringify(build.envVariables.toMap()) },
             );
 
             logger.info('Persisting environmental variables.');
             this.instanceRepository
-                .updateEnvironmentalVariables(build)
+                .updateEnvVariables(build)
                 .then(resolve);
         });
     }

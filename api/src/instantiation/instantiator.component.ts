@@ -13,7 +13,7 @@ import {DownloadSourceJob} from './job/download-source.job';
 import {ExtractSourceJob} from './job/extract-source.job';
 import {ParseDockerComposeJob} from './job/parse-docker-compose.job';
 import {PreparePortDomainsJob} from './job/prepare-port-domains.job';
-import {PrepareEnvironmentalVariablesJob} from './job/prepare-environmental-variables.job';
+import {PrepareEnvVariablesJob} from './job/prepare-env-variables.job';
 import {PrepareSummaryItemsJob} from './job/prepare-summary-items.job';
 import {RunDockerComposeJob} from './job/run-docker-compose.job';
 import {GetContainerIdsJob} from './job/get-container-ids.job';
@@ -87,7 +87,7 @@ export class Instantiator {
         stagesList.addSequentialStage('beforeBuildTasks', ['parseCompose'], beforeBuildJobs);
 
         stagesList.addSequentialStage('buildAndRun', ['beforeBuildTasks'], [
-            new PrepareEnvironmentalVariablesJob(build),
+            new PrepareEnvVariablesJob(build),
             new PrepareSummaryItemsJob(build),
             new RunDockerComposeJob(build),
             new GetContainerIdsJob(build),

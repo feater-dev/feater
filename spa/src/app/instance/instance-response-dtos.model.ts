@@ -15,7 +15,7 @@ interface ProxiedPort {
     port: number;
 }
 
-export interface EnvironmentalVariable {
+export interface EnvVariable {
     key: string;
     value: string;
 }
@@ -30,7 +30,7 @@ export interface GetInstanceResponseDto {
     name: string;
     definition: DefinitionReference;
     summaryItems?: SummaryItem[];
-    environmentalVariables: EnvironmentalVariable[];
+    envVariables: EnvVariable[];
     proxiedPorts?: {
         [key: string]: ProxiedPort
     };

@@ -3,7 +3,6 @@ import {InstanceTypeInterface} from '../type/instance-type.interface';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {InstanceInterface} from '../../persistence/interface/instance.interface';
 import {CreateInstanceInputTypeInterface} from '../input-type/create-instance-input-type.interface';
-import {CreateInstanceRequestDto} from '../../api/dto/request/create-instance-request.dto';
 import {RemoveInstanceInputTypeInterface} from '../input-type/remove-instance-input-type.interface';
 import {Instantiator} from '../../instantiation/instantiator.component';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
@@ -31,11 +30,11 @@ export class InstanceResolverFactory {
         created_at_desc: {createdAt: 'desc', _id: 'desc'},
     };
 
-    public getListResolver(queryExtractor?: (object: object) => object): (object: object, args: object) => Promise<InstanceTypeInterface[]> {
-        return async (object: object, args: object): Promise<InstanceTypeInterface[]> => {
+    public getListResolver(queryExtractor?: (obj: any, args: any) => any): (obj: any, args: any) => Promise<InstanceTypeInterface[]> {
+        return async (obj: any, args: any): Promise<InstanceTypeInterface[]> => {
             const resolverListOptions = args as ResolverPaginationArgumentsInterface;
             const criteria = this.applyFilterArgumentToCriteria(
-                queryExtractor ? queryExtractor(object) : {},
+                queryExtractor ? queryExtractor(obj, args) : {},
                 args as ResolverInstanceFilterArgumentsInterface,
             );
             const instances = await this.instanceRepository.find(
@@ -53,10 +52,10 @@ export class InstanceResolverFactory {
         };
     }
 
-    public getItemResolver(idExtractor: (any) => string): (string) => Promise<InstanceTypeInterface> {
-        return async (object: any): Promise<InstanceTypeInterface> => {
+    public getItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, args: any) => Promise<InstanceTypeInterface> {
+        return async (obj: any, args: any): Promise<InstanceTypeInterface> => {
             return this.mapPersistentModelToTypeModel(
-                await this.instanceRepository.findById(idExtractor(object)),
+                await this.instanceRepository.findById(idExtractor(obj, args)),
             );
         };
     }
@@ -64,7 +63,7 @@ export class InstanceResolverFactory {
     public getCreateItemResolver(): (_: any, createInstanceInput: CreateInstanceInputTypeInterface) => Promise<InstanceTypeInterface> {
         return async (_: any, createInstanceInput: CreateInstanceInputTypeInterface): Promise<InstanceTypeInterface> => {
             // TODO Add validation.
-            const instance = await this.instanceRepository.create(createInstanceInput as CreateInstanceRequestDto);
+            const instance = await this.instanceRepository.create(createInstanceInput);
             const definition = await this.definitionRepository.findByIdOrFail(instance.definitionId);
             const hash = nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 8);
 
@@ -102,10 +101,16 @@ export class InstanceResolverFactory {
     }
 
     protected mapPersistentModelToTypeModel(instance: InstanceInterface): InstanceTypeInterface {
-        return {
+        const mapped = {
             id: instance._id,
             name: instance.name,
             definitionId: instance.definitionId,
+            services: instance.services,
+            summaryItems: instance.summaryItems,
+            envVariables: instance.envVariables,
+            proxiedPorts: instance.proxiedPorts,
         } as InstanceTypeInterface;
+
+        return mapped;
     }
 }

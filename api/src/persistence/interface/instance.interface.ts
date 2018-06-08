@@ -8,10 +8,17 @@ export interface InstanceInterface extends Document {
     readonly services: any;
     readonly summaryItems: {
         readonly name: string;
+        readonly text: string;
+    }[];
+    readonly envVariables: {
+        readonly name: string;
         readonly value: string;
     }[];
-    readonly environmentalVariables: {
-        readonly key: string;
-        readonly value: string;
+    readonly proxiedPorts: {
+        readonly id: string;
+        readonly serviceId: string;
+        readonly name: string;
+        readonly port: number;
+        readonly proxyDomain: string;
     }[];
 }

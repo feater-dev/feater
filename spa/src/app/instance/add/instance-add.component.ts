@@ -1,11 +1,20 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
+
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 
 import {InstanceAddForm} from '../../instance/instance-add-form.model';
-import {GetDefinitionResponseDto} from '../../definition/definition-response-dtos.model';
+
+
+interface Definition {
+    id: string;
+}
+
+interface Query {
+    definition: Definition;
+}
 
 
 @Component({
@@ -16,8 +25,8 @@ import {GetDefinitionResponseDto} from '../../definition/definition-response-dto
 export class InstanceAddComponent implements OnInit {
 
     protected readonly mutation = gql`
-        mutation ($name: String!) {
-            createProject(name: $name) {
+        mutation ($definitionId: String!, $name: String!) {
+            createInstance(definitionId: $definitionId, name: $name) {
                 id
             }
         }
@@ -25,7 +34,9 @@ export class InstanceAddComponent implements OnInit {
 
     item: InstanceAddForm;
 
-    definition: GetDefinitionResponseDto;
+    definition: Definition;
+
+    errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -35,7 +46,6 @@ export class InstanceAddComponent implements OnInit {
         private apollo: Apollo,
     ) {
         this.item = {
-            definitionId: '',
             name: ''
         };
     }
@@ -52,6 +62,7 @@ export class InstanceAddComponent implements OnInit {
         this.apollo.mutate({
             mutation: this.mutation,
             variables: {
+                definitionId: this.definition.id,
                 name: this.item.name,
             },
         }).subscribe(
@@ -67,12 +78,30 @@ export class InstanceAddComponent implements OnInit {
     private getDefinition() {
         this.route.params.pipe(
             switchMap(
-                (params: Params) => this.definitionRepository.getItem(params['id'])
+                (params: Params) => {
+                    return this.apollo
+                        .watchQuery<Query>({
+                            query: gql`query ($id: String!) {
+                                definition(id: $id) {
+                                    id
+                                    name
+                                }
+                            }`,
+                            variables: {
+                                id: params['id'],
+                            },
+                        })
+                        .valueChanges
+                        .pipe(
+                            map(result => {
+                                return result.data.definition;
+                            })
+                        );
+                }
             ))
             .subscribe(
-                (item: GetDefinitionResponseDto) => {
-                    this.definition = item;
-                    this.item.definitionId = item.id;
+                (definition: Definition) => {
+                    this.definition = definition;
                 }
             );
 

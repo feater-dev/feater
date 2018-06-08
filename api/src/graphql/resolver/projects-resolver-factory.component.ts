@@ -3,12 +3,11 @@ import {ProjectRepository} from '../../persistence/repository/project.repository
 import {ProjectTypeInterface} from '../type/project-type.interface';
 import {ProjectInterface} from '../../persistence/interface/project.interface';
 import {CreateProjectInputTypeInterface} from '../input-type/create-project-input-type.interface';
-import {CreateProjectRequestDto} from '../../api/dto/request/create-project-request.dto';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverProjectFilterArgumentsInterface} from './filter-argument/resolver-project-filter-arguments.interface';
 import * as escapeStringRegexp from 'escape-string-regexp';
-import {ResolverInstanceFilterArgumentsInterface} from './filter-argument/resolver-instance-filter-arguments.interface';
+
 
 @Component()
 export class ProjectsResolverFactory {
@@ -49,10 +48,10 @@ export class ProjectsResolverFactory {
         };
     }
 
-    public getItemResolver(idExtractor: (any) => string): (string) => Promise<ProjectTypeInterface> {
-        return async (object: any): Promise<ProjectTypeInterface> => {
+    public getItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, args: any) => Promise<ProjectTypeInterface> {
+        return async (obj: any, args: any): Promise<ProjectTypeInterface> => {
             return this.mapPersistentModelToTypeModel(
-                await this.projectRepository.findById(idExtractor(object)),
+                await this.projectRepository.findById(idExtractor(obj, args)),
             );
         };
     }
@@ -60,7 +59,7 @@ export class ProjectsResolverFactory {
     public getCreateItemResolver(): (_: any, createProjectInput: CreateProjectInputTypeInterface) => Promise<ProjectTypeInterface> {
         return async (_: any, createProjectInput: CreateProjectInputTypeInterface): Promise<ProjectTypeInterface> => {
             // TODO Add validation.
-            const project = await this.projectRepository.create(createProjectInput as CreateProjectRequestDto);
+            const project = await this.projectRepository.create(createProjectInput);
 
             return this.mapPersistentModelToTypeModel(project);
         };

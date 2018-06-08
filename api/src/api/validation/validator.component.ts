@@ -1,12 +1,15 @@
 import {Component} from '@nestjs/common';
-import { Validator as JsonSchemaValidator} from 'jsonschema';
-import {CreateDefinitionRequestDto} from '../dto/request/create-definition-request.dto';
-import {CreateProjectRequestDto} from '../dto/request/create-project-request.dto';
-import {CreateInstanceRequestDto} from '../dto/request/create-instance-request.dto';
+import {Validator as JsonSchemaValidator} from 'jsonschema';
+
 import {createProjectDtoJsonSchema} from './schema/api/create-project-dto.json-schema';
 import {createDefinitionDtoJsonSchema} from './schema/api/create-definition-dto.json-schema';
 import {createInstanceDtoJsonSchema} from './schema/api/create-instance-dto.json-schema';
 import {definitionConfigJsonSchema} from './schema/definition-config.json-schema';
+
+import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/create-definition-input-type.interface';
+import {CreateInstanceInputTypeInterface} from '../../graphql/input-type/create-instance-input-type.interface';
+import {CreateProjectInputTypeInterface} from '../../graphql/input-type/create-project-input-type.interface';
+
 
 @Component()
 export class Validator {
@@ -17,16 +20,16 @@ export class Validator {
         this.jsonSchemaValidator = new JsonSchemaValidator();
     }
 
-    async validateCreateProjectDto(createProjectDto: CreateProjectRequestDto): Promise<any> {
-        return await this.validate(createProjectDto, createProjectDtoJsonSchema);
+    async validateCreateProjectInputType(createProjectInputType: CreateProjectInputTypeInterface): Promise<any> {
+        return await this.validate(createProjectInputType, createProjectDtoJsonSchema);
     }
 
-    async validateCreateDefinitionDto(createDefinitionDto: CreateDefinitionRequestDto): Promise<any> {
-        return await this.validate(createDefinitionDto, createDefinitionDtoJsonSchema);
+    async validateCreateDefinitionInputType(createDefinitionInputType: CreateDefinitionInputTypeInterface): Promise<any> {
+        return await this.validate(createDefinitionInputType, createDefinitionDtoJsonSchema);
     }
 
-    async validateCreateInstanceDto(createInstanceDto: CreateInstanceRequestDto): Promise<any> {
-        return await this.validate(createInstanceDto, createInstanceDtoJsonSchema);
+    async validateCreateInstanceInputType(createInstanceInputType: CreateInstanceInputTypeInterface): Promise<any> {
+        return await this.validate(createInstanceInputType, createInstanceDtoJsonSchema);
     }
 
     async validateDefinitionConfig(definitionConfig: any): Promise<any> {

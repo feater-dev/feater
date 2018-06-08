@@ -31,7 +31,7 @@ import {
     DefinitionAddProxiedPortFormElementComponent
 } from './definition/add/form-element/definition-add.proxied-port-form-element.component';
 import {
-    DefinitionAddEnvironmentalVariableFormElementComponent
+    DefinitionAddEnvVariableFormElementComponent
 } from './definition/add/form-element/definition-add.environmental-variable-form-element.component';
 import {
     DefinitionAddSummaryItemFormElementComponent
@@ -55,7 +55,8 @@ import {ProjectRepositoryService} from './project/repository/project-repository.
 import {DefinitionRepositoryService} from './definition/repository/definition-repository.service';
 import {InstanceRepositoryService} from './instance/repository/instance-repository.service';
 import {AuthHttpClient} from './api/auth-http-client.service';
-import {InMemoryCache} from 'apollo-cache-inmemory';
+import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
+
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
@@ -84,7 +85,7 @@ const appRoutes: Routes = [
         DefinitionAddBeforeBuildTaskCopyFormElementComponent,
         DefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
         DefinitionAddProxiedPortFormElementComponent,
-        DefinitionAddEnvironmentalVariableFormElementComponent,
+        DefinitionAddEnvVariableFormElementComponent,
         DefinitionAddSummaryItemFormElementComponent,
         DefinitionAddComposeFileFormElementComponent,
         DefinitionDetailComponent,
@@ -117,9 +118,26 @@ export class AppModule {
         apollo: Apollo,
         httpLink: HttpLink
     ) {
+        const introspectionQueryResultData = {
+            __schema: {
+                types: [
+                    {
+                        kind: 'UNION',
+                        name: 'BeforeBuildTask',
+                        possibleTypes: [
+                            {name: 'CopyBeforeBuildTask'},
+                            {name: 'InterpolateBeforeBuildTask'},
+                        ],
+                    },
+                ],
+            }
+        };
+
+        const fragmentMatcher = new IntrospectionFragmentMatcher({ introspectionQueryResultData });
+
         apollo.create({
             link: httpLink.create({ uri: 'http://localhost:3001/graphql-api' }),
-            cache: new InMemoryCache()
+            cache: new InMemoryCache({ fragmentMatcher }),
         });
     }
 }

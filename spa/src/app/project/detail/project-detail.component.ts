@@ -2,7 +2,19 @@ import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 
-import {GetProjectResponseDto} from '../project-response-dtos.model';
+import {map} from 'rxjs/operators';
+import gql from 'graphql-tag';
+import {Apollo} from 'apollo-angular';
+
+
+interface Project {
+    readonly id: string;
+    readonly name: string;
+}
+
+interface Query {
+    project: Project;
+}
 
 
 @Component({
@@ -12,14 +24,15 @@ import {GetProjectResponseDto} from '../project-response-dtos.model';
 })
 export class ProjectDetailComponent implements OnInit {
 
-    item: GetProjectResponseDto;
+    item: Project;
 
     errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.project') private repository
+        @Inject('repository.project') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -37,10 +50,31 @@ export class ProjectDetailComponent implements OnInit {
     private getItem() {
         this.route.params.pipe(
             switchMap(
-                (params: Params) => this.repository.getItem(params['id'])
+                (params: Params) => {
+                    return this.apollo
+                        .watchQuery<Query>({
+                            query: gql`query ($id: String!) {
+                                project(id: $id) {
+                                    id
+                                    name
+                                }
+                            }`,
+                            variables: {
+                                id: params['id'],
+                            },
+                        })
+                        .valueChanges
+                        .pipe(
+                            map(result => {
+                                return result.data.project;
+                            })
+                        );
+                }
             ))
             .subscribe(
-                (item: GetProjectResponseDto) => { this.item = item },
+                (item: Project) => {
+                    this.item = item;
+                },
                 (error) => { this.errorMessage = <any>error; }
             );
     }

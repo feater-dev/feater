@@ -4,7 +4,7 @@ export const definitionConfigJsonSchema = {
         'sources',
         'proxiedPorts',
         'composeFile',
-        'environmentalVariables',
+        'envVariables',
         'summaryItems',
     ],
     properties: {
@@ -119,7 +119,7 @@ export const definitionConfigJsonSchema = {
                 },
             },
         },
-        environmentalVariables: {
+        envVariables: {
             type: 'object',
             patternProperties: {
                 '^(?!FEAT__)[A-Z\\d_]+$': {

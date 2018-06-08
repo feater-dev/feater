@@ -1,6 +1,7 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
+
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 import {jsonToGraphQLQuery} from 'json-to-graphql-query';
@@ -9,10 +10,18 @@ import {
     DefinitionAddForm,
     DefinitionAddFormSourceFormElement,
     DefinitionAddFormProxiedPortFormElement,
-    DefinitionAddFormEnvironmentalVariableFormElement,
+    DefinitionAddFormEnvVariableFormElement,
     DefinitionAddFormSummaryItemFormElement, DefinitionAddFormConfigFormElement
 } from '../../definition/definition-add-form.model';
-import {GetProjectResponseDto} from '../../project/project-response-dtos.model';
+
+
+interface Project {
+    id: string;
+}
+
+interface Query {
+    project: Project;
+}
 
 
 @Component({
@@ -24,9 +33,11 @@ export class DefinitionAddComponent implements OnInit {
 
     item: DefinitionAddForm;
 
-    project: GetProjectResponseDto;
+    project: Project;
 
-    mode: String = 'form';
+    mode = 'form';
+
+    errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -36,12 +47,11 @@ export class DefinitionAddComponent implements OnInit {
         private apollo: Apollo,
     ) {
         this.item = {
-            projectId: '',
             name: '',
             config: {
                 sources: [],
                 proxiedPorts: [],
-                environmentalVariables: [],
+                envVariables: [],
                 composeFile: {
                     sourceId: '',
                     envDirRelativePath: '',
@@ -109,17 +119,17 @@ export class DefinitionAddComponent implements OnInit {
         }
     }
 
-    addEnvironmentalVariable(): void {
-        this.item.config.environmentalVariables.push({
+    addEnvVariable(): void {
+        this.item.config.envVariables.push({
             name: '',
             value: ''
         });
     }
 
-    deleteEnvironmentalVariable(environmentalVariable: DefinitionAddFormEnvironmentalVariableFormElement): void {
-        const index = this.item.config.environmentalVariables.indexOf(environmentalVariable);
+    deleteEnvVariable(envVariable: DefinitionAddFormEnvVariableFormElement): void {
+        const index = this.item.config.envVariables.indexOf(envVariable);
         if (-1 !== index) {
-            this.item.config.environmentalVariables.splice(index, 1);
+            this.item.config.envVariables.splice(index, 1);
         }
     }
 
@@ -152,12 +162,12 @@ export class DefinitionAddComponent implements OnInit {
 
     mapItem(): any {
         const mappedItem = {
-            projectId: this.item.projectId,
+            projectId: this.project.id,
             name: this.item.name,
             config: {
                 sources: this.item.config.sources,
                 proxiedPorts: this.item.config.proxiedPorts,
-                environmentalVariables: this.item.config.environmentalVariables,
+                envVariables: this.item.config.envVariables,
                 summaryItems: this.item.config.summaryItems,
                 composeFiles: [
                     {
@@ -180,7 +190,7 @@ export class DefinitionAddComponent implements OnInit {
         const mappedJsonConfig = {
             sources: [],
             proxiedPorts: [],
-            environmentalVariables: [],
+            envVariables: [],
             summaryItems: [],
             composeFile: null
         };
@@ -193,8 +203,8 @@ export class DefinitionAddComponent implements OnInit {
             mappedJsonConfig.proxiedPorts.push(proxiedPort);
         }
 
-        for (const environmentalVariable of jsonConfig.environmentalVariables) {
-            mappedJsonConfig.environmentalVariables.push(environmentalVariable);
+        for (const envVariable of jsonConfig.envVariables) {
+            mappedJsonConfig.envVariables.push(envVariable);
         }
 
         for (const summaryItem of jsonConfig.summaryItems) {
@@ -226,13 +236,32 @@ export class DefinitionAddComponent implements OnInit {
     protected getProject(): void {
         this.route.params.pipe(
             switchMap(
-                (params: Params) => this.projectRepository.getItem(params['id'])
+                (params: Params) => {
+                    return this.apollo
+                        .watchQuery<Query>({
+                            query: gql`query ($id: String!) {
+                                project(id: $id) {
+                                    id
+                                    name
+                                }
+                            }`,
+                            variables: {
+                                id: params['id'],
+                            },
+                        })
+                        .valueChanges
+                        .pipe(
+                            map(result => {
+                                return result.data.project;
+                            })
+                        );
+                }
             ))
             .subscribe(
-                (item: GetProjectResponseDto) => {
+                (item: Project) => {
                     this.project = item;
-                    this.item.projectId = item.id;
-                }
+                },
+                (error) => { this.errorMessage = <any>error; }
             );
 
     }

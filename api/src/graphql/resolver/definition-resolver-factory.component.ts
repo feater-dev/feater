@@ -4,7 +4,6 @@ import {DefinitionRepository} from '../../persistence/repository/definition.repo
 import {DefinitionConfigMapper} from './definition-config-mapper.component';
 import {DefinitionInterface} from '../../persistence/interface/definition.interface';
 import {CreateDefinitionInputTypeInterface} from '../input-type/create-definition-input-type.interface';
-import {CreateDefinitionRequestDto} from '../../api/dto/request/create-definition-request.dto';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverProjectFilterArgumentsInterface} from './filter-argument/resolver-project-filter-arguments.interface';
@@ -61,7 +60,7 @@ export class DefinitionResolverFactory {
     public getCreateItemResolver(): (_: any, createDefinitionInput: CreateDefinitionInputTypeInterface) => Promise<DefinitionTypeInterface> {
         return async (_: any, createDefinitionInput: CreateDefinitionInputTypeInterface): Promise<DefinitionTypeInterface> => {
             // TODO Add validation.
-            const definition = await this.definitionRepository.create(createDefinitionInput as CreateDefinitionRequestDto);
+            const definition = await this.definitionRepository.create(createDefinitionInput);
 
             return this.mapPersistentModelToTypeModel(definition);
         };

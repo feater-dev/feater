@@ -3,7 +3,7 @@ export const typeDefsProvider = {
     useValue: `
         scalar JSON
 
-        schema {
+         {
             query: Query
             mutation: Mutation
         }
@@ -15,12 +15,18 @@ export const typeDefsProvider = {
                 sortKey: String
                 name: String
             ): [User!]!
+
             projects(
                 limit: Int
                 offset: Int
                 sortKey: String
                 name: String
             ): [Project!]!
+
+            project(
+                id: String!
+            ): Project!
+
             definitions(
                 limit: Int
                 offset: Int
@@ -28,9 +34,11 @@ export const typeDefsProvider = {
                 name: String
                 projectId: String
             ): [Definition!]!
+
             definition(
                 id: String!
             ): Definition!
+
             instances(
                 limit: Int
                 offset: Int
@@ -39,21 +47,25 @@ export const typeDefsProvider = {
                 projectId: String
                 definitionId: String
             ): [Instance!]!
+
+            instance(
+                id: String!
+            ): Instance!
         }
 
         input DefinitionConfigInput {
-            sources: [DefinitionSourceInput!]!
-            proxiedPorts: [DefinitionProxiedPortInput!]!
-            summaryItems: [DefinitionSummaryItemInput!]!
-            environmentalVariables: [DefinitionEnvironmentalVariableInput!]!
-            composeFiles: [DefinitionComposeFileInput!]!
+            sources: [SourceInput!]!
+            proxiedPorts: [ProxiedPortInput!]!
+            summaryItems: [SummaryItemInput!]!
+            envVariables: [EnvVariableInput!]!
+            composeFiles: [ComposeFileInput!]!
         }
 
-        input DefinitionSourceInput {
+        input SourceInput {
             id: String!
             type: String!
             name: String!
-            reference: DefinitionSourceReferenceInput!
+            reference: SourceReferenceInput!
             beforeBuildTasks: [BeforeBuildTaskInput!]!
         }
 
@@ -64,29 +76,29 @@ export const typeDefsProvider = {
             relativePath: String
         }
 
-        input DefinitionSourceReferenceInput {
+        input SourceReferenceInput {
             type: String!
             name: String!
         }
 
-        input DefinitionProxiedPortInput {
+        input ProxiedPortInput {
             id: String!
             serviceId: String!
             port: Int!
             name: String!
         }
 
-        input DefinitionSummaryItemInput {
+        input SummaryItemInput {
             name: String!
             text: String!
         }
 
-        input DefinitionEnvironmentalVariableInput {
+        input EnvVariableInput {
             name: String!
             value: String!
         }
 
-        input DefinitionComposeFileInput {
+        input ComposeFileInput {
             sourceId: String!
             envDirRelativePath: String!
             composeFileRelativePaths: [String!]!
@@ -159,18 +171,18 @@ export const typeDefsProvider = {
         }
 
         type DefinitionConfig {
-            sources: [DefinitionSource!]!
-            proxiedPorts: [DefinitionProxiedPort!]!
-            summaryItems: [DefinitionSummaryItem!]!
-            environmentalVariables: [DefinitionEnvironmentalVariable!]!
-            composeFiles: [DefinitionComposeFile!]!
+            sources: [Source!]!
+            proxiedPorts: [ProxiedPort!]!
+            summaryItems: [SummaryItem!]!
+            envVariables: [EnvVariable!]!
+            composeFiles: [ComposeFile!]!
         }
 
-        type DefinitionSource {
+        type Source {
             id: String!
             type: String!
             name: String!
-            reference: DefinitionSourceReference!
+            reference: SourceReference!
             beforeBuildTasks: [BeforeBuildTask!]!
         }
 
@@ -187,38 +199,68 @@ export const typeDefsProvider = {
             relativePath: String!
         }
 
-        type DefinitionSourceReference {
+        type SourceReference {
             type: String!
             name: String!
         }
 
-        type DefinitionProxiedPort {
+        type ProxiedPort {
             id: String!
             serviceId: String!
             port: Int!
             name: String!
         }
 
-        type DefinitionSummaryItem {
+        type SummaryItem {
             name: String!
             text: String!
         }
 
-        type DefinitionEnvironmentalVariable {
+        type EnvVariable {
             name: String!
             value: String!
         }
 
-        type DefinitionComposeFile {
+        type ComposeFile {
             sourceId: String!
             envDirRelativePath: String!
             composeFileRelativePaths: [String!]!
+        }
+
+        type InstanceService {
+            id: String!
+            cleanId: String!
+            containerNamePrefix: String!
+            containerId: String!
+            ipAddress: String!
+        }
+
+        type InstanceEnvVariable {
+            name: String!
+            value: String!
+        }
+
+        type InstanceProxiedPort {
+            id: String!
+            serviceId: String!
+            name: String!
+            port: Int!
+            proxyDomain: String!
+        }
+
+        type InstanceSummaryItem {
+            name: String!
+            text: String!
         }
 
         type Instance {
             id: String!
             name: String!
             definition: Definition!
+            services: [InstanceService!]!
+            envVariables: [InstanceEnvVariable!]!
+            proxiedPorts: [InstanceProxiedPort!]!
+            summaryItems: [InstanceSummaryItem!]!
         }
     `,
 };

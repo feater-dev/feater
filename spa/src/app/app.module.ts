@@ -1,3 +1,5 @@
+import {environment} from './../environments/environment';
+
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
@@ -136,7 +138,7 @@ export class AppModule {
         const fragmentMatcher = new IntrospectionFragmentMatcher({ introspectionQueryResultData });
 
         apollo.create({
-            link: httpLink.create({ uri: 'http://localhost:3001/graphql-api' }),
+            link: httpLink.create({ uri: environment.apiBaseUrl }),
             cache: new InMemoryCache({ fragmentMatcher }),
         });
     }

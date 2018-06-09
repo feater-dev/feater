@@ -2,8 +2,7 @@ import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
-
-import {ProjectAddForm} from '../project-add-form.model';
+import {ProjectAddForm} from './project-add-form.model';
 
 
 @Component({

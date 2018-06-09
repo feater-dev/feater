@@ -1,6 +1,12 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
+import {DefinitionAddFormEnvVariableFormElement} from '../definition-add-form.model';
 
-import {DefinitionAddFormEnvVariableFormElement} from '../../definition-add-form.model';
 
 @Component({
     selector: 'app-definition-add-environmental-variable-form-element',

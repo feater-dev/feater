@@ -1,19 +1,14 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
-import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
+import {
+    GetDefinitionListQueryDefinitionsFieldItemInterface,
+    getDefinitionListQueryGql,
+    GetDefinitionListQueryInterface
+} from './get-definition-list.query';
 
-interface Definition {
-    id: number;
-    name: string;
-}
-
-interface Query {
-    definitions: Definition[];
-}
 
 @Component({
     selector: 'app-definition-list',
@@ -22,7 +17,7 @@ interface Query {
 })
 export class DefinitionListComponent implements OnInit {
 
-    items: Observable<Definition[]>;
+    items: Observable<GetDefinitionListQueryDefinitionsFieldItemInterface[]>;
 
     constructor(
         private router: Router,
@@ -40,8 +35,8 @@ export class DefinitionListComponent implements OnInit {
 
     private getItems() {
         this.items = this.apollo
-            .watchQuery<Query>({
-                query: gql`query { definitions { id name } }`
+            .watchQuery<GetDefinitionListQueryInterface>({
+                query: getDefinitionListQueryGql
             })
             .valueChanges
             .pipe(

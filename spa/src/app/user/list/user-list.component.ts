@@ -1,25 +1,10 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
-
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
-import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
+import {getuserListQueryGql, GetUserListQueryInterface, GetUserListQueryUsersFieldItemInterface} from './get-user-list.query';
 
-interface User {
-    id: number;
-    name: string;
-    githubProfile: {
-        username: string;
-    };
-    googleProfile: {
-        emailAddress: string;
-    };
-}
-
-interface Query {
-    users: User[];
-}
 
 @Component({
     selector: 'app-user-list',
@@ -28,9 +13,7 @@ interface Query {
 })
 export class UserListComponent implements OnInit {
 
-    items: Observable<User[]>;
-
-    errorMessage: string;
+    items: Observable<GetUserListQueryUsersFieldItemInterface[]>;
 
     constructor(
         private router: Router,
@@ -44,8 +27,8 @@ export class UserListComponent implements OnInit {
 
     private getItems() {
         this.items = this.apollo
-            .watchQuery<Query>({
-                query: gql`query { users { id name githubProfile { username } googleProfile { emailAddress } } }`
+            .watchQuery<GetUserListQueryInterface>({
+                query: getuserListQueryGql,
             })
             .valueChanges
             .pipe(

@@ -1,48 +1,14 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
-
-import {MappedInstance} from '../instance.model';
-import {GetInstanceResponseDto} from '../instance-response-dtos.model';
-
 import {map} from 'rxjs/operators';
-import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
+import {
+    getInstanceDetailQueryGql,
+    GetInstanceDetailQueryInstanceFieldinterface,
+    GetInstanceDetailQueryInterface,
+} from './get-instance-detail.query';
 
-
-interface Instance {
-    readonly id: string;
-    readonly definition: {
-        readonly id: string;
-        readonly name: string;
-        readonly project: {
-            readonly id: string;
-            readonly name: string;
-        };
-    };
-    readonly hash: string;
-    readonly name: string;
-    readonly services: any;
-    readonly summaryItems: {
-        readonly name: string;
-        readonly text: string;
-    }[];
-    readonly envVariables: {
-        readonly name: string;
-        readonly value: string;
-    }[];
-    readonly proxiedPorts: {
-        readonly id: string;
-        readonly serviceId: string;
-        readonly name: string;
-        readonly port: number;
-        readonly proxyDomain: string;
-    }[];
-}
-
-interface Query {
-    instance: Instance;
-}
 
 @Component({
     selector: 'app-instance-detail',
@@ -51,7 +17,7 @@ interface Query {
 })
 export class InstanceDetailComponent implements OnInit {
 
-    item: Instance;
+    item: GetInstanceDetailQueryInstanceFieldinterface;
 
     errorMessage: string;
 
@@ -83,43 +49,8 @@ export class InstanceDetailComponent implements OnInit {
             switchMap(
                 (params: Params) => {
                     return this.apollo
-                        .watchQuery<Query>({
-                            query: gql`query ($id: String!) {
-                                instance(id: $id) {
-                                    id
-                                    name
-                                    definition {
-                                        id
-                                        name
-                                        project {
-                                            id
-                                            name
-                                        }
-                                    }
-                                    services {
-                                        id
-                                        cleanId
-                                        containerId
-                                        containerNamePrefix
-                                        ipAddress
-                                    }
-                                    proxiedPorts {
-                                        serviceId
-                                        id
-                                        name
-                                        port
-                                        proxyDomain
-                                    }
-                                    summaryItems {
-                                        name
-                                        text
-                                    }
-                                    envVariables {
-                                        name
-                                        value
-                                    }
-                                }
-                            }`,
+                        .watchQuery<GetInstanceDetailQueryInterface>({
+                            query: getInstanceDetailQueryGql,
                             variables: {
                                 id: params['id'],
                             },
@@ -133,21 +64,11 @@ export class InstanceDetailComponent implements OnInit {
                 }
             ))
             .subscribe(
-                (item: Instance) => {
+                (item: GetInstanceDetailQueryInstanceFieldinterface) => {
                     this.item = item;
                 },
                 (error) => { this.errorMessage = <any>error; }
             );
-    }
-
-    private mapItem(item: GetInstanceResponseDto): MappedInstance {
-        return {
-            id: item.id,
-            name: item.name,
-            definition: item.definition,
-            envVariables: item.envVariables,
-            summaryItems: item.summaryItems
-        } as MappedInstance;
     }
 
 }

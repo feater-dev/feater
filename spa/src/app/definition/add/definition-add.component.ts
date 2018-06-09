@@ -1,27 +1,21 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
-
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-
 import {
     DefinitionAddForm,
     DefinitionAddFormSourceFormElement,
     DefinitionAddFormProxiedPortFormElement,
     DefinitionAddFormEnvVariableFormElement,
     DefinitionAddFormSummaryItemFormElement, DefinitionAddFormConfigFormElement
-} from '../../definition/definition-add-form.model';
-
-
-interface Project {
-    id: string;
-}
-
-interface Query {
-    project: Project;
-}
+} from './definition-add-form.model';
+import {
+    getProjectQueryGql,
+    GetProjectQueryInterface,
+    GetProjectQueryProjectFieldInterface
+} from './get-project.query';
 
 
 @Component({
@@ -33,7 +27,7 @@ export class DefinitionAddComponent implements OnInit {
 
     item: DefinitionAddForm;
 
-    project: Project;
+    project: GetProjectQueryProjectFieldInterface;
 
     mode = 'form';
 
@@ -174,9 +168,9 @@ export class DefinitionAddComponent implements OnInit {
                         sourceId: this.item.config.composeFile.sourceId,
                         envDirRelativePath: this.item.config.composeFile.envDirRelativePath,
                         composeFileRelativePaths: this.item.config.composeFile.composeFileRelativePaths,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         };
 
         return mappedItem;
@@ -238,13 +232,8 @@ export class DefinitionAddComponent implements OnInit {
             switchMap(
                 (params: Params) => {
                     return this.apollo
-                        .watchQuery<Query>({
-                            query: gql`query ($id: String!) {
-                                project(id: $id) {
-                                    id
-                                    name
-                                }
-                            }`,
+                        .watchQuery<GetProjectQueryInterface>({
+                            query: getProjectQueryGql,
                             variables: {
                                 id: params['id'],
                             },
@@ -258,12 +247,11 @@ export class DefinitionAddComponent implements OnInit {
                 }
             ))
             .subscribe(
-                (item: Project) => {
+                (item: GetProjectQueryProjectFieldInterface) => {
                     this.project = item;
                 },
                 (error) => { this.errorMessage = <any>error; }
             );
-
     }
 
 }

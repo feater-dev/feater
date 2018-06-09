@@ -1,26 +1,14 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
-
-import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
-import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
+import {
+    GetDefinitionDetailQueryDefinitionFieldInterface,
+    getDefinitionDetailQueryGql,
+    GetDefinitionDetailQueryInterface
+} from './get-definition-detail.query';
 
-
-interface Definition {
-    id: string;
-    project: {
-        id: string;
-        name: string;
-    };
-    name: string;
-    config: any;
-}
-
-interface Query {
-    definition: Definition;
-}
 
 @Component({
     selector: 'app-definition-detail',
@@ -29,7 +17,7 @@ interface Query {
 })
 export class DefinitionDetailComponent implements OnInit {
 
-    item: Definition;
+    item: GetDefinitionDetailQueryDefinitionFieldInterface;
 
     errorMessage: string;
 
@@ -52,6 +40,10 @@ export class DefinitionDetailComponent implements OnInit {
         this.router.navigate(['/project', this.item.project.id]);
     }
 
+    goToInstanceDetail(id: string) {
+        this.router.navigate(['/instance', id]);
+    }
+
     goToAddInstance() {
         this.router.navigate(['/definition', this.item.id, 'instance', 'add']);
     }
@@ -61,58 +53,8 @@ export class DefinitionDetailComponent implements OnInit {
             switchMap(
                 (params: Params) => {
                     return this.apollo
-                        .watchQuery<Query>({
-                            query: gql`query ($id: String!) {
-                                definition(id: $id) {
-                                    id
-                                    project {
-                                        id
-                                        name
-                                    }
-                                    name
-                                    config {
-                                        sources {
-                                            id
-                                            type
-                                            name
-                                            reference {
-                                                type
-                                                name
-                                            }
-                                            beforeBuildTasks {
-                                                ... on CopyBeforeBuildTask {
-                                                        type
-                                                        sourceRelativePath
-                                                        destinationRelativePath
-                                                    }
-                                                ... on InterpolateBeforeBuildTask {
-                                                        type
-                                                        relativePath
-                                                    }
-                                            }
-                                        }
-                                        proxiedPorts {
-                                            id
-                                            serviceId
-                                            name
-                                            port
-                                        }
-                                        composeFiles {
-                                            sourceId
-                                            envDirRelativePath
-                                            composeFileRelativePaths
-                                        }
-                                        summaryItems {
-                                            name
-                                            text
-                                        }
-                                        envVariables {
-                                            name
-                                            value
-                                        }
-                                    }
-                                }
-                            }`,
+                        .watchQuery<GetDefinitionDetailQueryInterface>({
+                            query: getDefinitionDetailQueryGql,
                             variables: {
                                 id: params['id'],
                             },
@@ -126,7 +68,7 @@ export class DefinitionDetailComponent implements OnInit {
                 }
             ))
             .subscribe(
-                (item: Definition) => {
+                (item: GetDefinitionDetailQueryDefinitionFieldInterface) => {
                     this.item = item;
                 },
                 (error) => { this.errorMessage = <any>error; }

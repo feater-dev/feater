@@ -1,6 +1,12 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
+import {DefinitionAddFormBeforeBuildInterpolateTaskFormElement} from '../definition-add-form.model';
 
-import {DefinitionAddFormBeforeBuildInterpolateTaskFormElement} from '../../definition-add-form.model';
 
 @Component({
     selector: 'app-definition-add-before-build-task-interpolate-form-element',

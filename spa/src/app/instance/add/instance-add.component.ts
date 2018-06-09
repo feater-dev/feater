@@ -5,7 +5,8 @@ import {map, switchMap} from 'rxjs/operators';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 
-import {InstanceAddForm} from '../../instance/instance-add-form.model';
+import {InstanceAddForm} from './instance-add-form.model';
+import {GetDefinitionQueryDefinitionFieldInterface, getDefinitionQueryGql, GetDefinitionQueryInterface} from './get-definition.query';
 
 
 interface Definition {
@@ -34,9 +35,7 @@ export class InstanceAddComponent implements OnInit {
 
     item: InstanceAddForm;
 
-    definition: Definition;
-
-    errorMessage: string;
+    definition: GetDefinitionQueryDefinitionFieldInterface;
 
     constructor(
         private route: ActivatedRoute,
@@ -80,13 +79,8 @@ export class InstanceAddComponent implements OnInit {
             switchMap(
                 (params: Params) => {
                     return this.apollo
-                        .watchQuery<Query>({
-                            query: gql`query ($id: String!) {
-                                definition(id: $id) {
-                                    id
-                                    name
-                                }
-                            }`,
+                        .watchQuery<GetDefinitionQueryInterface>({
+                            query: getDefinitionQueryGql,
                             variables: {
                                 id: params['id'],
                             },
@@ -100,7 +94,7 @@ export class InstanceAddComponent implements OnInit {
                 }
             ))
             .subscribe(
-                (definition: Definition) => {
+                (definition: GetDefinitionQueryDefinitionFieldInterface) => {
                     this.definition = definition;
                 }
             );

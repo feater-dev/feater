@@ -1,20 +1,13 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
-
 import {map} from 'rxjs/operators';
-import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
-
-
-interface Project {
-    readonly id: string;
-    readonly name: string;
-}
-
-interface Query {
-    project: Project;
-}
+import {
+    getProjectDetailQueryGql,
+    GetProjectDetailQueryInterface,
+    GetProjectDetailQueryProjectFieldInterface,
+} from './get-project-detail.query';
 
 
 @Component({
@@ -24,7 +17,7 @@ interface Query {
 })
 export class ProjectDetailComponent implements OnInit {
 
-    item: Project;
+    item: GetProjectDetailQueryProjectFieldInterface;
 
     errorMessage: string;
 
@@ -43,6 +36,10 @@ export class ProjectDetailComponent implements OnInit {
         this.router.navigate(['/projects']);
     }
 
+    goToDefinitionDetail(id: string) {
+        this.router.navigate(['/definition', id]);
+    }
+
     goToAddDefinition() {
         this.router.navigate(['/project', this.item.id, 'definition', 'add']);
     }
@@ -52,13 +49,8 @@ export class ProjectDetailComponent implements OnInit {
             switchMap(
                 (params: Params) => {
                     return this.apollo
-                        .watchQuery<Query>({
-                            query: gql`query ($id: String!) {
-                                project(id: $id) {
-                                    id
-                                    name
-                                }
-                            }`,
+                        .watchQuery<GetProjectDetailQueryInterface>({
+                            query: getProjectDetailQueryGql,
                             variables: {
                                 id: params['id'],
                             },
@@ -72,7 +64,7 @@ export class ProjectDetailComponent implements OnInit {
                 }
             ))
             .subscribe(
-                (item: Project) => {
+                (item: GetProjectDetailQueryProjectFieldInterface) => {
                     this.item = item;
                 },
                 (error) => { this.errorMessage = <any>error; }

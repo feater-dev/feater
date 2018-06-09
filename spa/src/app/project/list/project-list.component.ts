@@ -1,19 +1,14 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
-
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
-import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
+import {
+    getProjectListQueryGql,
+    GetProjectListQueryInterface,
+    GetProjectListQueryProjectsFieldItemInterface,
+} from './get-project-list.query';
 
-interface Project {
-    id: number;
-    name: string;
-}
-
-interface Query {
-    projects: Project[];
-}
 
 @Component({
     selector: 'app-project-list',
@@ -22,7 +17,7 @@ interface Query {
 })
 export class ProjectListComponent implements OnInit {
 
-    items: Observable<Project[]>;
+    items: Observable<GetProjectListQueryProjectsFieldItemInterface[]>;
 
     constructor(
         private router: Router,
@@ -44,8 +39,8 @@ export class ProjectListComponent implements OnInit {
 
     private getItems() {
         this.items = this.apollo
-            .watchQuery<Query>({
-                query: gql`query { projects { id name } }`
+            .watchQuery<GetProjectListQueryInterface>({
+                query: getProjectListQueryGql,
             })
             .valueChanges
             .pipe(

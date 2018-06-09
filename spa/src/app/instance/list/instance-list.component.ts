@@ -1,19 +1,14 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
-
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
-import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
+import {
+    getInstanceListQueryGql,
+    GetInstanceListQueryInstanceFieldItemInterface,
+    GetInstanceListQueryInterface,
+} from './get-instance-list.query';
 
-interface Instance {
-    id: number;
-    name: string;
-}
-
-interface Query {
-    instances: Instance[];
-}
 
 @Component({
     selector: 'app-instance-list',
@@ -22,9 +17,7 @@ interface Query {
 })
 export class InstanceListComponent implements OnInit {
 
-    items: Observable<Instance[]>;
-
-    errorMessage: string;
+    items: Observable<GetInstanceListQueryInstanceFieldItemInterface[]>;
 
     constructor(
         private router: Router,
@@ -42,8 +35,8 @@ export class InstanceListComponent implements OnInit {
 
     private getItems() {
         this.items = this.apollo
-            .watchQuery<Query>({
-                query: gql`query { instances { id name } }`
+            .watchQuery<GetInstanceListQueryInterface>({
+                query: getInstanceListQueryGql
             })
             .valueChanges
             .pipe(

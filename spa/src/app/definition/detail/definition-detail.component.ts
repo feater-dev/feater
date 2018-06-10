@@ -1,9 +1,13 @@
-
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
-
-import {GetDefinitionResponseDto} from '../definition-response-dtos.model';
+import {map} from 'rxjs/operators';
+import {Apollo} from 'apollo-angular';
+import {
+    GetDefinitionDetailQueryDefinitionFieldInterface,
+    getDefinitionDetailQueryGql,
+    GetDefinitionDetailQueryInterface
+} from './get-definition-detail.query';
 
 
 @Component({
@@ -13,14 +17,15 @@ import {GetDefinitionResponseDto} from '../definition-response-dtos.model';
 })
 export class DefinitionDetailComponent implements OnInit {
 
-    item: GetDefinitionResponseDto;
+    item: GetDefinitionDetailQueryDefinitionFieldInterface;
 
     errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.definition') private repository
+        @Inject('repository.definition') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -32,20 +37,40 @@ export class DefinitionDetailComponent implements OnInit {
     }
 
     goToProjectDetails() {
-        this.router.navigate(['/project', this.item.project._id]);
+        this.router.navigate(['/project', this.item.project.id]);
+    }
+
+    goToInstanceDetail(id: string) {
+        this.router.navigate(['/instance', id]);
     }
 
     goToAddInstance() {
-        this.router.navigate(['/definition', this.item._id, 'instance', 'add']);
+        this.router.navigate(['/definition', this.item.id, 'instance', 'add']);
     }
 
     private getItem() {
         this.route.params.pipe(
             switchMap(
-                (params: Params) => this.repository.getItem(params['id'])
+                (params: Params) => {
+                    return this.apollo
+                        .watchQuery<GetDefinitionDetailQueryInterface>({
+                            query: getDefinitionDetailQueryGql,
+                            variables: {
+                                id: params['id'],
+                            },
+                        })
+                        .valueChanges
+                        .pipe(
+                            map(result => {
+                                return result.data.definition;
+                            })
+                        );
+                }
             ))
             .subscribe(
-                (item: GetDefinitionResponseDto) => { this.item = item },
+                (item: GetDefinitionDetailQueryDefinitionFieldInterface) => {
+                    this.item = item;
+                },
                 (error) => { this.errorMessage = <any>error; }
             );
     }

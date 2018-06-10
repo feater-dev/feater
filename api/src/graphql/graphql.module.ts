@@ -11,6 +11,7 @@ import {DefinitionResolverFactory} from './resolver/definition-resolver-factory.
 import {InstanceResolverFactory} from './resolver/instance-resolver-factory.component';
 import {UsersResolverFactory} from './resolver/users-resolver-factory.component';
 import {InstantiationModule} from '../instantiation/instantiation.module';
+import {ResolverPaginationArgumentsHelper} from './resolver/pagination-argument/resolver-pagination-arguments-helper.component';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import {InstantiationModule} from '../instantiation/instantiation.module';
         ProjectsResolverFactory,
         DefinitionResolverFactory,
         InstanceResolverFactory,
+        ResolverPaginationArgumentsHelper,
         typeDefsProvider,
     ],
 })

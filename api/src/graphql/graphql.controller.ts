@@ -8,7 +8,7 @@ export class GraphqlController {
         private readonly graphqlService: GraphqlSchemaFactory,
     ) { }
 
-    @Post('graphql-api')
+    @Post('api')
     public async create(@Request() req, @Response() res, @Next() next) {
         return graphqlExpress({schema: this.graphqlService.createSchema()})(req, res, next);
     }

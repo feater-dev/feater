@@ -1,9 +1,15 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-
+import {
+    Component,
+    OnInit,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
 import {
     DefinitionAddFormSourceFormElement,
     DefinitionAddComposeFileFormElement
-} from '../../definition-add-form.model';
+} from '../definition-add-form.model';
+
 
 @Component({
     selector: 'app-definition-add-compose-file-form-element',

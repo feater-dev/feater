@@ -1,7 +1,14 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
+import {Apollo} from 'apollo-angular';
+import {
+    getInstanceListQueryGql,
+    GetInstanceListQueryInstanceFieldItemInterface,
+    GetInstanceListQueryInterface,
+} from './get-instance-list.query';
 
-import {GetInstanceResponseDto} from '../instance-response-dtos.model';
 
 @Component({
     selector: 'app-instance-list',
@@ -10,13 +17,12 @@ import {GetInstanceResponseDto} from '../instance-response-dtos.model';
 })
 export class InstanceListComponent implements OnInit {
 
-    items: GetInstanceResponseDto[];
-
-    errorMessage: string;
+    items: Observable<GetInstanceListQueryInstanceFieldItemInterface[]>;
 
     constructor(
         private router: Router,
-        @Inject('repository.build') private repository
+        @Inject('repository.build') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -24,15 +30,17 @@ export class InstanceListComponent implements OnInit {
     }
 
     goToDetail(item) {
-        this.router.navigate(['/instance', item._id]);
+        this.router.navigate(['/instance', item.id]);
     }
 
     private getItems() {
-        this.repository
-            .getItems()
-            .subscribe(
-                (items: GetInstanceResponseDto[]) => { this.items = items; },
-                (error) => { this.errorMessage = <any>error; }
+        this.items = this.apollo
+            .watchQuery<GetInstanceListQueryInterface>({
+                query: getInstanceListQueryGql
+            })
+            .valueChanges
+            .pipe(
+                map(result => result.data.instances)
             );
     }
 }

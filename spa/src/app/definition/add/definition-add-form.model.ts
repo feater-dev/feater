@@ -1,5 +1,4 @@
 export interface DefinitionAddForm {
-    projectId: string;
     name: string;
     config: DefinitionAddFormConfigFormElement;
 }
@@ -7,7 +6,7 @@ export interface DefinitionAddForm {
 export interface DefinitionAddFormConfigFormElement {
     sources: DefinitionAddFormSourceFormElement[];
     proxiedPorts: DefinitionAddFormProxiedPortFormElement[];
-    environmentalVariables: DefinitionAddFormEnvironmentalVariableFormElement[];
+    envVariables: DefinitionAddFormEnvVariableFormElement[];
     composeFile: DefinitionAddComposeFileFormElement;
     summaryItems: DefinitionAddFormSummaryItemFormElement[];
 }
@@ -36,7 +35,7 @@ export interface DefinitionAddFormProxiedPortFormElement {
     port: number;
 }
 
-export interface DefinitionAddFormEnvironmentalVariableFormElement {
+export interface DefinitionAddFormEnvVariableFormElement {
     name: string;
     value: string;
 }

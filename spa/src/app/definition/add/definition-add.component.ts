@@ -1,16 +1,21 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
-
+import {map, switchMap} from 'rxjs/operators';
+import gql from 'graphql-tag';
+import {Apollo} from 'apollo-angular';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
 import {
     DefinitionAddForm,
     DefinitionAddFormSourceFormElement,
     DefinitionAddFormProxiedPortFormElement,
-    DefinitionAddFormEnvironmentalVariableFormElement,
+    DefinitionAddFormEnvVariableFormElement,
     DefinitionAddFormSummaryItemFormElement, DefinitionAddFormConfigFormElement
-} from '../../definition/definition-add-form.model';
-import {GetProjectResponseDto} from '../../project/project-response-dtos.model';
-import {AddDefinitionResponseDto} from '../definition-response-dtos.model';
+} from './definition-add-form.model';
+import {
+    getProjectQueryGql,
+    GetProjectQueryInterface,
+    GetProjectQueryProjectFieldInterface
+} from './get-project.query';
 
 
 @Component({
@@ -22,23 +27,25 @@ export class DefinitionAddComponent implements OnInit {
 
     item: DefinitionAddForm;
 
-    project: GetProjectResponseDto;
+    project: GetProjectQueryProjectFieldInterface;
 
-    mode: String = 'form';
+    mode = 'form';
+
+    errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         @Inject('repository.definition') private repository,
-        @Inject('repository.project') private projectRepository
+        @Inject('repository.project') private projectRepository,
+        private apollo: Apollo,
     ) {
         this.item = {
-            projectId: '',
             name: '',
             config: {
                 sources: [],
                 proxiedPorts: [],
-                environmentalVariables: [],
+                envVariables: [],
                 composeFile: {
                     sourceId: '',
                     envDirRelativePath: '',
@@ -58,13 +65,16 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     addItem(): void {
-        this.repository
-            .addItem(this.mapItem())
-            .subscribe(
-                (addDefinitionResponseDto: AddDefinitionResponseDto) => {
-                    this.router.navigate(['/definition', addDefinitionResponseDto.id]);
-                }
-            );
+        this.apollo.mutate({
+            mutation: gql`${this.getCreateDefinitionMutation()}`,
+        }).subscribe(
+            ({data}) => {
+                this.router.navigate(['/definition', data.createDefinition.id]);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }
 
     addSource(): void {
@@ -81,7 +91,7 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteSource(source: DefinitionAddFormSourceFormElement): void {
-        var index = this.item.config.sources.indexOf(source);
+        const index = this.item.config.sources.indexOf(source);
         if (-1 !== index) {
             this.item.config.sources.splice(index, 1);
         }
@@ -97,23 +107,23 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteProxiedPort(proxiedPort: DefinitionAddFormProxiedPortFormElement): void {
-        var index = this.item.config.proxiedPorts.indexOf(proxiedPort);
+        const index = this.item.config.proxiedPorts.indexOf(proxiedPort);
         if (-1 !== index) {
             this.item.config.proxiedPorts.splice(index, 1);
         }
     }
 
-    addEnvironmentalVariable(): void {
-        this.item.config.environmentalVariables.push({
+    addEnvVariable(): void {
+        this.item.config.envVariables.push({
             name: '',
             value: ''
         });
     }
 
-    deleteEnvironmentalVariable(environmentalVariable: DefinitionAddFormEnvironmentalVariableFormElement): void {
-        var index = this.item.config.environmentalVariables.indexOf(environmentalVariable);
+    deleteEnvVariable(envVariable: DefinitionAddFormEnvVariableFormElement): void {
+        const index = this.item.config.envVariables.indexOf(envVariable);
         if (-1 !== index) {
-            this.item.config.environmentalVariables.splice(index, 1);
+            this.item.config.envVariables.splice(index, 1);
         }
     }
 
@@ -125,7 +135,7 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteSummaryItem(summaryItem: DefinitionAddFormSummaryItemFormElement): void {
-        var index = this.item.config.summaryItems.indexOf(summaryItem);
+        const index = this.item.config.summaryItems.indexOf(summaryItem);
         if (-1 !== index) {
             this.item.config.summaryItems.splice(index, 1);
         }
@@ -144,23 +154,23 @@ export class DefinitionAddComponent implements OnInit {
         this.switchMode('form');
     }
 
-    mapItem(): Object {
+    mapItem(): any {
         const mappedItem = {
-            projectId: this.item.projectId,
+            projectId: this.project.id,
             name: this.item.name,
             config: {
                 sources: this.item.config.sources,
                 proxiedPorts: this.item.config.proxiedPorts,
-                environmentalVariables: this.item.config.environmentalVariables,
+                envVariables: this.item.config.envVariables,
                 summaryItems: this.item.config.summaryItems,
                 composeFiles: [
                     {
                         sourceId: this.item.config.composeFile.sourceId,
                         envDirRelativePath: this.item.config.composeFile.envDirRelativePath,
                         composeFileRelativePaths: this.item.config.composeFile.composeFileRelativePaths,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         };
 
         return mappedItem;
@@ -174,7 +184,7 @@ export class DefinitionAddComponent implements OnInit {
         const mappedJsonConfig = {
             sources: [],
             proxiedPorts: [],
-            environmentalVariables: [],
+            envVariables: [],
             summaryItems: [],
             composeFile: null
         };
@@ -187,8 +197,8 @@ export class DefinitionAddComponent implements OnInit {
             mappedJsonConfig.proxiedPorts.push(proxiedPort);
         }
 
-        for (const environmentalVariable of jsonConfig.environmentalVariables) {
-            mappedJsonConfig.environmentalVariables.push(environmentalVariable);
+        for (const envVariable of jsonConfig.envVariables) {
+            mappedJsonConfig.envVariables.push(envVariable);
         }
 
         for (const summaryItem of jsonConfig.summaryItems) {
@@ -204,18 +214,44 @@ export class DefinitionAddComponent implements OnInit {
         return mappedJsonConfig;
     }
 
-    private getProject(): void {
+    protected getCreateDefinitionMutation(): string {
+        const mutation = {
+            mutation: {
+                createDefinition: {
+                    __args: this.mapItem(),
+                    id: true,
+                }
+            }
+        };
+
+        return jsonToGraphQLQuery(mutation);
+    }
+
+    protected getProject(): void {
         this.route.params.pipe(
             switchMap(
-                (params: Params) => this.projectRepository.getItem(params['id'])
+                (params: Params) => {
+                    return this.apollo
+                        .watchQuery<GetProjectQueryInterface>({
+                            query: getProjectQueryGql,
+                            variables: {
+                                id: params['id'],
+                            },
+                        })
+                        .valueChanges
+                        .pipe(
+                            map(result => {
+                                return result.data.project;
+                            })
+                        );
+                }
             ))
             .subscribe(
-                (item: GetProjectResponseDto) => {
+                (item: GetProjectQueryProjectFieldInterface) => {
                     this.project = item;
-                    this.item.projectId = item._id;
-                }
+                },
+                (error) => { this.errorMessage = <any>error; }
             );
-
     }
 
 }

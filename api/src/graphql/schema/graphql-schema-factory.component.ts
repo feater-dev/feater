@@ -35,8 +35,17 @@ export class GraphqlSchemaFactory {
             Query: {
                 users: this.usersResolverFactory.getListResolver(),
                 projects: this.projectsResolverFactory.getListResolver(),
+                project: this.projectsResolverFactory.getItemResolver(
+                    (obj: any, args: any): string => args.id,
+                ),
                 definitions: this.definitionResolverFactory.getListResolver(),
+                definition: this.definitionResolverFactory.getItemResolver(
+                    (obj: any, args: any): string => args.id,
+                ),
                 instances: this.instanceResolverFactory.getListResolver(),
+                instance: this.instanceResolverFactory.getItemResolver(
+                    (obj: any, args: any): string => args.id,
+                ),
             },
 
             Mutation: {
@@ -54,7 +63,7 @@ export class GraphqlSchemaFactory {
 
             Definition: {
                 project: this.projectsResolverFactory.getItemResolver(
-                    (definitionType: DefinitionTypeInterface) => definitionType.projectId,
+                    (definition: DefinitionTypeInterface) => definition.projectId,
                 ),
                 instances: this.instanceResolverFactory.getListResolver(
                     (definition: DefinitionTypeInterface) => ({definitionId: definition.id}),

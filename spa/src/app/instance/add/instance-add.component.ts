@@ -1,10 +1,21 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 
-import {InstanceAddForm} from '../../instance/instance-add-form.model';
-import {GetDefinitionResponseDto} from '../../definition/definition-response-dtos.model';
-import {AddInstanceResponseDto} from '../instance-response-dtos.model';
+import gql from 'graphql-tag';
+import {Apollo} from 'apollo-angular';
+
+import {InstanceAddForm} from './instance-add-form.model';
+import {GetDefinitionQueryDefinitionFieldInterface, getDefinitionQueryGql, GetDefinitionQueryInterface} from './get-definition.query';
+
+
+interface Definition {
+    id: string;
+}
+
+interface Query {
+    definition: Definition;
+}
 
 
 @Component({
@@ -14,18 +25,26 @@ import {AddInstanceResponseDto} from '../instance-response-dtos.model';
 })
 export class InstanceAddComponent implements OnInit {
 
+    protected readonly mutation = gql`
+        mutation ($definitionId: String!, $name: String!) {
+            createInstance(definitionId: $definitionId, name: $name) {
+                id
+            }
+        }
+    `;
+
     item: InstanceAddForm;
 
-    definition: GetDefinitionResponseDto;
+    definition: GetDefinitionQueryDefinitionFieldInterface;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         @Inject('repository.build') private repository,
-        @Inject('repository.definition') private definitionRepository
+        @Inject('repository.definition') private definitionRepository,
+        private apollo: Apollo,
     ) {
         this.item = {
-            definitionId: '',
             name: ''
         };
     }
@@ -39,24 +58,44 @@ export class InstanceAddComponent implements OnInit {
     }
 
     addItem() {
-        this.repository
-            .addItem(this.item)
-            .subscribe(
-                (addInstanceResponseDto: AddInstanceResponseDto) => {
-                    this.router.navigate(['/instance', addInstanceResponseDto.id]);
-                }
-            );
+        this.apollo.mutate({
+            mutation: this.mutation,
+            variables: {
+                definitionId: this.definition.id,
+                name: this.item.name,
+            },
+        }).subscribe(
+            ({data}) => {
+                this.router.navigate(['/instance', data.createInstance.id]);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }
 
     private getDefinition() {
         this.route.params.pipe(
             switchMap(
-                (params: Params) => this.definitionRepository.getItem(params['id'])
+                (params: Params) => {
+                    return this.apollo
+                        .watchQuery<GetDefinitionQueryInterface>({
+                            query: getDefinitionQueryGql,
+                            variables: {
+                                id: params['id'],
+                            },
+                        })
+                        .valueChanges
+                        .pipe(
+                            map(result => {
+                                return result.data.definition;
+                            })
+                        );
+                }
             ))
             .subscribe(
-                (item: GetDefinitionResponseDto) => {
-                    this.definition = item;
-                    this.item.definitionId = item._id;
+                (definition: GetDefinitionQueryDefinitionFieldInterface) => {
+                    this.definition = definition;
                 }
             );
 

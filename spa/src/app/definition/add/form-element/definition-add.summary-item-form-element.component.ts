@@ -1,6 +1,12 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
+import {DefinitionAddFormSummaryItemFormElement} from '../definition-add-form.model';
 
-import {DefinitionAddFormSummaryItemFormElement} from '../../definition-add-form.model';
 
 @Component({
     selector: 'app-definition-add-summary-item-form-element',

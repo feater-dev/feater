@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="page-header">
-            <h2>Build instance <em>{{ item?.name }}</em></h2>
+            <h2>Instance <em>{{ item?.name }}</em></h2>
         </div>
     </div>
 </div>
@@ -21,18 +21,52 @@
                     </div>
                 </div>
 
-                <div class="form-group" [hidden]="!item?.environmentalVariables?.length">
+                <div class="form-group" [hidden]="!item?.envVariables?.length">
                     <label class="col-lg-3 control-label">Environmental variables</label>
                     <div class="col-lg-9">
                         <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Value</th>
+                                </tr>
+                            </thead>
                             <tbody>
-                            <tr
-                                    *ngFor="let environmentalVariable of item?.environmentalVariables"
-                                    class="form-control-static"
-                            >
-                                <td>{{ environmentalVariable.key }}</td>
-                                <td>{{ environmentalVariable.value }}</td>
-                            </tr>
+                                <tr *ngFor="let envVariable of item?.envVariables" class="form-control-static">
+                                    <td>{{ envVariable.name }}</td>
+                                    <td>{{ envVariable.value }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-group" [hidden]="!item?.proxiedPorts?.length">
+                    <label class="col-lg-3 control-label">Proxied ports</label>
+                    <div class="col-lg-9">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Service ID</th>
+                                    <th scope="col">IP address</th>
+                                    <th scope="col">Port</th>
+                                    <th scope="col">Proxy domains</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let proxiedPort of item?.proxiedPorts" class="form-control-static">
+                                    <td>{{ proxiedPort.id }}</td>
+                                    <td>{{ proxiedPort.name }}</td>
+                                    <td>{{ proxiedPort.serviceId }}</td>
+                                    <td>{{ getServiceById(proxiedPort.serviceId).ipAddress }}</td>
+                                    <td>{{ proxiedPort.port }}</td>
+                                    <td>
+                                        {{ proxiedPort.proxyDomains.short }}<br>
+                                        {{ proxiedPort.proxyDomains.long }}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -41,17 +75,12 @@
                 <div class="form-group" [hidden]="!item?.summaryItems?.length">
                     <label class="col-lg-3 control-label">Summary</label>
                     <div class="col-lg-9">
-                        <table class="table table-striped">
-                            <tbody>
-                            <tr
-                                    *ngFor="let summaryItem of item?.summaryItems"
-                                    class="form-control-static"
-                            >
-                                <td>{{ summaryItem.name }}</td>
-                                <td>{{ summaryItem.value }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <ul style="list-style-position: outside; list-style-type: none; padding-left: 0">
+                            <li *ngFor="let summaryItem of item?.summaryItems" class="form-control-static">
+                                <div><strong>{{ summaryItem.name }}</strong></div>
+                                <div>{{ summaryItem.text }}</div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

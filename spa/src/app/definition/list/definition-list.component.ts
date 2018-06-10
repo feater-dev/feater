@@ -1,7 +1,14 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
+import {Apollo} from 'apollo-angular';
+import {
+    GetDefinitionListQueryDefinitionsFieldItemInterface,
+    getDefinitionListQueryGql,
+    GetDefinitionListQueryInterface
+} from './get-definition-list.query';
 
-import {GetDefinitionResponseDto} from '../definition-response-dtos.model';
 
 @Component({
     selector: 'app-definition-list',
@@ -10,13 +17,12 @@ import {GetDefinitionResponseDto} from '../definition-response-dtos.model';
 })
 export class DefinitionListComponent implements OnInit {
 
-    items: GetDefinitionResponseDto[];
-
-    errorMessage: string;
+    items: Observable<GetDefinitionListQueryDefinitionsFieldItemInterface[]>;
 
     constructor(
         private router: Router,
-        @Inject('repository.definition') private repository
+        @Inject('repository.definition') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -24,15 +30,17 @@ export class DefinitionListComponent implements OnInit {
     }
 
     goToDetail(item) {
-        this.router.navigate(['/definition', item._id]);
+        this.router.navigate(['/definition', item.id]);
     }
 
     private getItems() {
-        this.repository
-            .getItems()
-            .subscribe(
-                (items: GetDefinitionResponseDto[]) => { this.items = items; },
-                (error) => { this.errorMessage = <any>error; }
+        this.items = this.apollo
+            .watchQuery<GetDefinitionListQueryInterface>({
+                query: getDefinitionListQueryGql
+            })
+            .valueChanges
+            .pipe(
+                map(result => result.data.definitions)
             );
     }
 }

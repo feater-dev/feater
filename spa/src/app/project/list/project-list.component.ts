@@ -1,7 +1,14 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
+import {Apollo} from 'apollo-angular';
+import {
+    getProjectListQueryGql,
+    GetProjectListQueryInterface,
+    GetProjectListQueryProjectsFieldItemInterface,
+} from './get-project-list.query';
 
-import {GetProjectResponseDto} from '../project-response-dtos.model';
 
 @Component({
     selector: 'app-project-list',
@@ -10,13 +17,12 @@ import {GetProjectResponseDto} from '../project-response-dtos.model';
 })
 export class ProjectListComponent implements OnInit {
 
-    items: GetProjectResponseDto[];
-
-    errorMessage: string;
+    items: Observable<GetProjectListQueryProjectsFieldItemInterface[]>;
 
     constructor(
         private router: Router,
-        @Inject('repository.project') private repository
+        @Inject('repository.project') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -24,7 +30,7 @@ export class ProjectListComponent implements OnInit {
     }
 
     goToDetail(item) {
-        this.router.navigate(['/project', item._id]);
+        this.router.navigate(['/project', item.id]);
     }
 
     goToAdd() {
@@ -32,11 +38,13 @@ export class ProjectListComponent implements OnInit {
     }
 
     private getItems() {
-        this.repository
-            .getItems()
-            .subscribe(
-                (items: GetProjectResponseDto[]) => { this.items = items; },
-                (error) => { this.errorMessage = <any>error; }
+        this.items = this.apollo
+            .watchQuery<GetProjectListQueryInterface>({
+                query: getProjectListQueryGql,
+            })
+            .valueChanges
+            .pipe(
+                map(result => result.data.projects)
             );
     }
 }

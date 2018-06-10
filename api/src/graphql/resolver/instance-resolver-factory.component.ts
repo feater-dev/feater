@@ -2,31 +2,48 @@ import {Component} from '@nestjs/common';
 import {InstanceTypeInterface} from '../type/instance-type.interface';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {InstanceInterface} from '../../persistence/interface/instance.interface';
-import {CreateDefinitionInputTypeInterface} from '../input-type/create-definition-input-type.interface';
-import {CreateDefinitionRequestDto} from '../../api/dto/request/create-definition-request.dto';
-import {DefinitionTypeInterface} from '../type/definition-type.interface';
 import {CreateInstanceInputTypeInterface} from '../input-type/create-instance-input-type.interface';
-import {CreateInstanceRequestDto} from '../../api/dto/request/create-instance-request.dto';
 import {RemoveInstanceInputTypeInterface} from '../input-type/remove-instance-input-type.interface';
 import {Instantiator} from '../../instantiation/instantiator.component';
-import * as nanoidGenerate from 'nanoid/generate';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
+import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
+import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
+import {ResolverInstanceFilterArgumentsInterface} from './filter-argument/resolver-instance-filter-arguments.interface';
+import * as nanoidGenerate from 'nanoid/generate';
+import * as escapeStringRegexp from 'escape-string-regexp';
 
 @Component()
 export class InstanceResolverFactory {
     constructor(
+        private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
         private readonly instanceRepository: InstanceRepository,
         private readonly definitionRepository: DefinitionRepository,
         private readonly instantiator: Instantiator,
     ) { }
 
-    public getListResolver(queryExtractor?: (any) => object): (object) => Promise<InstanceTypeInterface[]> {
-        return async (object: any): Promise<InstanceTypeInterface[]> => {
+    protected readonly defaultSortKey = 'name_asc';
+
+    readonly sortMap = {
+        name_asc: {name: 'asc', createdAt: 'desc', _id: 'desc'},
+        name_desc: {name: 'desc', createdAt: 'desc', _id: 'desc'},
+        created_at_asc: {createdAt: 'asc', _id: 'desc'},
+        created_at_desc: {createdAt: 'desc', _id: 'desc'},
+    };
+
+    public getListResolver(queryExtractor?: (obj: any, args: any) => any): (obj: any, args: any) => Promise<InstanceTypeInterface[]> {
+        return async (obj: any, args: any): Promise<InstanceTypeInterface[]> => {
+            const resolverListOptions = args as ResolverPaginationArgumentsInterface;
+            const criteria = this.applyFilterArgumentToCriteria(
+                queryExtractor ? queryExtractor(obj, args) : {},
+                args as ResolverInstanceFilterArgumentsInterface,
+            );
             const instances = await this.instanceRepository.find(
-                queryExtractor ? queryExtractor(object) : {},
+                criteria,
+                this.resolveListOptionsHelper.getOffset(resolverListOptions.offset),
+                this.resolveListOptionsHelper.getLimit(resolverListOptions.limit),
+                this.resolveListOptionsHelper.getSort(this.defaultSortKey, this.sortMap, resolverListOptions.sortKey),
             );
             const data: InstanceTypeInterface[] = [];
-
             for (const instance of instances) {
                 data.push(this.mapPersistentModelToTypeModel(instance));
             }
@@ -35,10 +52,10 @@ export class InstanceResolverFactory {
         };
     }
 
-    public getItemResolver(idExtractor: (any) => string): (string) => Promise<InstanceTypeInterface> {
-        return async (object: any): Promise<InstanceTypeInterface> => {
+    public getItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, args: any) => Promise<InstanceTypeInterface> {
+        return async (obj: any, args: any): Promise<InstanceTypeInterface> => {
             return this.mapPersistentModelToTypeModel(
-                await this.instanceRepository.findById(idExtractor(object)),
+                await this.instanceRepository.findById(idExtractor(obj, args)),
             );
         };
     }
@@ -46,7 +63,7 @@ export class InstanceResolverFactory {
     public getCreateItemResolver(): (_: any, createInstanceInput: CreateInstanceInputTypeInterface) => Promise<InstanceTypeInterface> {
         return async (_: any, createInstanceInput: CreateInstanceInputTypeInterface): Promise<InstanceTypeInterface> => {
             // TODO Add validation.
-            const instance = await this.instanceRepository.create(createInstanceInput as CreateInstanceRequestDto);
+            const instance = await this.instanceRepository.create(createInstanceInput);
             const definition = await this.definitionRepository.findByIdOrFail(instance.definitionId);
             const hash = nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 8);
 
@@ -69,11 +86,31 @@ export class InstanceResolverFactory {
         };
     }
 
+    protected applyFilterArgumentToCriteria(criteria: any, args: ResolverInstanceFilterArgumentsInterface): object {
+        if (args.name) {
+            criteria.name = new RegExp(escapeStringRegexp(args.name));
+        }
+        if (args.projectId) {
+            criteria.projectId = args.projectId;
+        }
+        if (args.definitionId) {
+            criteria.definitionId = args.definitionId;
+        }
+
+        return criteria;
+    }
+
     protected mapPersistentModelToTypeModel(instance: InstanceInterface): InstanceTypeInterface {
-        return {
+        const mapped = {
             id: instance._id,
             name: instance.name,
             definitionId: instance.definitionId,
+            services: instance.services,
+            summaryItems: instance.summaryItems,
+            envVariables: instance.envVariables,
+            proxiedPorts: instance.proxiedPorts,
         } as InstanceTypeInterface;
+
+        return mapped;
     }
 }

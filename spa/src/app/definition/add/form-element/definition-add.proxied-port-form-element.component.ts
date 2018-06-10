@@ -1,6 +1,12 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
+import {DefinitionAddFormProxiedPortFormElement} from '../definition-add-form.model';
 
-import {DefinitionAddFormProxiedPortFormElement} from '../../definition-add-form.model';
 
 @Component({
     selector: 'app-definition-add-proxied-port-form-element',

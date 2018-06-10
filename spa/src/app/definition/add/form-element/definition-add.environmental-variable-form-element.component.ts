@@ -1,18 +1,24 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
+import {DefinitionAddFormEnvVariableFormElement} from '../definition-add-form.model';
 
-import {DefinitionAddFormEnvironmentalVariableFormElement} from '../../definition-add-form.model';
 
 @Component({
     selector: 'app-definition-add-environmental-variable-form-element',
     templateUrl: './definition-add.environmental-variable-form-element.component.html',
     styles: []
 })
-export class DefinitionAddEnvironmentalVariableFormElementComponent implements OnInit {
+export class DefinitionAddEnvVariableFormElementComponent implements OnInit {
 
-    @Input() item: DefinitionAddFormEnvironmentalVariableFormElement;
+    @Input() item: DefinitionAddFormEnvVariableFormElement;
 
-    @Output() deleteItem: EventEmitter<DefinitionAddFormEnvironmentalVariableFormElement> =
-        new EventEmitter<DefinitionAddFormEnvironmentalVariableFormElement>();
+    @Output() deleteItem: EventEmitter<DefinitionAddFormEnvVariableFormElement> =
+        new EventEmitter<DefinitionAddFormEnvVariableFormElement>();
 
     ngOnInit() {}
 

@@ -1,8 +1,13 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
-
-import {GetProjectResponseDto} from '../project-response-dtos.model';
+import {map} from 'rxjs/operators';
+import {Apollo} from 'apollo-angular';
+import {
+    getProjectDetailQueryGql,
+    GetProjectDetailQueryInterface,
+    GetProjectDetailQueryProjectFieldInterface,
+} from './get-project-detail.query';
 
 
 @Component({
@@ -12,14 +17,15 @@ import {GetProjectResponseDto} from '../project-response-dtos.model';
 })
 export class ProjectDetailComponent implements OnInit {
 
-    item: GetProjectResponseDto;
+    item: GetProjectDetailQueryProjectFieldInterface;
 
     errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.project') private repository
+        @Inject('repository.project') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -30,17 +36,37 @@ export class ProjectDetailComponent implements OnInit {
         this.router.navigate(['/projects']);
     }
 
+    goToDefinitionDetail(id: string) {
+        this.router.navigate(['/definition', id]);
+    }
+
     goToAddDefinition() {
-        this.router.navigate(['/project', this.item._id, 'definition', 'add']);
+        this.router.navigate(['/project', this.item.id, 'definition', 'add']);
     }
 
     private getItem() {
         this.route.params.pipe(
             switchMap(
-                (params: Params) => this.repository.getItem(params['id'])
+                (params: Params) => {
+                    return this.apollo
+                        .watchQuery<GetProjectDetailQueryInterface>({
+                            query: getProjectDetailQueryGql,
+                            variables: {
+                                id: params['id'],
+                            },
+                        })
+                        .valueChanges
+                        .pipe(
+                            map(result => {
+                                return result.data.project;
+                            })
+                        );
+                }
             ))
             .subscribe(
-                (item: GetProjectResponseDto) => { this.item = item },
+                (item: GetProjectDetailQueryProjectFieldInterface) => {
+                    this.item = item;
+                },
                 (error) => { this.errorMessage = <any>error; }
             );
     }

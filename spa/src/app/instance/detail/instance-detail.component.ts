@@ -1,9 +1,13 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
-
-import {MappedInstance} from '../instance.model';
-import {GetInstanceResponseDto} from '../instance-response-dtos.model';
+import {map} from 'rxjs/operators';
+import {Apollo} from 'apollo-angular';
+import {
+    getInstanceDetailQueryGql,
+    GetInstanceDetailQueryInstanceFieldinterface,
+    GetInstanceDetailQueryInterface,
+} from './get-instance-detail.query';
 
 
 @Component({
@@ -13,14 +17,15 @@ import {GetInstanceResponseDto} from '../instance-response-dtos.model';
 })
 export class InstanceDetailComponent implements OnInit {
 
-    item: MappedInstance;
+    item: GetInstanceDetailQueryInstanceFieldinterface;
 
     errorMessage: string;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.build') private repository
+        @Inject('repository.build') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -32,32 +37,46 @@ export class InstanceDetailComponent implements OnInit {
     }
 
     goToProjectDetails() {
-        this.router.navigate(['/project', this.item.definition.project._id]);
+        this.router.navigate(['/project', this.item.definition.project.id]);
     }
 
     goToDefinitionDetails() {
-        this.router.navigate(['/definition', this.item.definition._id]);
+        this.router.navigate(['/definition', this.item.definition.id]);
+    }
+
+    getServiceById(id) {
+        for (const service of this.item.services) {
+            if (id === service.id) {
+                return service;
+            }
+        }
     }
 
     private getItem() {
         this.route.params.pipe(
             switchMap(
-                (params: Params) => this.repository.getItem(params['id'])
+                (params: Params) => {
+                    return this.apollo
+                        .watchQuery<GetInstanceDetailQueryInterface>({
+                            query: getInstanceDetailQueryGql,
+                            variables: {
+                                id: params['id'],
+                            },
+                        })
+                        .valueChanges
+                        .pipe(
+                            map(result => {
+                                return result.data.instance;
+                            })
+                        );
+                }
             ))
             .subscribe(
-                (item: GetInstanceResponseDto) => { this.item = this.mapItem(item); },
+                (item: GetInstanceDetailQueryInstanceFieldinterface) => {
+                    this.item = item;
+                },
                 (error) => { this.errorMessage = <any>error; }
             );
-    }
-
-    private mapItem(item: GetInstanceResponseDto): MappedInstance {
-        return {
-            _id: item._id,
-            name: item.name,
-            definition: item.definition,
-            environmentalVariables: item.environmentalVariables,
-            summaryItems: item.summaryItems
-        } as MappedInstance;
     }
 
 }

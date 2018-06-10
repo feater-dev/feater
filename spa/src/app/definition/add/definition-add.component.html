@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12">
-        <h2>Add build definition for project <em>{{ project?.name}}</em></h2>
+        <h2>Add definition for project <em>{{ project?.name}}</em></h2>
     </div>
 </div>
 
@@ -85,20 +85,20 @@
                 <h3 style="display: inline;">Environmental variables</h3>
                 <a
                     class="btn btn-success btn-sm"
-                    (click)="addEnvironmentalVariable()"
+                    (click)="addEnvVariable()"
                     style="position: relative; bottom: 5px; margin-left: 8px;"
                 >
                     Add environmental variable
                 </a>
             </div>
             <div class="col-lg-12">
-                <p *ngIf="0 === item.config.environmentalVariables.length">
+                <p *ngIf="0 === item.config.envVariables.length">
                     No environmental variables defined.
                 </p>
-                <div *ngFor="let environmentalVariable of item.config.environmentalVariables">
+                <div *ngFor="let envVariable of item.config.envVariables">
                     <app-definition-add-environmental-variable-form-element
-                        [item]="environmentalVariable"
-                        (deleteItem)="deleteEnvironmentalVariable($event)"
+                        [item]="envVariable"
+                        (deleteItem)="deleteEnvVariable($event)"
                     ></app-definition-add-environmental-variable-form-element>
                 </div>
             </div>

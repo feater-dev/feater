@@ -1,8 +1,12 @@
+import {environment} from './../environments/environment';
+
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule, Routes} from '@angular/router';
+import {ApolloModule, Apollo} from 'apollo-angular';
+import {HttpLinkModule, HttpLink} from 'apollo-angular-link-http';
 
 import {AppComponent} from './app.component';
 
@@ -29,7 +33,7 @@ import {
     DefinitionAddProxiedPortFormElementComponent
 } from './definition/add/form-element/definition-add.proxied-port-form-element.component';
 import {
-    DefinitionAddEnvironmentalVariableFormElementComponent
+    DefinitionAddEnvVariableFormElementComponent
 } from './definition/add/form-element/definition-add.environmental-variable-form-element.component';
 import {
     DefinitionAddSummaryItemFormElementComponent
@@ -53,6 +57,8 @@ import {ProjectRepositoryService} from './project/repository/project-repository.
 import {DefinitionRepositoryService} from './definition/repository/definition-repository.service';
 import {InstanceRepositoryService} from './instance/repository/instance-repository.service';
 import {AuthHttpClient} from './api/auth-http-client.service';
+import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
+
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
@@ -81,7 +87,7 @@ const appRoutes: Routes = [
         DefinitionAddBeforeBuildTaskCopyFormElementComponent,
         DefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
         DefinitionAddProxiedPortFormElementComponent,
-        DefinitionAddEnvironmentalVariableFormElementComponent,
+        DefinitionAddEnvVariableFormElementComponent,
         DefinitionAddSummaryItemFormElementComponent,
         DefinitionAddComposeFileFormElementComponent,
         DefinitionDetailComponent,
@@ -95,7 +101,9 @@ const appRoutes: Routes = [
     imports: [
         BrowserModule,
         FormsModule,
+        ApolloModule,
         HttpClientModule,
+        HttpLinkModule,
         RouterModule.forRoot(appRoutes)
     ],
     providers: [
@@ -107,4 +115,31 @@ const appRoutes: Routes = [
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+    constructor(
+        apollo: Apollo,
+        httpLink: HttpLink
+    ) {
+        const introspectionQueryResultData = {
+            __schema: {
+                types: [
+                    {
+                        kind: 'UNION',
+                        name: 'BeforeBuildTask',
+                        possibleTypes: [
+                            {name: 'CopyBeforeBuildTask'},
+                            {name: 'InterpolateBeforeBuildTask'},
+                        ],
+                    },
+                ],
+            }
+        };
+
+        const fragmentMatcher = new IntrospectionFragmentMatcher({ introspectionQueryResultData });
+
+        apollo.create({
+            link: httpLink.create({ uri: environment.apiBaseUrl }),
+            cache: new InMemoryCache({ fragmentMatcher }),
+        });
+    }
+}

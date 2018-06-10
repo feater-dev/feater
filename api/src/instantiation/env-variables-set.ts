@@ -1,4 +1,4 @@
-class EnvironmentalVariablesSetItem {
+class EnvVariablesSetItem {
 
     constructor(
         readonly key: string,
@@ -7,20 +7,20 @@ class EnvironmentalVariablesSetItem {
 
 }
 
-export class EnvironmentalVariablesSet {
+export class EnvVariablesSet {
 
-    private readonly items: EnvironmentalVariablesSetItem[];
+    private readonly items: EnvVariablesSetItem[];
 
     constructor() {
         this.items = [];
     }
 
     add(key: string, value: string) {
-        this.items.push(new EnvironmentalVariablesSetItem(key, value));
+        this.items.push(new EnvVariablesSetItem(key, value));
     }
 
-    static merge(...sets: EnvironmentalVariablesSet[]): EnvironmentalVariablesSet {
-        const merged = new EnvironmentalVariablesSet();
+    static merge(...sets: EnvVariablesSet[]): EnvVariablesSet {
+        const merged = new EnvVariablesSet();
         for (const set of sets) {
             for (const item of set.items) {
                 merged.add(item.key, item.value);
@@ -30,7 +30,7 @@ export class EnvironmentalVariablesSet {
         return merged;
     }
 
-    toList(): EnvironmentalVariablesSetItem[] {
+    toList(): EnvVariablesSetItem[] {
         return this.items.slice();
     }
 

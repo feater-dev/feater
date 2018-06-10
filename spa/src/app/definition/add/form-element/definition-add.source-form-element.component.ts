@@ -1,11 +1,17 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-
+import {
+    Component,
+    OnInit,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
 import {
     DefinitionAddFormSourceFormElement,
     DefinitionAddFormBeforeBuildTaskFormElement,
     DefinitionAddFormBeforeBuildCopyTaskFormElement,
-    DefinitionAddFormBeforeBuildInterpolateTaskFormElement
-} from '../../definition-add-form.model';
+    DefinitionAddFormBeforeBuildInterpolateTaskFormElement,
+} from '../definition-add-form.model';
+
 
 @Component({
     selector: 'app-definition-add-source-form-element',

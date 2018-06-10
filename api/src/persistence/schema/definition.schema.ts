@@ -29,7 +29,7 @@ export const DefinitionSchema = new Schema({
             name: String,
             port: Number,
         }],
-        environmentalVariables: [{
+        envVariables: [{
             _id: false,
             name: String,
             value: String,

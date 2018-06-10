@@ -3,7 +3,7 @@ import {Component} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {InstanceSchema} from '../schema/instance.schema';
 import {InstanceInterface} from '../interface/instance.interface';
-import {CreateInstanceRequestDto} from '../../api/dto/request/create-instance-request.dto';
+import {CreateInstanceInputTypeInterface} from '../../graphql/input-type/create-instance-input-type.interface';
 
 @Component()
 export class InstanceRepository {
@@ -12,16 +12,18 @@ export class InstanceRepository {
         @InjectModel(InstanceSchema) private readonly instanceModel: Model<InstanceInterface>,
     ) {}
 
-    find(query: any): Promise<InstanceInterface[]> {
-        return this.instanceModel.find(query).exec();
+    find(criteria: object, offset: number, limit: number, sort?: object): Promise<InstanceInterface[]> {
+        const query = this.instanceModel.find(criteria);
+        query.skip(offset).limit(limit);
+        if (sort) {
+            query.sort(sort);
+        }
+
+        return query.exec();
     }
 
     findById(id: string): Promise<InstanceInterface> {
         return this.instanceModel.findById(id).exec();
-    }
-
-    findByHash(hash: string): Promise<InstanceInterface> {
-        return this.instanceModel.find({ hash }).exec();
     }
 
     async findByIdOrFail(id: string): Promise<InstanceInterface> {
@@ -33,8 +35,8 @@ export class InstanceRepository {
         return instance;
     }
 
-    create(createInstanceDto: CreateInstanceRequestDto): Promise<InstanceInterface> {
-        const createdInstance = new this.instanceModel(createInstanceDto);
+    create(createInstanceInputType: CreateInstanceInputTypeInterface): Promise<InstanceInterface> {
+        const createdInstance = new this.instanceModel(createInstanceInputType);
 
         return new Promise(resolve => {
             createdInstance.save();
@@ -53,7 +55,32 @@ export class InstanceRepository {
         if (null === persistentBuild) {
             throw new Error();
         }
-        persistentBuild.set({services: build.services});
+        const mappedServices = [];
+        const mappedProxiedPorts = [];
+        for (const serviceId of Object.keys(build.services)) {
+            const service = build.services[serviceId];
+            mappedServices.push({
+                id: serviceId,
+                cleanId: service.cleanId,
+                containerNamePrefix: service.containerNamePrefix,
+                containerId: service.containerId,
+                ipAddress: service.ipAddress,
+            });
+            for (const proxiedPort of service.proxiedPorts) {
+                mappedProxiedPorts.push({
+                    id: proxiedPort.id,
+                    name: proxiedPort.name,
+                    serviceId: proxiedPort.serviceId,
+                    port: proxiedPort.port,
+                    proxyDomains: {
+                        short: proxiedPort.proxyDomains.short,
+                        long: proxiedPort.proxyDomains.long,
+                    },
+                });
+            }
+        }
+        persistentBuild.set({services: mappedServices});
+        persistentBuild.set({proxiedPorts: mappedProxiedPorts});
         await persistentBuild.save();
     }
 
@@ -62,16 +89,30 @@ export class InstanceRepository {
         if (null === persistentBuild) {
             throw new Error();
         }
-        persistentBuild.set({summaryItems: build.summaryItems.toList()});
+        const mappedSummaryItems = [];
+        for (const summaryItem of build.summaryItems.toList()) {
+            mappedSummaryItems.push({
+                name: summaryItem.name,
+                text: summaryItem.value,
+            });
+        }
+        persistentBuild.set({summaryItems: mappedSummaryItems});
         await persistentBuild.save();
     }
 
-    async updateEnvironmentalVariables(build: any): Promise<any> {
+    async updateEnvVariables(build: any): Promise<any> {
         const persistentBuild = await this.findById(build.id);
         if (null === persistentBuild) {
             throw new Error();
         }
-        persistentBuild.set({environmentalVariables: build.environmentalVariables.toList()});
+        const mappedEnvVariables = [];
+        for (const envVariable of build.envVariables.toList()) {
+            mappedEnvVariables.push({
+                name: envVariable.key,
+                value: envVariable.value,
+            });
+        }
+        persistentBuild.set({envVariables: mappedEnvVariables});
         await persistentBuild.save();
     }
 }

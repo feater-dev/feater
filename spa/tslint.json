@@ -1,4 +1,9 @@
 {
+  "lib": [
+    "es6",
+    "dom",
+    "esnext.asynciterable"
+  ],
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],

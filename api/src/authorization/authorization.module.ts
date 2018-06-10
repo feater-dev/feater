@@ -51,14 +51,14 @@ export class AuthorizationModule implements NestModule {
             path: '*', method: RequestMethod.ALL,
         });
 
-        consumer.apply(CustomBearerAuthenticationMiddleware).forRoutes({
-            path: '/api/*', method: RequestMethod.ALL,
-        });
+        //consumer.apply(CustomBearerAuthenticationMiddleware).forRoutes({
+        //    path: '/api/*', method: RequestMethod.ALL,
+        //});
 
         this.googlePassportStrategyConfigurationComponent.configure();
         this.githubPassportStrategyConfigurationComponent.configure();
         this.passportUserSerializationConfiguratorComponent.configure();
-        this.customBearerPassportStrategyConfiguratorComponent.configure();
+        //this.customBearerPassportStrategyConfiguratorComponent.configure();
 
     }
 

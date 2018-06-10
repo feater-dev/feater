@@ -1,7 +1,10 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
+import {Apollo} from 'apollo-angular';
+import {getuserListQueryGql, GetUserListQueryInterface, GetUserListQueryUsersFieldItemInterface} from './get-user-list.query';
 
-import {GetUserResponseDto} from '../user-response-dtos';
 
 @Component({
     selector: 'app-user-list',
@@ -10,13 +13,12 @@ import {GetUserResponseDto} from '../user-response-dtos';
 })
 export class UserListComponent implements OnInit {
 
-    items: GetUserResponseDto[];
-
-    errorMessage: string;
+    items: Observable<GetUserListQueryUsersFieldItemInterface[]>;
 
     constructor(
         private router: Router,
-        @Inject('repository.user') private repository
+        @Inject('repository.user') private repository,
+        private apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -24,11 +26,13 @@ export class UserListComponent implements OnInit {
     }
 
     private getItems() {
-        this.repository
-            .getItems()
-            .subscribe(
-                (items: GetUserResponseDto[]) => { this.items = items; },
-                (error) => { this.errorMessage = <any>error; }
+        this.items = this.apollo
+            .watchQuery<GetUserListQueryInterface>({
+                query: getuserListQueryGql,
+            })
+            .valueChanges
+            .pipe(
+                map(result => result.data.users)
             );
     }
 }

@@ -32,10 +32,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                        *ngFor="let envVariable of item?.envVariables"
-                                        class="form-control-static"
-                                >
+                                <tr *ngFor="let envVariable of item?.envVariables" class="form-control-static">
                                     <td>{{ envVariable.name }}</td>
                                     <td>{{ envVariable.value }}</td>
                                 </tr>
@@ -52,21 +49,23 @@
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Service iD</th>
+                                    <th scope="col">Service ID</th>
+                                    <th scope="col">IP address</th>
                                     <th scope="col">Port</th>
-                                    <th scope="col">Proxy domain</th>
+                                    <th scope="col">Proxy domains</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                        *ngFor="let proxiedPort of item?.proxiedPorts"
-                                        class="form-control-static"
-                                >
+                                <tr *ngFor="let proxiedPort of item?.proxiedPorts" class="form-control-static">
                                     <td>{{ proxiedPort.id }}</td>
                                     <td>{{ proxiedPort.name }}</td>
                                     <td>{{ proxiedPort.serviceId }}</td>
+                                    <td>{{ getServiceById(proxiedPort.serviceId).ipAddress }}</td>
                                     <td>{{ proxiedPort.port }}</td>
-                                    <td>{{ proxiedPort.proxyDomain }}</td>
+                                    <td>
+                                        {{ proxiedPort.proxyDomains.short }}<br>
+                                        {{ proxiedPort.proxyDomains.long }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -77,10 +76,7 @@
                     <label class="col-lg-3 control-label">Summary</label>
                     <div class="col-lg-9">
                         <ul style="list-style-position: outside; list-style-type: none; padding-left: 0">
-                            <li
-                                    *ngFor="let summaryItem of item?.summaryItems"
-                                    class="form-control-static"
-                            >
+                            <li *ngFor="let summaryItem of item?.summaryItems" class="form-control-static">
                                 <div><strong>{{ summaryItem.name }}</strong></div>
                                 <div>{{ summaryItem.text }}</div>
                             </li>

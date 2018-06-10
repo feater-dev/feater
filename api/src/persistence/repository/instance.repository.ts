@@ -72,7 +72,10 @@ export class InstanceRepository {
                     name: proxiedPort.name,
                     serviceId: proxiedPort.serviceId,
                     port: proxiedPort.port,
-                    proxyDomain: proxiedPort.proxyDomains.short,
+                    proxyDomains: {
+                        short: proxiedPort.proxyDomains.short,
+                        long: proxiedPort.proxyDomains.long,
+                    },
                 });
             }
         }

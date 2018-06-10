@@ -44,6 +44,14 @@ export class InstanceDetailComponent implements OnInit {
         this.router.navigate(['/definition', this.item.definition.id]);
     }
 
+    getServiceById(id) {
+        for (const service of this.item.services) {
+            if (id === service.id) {
+                return service;
+            }
+        }
+    }
+
     private getItem() {
         this.route.params.pipe(
             switchMap(

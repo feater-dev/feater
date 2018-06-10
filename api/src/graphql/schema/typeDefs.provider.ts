@@ -240,12 +240,17 @@ export const typeDefsProvider = {
             value: String!
         }
 
+        type InstanceProxyDomains {
+            short: String!
+            long: String!
+        }
+
         type InstanceProxiedPort {
             id: String!
             serviceId: String!
             name: String!
             port: Int!
-            proxyDomain: String!
+            proxyDomains: InstanceProxyDomains!
         }
 
         type InstanceSummaryItem {

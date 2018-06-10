@@ -67,10 +67,12 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
     };
     name: string;
     config: any; // TODO Define in this interface.
-    instances: [{
-        readonly id: string;
-        readonly name: string;
-    }];
+    instances: [
+        {
+            readonly id: string;
+            readonly name: string;
+        }
+    ];
 }
 
 export interface GetDefinitionDetailQueryInterface {

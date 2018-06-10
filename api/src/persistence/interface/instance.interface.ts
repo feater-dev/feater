@@ -19,6 +19,9 @@ export interface InstanceInterface extends Document {
         readonly serviceId: string;
         readonly name: string;
         readonly port: number;
-        readonly proxyDomain: string;
+        readonly proxyDomains: {
+            readonly short: string;
+            readonly long: string;
+        };
     }[];
 }

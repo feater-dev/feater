@@ -17,10 +17,12 @@ export const getProjectDetailQueryGql = gql`
 export interface GetProjectDetailQueryProjectFieldInterface {
     readonly id: string;
     readonly name: string;
-    readonly definitions: [{
-        readonly id: string;
-        readonly name: string;
-    }];
+    readonly definitions: [
+        {
+            readonly id: string;
+            readonly name: string;
+        }
+    ];
 }
 
 export interface GetProjectDetailQueryInterface {

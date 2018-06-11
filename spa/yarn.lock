@@ -3005,6 +3005,16 @@ html-entities@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
 
+html-escape@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/html-escape/-/html-escape-1.0.0.tgz#db2db5526a64c04a41c7677de3056c0d1381d465"
+
+html-linkify@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/html-linkify/-/html-linkify-1.2.2.tgz#875f7d0773a793a5de6ae306b7ddf21ff2a3347b"
+  dependencies:
+    html-escape "1.0.0"
+
 html-minifier@^3.2.3:
   version "3.5.16"
   resolved "https://registry.yarnpkg.com/html-minifier/-/html-minifier-3.5.16.tgz#39f5aabaf78bdfc057fe67334226efd7f3851175"

@@ -58,6 +58,7 @@ import {DefinitionRepositoryService} from './definition/repository/definition-re
 import {InstanceRepositoryService} from './instance/repository/instance-repository.service';
 import {AuthHttpClient} from './api/auth-http-client.service';
 import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
+import {LinkifyPipe} from './pipes/linkify.pipe';
 
 
 const appRoutes: Routes = [
@@ -96,7 +97,8 @@ const appRoutes: Routes = [
         InstanceDetailComponent,
         InstanceListComponent,
         NavbarComponent,
-        AboutComponent
+        AboutComponent,
+        LinkifyPipe,
     ],
     imports: [
         BrowserModule,
@@ -104,16 +106,18 @@ const appRoutes: Routes = [
         ApolloModule,
         HttpClientModule,
         HttpLinkModule,
-        RouterModule.forRoot(appRoutes)
+        RouterModule.forRoot(appRoutes),
     ],
     providers: [
         {provide: 'authHttp', useClass: AuthHttpClient},
         {provide: 'repository.user', useClass: UserRepositoryService},
         {provide: 'repository.project', useClass: ProjectRepositoryService},
         {provide: 'repository.definition', useClass: DefinitionRepositoryService},
-        {provide: 'repository.build', useClass: InstanceRepositoryService}
+        {provide: 'repository.build', useClass: InstanceRepositoryService},
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [
+        AppComponent,
+    ],
 })
 export class AppModule {
     constructor(

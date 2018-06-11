@@ -63,8 +63,8 @@
                                     <td>{{ getServiceById(proxiedPort.serviceId).ipAddress }}</td>
                                     <td>{{ proxiedPort.port }}</td>
                                     <td>
-                                        {{ proxiedPort.proxyDomains.short }}<br>
-                                        {{ proxiedPort.proxyDomains.long }}
+                                        <div>{{ proxiedPort.proxyDomains.short }}</div>
+                                        <div>{{ proxiedPort.proxyDomains.long }}</div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -78,7 +78,7 @@
                         <ul style="list-style-position: outside; list-style-type: none; padding-left: 0">
                             <li *ngFor="let summaryItem of item?.summaryItems" class="form-control-static">
                                 <div><strong>{{ summaryItem.name }}</strong></div>
-                                <div>{{ summaryItem.text }}</div>
+                                <div innerHTML="{{ summaryItem.text | linkify }}"></div>
                             </li>
                         </ul>
                     </div>

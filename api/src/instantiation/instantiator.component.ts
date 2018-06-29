@@ -8,9 +8,7 @@ import {JobInterface} from './job/job';
 import {CopyBeforeBuildTaskJob} from './job/copy-before-build-task.job';
 import {InterpolateBeforeBuildTaskJob} from './job/interpolate-before-build-task.job';
 import {CreateDirectoryJob} from './job/create-directory.job';
-import {ResolveReferenceJob} from './job/resolve-reference.job';
-import {DownloadSourceJob} from './job/download-source.job';
-import {ExtractSourceJob} from './job/extract-source.job';
+import {CloneSourceJob} from './job/clone-source.job';
 import {ParseDockerComposeJob} from './job/parse-docker-compose.job';
 import {PreparePortDomainsJob} from './job/prepare-port-domains.job';
 import {PrepareEnvVariablesJob} from './job/prepare-env-variables.job';
@@ -64,9 +62,7 @@ export class Instantiator {
         for (const sourceId of Object.keys(build.sources)) {
             const source = build.sources[sourceId];
             stagesList.addSequentialStage(`prepareSource_${sourceId}`, ['createDirectory'], [
-                new ResolveReferenceJob(source),
-                new DownloadSourceJob(source),
-                new ExtractSourceJob(source),
+                new CloneSourceJob(source),
             ]);
         }
 

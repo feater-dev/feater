@@ -12,11 +12,12 @@ export const environment = {
     mongo: {
         dsn: 'mongodb://user:password@host:27017/feat',
     },
-    github: {
-        personalAccessToken: 'personalAccessToken',
+    sshKey: {
+        publicKeyPath: '/root/.ssh/id_rsa.pub',
+        privateKeyPath: '/root/.ssh/id_rsa',
+        passphrase: 'passphrase',
     },
     guestPaths: {
-        repositoryCache: '/data/repository/',
         build: '/data/build/',
         proxyDomain: '/data/proxyDomain/',
     },

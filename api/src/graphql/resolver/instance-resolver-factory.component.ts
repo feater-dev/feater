@@ -109,6 +109,7 @@ export class InstanceResolverFactory {
             summaryItems: instance.summaryItems,
             envVariables: instance.envVariables,
             proxiedPorts: instance.proxiedPorts,
+            createdAt: instance.createdAt,
         } as InstanceTypeInterface;
 
         return mapped;

@@ -19,8 +19,6 @@ export class DefinitionDetailComponent implements OnInit {
 
     item: GetDefinitionDetailQueryDefinitionFieldInterface;
 
-    errorMessage: string;
-
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -44,7 +42,7 @@ export class DefinitionDetailComponent implements OnInit {
         this.router.navigate(['/instance', id]);
     }
 
-    goToAddInstance() {
+    goToInstanceAdd() {
         this.router.navigate(['/definition', this.item.id, 'instance', 'add']);
     }
 
@@ -70,8 +68,7 @@ export class DefinitionDetailComponent implements OnInit {
             .subscribe(
                 (item: GetDefinitionDetailQueryDefinitionFieldInterface) => {
                     this.item = item;
-                },
-                (error) => { this.errorMessage = <any>error; }
+                }
             );
     }
 }

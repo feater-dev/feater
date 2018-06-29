@@ -59,6 +59,8 @@ import {InstanceRepositoryService} from './instance/repository/instance-reposito
 import {AuthHttpClient} from './api/auth-http-client.service';
 import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
 import {LinkifyPipe} from './pipes/linkify.pipe';
+import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
+import {RelativeDatePipe} from './pipes/relative-date.pipe';
 
 
 const appRoutes: Routes = [
@@ -99,6 +101,8 @@ const appRoutes: Routes = [
         NavbarComponent,
         AboutComponent,
         LinkifyPipe,
+        AbsoluteDatePipe,
+        RelativeDatePipe,
     ],
     imports: [
         BrowserModule,

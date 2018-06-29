@@ -266,6 +266,7 @@ export const typeDefsProvider = {
             envVariables: [InstanceEnvVariable!]!
             proxiedPorts: [InstanceProxiedPort!]!
             summaryItems: [InstanceSummaryItem!]!
+            createdAt: String!
         }
     `,
 };

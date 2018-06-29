@@ -1,5 +1,6 @@
 /config/main.ini
 /config/env.ini
+src/environment/environment.ts
 /public/
 /node_modules/
 /*.log

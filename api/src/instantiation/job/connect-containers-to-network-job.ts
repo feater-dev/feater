@@ -4,10 +4,9 @@ import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
+import {Config} from '../../config/config.component';
 
 const BUFFER_SIZE = 1048576; // 1M
-// TODO Move to config
-const BUILD_NETWORK = 'feat_build';
 
 export class ConnectContainersToNetworkJob implements BuildJobInterface {
 
@@ -19,6 +18,7 @@ export class ConnectContainersToNetworkJob implements BuildJobInterface {
 export class ConnectContainersToNetworkJobExecutor implements JobExecutorInterface {
 
     constructor(
+        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly instanceRepository: InstanceRepository,
     ) {}
@@ -43,7 +43,7 @@ export class ConnectContainersToNetworkJobExecutor implements JobExecutorInterfa
                 const service = build.services[serviceId];
 
                 execSync(
-                    `docker network connect ${BUILD_NETWORK} ${service.containerId}`,
+                    `docker network connect ${this.config.instantiation.proxyDomainsNetworkName} ${service.containerId}`,
                     { maxBuffer: BUFFER_SIZE },
                 );
 
@@ -52,7 +52,7 @@ export class ConnectContainersToNetworkJobExecutor implements JobExecutorInterfa
                     { maxBuffer: BUFFER_SIZE },
                 ).toString();
 
-                service.ipAddress = JSON.parse(dockerInspectStdout)[0].NetworkSettings.Networks[BUILD_NETWORK].IPAddress;
+                service.ipAddress = JSON.parse(dockerInspectStdout)[0].NetworkSettings.Networks[this.config.instantiation.proxyDomainsNetworkName].IPAddress;
             }
 
             this.instanceRepository

@@ -12,6 +12,7 @@ import {InstanceResolverFactory} from './resolver/instance-resolver-factory.comp
 import {UsersResolverFactory} from './resolver/users-resolver-factory.component';
 import {InstantiationModule} from '../instantiation/instantiation.module';
 import {ResolverPaginationArgumentsHelper} from './resolver/pagination-argument/resolver-pagination-arguments-helper.component';
+import {DateResolverFactory} from './resolver/date-resolver-factory.component';
 
 @Module({
     imports: [
@@ -28,6 +29,7 @@ import {ResolverPaginationArgumentsHelper} from './resolver/pagination-argument/
         ProjectsResolverFactory,
         DefinitionResolverFactory,
         InstanceResolverFactory,
+        DateResolverFactory,
         ResolverPaginationArgumentsHelper,
         typeDefsProvider,
     ],

@@ -9,7 +9,6 @@ import {
     GetInstanceDetailQueryInterface,
 } from './get-instance-detail.query';
 
-
 @Component({
     selector: 'app-instance-detail',
     templateUrl: './instance-detail.component.html',

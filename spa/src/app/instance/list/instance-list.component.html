@@ -6,14 +6,20 @@
         <table class="table table-striped table-hover ">
             <thead>
                 <tr>
+                    <th>Project</th>
+                    <th>Definition</th>
                     <th>Name</th>
+                    <th class="fit-column">Created at</th>
                     <th class="fit-column">Id</th>
                     <th class="fit-column"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items | async">
+                <tr *ngFor="let item of items">
+                    <td>{{ item.definition.project.name }}</td>
+                    <td>{{ item.definition.name }}</td>
                     <td>{{ item.name }}</td>
+                    <td class="fit-column"><small>{{ item.createdAt | relativeDate }}</small></td>
                     <td class="fit-column"><small>{{ item.id }}</small></td>
                     <td class="fit-column">
                         <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(item)" aria-hidden="true"></span>

@@ -10,6 +10,7 @@ import {DefinitionResolverFactory} from '../resolver/definition-resolver-factory
 import {InstanceResolverFactory} from '../resolver/instance-resolver-factory.component';
 import {BeforeBuildTaskTypeInterface} from '../type/nested/definition-config/before-build-task-type.interface';
 import {UsersResolverFactory} from '../resolver/users-resolver-factory.component';
+import {DateResolverFactory} from '../resolver/date-resolver-factory.component';
 
 @Component()
 export class GraphqlSchemaFactory {
@@ -19,6 +20,7 @@ export class GraphqlSchemaFactory {
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly definitionResolverFactory: DefinitionResolverFactory,
         private readonly instanceResolverFactory: InstanceResolverFactory,
+        private readonly dateResolverFactory: DateResolverFactory,
     ) { }
 
     public createSchema(): GraphQLSchema {
@@ -73,6 +75,9 @@ export class GraphqlSchemaFactory {
             Instance: {
                 definition: this.definitionResolverFactory.getItemResolver(
                     (instance: InstanceTypeInterface) => instance.definitionId,
+                ),
+                createdAt: this.dateResolverFactory.getResolver(
+                    (instance: InstanceTypeInterface) => instance.createdAt,
                 ),
             },
 

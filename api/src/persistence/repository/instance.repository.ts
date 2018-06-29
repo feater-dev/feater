@@ -37,6 +37,7 @@ export class InstanceRepository {
 
     create(createInstanceInputType: CreateInstanceInputTypeInterface): Promise<InstanceInterface> {
         const createdInstance = new this.instanceModel(createInstanceInputType);
+        createdInstance.createdAt = new Date();
 
         return new Promise(resolve => {
             createdInstance.save();

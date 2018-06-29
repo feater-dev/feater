@@ -39,6 +39,7 @@ export const getInstanceDetailQueryGql = gql`
                 name
                 value
             }
+            createdAt
         }
     }
 `;

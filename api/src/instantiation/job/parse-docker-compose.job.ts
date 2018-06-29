@@ -7,6 +7,7 @@ import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {JobInterface, BuildJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
+import {Config} from '../../config/config.component';
 
 export class ParseDockerComposeJob implements BuildJobInterface {
 
@@ -20,6 +21,7 @@ export class ParseDockerComposeJob implements BuildJobInterface {
 export class ParseDockerComposeJobExecutor implements JobExecutorInterface {
 
     constructor(
+        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly instanceRepository: InstanceRepository,
     ) {}
@@ -43,7 +45,7 @@ export class ParseDockerComposeJobExecutor implements JobExecutorInterface {
             const composeFile = build.config.composeFiles[0]; // TODO Handle multiple compose files.
             const fullBuildPath = build.sources[composeFile.sourceId].fullBuildPath;
 
-            build.composeProjectName = `featbuild${build.hash}`;
+            build.composeProjectName = `${this.config.instantiation.containerNamePrefix}${build.hash}`;
             build.services = {};
 
             for (const composeFileRelativePath of composeFile.composeFileRelativePaths) {

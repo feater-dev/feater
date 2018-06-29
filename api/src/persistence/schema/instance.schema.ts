@@ -44,4 +44,6 @@ export const InstanceSchema = new Schema({
     envVariables: [InstanceEnvVariableSchema],
     proxiedPorts: [InstanceProxiedPortSchema],
     summaryItems: [InstanceSummaryItemSchema],
+    createdAt: Date,
+    builtAt: Date,
 });

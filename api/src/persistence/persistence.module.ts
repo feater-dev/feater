@@ -10,10 +10,11 @@ import {ProjectRepository} from './repository/project.repository';
 import {DefinitionRepository} from './repository/definition.repository';
 import {InstanceRepository} from './repository/instance.repository';
 import {ApiTokenRepository} from './repository/api-token.repository';
+import {environment} from '../environment/environment';
 
 @Module({
   imports: [
-      MongooseModule.forRoot('mongodb://mongo:27017/feat'), // TODO Move to config
+      MongooseModule.forRoot(environment.mongo.dsn), // TODO Use config component instead with dynamic module (but how?)
       MongooseModule.forFeature([{ name: 'ApiToken', schema: ApiTokenSchema }]),
       MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
       MongooseModule.forFeature([{ name: 'Project', schema: ProjectSchema }]),

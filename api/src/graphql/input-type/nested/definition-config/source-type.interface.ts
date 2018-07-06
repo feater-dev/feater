@@ -3,7 +3,6 @@ import {BeforeBuildTaskInputTypeInterface} from './before-build-task-input-type.
 
 export interface SourceInputTypeInterface {
     readonly id: string;
-    readonly type: string;
     readonly name: string;
     readonly reference: SourceReferenceInputTypeInterface;
     readonly beforeBuildTasks: BeforeBuildTaskInputTypeInterface[];

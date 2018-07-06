@@ -17,12 +17,13 @@ interface MongoConfigInterface {
     readonly dsn: string;
 }
 
-interface GithubConfigInterface {
-    readonly personalAccessToken: string;
+interface SshKeyConfigInterface {
+    readonly publicKeyPath: string;
+    readonly privateKeyPath: string;
+    readonly passphrase: string;
 }
 
 interface GuestPathsConfigInterface {
-    readonly repositoryCache: string;
     readonly build: string;
     readonly proxyDomain: string;
 }
@@ -65,7 +66,7 @@ export class Config {
     readonly app: AppConfigInterface;
     readonly ports: PortsConfigInterface;
     readonly mongo: MongoConfigInterface;
-    readonly github: GithubConfigInterface;
+    readonly sshKey: SshKeyConfigInterface;
     readonly guestPaths: GuestPathsConfigInterface;
     readonly hostPaths: HostPathsConfigInterface;
     readonly googleOAuth2: GoogleOAuth2ConfigInterface;
@@ -77,7 +78,7 @@ export class Config {
         this.app = environment.app as AppConfigInterface;
         this.ports = environment.ports as PortsConfigInterface;
         this.mongo = environment.mongo as MongoConfigInterface;
-        this.github = environment.github as GithubConfigInterface;
+        this.sshKey = environment.sshKey as SshKeyConfigInterface;
         this.guestPaths = environment.guestPaths as GuestPathsConfigInterface;
         this.hostPaths = environment.hostPaths as HostPathsConfigInterface;
         this.googleOAuth2 = environment.googleOAuth2 as GoogleOAuth2ConfigInterface;

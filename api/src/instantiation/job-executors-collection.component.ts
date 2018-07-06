@@ -5,8 +5,7 @@ import {JobExecutorInterface} from './job/job-executor';
 import {ConnectContainersToNetworkJobExecutor} from './job/connect-containers-to-network-job';
 import {CopyBeforeBuildTaskJobExecutor} from './job/copy-before-build-task.job';
 import {CreateDirectoryJobExecutor} from './job/create-directory.job';
-import {DownloadSourceJobExecutor} from './job/download-source.job';
-import {ExtractSourceJobExecutor} from './job/extract-source.job';
+import {CloneSourceJobExecutor} from './job/clone-source.job';
 import {GetContainerIdsJobExecutor} from './job/get-container-ids.job';
 import {InterpolateBeforeBuildTaskJobExecutor} from './job/interpolate-before-build-task.job';
 import {ParseDockerComposeJobExecutor} from './job/parse-docker-compose.job';
@@ -14,7 +13,6 @@ import {PrepareEnvVariablesJobExecutor} from './job/prepare-env-variables.job';
 import {PreparePortDomainsJobExecutor} from './job/prepare-port-domains.job';
 import {PrepareSummaryItemsJobExecutor} from './job/prepare-summary-items.job';
 import {ProxyPortDomainsJobExecutor} from './job/proxy-port-domains.job';
-import {ResolveReferenceJobExecutor} from './job/resolve-reference.job';
 import {RunDockerComposeJobExecutor} from './job/run-docker-compose.job';
 
 @Component()
@@ -26,8 +24,7 @@ export class JobExecutorsCollection {
         connectContainersToNetworkJobExecutor: ConnectContainersToNetworkJobExecutor,
         copyBeforeBuildTaskJobExecutor: CopyBeforeBuildTaskJobExecutor,
         createDirectoryJobExecutor: CreateDirectoryJobExecutor,
-        downloadSourceJobExecutor: DownloadSourceJobExecutor,
-        extractSourceJobExecutor: ExtractSourceJobExecutor,
+        cloneSourceJobExecutor: CloneSourceJobExecutor,
         getContainerIdsJobExecutor: GetContainerIdsJobExecutor,
         interpolateBeforeBuildTaskJobExecutor: InterpolateBeforeBuildTaskJobExecutor,
         parseDockerComposeJobExecutor: ParseDockerComposeJobExecutor,
@@ -35,15 +32,13 @@ export class JobExecutorsCollection {
         preparePortDomainsJobExecutor: PreparePortDomainsJobExecutor,
         prepareSummaryItemsJobExecutor: PrepareSummaryItemsJobExecutor,
         proxyPortDomainsJobExecutor: ProxyPortDomainsJobExecutor,
-        resolveReferenceJobExecutor: ResolveReferenceJobExecutor,
         runDockerComposeJobExecutor: RunDockerComposeJobExecutor,
     ) {
         this.jobExecutors = [
             connectContainersToNetworkJobExecutor,
             copyBeforeBuildTaskJobExecutor,
             createDirectoryJobExecutor,
-            downloadSourceJobExecutor,
-            extractSourceJobExecutor,
+            cloneSourceJobExecutor,
             getContainerIdsJobExecutor,
             interpolateBeforeBuildTaskJobExecutor,
             parseDockerComposeJobExecutor,
@@ -51,7 +46,6 @@ export class JobExecutorsCollection {
             preparePortDomainsJobExecutor,
             prepareSummaryItemsJobExecutor,
             proxyPortDomainsJobExecutor,
-            resolveReferenceJobExecutor,
             runDockerComposeJobExecutor,
         ];
     }

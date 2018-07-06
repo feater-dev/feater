@@ -24,4 +24,5 @@ export interface InstanceInterface extends Document {
             readonly long: string;
         };
     }[];
+    readonly createdAt: Date;
 }

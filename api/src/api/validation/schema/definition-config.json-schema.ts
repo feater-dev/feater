@@ -13,17 +13,12 @@ export const definitionConfigJsonSchema = {
             patternProperties: {
                 '^[_a-zA-Z\\d]+$': {
                     required: [
-                        'type',
-                        'name',
+                        'sshCloneUrl',
                         'reference',
                         'beforeBuildTasks',
                     ],
                     properties: {
-                        type: {
-                            type: 'string',
-                            minLegth: 1,
-                        },
-                        name: {
+                        sshCloneUrl: {
                             type: 'string',
                             minLegth: 1,
                         },

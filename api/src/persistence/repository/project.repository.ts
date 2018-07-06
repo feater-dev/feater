@@ -15,7 +15,9 @@ export class ProjectRepository {
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<ProjectInterface[]> {
         const query = this.projectModel.find(criteria);
-        query.skip(offset).limit(limit);
+        query
+            .skip(offset)
+            .limit(limit);
         if (sort) {
             query.sort(sort);
         }

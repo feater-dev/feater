@@ -7,8 +7,7 @@ export const DefinitionSchema = new Schema({
         sources: [{
             _id: false,
             id: String,
-            type: {type: String},
-            name: String,
+            sshCloneUrl: String,
             reference: {
                 _id: false,
                 type: {type: String},

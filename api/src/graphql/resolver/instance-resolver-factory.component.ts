@@ -24,10 +24,24 @@ export class InstanceResolverFactory {
     protected readonly defaultSortKey = 'name_asc';
 
     readonly sortMap = {
-        name_asc: {name: 'asc', createdAt: 'desc', _id: 'desc'},
-        name_desc: {name: 'desc', createdAt: 'desc', _id: 'desc'},
-        created_at_asc: {createdAt: 'asc', _id: 'desc'},
-        created_at_desc: {createdAt: 'desc', _id: 'desc'},
+        name_asc: {
+            name: 'asc',
+            createdAt: 'desc',
+            _id: 'desc',
+        },
+        name_desc: {
+            name: 'desc',
+            createdAt: 'desc',
+            _id: 'desc',
+        },
+        created_at_asc: {
+            createdAt: 'asc',
+            _id: 'desc',
+        },
+        created_at_desc: {
+            createdAt: 'desc',
+            _id: 'desc',
+        },
     };
 
     public getListResolver(queryExtractor?: (obj: any, args: any) => any): (obj: any, args: any) => Promise<InstanceTypeInterface[]> {

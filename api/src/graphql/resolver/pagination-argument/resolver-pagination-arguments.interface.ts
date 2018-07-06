@@ -1,5 +1,5 @@
 export interface ResolverPaginationArgumentsInterface {
-    limit?: number;
-    offset?: number;
-    sortKey?: string;
+    readonly limit?: number;
+    readonly offset?: number;
+    readonly sortKey?: string;
 }

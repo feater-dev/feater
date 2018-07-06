@@ -14,7 +14,7 @@ import {environment} from '../environment/environment';
 
 @Module({
   imports: [
-      MongooseModule.forRoot(environment.mongo.dsn), // TODO Use config component instead with dynamic module (but how?)
+      MongooseModule.forRoot(environment.mongo.dsn), // TODO How to use config component instead? Is it needed?
       MongooseModule.forFeature([{ name: 'ApiToken', schema: ApiTokenSchema }]),
       MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
       MongooseModule.forFeature([{ name: 'Project', schema: ProjectSchema }]),

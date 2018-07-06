@@ -80,8 +80,7 @@ export class DefinitionAddComponent implements OnInit {
     addSource(): void {
         this.item.config.sources.push({
             id: '',
-            type: 'github',
-            name: '',
+            sshCloneUrl: '',
             reference: {
                 type: '',
                 name: ''

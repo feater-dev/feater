@@ -70,8 +70,7 @@ export class DefinitionConfigMapper {
 
         return {
             id: source.id,
-            type: source.type,
-            name: source.name,
+            sshCloneUrl: source.sshCloneUrl,
             reference: this.mapSourceReference(source.reference),
             beforeBuildTasks: mappedBeforeBuildTasks,
         } as SourceTypeInterface;

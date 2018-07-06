@@ -13,11 +13,14 @@ import {UsersResolverFactory} from './resolver/users-resolver-factory.component'
 import {InstantiationModule} from '../instantiation/instantiation.module';
 import {ResolverPaginationArgumentsHelper} from './resolver/pagination-argument/resolver-pagination-arguments-helper.component';
 import {DateResolverFactory} from './resolver/date-resolver-factory.component';
+import {PublicSshKeyResolverFactory} from './resolver/public-ssh-key-resolver-factory.component';
+import {ConfigModule} from '../config/config.module';
 
 @Module({
     imports: [
         PersistenceModule,
         InstantiationModule,
+        ConfigModule,
     ],
     controllers: [
         GraphqlController,
@@ -25,6 +28,7 @@ import {DateResolverFactory} from './resolver/date-resolver-factory.component';
     components: [
         DefinitionConfigMapper,
         GraphqlSchemaFactory,
+        PublicSshKeyResolverFactory,
         UsersResolverFactory,
         ProjectsResolverFactory,
         DefinitionResolverFactory,

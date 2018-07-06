@@ -9,6 +9,8 @@ export const typeDefsProvider = {
         }
 
         type Query {
+            publicSshKey: String
+
             users(
                 limit: Int
                 offset: Int
@@ -63,8 +65,7 @@ export const typeDefsProvider = {
 
         input SourceInput {
             id: String!
-            type: String!
-            name: String!
+            sshCloneUrl: String!
             reference: SourceReferenceInput!
             beforeBuildTasks: [BeforeBuildTaskInput!]!
         }
@@ -180,8 +181,7 @@ export const typeDefsProvider = {
 
         type Source {
             id: String!
-            type: String!
-            name: String!
+            sshCloneUrl: String!
             reference: SourceReference!
             beforeBuildTasks: [BeforeBuildTask!]!
         }

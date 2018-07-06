@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 
 export const getDefinitionDetailQueryGql = gql`
     query ($id: String!) {
+        publicSshKey
         definition(id: $id) {
             id
             project {
@@ -13,8 +14,7 @@ export const getDefinitionDetailQueryGql = gql`
             config {
                 sources {
                     id
-                    type
-                    name
+                    sshCloneUrl
                     reference {
                         type
                         name
@@ -76,5 +76,6 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
 }
 
 export interface GetDefinitionDetailQueryInterface {
+    publicSshKey: string;
     definition: GetDefinitionDetailQueryDefinitionFieldInterface;
 }

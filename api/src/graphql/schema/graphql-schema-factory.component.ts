@@ -11,11 +11,13 @@ import {InstanceResolverFactory} from '../resolver/instance-resolver-factory.com
 import {BeforeBuildTaskTypeInterface} from '../type/nested/definition-config/before-build-task-type.interface';
 import {UsersResolverFactory} from '../resolver/users-resolver-factory.component';
 import {DateResolverFactory} from '../resolver/date-resolver-factory.component';
+import {PublicSshKeyResolverFactory} from '../resolver/public-ssh-key-resolver-factory.component';
 
 @Component()
 export class GraphqlSchemaFactory {
     constructor(
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,
+        private readonly publicSshKeyResolverFactory: PublicSshKeyResolverFactory,
         private readonly usersResolverFactory: UsersResolverFactory,
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly definitionResolverFactory: DefinitionResolverFactory,
@@ -35,6 +37,7 @@ export class GraphqlSchemaFactory {
             JSON: GraphQLJSON,
 
             Query: {
+                publicSshKey: this.publicSshKeyResolverFactory.getResolver(),
                 users: this.usersResolverFactory.getListResolver(),
                 projects: this.projectsResolverFactory.getListResolver(),
                 project: this.projectsResolverFactory.getItemResolver(

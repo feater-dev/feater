@@ -13,8 +13,7 @@ export interface DefinitionAddFormConfigFormElement {
 
 export interface DefinitionAddFormSourceFormElement {
     id: string;
-    type: string;
-    name: string;
+    sshCloneUrl: string;
     reference: DefinitionAddFormComponentReferenceFormElement;
     beforeBuildTasks: Array<
         DefinitionAddFormBeforeBuildTaskFormElement|

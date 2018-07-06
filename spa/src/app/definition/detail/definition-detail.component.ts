@@ -17,7 +17,9 @@ import {
 })
 export class DefinitionDetailComponent implements OnInit {
 
-    item: GetDefinitionDetailQueryDefinitionFieldInterface;
+    publicSshKey: string;
+
+    definition: GetDefinitionDetailQueryDefinitionFieldInterface;
 
     constructor(
         private route: ActivatedRoute,
@@ -35,7 +37,7 @@ export class DefinitionDetailComponent implements OnInit {
     }
 
     goToProjectDetails() {
-        this.router.navigate(['/project', this.item.project.id]);
+        this.router.navigate(['/project', this.definition.project.id]);
     }
 
     goToInstanceDetail(id: string) {
@@ -43,31 +45,32 @@ export class DefinitionDetailComponent implements OnInit {
     }
 
     goToInstanceAdd() {
-        this.router.navigate(['/definition', this.item.id, 'instance', 'add']);
+        this.router.navigate(['/definition', this.definition.id, 'instance', 'add']);
     }
 
     private getItem() {
-        this.route.params.pipe(
-            switchMap(
-                (params: Params) => {
-                    return this.apollo
-                        .watchQuery<GetDefinitionDetailQueryInterface>({
-                            query: getDefinitionDetailQueryGql,
-                            variables: {
-                                id: params['id'],
-                            },
-                        })
-                        .valueChanges
-                        .pipe(
-                            map(result => {
-                                return result.data.definition;
+        this.route.params
+            .pipe(
+                switchMap(
+                    (params: Params) => {
+                        return this.apollo
+                            .watchQuery<GetDefinitionDetailQueryInterface>({
+                                query: getDefinitionDetailQueryGql,
+                                variables: {
+                                    id: params['id'],
+                                },
                             })
-                        );
-                }
-            ))
+                            .valueChanges
+                            .pipe(
+                                map(result => result.data)
+                            );
+                    }
+                )
+            )
             .subscribe(
-                (item: GetDefinitionDetailQueryDefinitionFieldInterface) => {
-                    this.item = item;
+                (resultData: GetDefinitionDetailQueryInterface) => {
+                    this.publicSshKey = resultData.publicSshKey;
+                    this.definition = resultData.definition;
                 }
             );
     }

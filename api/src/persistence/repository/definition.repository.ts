@@ -15,7 +15,9 @@ export class DefinitionRepository {
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<DefinitionInterface[]> {
         const query = this.definitionModel.find(criteria);
-        query.skip(offset).limit(limit);
+        query
+            .skip(offset)
+            .limit(limit);
         if (sort) {
             query.sort(sort);
         }

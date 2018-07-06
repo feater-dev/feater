@@ -14,7 +14,9 @@ export class InstanceRepository {
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<InstanceInterface[]> {
         const query = this.instanceModel.find(criteria);
-        query.skip(offset).limit(limit);
+        query
+            .skip(offset)
+            .limit(limit);
         if (sort) {
             query.sort(sort);
         }

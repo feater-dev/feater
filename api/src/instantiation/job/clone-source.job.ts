@@ -40,26 +40,6 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
         logger.info('Cloning source.');
 
         return new Promise((resolve, reject) => {
-            const local = source.fullBuildPath;
-            let url;
-
-            switch (source.config.type) {
-                case 'github':
-                    url = `git@github.com:${source.config.name}.git`;
-                    break;
-
-                case 'gitlab':
-                    url = `git@gitlab.com:${source.config.name}.git`;
-                    break;
-
-                case 'bitbucket':
-                    url = `git@bitbucket.org:${source.config.name}.git`;
-                    break;
-
-                default:
-                    reject();
-            }
-
             const cloneOpts = {
                 fetchOpts: {
                     callbacks: {
@@ -74,7 +54,7 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
             };
 
             nodegit
-                .Clone(url, local, cloneOpts)
+                .Clone(source.config.sshCloneUrl, source.fullBuildPath, cloneOpts)
                 .then(repo => {
                     // TODO Handle non-existent reference and improve logging and error reporting.
                     switch (source.config.reference.type) {
@@ -85,8 +65,8 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
                                     return repo.checkoutRef(reference);
                                 });
 
-                        case 'tag':
-                        case 'commit':
+                        case 'tag': // TODO Allow to checkout tag.
+                        case 'commit': // TODO Allow to checkout commit.
                         default:
                             reject();
                     }
@@ -95,7 +75,7 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
                     resolve();
                 })
                 .catch(err => {
-                    logger.info(`Failed to clone source from repository ${source.config.name}`);
+                    logger.info(`Failed to clone source from repository ${source.config.sshCloneUrl}`);
                     reject(err);
                 });
         });

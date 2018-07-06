@@ -17,9 +17,7 @@ import {
 })
 export class ProjectDetailComponent implements OnInit {
 
-    item: GetProjectDetailQueryProjectFieldInterface;
-
-    errorMessage: string;
+    project: GetProjectDetailQueryProjectFieldInterface;
 
     constructor(
         private route: ActivatedRoute,
@@ -41,33 +39,21 @@ export class ProjectDetailComponent implements OnInit {
     }
 
     goToAddDefinition() {
-        this.router.navigate(['/project', this.item.id, 'definition', 'add']);
+        this.router.navigate(['/project', this.project.id, 'definition', 'add']);
     }
 
     private getItem() {
-        this.route.params.pipe(
-            switchMap(
-                (params: Params) => {
-                    return this.apollo
-                        .watchQuery<GetProjectDetailQueryInterface>({
-                            query: getProjectDetailQueryGql,
-                            variables: {
-                                id: params['id'],
-                            },
-                        })
-                        .valueChanges
-                        .pipe(
-                            map(result => {
-                                return result.data.project;
-                            })
-                        );
-                }
-            ))
-            .subscribe(
-                (item: GetProjectDetailQueryProjectFieldInterface) => {
-                    this.item = item;
+        return this.apollo
+            .watchQuery<GetProjectDetailQueryInterface>({
+                query: getProjectDetailQueryGql,
+                variables: {
+                    id: this.route.snapshot.params['id'],
                 },
-                (error) => { this.errorMessage = <any>error; }
-            );
+            })
+            .valueChanges
+            .subscribe(result => {
+                const resultData: GetProjectDetailQueryInterface = result.data;
+                this.project = resultData.project;
+            });
     }
 }

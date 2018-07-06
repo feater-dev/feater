@@ -16,9 +16,7 @@ import {
 })
 export class InstanceDetailComponent implements OnInit {
 
-    item: GetInstanceDetailQueryInstanceFieldinterface;
-
-    errorMessage: string;
+    instance: GetInstanceDetailQueryInstanceFieldinterface;
 
     constructor(
         private route: ActivatedRoute,
@@ -36,15 +34,15 @@ export class InstanceDetailComponent implements OnInit {
     }
 
     goToProjectDetails() {
-        this.router.navigate(['/project', this.item.definition.project.id]);
+        this.router.navigate(['/project', this.instance.definition.project.id]);
     }
 
     goToDefinitionDetails() {
-        this.router.navigate(['/definition', this.item.definition.id]);
+        this.router.navigate(['/definition', this.instance.definition.id]);
     }
 
     getServiceById(id) {
-        for (const service of this.item.services) {
+        for (const service of this.instance.services) {
             if (id === service.id) {
                 return service;
             }
@@ -52,30 +50,18 @@ export class InstanceDetailComponent implements OnInit {
     }
 
     private getItem() {
-        this.route.params.pipe(
-            switchMap(
-                (params: Params) => {
-                    return this.apollo
-                        .watchQuery<GetInstanceDetailQueryInterface>({
-                            query: getInstanceDetailQueryGql,
-                            variables: {
-                                id: params['id'],
-                            },
-                        })
-                        .valueChanges
-                        .pipe(
-                            map(result => {
-                                return result.data.instance;
-                            })
-                        );
-                }
-            ))
-            .subscribe(
-                (item: GetInstanceDetailQueryInstanceFieldinterface) => {
-                    this.item = item;
+        this.apollo
+            .watchQuery<GetInstanceDetailQueryInterface>({
+                query: getInstanceDetailQueryGql,
+                variables: {
+                    id: this.route.snapshot.params['id'],
                 },
-                (error) => { this.errorMessage = <any>error; }
-            );
+            })
+            .valueChanges
+            .subscribe(result => {
+                const resultData: GetInstanceDetailQueryInterface = result.data;
+                this.instance = resultData.instance;
+            });
     }
 
 }

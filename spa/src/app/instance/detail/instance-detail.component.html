@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="page-header">
-            <h2>Instance <em>{{ item?.name }}</em></h2>
+            <h2>Instance <em>{{ instance?.name }}</em></h2>
         </div>
     </div>
 </div>
@@ -14,9 +14,10 @@
                     <label class="col-lg-3 control-label">Name</label>
                     <div class="col-lg-9">
                         <p class="form-control-static">
-                            <a (click)="goToProjectDetails(item?.definition.project)">{{ item?.definition.project.name }}</a> /
-                            <a (click)="goToDefinitionDetails(item?.definition)">{{ item?.definition.name }}</a> /
-                            <span>{{ item?.name}}</span>
+                            <a (click)="goToProjectDetails(instance?.definition.project)">{{
+                                instance?.definition.project.name }}</a> /
+                            <a (click)="goToDefinitionDetails(instance?.definition)">{{ instance?.definition.name }}</a> /
+                            <span>{{ instance?.name}}</span>
                         </p>
                     </div>
                 </div>
@@ -24,11 +25,11 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Created at</label>
                     <div class="col-lg-9">
-                        <p class="form-control-static">{{ item?.createdAt | absoluteDate }}</p>
+                        <p class="form-control-static">{{ instance?.createdAt | absoluteDate }}</p>
                     </div>
                 </div>
 
-                <div class="form-group" [hidden]="!item?.envVariables?.length">
+                <div class="form-group" [hidden]="!instance?.envVariables?.length">
                     <label class="col-lg-3 control-label">Environmental variables</label>
                     <div class="col-lg-9">
                         <table class="table table-striped">
@@ -39,7 +40,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let envVariable of item?.envVariables" class="form-control-static">
+                                <tr *ngFor="let envVariable of instance?.envVariables" class="form-control-static">
                                     <td>{{ envVariable.name }}</td>
                                     <td>{{ envVariable.value }}</td>
                                 </tr>
@@ -48,7 +49,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" [hidden]="!item?.proxiedPorts?.length">
+                <div class="form-group" [hidden]="!instance?.proxiedPorts?.length">
                     <label class="col-lg-3 control-label">Proxied ports</label>
                     <div class="col-lg-9">
                         <table class="table table-striped">
@@ -63,7 +64,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let proxiedPort of item?.proxiedPorts" class="form-control-static">
+                                <tr *ngFor="let proxiedPort of instance?.proxiedPorts" class="form-control-static">
                                     <td>{{ proxiedPort.id }}</td>
                                     <td>{{ proxiedPort.name }}</td>
                                     <td>{{ proxiedPort.serviceId }}</td>
@@ -79,11 +80,11 @@
                     </div>
                 </div>
 
-                <div class="form-group" [hidden]="!item?.summaryItems?.length">
+                <div class="form-group" [hidden]="!instance?.summaryItems?.length">
                     <label class="col-lg-3 control-label">Summary</label>
                     <div class="col-lg-9">
                         <ul style="list-style-position: outside; list-style-type: none; padding-left: 0">
-                            <li *ngFor="let summaryItem of item?.summaryItems" class="form-control-static">
+                            <li *ngFor="let summaryItem of instance?.summaryItems" class="form-control-static">
                                 <div><strong>{{ summaryItem.name }}</strong></div>
                                 <div innerHTML="{{ summaryItem.text | linkify }}"></div>
                             </li>

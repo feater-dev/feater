@@ -1,22 +1,26 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {Router, ActivatedRoute, Params} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
-import {map} from 'rxjs/operators';
+import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
     getInstanceDetailQueryGql,
     GetInstanceDetailQueryInstanceFieldinterface,
     GetInstanceDetailQueryInterface,
 } from './get-instance-detail.query';
+import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
+
+const POLLING_INTERVAL = 5000;
 
 @Component({
     selector: 'app-instance-detail',
     templateUrl: './instance-detail.component.html',
     styles: []
 })
-export class InstanceDetailComponent implements OnInit {
+export class InstanceDetailComponent implements OnInit, OnDestroy {
 
     instance: GetInstanceDetailQueryInstanceFieldinterface;
+
+    pollingSubscription: Subscription;
 
     constructor(
         private route: ActivatedRoute,
@@ -27,6 +31,14 @@ export class InstanceDetailComponent implements OnInit {
 
     ngOnInit() {
         this.getInstance();
+        const polling = Observable.interval(POLLING_INTERVAL);
+        this.pollingSubscription = polling.subscribe(
+            () => { this.getInstance(); },
+        );
+    }
+
+    ngOnDestroy() {
+        this.pollingSubscription.unsubscribe();
     }
 
     goToList() {
@@ -56,6 +68,7 @@ export class InstanceDetailComponent implements OnInit {
                 variables: {
                     id: this.route.snapshot.params['id'],
                 },
+                fetchPolicy: 'network-only',
             })
             .valueChanges
             .subscribe(result => {

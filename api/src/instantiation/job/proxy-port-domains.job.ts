@@ -60,7 +60,7 @@ server {
 
     location / {
         proxy_pass http://${service.ipAddress}:${proxiedPorts.port};
-        proxy_set_header Host $host:${this.config.app.proxyPort};
+        proxy_set_header Host $host:80;
     }
 }
 `,

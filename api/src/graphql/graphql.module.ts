@@ -15,6 +15,7 @@ import {ResolverPaginationArgumentsHelper} from './resolver/pagination-argument/
 import {DateResolverFactory} from './resolver/date-resolver-factory.component';
 import {PublicSshKeyResolverFactory} from './resolver/public-ssh-key-resolver-factory.component';
 import {ConfigModule} from '../config/config.module';
+import {LogsResolverFactory} from './resolver/logs-resolver-factory.component';
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import {ConfigModule} from '../config/config.module';
         GraphqlSchemaFactory,
         PublicSshKeyResolverFactory,
         UsersResolverFactory,
+        LogsResolverFactory,
         ProjectsResolverFactory,
         DefinitionResolverFactory,
         InstanceResolverFactory,

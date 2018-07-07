@@ -6,6 +6,8 @@ import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {JobInterface, SourceJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 
+const PROGRESS_THROTTLE_PERIOD = 10; // In miliseconds.
+
 export class CloneSourceJob implements SourceJobInterface {
 
     constructor(
@@ -37,7 +39,7 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
 
         source.relativePath = source.id;
 
-        logger.info('Cloning source.');
+        logger.info(`Cloning source from ${source.config.sshCloneUrl} to ${source.fullBuildPath}.`);
 
         return new Promise((resolve, reject) => {
             const cloneOpts = {
@@ -49,6 +51,16 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
                             this.config.sshKey.privateKeyPath,
                             this.config.sshKey.passphrase,
                         ),
+                        transferProgress: {
+                            throttle: PROGRESS_THROTTLE_PERIOD,
+                            callback: (transferProgress) => {
+                                const progress = 100 * (
+                                    (transferProgress.receivedObjects() + transferProgress.indexedObjects()) /
+                                    (transferProgress.totalObjects() * 2)
+                                );
+                                logger.info(`Cloning progress ${progress.toFixed(2)}%.`);
+                            },
+                        },
                     },
                 },
             };
@@ -72,10 +84,11 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
                     }
                 })
                 .then(() => {
+                    logger.info(`Completed cloning source from ${source.config.sshCloneUrl}.`);
                     resolve();
                 })
                 .catch(err => {
-                    logger.info(`Failed to clone source from repository ${source.config.sshCloneUrl}`);
+                    logger.info(`Failed to clone source from ${source.config.sshCloneUrl}.`);
                     reject(err);
                 });
         });

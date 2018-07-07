@@ -12,6 +12,8 @@ import {BeforeBuildTaskTypeInterface} from '../type/nested/definition-config/bef
 import {UsersResolverFactory} from '../resolver/users-resolver-factory.component';
 import {DateResolverFactory} from '../resolver/date-resolver-factory.component';
 import {PublicSshKeyResolverFactory} from '../resolver/public-ssh-key-resolver-factory.component';
+import {LogsResolverFactory} from '../resolver/logs-resolver-factory.component';
+import {LogTypeInterface} from '../type/log-type.interface';
 
 @Component()
 export class GraphqlSchemaFactory {
@@ -22,6 +24,7 @@ export class GraphqlSchemaFactory {
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly definitionResolverFactory: DefinitionResolverFactory,
         private readonly instanceResolverFactory: InstanceResolverFactory,
+        private readonly logsResolverFactory: LogsResolverFactory,
         private readonly dateResolverFactory: DateResolverFactory,
     ) { }
 
@@ -79,8 +82,17 @@ export class GraphqlSchemaFactory {
                 definition: this.definitionResolverFactory.getItemResolver(
                     (instance: InstanceTypeInterface) => instance.definitionId,
                 ),
-                createdAt: this.dateResolverFactory.getResolver(
+                createdAt: this.dateResolverFactory.getDateResolver(
                     (instance: InstanceTypeInterface) => instance.createdAt,
+                ),
+                logs: this.logsResolverFactory.getListResolver(
+                    (instance: InstanceTypeInterface) => ({instanceId: instance.id}),
+                ),
+            },
+
+            InstanceLog: {
+                createdAt: this.dateResolverFactory.getTimestampResolver(
+                    (instanceLog: LogTypeInterface) => instanceLog.timestamp,
                 ),
             },
 

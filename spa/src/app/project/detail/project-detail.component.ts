@@ -1,7 +1,5 @@
 import {Component, OnInit, Inject} from '@angular/core';
-import {Router, ActivatedRoute, Params} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
-import {map} from 'rxjs/operators';
+import {Router, ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
     getProjectDetailQueryGql,

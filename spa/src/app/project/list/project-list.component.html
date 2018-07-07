@@ -13,11 +13,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items | async">
-                    <td>{{ item.name }}</td>
-                    <td class="fit-column"><small>{{ item.id }}</small></td>
+                <tr *ngFor="let project of projects">
+                    <td>{{ project.name }}</td>
+                    <td class="fit-column"><small>{{ project.id }}</small></td>
                     <td class="fit-column">
-                        <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(item)" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(project)" aria-hidden="true"></span>
                     </td>
                 </tr>
             </tbody>

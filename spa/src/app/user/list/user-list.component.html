@@ -13,11 +13,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items | async">
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.githubProfile?.username || '&mdash;' }}</td>
-                    <td>{{ item.googleProfile?.emailAddress || '&mdash;' }}</td>
-                    <td class="fit-column"><small>{{ item.id }}</small></td>
+                <tr *ngFor="let user of users">
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.githubProfile?.username || '&mdash;' }}</td>
+                    <td>{{ user.googleProfile?.emailAddress || '&mdash;' }}</td>
+                    <td class="fit-column"><small>{{ user.id }}</small></td>
                 </tr>
             </tbody>
         </table>

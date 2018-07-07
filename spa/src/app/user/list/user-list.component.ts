@@ -13,7 +13,7 @@ import {getuserListQueryGql, GetUserListQueryInterface, GetUserListQueryUsersFie
 })
 export class UserListComponent implements OnInit {
 
-    items: Observable<GetUserListQueryUsersFieldItemInterface[]>;
+    users: GetUserListQueryUsersFieldItemInterface[];
 
     constructor(
         private router: Router,
@@ -22,17 +22,18 @@ export class UserListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItems();
+        this.getUsers();
     }
 
-    private getItems() {
-        this.items = this.apollo
+    private getUsers() {
+        this.apollo
             .watchQuery<GetUserListQueryInterface>({
                 query: getuserListQueryGql,
             })
             .valueChanges
-            .pipe(
-                map(result => result.data.users)
-            );
+            .subscribe(result => {
+                    const resultData: GetUserListQueryInterface = result.data;
+                    this.users = resultData.users;
+            });
     }
 }

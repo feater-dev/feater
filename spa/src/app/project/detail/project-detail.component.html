@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="page-header">
-            <h2>Project <em>{{ item?.name }}</em></h2>
+            <h2>Project <em>{{ project?.name }}</em></h2>
         </div>
     </div>
 </div>
@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label for="inputProjectName" class="col-lg-2 control-label">Name</label>
                     <div class="col-lg-10">
-                        <p class="form-control-static" id="inputProjectName">{{ item?.name}}</p>
+                        <p class="form-control-static" id="inputProjectName">{{ project?.name}}</p>
                     </div>
                 </div>
             </form>
@@ -23,11 +23,11 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h3 id="tables">Definitions for project <em>{{ item?.name}}</em></h3>
-        <p *ngIf="!item?.definitions.length">
+        <h3 id="tables">Definitions for project <em>{{ project?.name}}</em></h3>
+        <p *ngIf="!project?.definitions.length">
             <em>No definitions to list.</em>
         </p>
-        <table *ngIf="item?.definitions.length" class="table table-striped table-hover">
+        <table *ngIf="project?.definitions.length" class="table table-striped table-hover">
             <thead>
             <tr>
                 <th>Name</th>
@@ -36,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let definition of item?.definitions">
+            <tr *ngFor="let definition of project?.definitions">
                 <td>{{ definition.name }}</td>
                 <td class="fit-column"><small>{{ definition.id }}</small></td>
                 <td class="fit-column">

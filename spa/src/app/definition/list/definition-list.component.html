@@ -12,11 +12,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items | async">
-                    <td>{{ item.name }}</td>
-                    <td class="fit-column"><small>{{ item.id }}</small></td>
+                <tr *ngFor="let definition of definitions">
+                    <td>{{ definition.name }}</td>
+                    <td class="fit-column"><small>{{ definition.id }}</small></td>
                     <td class="fit-column">
-                        <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(item)" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(definition)" aria-hidden="true"></span>
                     </td>
                 </tr>
             </tbody>

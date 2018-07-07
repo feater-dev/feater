@@ -15,7 +15,7 @@ import {
 })
 export class InstanceListComponent implements OnInit {
 
-    items: GetInstanceListQueryInstanceFieldItemInterface[];
+    instances: GetInstanceListQueryInstanceFieldItemInterface[];
 
     constructor(
         private route: ActivatedRoute,
@@ -25,40 +25,27 @@ export class InstanceListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItems();
+        this.getInstances();
     }
 
-    goToDetail(item) {
-        this.router.navigate(['/instance', item.id]);
+    goToDetail(instance) {
+        this.router.navigate(['/instance', instance.id]);
     }
 
-    private getItems() {
-        this.route.queryParams
-            .pipe(
-                switchMap(
-                    (queryParams) => {
-                        console.log(queryParams);
-                        return this.apollo
-                            .watchQuery<GetInstanceListQueryInterface>({
-                                query: getInstanceListQueryGql,
-                                variables: {
-                                    definitionId: queryParams['definitionId'],
-                                    limit: queryParams['limit'],
-                                    offset: queryParams['offset'],
-                                },
-                            })
-                            .valueChanges
-                            .pipe(
-                                map(result => result.data.instances)
-                            );
-                    }
-                )
-            )
-            .subscribe(
-                (items: GetInstanceListQueryInstanceFieldItemInterface[]) => {
-                    this.items = items;
-                }
-            );
-
+    private getInstances() {
+        this.apollo
+            .watchQuery<GetInstanceListQueryInterface>({
+                query: getInstanceListQueryGql,
+                variables: {
+                    definitionId: this.route.snapshot.queryParams['definitionId'],
+                    limit: this.route.snapshot.queryParams['limit'],
+                    offset: this.route.snapshot.queryParams['offset'],
+                },
+            })
+            .valueChanges
+            .subscribe(result => {
+                const resultData: GetInstanceListQueryInterface = result.data;
+                this.instances = resultData.instances;
+            });
     }
 }

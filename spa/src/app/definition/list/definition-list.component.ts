@@ -17,7 +17,7 @@ import {
 })
 export class DefinitionListComponent implements OnInit {
 
-    items: Observable<GetDefinitionListQueryDefinitionsFieldItemInterface[]>;
+    definitions: GetDefinitionListQueryDefinitionsFieldItemInterface[];
 
     constructor(
         private router: Router,
@@ -26,21 +26,22 @@ export class DefinitionListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItems();
+        this.getDefinitions();
     }
 
-    goToDetail(item) {
-        this.router.navigate(['/definition', item.id]);
+    goToDetail(definition) {
+        this.router.navigate(['/definition', definition.id]);
     }
 
-    private getItems() {
-        this.items = this.apollo
+    private getDefinitions() {
+        this.apollo
             .watchQuery<GetDefinitionListQueryInterface>({
                 query: getDefinitionListQueryGql
             })
             .valueChanges
-            .pipe(
-                map(result => result.data.definitions)
-            );
+            .subscribe(result => {
+                const resultData: GetDefinitionListQueryInterface= result.data;
+                this.definitions = resultData.definitions;
+            });
     }
 }

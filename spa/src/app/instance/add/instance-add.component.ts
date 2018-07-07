@@ -75,30 +75,18 @@ export class InstanceAddComponent implements OnInit {
     }
 
     private getDefinition() {
-        this.route.params.pipe(
-            switchMap(
-                (params: Params) => {
-                    return this.apollo
-                        .watchQuery<GetDefinitionQueryInterface>({
-                            query: getDefinitionQueryGql,
-                            variables: {
-                                id: params['id'],
-                            },
-                        })
-                        .valueChanges
-                        .pipe(
-                            map(result => {
-                                return result.data.definition;
-                            })
-                        );
-                }
-            ))
-            .subscribe(
-                (definition: GetDefinitionQueryDefinitionFieldInterface) => {
-                    this.definition = definition;
-                }
-            );
-
+        this.apollo
+            .watchQuery<GetDefinitionQueryInterface>({
+                query: getDefinitionQueryGql,
+                variables: {
+                    id: this.route.snapshot.params['id'],
+                },
+            })
+            .valueChanges
+            .subscribe(result => {
+                const resultData: GetDefinitionQueryInterface = result.data;
+                this.definition = resultData.definition;
+            });
     }
 
 }

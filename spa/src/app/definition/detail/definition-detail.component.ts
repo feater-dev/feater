@@ -29,7 +29,7 @@ export class DefinitionDetailComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItem();
+        this.getDefinitions();
     }
 
     goToList() {
@@ -48,30 +48,19 @@ export class DefinitionDetailComponent implements OnInit {
         this.router.navigate(['/definition', this.definition.id, 'instance', 'add']);
     }
 
-    private getItem() {
-        this.route.params
-            .pipe(
-                switchMap(
-                    (params: Params) => {
-                        return this.apollo
-                            .watchQuery<GetDefinitionDetailQueryInterface>({
-                                query: getDefinitionDetailQueryGql,
-                                variables: {
-                                    id: params['id'],
-                                },
-                            })
-                            .valueChanges
-                            .pipe(
-                                map(result => result.data)
-                            );
-                    }
-                )
-            )
-            .subscribe(
-                (resultData: GetDefinitionDetailQueryInterface) => {
-                    this.publicSshKey = resultData.publicSshKey;
-                    this.definition = resultData.definition;
-                }
-            );
+    private getDefinitions() {
+        this.apollo
+            .watchQuery<GetDefinitionDetailQueryInterface>({
+                query: getDefinitionDetailQueryGql,
+                variables: {
+                    id: this.route.snapshot.params['id'],
+                },
+            })
+            .valueChanges
+            .subscribe(result => {
+                const resultData: GetDefinitionDetailQueryInterface = result.data;
+                this.publicSshKey = resultData.publicSshKey;
+                this.definition = resultData.definition;
+            });
     }
 }

@@ -18,6 +18,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="inputDefinitionConfig" class="col-lg-2 control-label">Config</label>
+                    <div class="col-lg-10">
+                        <pre class="form-control-static" id="inputDefinitionConfig">{{ definition?.config | json }}</pre>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="publicSshKey" class="col-lg-2 control-label">Public SSH key</label>
                     <div class="col-lg-10">
                         <pre class="form-control-static" id="publicSshKey" style="white-space: pre-wrap">{{ publicSshKey }}</pre>
@@ -29,12 +35,6 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputDefinitionConfig" class="col-lg-2 control-label">Config</label>
-                    <div class="col-lg-10">
-                        <pre class="form-control-static" id="inputDefinitionConfig">{{ definition?.config | json }}</pre>
                     </div>
                 </div>
             </div>

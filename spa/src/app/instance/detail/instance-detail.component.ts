@@ -26,7 +26,7 @@ export class InstanceDetailComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItem();
+        this.getInstance();
     }
 
     goToList() {
@@ -49,7 +49,7 @@ export class InstanceDetailComponent implements OnInit {
         }
     }
 
-    private getItem() {
+    private getInstance() {
         this.apollo
             .watchQuery<GetInstanceDetailQueryInterface>({
                 query: getInstanceDetailQueryGql,

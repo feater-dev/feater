@@ -27,7 +27,7 @@ export class ProjectDetailComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItem();
+        this.getProject();
     }
 
     goToList() {
@@ -42,7 +42,7 @@ export class ProjectDetailComponent implements OnInit {
         this.router.navigate(['/project', this.project.id, 'definition', 'add']);
     }
 
-    private getItem() {
+    private getProject() {
         return this.apollo
             .watchQuery<GetProjectDetailQueryInterface>({
                 query: getProjectDetailQueryGql,

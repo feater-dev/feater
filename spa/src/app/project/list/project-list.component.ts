@@ -17,7 +17,7 @@ import {
 })
 export class ProjectListComponent implements OnInit {
 
-    items: Observable<GetProjectListQueryProjectsFieldItemInterface[]>;
+    projects: GetProjectListQueryProjectsFieldItemInterface[];
 
     constructor(
         private router: Router,
@@ -26,25 +26,26 @@ export class ProjectListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItems();
+        this.getProjects();
     }
 
-    goToDetail(item) {
-        this.router.navigate(['/project', item.id]);
+    goToDetail(project) {
+        this.router.navigate(['/project', project.id]);
     }
 
     goToAdd() {
         this.router.navigate(['/project/add']);
     }
 
-    private getItems() {
-        this.items = this.apollo
+    private getProjects() {
+        this.apollo
             .watchQuery<GetProjectListQueryInterface>({
                 query: getProjectListQueryGql,
             })
             .valueChanges
-            .pipe(
-                map(result => result.data.projects)
-            );
+            .subscribe(result => {
+                const resultData: GetProjectListQueryInterface = result.data;
+                this.projects = resultData.projects;
+            });
     }
 }

@@ -22,10 +22,10 @@ export class UserListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItems();
+        this.getUsers();
     }
 
-    private getItems() {
+    private getUsers() {
         this.apollo
             .watchQuery<GetUserListQueryInterface>({
                 query: getuserListQueryGql,

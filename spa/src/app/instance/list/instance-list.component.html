@@ -15,14 +15,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items">
-                    <td>{{ item.definition.project.name }}</td>
-                    <td>{{ item.definition.name }}</td>
-                    <td>{{ item.name }}</td>
-                    <td class="fit-column"><small>{{ item.createdAt | relativeDate }}</small></td>
-                    <td class="fit-column"><small>{{ item.id }}</small></td>
+                <tr *ngFor="let instance of instances">
+                    <td>{{ instance.definition.project.name }}</td>
+                    <td>{{ instance.definition.name }}</td>
+                    <td>{{ instance.name }}</td>
+                    <td class="fit-column"><small>{{ instance.createdAt | relativeDate }}</small></td>
+                    <td class="fit-column"><small>{{ instance.id }}</small></td>
                     <td class="fit-column">
-                        <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(item)" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(instance)" aria-hidden="true"></span>
                     </td>
                 </tr>
             </tbody>

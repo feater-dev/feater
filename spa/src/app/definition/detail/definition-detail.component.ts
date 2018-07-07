@@ -29,7 +29,7 @@ export class DefinitionDetailComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getItem();
+        this.getDefinitions();
     }
 
     goToList() {
@@ -48,7 +48,7 @@ export class DefinitionDetailComponent implements OnInit {
         this.router.navigate(['/definition', this.definition.id, 'instance', 'add']);
     }
 
-    private getItem() {
+    private getDefinitions() {
         this.apollo
             .watchQuery<GetDefinitionDetailQueryInterface>({
                 query: getDefinitionDetailQueryGql,

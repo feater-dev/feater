@@ -11,6 +11,8 @@ import {DefinitionRepository} from './repository/definition.repository';
 import {InstanceRepository} from './repository/instance.repository';
 import {ApiTokenRepository} from './repository/api-token.repository';
 import {environment} from '../environment/environment';
+import {LogRepository} from './repository/log.repository';
+import {ConfigModule} from '../config/config.module';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import {environment} from '../environment/environment';
       MongooseModule.forFeature([{ name: 'Project', schema: ProjectSchema }]),
       MongooseModule.forFeature([{ name: 'Definition', schema: DefinitionSchema }]),
       MongooseModule.forFeature([{ name: 'Instance', schema: InstanceSchema }]),
+      ConfigModule,
   ],
   controllers: [],
   components: [
@@ -28,6 +31,7 @@ import {environment} from '../environment/environment';
       ProjectRepository,
       DefinitionRepository,
       InstanceRepository,
+      LogRepository,
   ],
   exports: [
       ApiTokenRepository,
@@ -35,6 +39,7 @@ import {environment} from '../environment/environment';
       ProjectRepository,
       DefinitionRepository,
       InstanceRepository,
+      LogRepository,
   ],
 })
 export class PersistenceModule {}

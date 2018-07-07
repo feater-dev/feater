@@ -258,6 +258,11 @@ export const typeDefsProvider = {
             text: String!
         }
 
+        type InstanceLog {
+            createdAt: String!
+            message: String!
+        }
+
         type Instance {
             id: String!
             name: String!
@@ -267,6 +272,7 @@ export const typeDefsProvider = {
             proxiedPorts: [InstanceProxiedPort!]!
             summaryItems: [InstanceSummaryItem!]!
             createdAt: String!
+            logs: [InstanceLog!]!
         }
     `,
 };

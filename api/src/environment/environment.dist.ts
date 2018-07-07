@@ -3,11 +3,6 @@ export const environment = {
         versionNumber: '0.0',
         scheme: 'https',
         host: 'feat.org',
-        port: '443',
-        proxyPort: '3002',
-    },
-    ports: {
-        translation: 0,
     },
     mongo: {
         dsn: 'mongodb://user:password@host:27017/feat',

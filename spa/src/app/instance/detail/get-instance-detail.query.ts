@@ -40,6 +40,10 @@ export const getInstanceDetailQueryGql = gql`
                 value
             }
             createdAt
+            logs {
+                createdAt
+                message
+            }
         }
     }
 `;
@@ -87,6 +91,13 @@ export interface GetInstanceDetailQueryInstanceFieldinterface {
                 readonly short: string;
                 readonly long: string;
             };
+        }
+    ];
+    readonly createdAt: string,
+    readonly logs: [
+        {
+            readonly createdAt: string;
+            readonly message: string;
         }
     ];
 }

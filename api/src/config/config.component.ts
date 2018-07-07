@@ -5,12 +5,6 @@ interface AppConfigInterface {
     readonly versionNumber: string;
     readonly scheme: string;
     readonly host: string;
-    readonly port: number;
-    readonly proxyPort: number;
-}
-
-interface PortsConfigInterface {
-    readonly translation: number;
 }
 
 interface MongoConfigInterface {
@@ -64,7 +58,6 @@ interface LoggerConfigInterface {
 export class Config {
 
     readonly app: AppConfigInterface;
-    readonly ports: PortsConfigInterface;
     readonly mongo: MongoConfigInterface;
     readonly sshKey: SshKeyConfigInterface;
     readonly guestPaths: GuestPathsConfigInterface;
@@ -76,7 +69,6 @@ export class Config {
 
     constructor() {
         this.app = environment.app as AppConfigInterface;
-        this.ports = environment.ports as PortsConfigInterface;
         this.mongo = environment.mongo as MongoConfigInterface;
         this.sshKey = environment.sshKey as SshKeyConfigInterface;
         this.guestPaths = environment.guestPaths as GuestPathsConfigInterface;

@@ -42,7 +42,6 @@ export class Instantiator {
         const featVariables = {
             scheme: this.config.app.scheme,
             host: this.config.app.host,
-            port: <string> <any> this.config.app.port,
             npm_cache: this.config.hostPaths.npmCache,
             composer_cache: this.config.hostPaths.composerCache,
         };

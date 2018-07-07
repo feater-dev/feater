@@ -17,7 +17,6 @@ export class Source {
     }
 
     get fullBuildPath(): string {
-        console.log(this.build.fullBuildPath, this.relativePath);
         return path.join(this.build.fullBuildPath, this.relativePath);
     }
 

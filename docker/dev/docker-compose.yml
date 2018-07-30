@@ -35,6 +35,12 @@ services:
       - featinternal
     container_name: feat_mongo
 
+  redis:
+    image: redis:4
+    networks:
+      - featinternal
+    container_name: feat_redis
+
   nginx:
     build: nginx
     volumes:

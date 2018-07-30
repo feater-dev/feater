@@ -11,6 +11,10 @@ interface MongoConfigInterface {
     readonly dsn: string;
 }
 
+interface RedisConfigInterface {
+    readonly url: string;
+}
+
 interface SshKeyConfigInterface {
     readonly publicKeyPath: string;
     readonly privateKeyPath: string;
@@ -59,6 +63,7 @@ export class Config {
 
     readonly app: AppConfigInterface;
     readonly mongo: MongoConfigInterface;
+    readonly redis: RedisConfigInterface;
     readonly sshKey: SshKeyConfigInterface;
     readonly guestPaths: GuestPathsConfigInterface;
     readonly hostPaths: HostPathsConfigInterface;
@@ -70,6 +75,7 @@ export class Config {
     constructor() {
         this.app = environment.app as AppConfigInterface;
         this.mongo = environment.mongo as MongoConfigInterface;
+        this.redis = environment.redis as RedisConfigInterface;
         this.sshKey = environment.sshKey as SshKeyConfigInterface;
         this.guestPaths = environment.guestPaths as GuestPathsConfigInterface;
         this.hostPaths = environment.hostPaths as HostPathsConfigInterface;

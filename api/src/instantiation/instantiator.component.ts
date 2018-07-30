@@ -29,26 +29,20 @@ export class Instantiator {
     ) {}
 
     createBuild(id: string, hash: string, definition: any) {
-        this.logger.info('Setting up build.');
+        this.logger.info('Setting up build and sources.');
         const {config: definitionConfig} = definition.toObject();
         const build = new Build(id, hash, definitionConfig);
-
-        this.logger.info('Setting up sources.');
         for (const source of definitionConfig.sources) {
             new Source(source.id, build, source);
         }
 
         this.logger.info('Setting basic Feat variables.');
-        const featVariables = {
-            scheme: this.config.app.scheme,
-            host: this.config.app.host,
-            npm_cache: this.config.hostPaths.npmCache,
-            composer_cache: this.config.hostPaths.composerCache,
-        };
-
-        _.each(featVariables, (value, name) => {
-            build.addFeatVariable(name, value);
-        });
+        build.addFeatVariable('scheme', this.config.app.scheme);
+        build.addFeatVariable('host', this.config.app.host);
+        build.addFeatVariable('npm_cache', this.config.hostPaths.npmCache);
+        build.addFeatVariable('composer_cache', this.config.hostPaths.composerCache);
+        build.addFeatVariable('instance_id', build.id);
+        build.addFeatVariable('instance_hash', build.hash);
 
         return build;
     }
@@ -104,10 +98,7 @@ export class Instantiator {
             );
     }
 
-    private mapBeforeBuildTaskToJob(
-        beforeBuildTask: any,
-        source: Source,
-    ): JobInterface {
+    private mapBeforeBuildTaskToJob(beforeBuildTask: any, source: Source,): JobInterface {
         switch (beforeBuildTask.type) {
             case 'copy':
                 return new CopyBeforeBuildTaskJob(

@@ -7,6 +7,9 @@ export const environment = {
     mongo: {
         dsn: 'mongodb://user:password@host:27017/feat',
     },
+    redis: {
+        url: 'redis://user:password@host:6379/1',
+    },
     sshKey: {
         publicKeyPath: '/root/.ssh/id_rsa.pub',
         privateKeyPath: '/root/.ssh/id_rsa',

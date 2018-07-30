@@ -14,6 +14,8 @@ import {DateResolverFactory} from '../resolver/date-resolver-factory.component';
 import {PublicSshKeyResolverFactory} from '../resolver/public-ssh-key-resolver-factory.component';
 import {LogsResolverFactory} from '../resolver/logs-resolver-factory.component';
 import {LogTypeInterface} from '../type/log-type.interface';
+import {DockerDaemonResolverFactory} from '../resolver/docker-daemon-resolver-factory.component';
+import {InstanceServiceTypeInterface} from '../type/instance-service-type.interface';
 
 @Component()
 export class GraphqlSchemaFactory {
@@ -26,6 +28,7 @@ export class GraphqlSchemaFactory {
         private readonly instanceResolverFactory: InstanceResolverFactory,
         private readonly logsResolverFactory: LogsResolverFactory,
         private readonly dateResolverFactory: DateResolverFactory,
+        private readonly dockerDaemonResolverFactory: DockerDaemonResolverFactory,
     ) { }
 
     public createSchema(): GraphQLSchema {
@@ -87,6 +90,12 @@ export class GraphqlSchemaFactory {
                 ),
                 logs: this.logsResolverFactory.getListResolver(
                     (instance: InstanceTypeInterface) => ({instanceId: instance.id}),
+                ),
+            },
+
+            InstanceService: {
+                containerState: this.dockerDaemonResolverFactory.getContainerStateResolver(
+                    (instanceService: any) => instanceService.containerNamePrefix,
                 ),
             },
 

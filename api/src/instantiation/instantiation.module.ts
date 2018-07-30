@@ -19,6 +19,8 @@ import {Instantiator} from './instantiator.component';
 import {InterpolationHelper} from './interpolation-helper.component';
 import {JobExecutorsCollection} from './job-executors-collection.component';
 import {StagesListFactory} from './stages-list-factory.component';
+import {ContainerStatusChecker} from './container-status-checker.component';
+import {ContainerDetailsWorker} from './container-details-worker.component';
 
 @Module({
   imports: [
@@ -45,9 +47,12 @@ import {StagesListFactory} from './stages-list-factory.component';
       InterpolationHelper,
       JobExecutorsCollection,
       StagesListFactory,
+      ContainerDetailsWorker,
+      ContainerStatusChecker,
   ],
   exports: [
       Instantiator,
+      ContainerStatusChecker,
   ],
 })
 export class InstantiationModule {}

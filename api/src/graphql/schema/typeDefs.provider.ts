@@ -233,6 +233,7 @@ export const typeDefsProvider = {
             containerNamePrefix: String!
             containerId: String!
             ipAddress: String!
+            containerState: String!
         }
 
         type InstanceEnvVariable {

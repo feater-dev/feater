@@ -19,6 +19,7 @@ export const getInstanceDetailQueryGql = gql`
                 cleanId
                 containerId
                 containerNamePrefix
+                containerState
                 ipAddress
             }
             proxiedPorts {
@@ -67,6 +68,7 @@ export interface GetInstanceDetailQueryInstanceFieldinterface {
             readonly containerId: string;
             readonly containerNamePrefix: string;
             readonly ipAddress: string;
+            readonly containerState: string;
         }
     ];
     readonly summaryItems: [

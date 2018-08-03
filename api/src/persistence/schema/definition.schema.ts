@@ -33,16 +33,32 @@ export const DefinitionSchema = new Schema({
             name: String,
             value: String,
         }],
-        summaryItems: [{
-            _id: false,
-            name: String,
-            text: String,
-        }],
         composeFiles: [{
             _id: false,
             sourceId: String,
             envDirRelativePath: String,
             composeFileRelativePaths: [String],
+        }],
+        afterBuildTasks: [{
+            _id: false,
+            type: {type: String},
+            serviceId: String,
+            customEnvVariables: [{
+                _id: false,
+                name: String,
+                value: String,
+            }],
+            inheritedEnvVariables: [{
+                _id: false,
+                name: String,
+                alias: String,
+            }],
+            command: [String],
+        }],
+        summaryItems: [{
+            _id: false,
+            name: String,
+            text: String,
         }],
     },
 });

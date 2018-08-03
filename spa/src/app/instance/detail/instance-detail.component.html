@@ -117,11 +117,14 @@
                 <div class="form-group" [hidden]="!instance?.logs?.length">
                     <label class="col-lg-3 control-label">Logs</label>
                     <div class="col-lg-9">
-                        <div class="logs">
-                            <div *ngFor="let log of instance?.logs">
-                                <span class="log-timestamp">{{ log.createdAt | absoluteDate }}</span><span class="log-message">{{ log.message }}</span>
-                            </div>
-                        </div>
+                        <table class="logs">
+                            <tbody>
+                                <tr *ngFor="let log of instance?.logs">
+                                    <td class="log-timestamp">{{ log.createdAt | absoluteDate }}</td>
+                                    <td class="log-message">{{ log.message }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

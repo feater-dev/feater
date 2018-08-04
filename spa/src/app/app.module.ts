@@ -137,6 +137,15 @@ export class AppModule {
                         possibleTypes: [
                             {name: 'CopyBeforeBuildTask'},
                             {name: 'InterpolateBeforeBuildTask'},
+                            {name: 'ReplaceBeforeBuildTask'},
+                        ],
+                    },
+                    {
+                        kind: 'UNION',
+                        name: 'AfterBuildTask',
+                        possibleTypes: [
+                            {name: 'ExecuteHostCommandAfterBuildTask'},
+                            {name: 'ExecuteServiceCommandAfterBuildTask'},
                         ],
                     },
                 ],

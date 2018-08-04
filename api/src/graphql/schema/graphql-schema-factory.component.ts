@@ -16,6 +16,7 @@ import {LogsResolverFactory} from '../resolver/logs-resolver-factory.component';
 import {LogTypeInterface} from '../type/log-type.interface';
 import {DockerDaemonResolverFactory} from '../resolver/docker-daemon-resolver-factory.component';
 import {InstanceServiceTypeInterface} from '../type/instance-service-type.interface';
+import {AfterBuildTaskTypeInterface} from '../type/nested/definition-config/after-build-task-type.interface';
 
 @Component()
 export class GraphqlSchemaFactory {
@@ -116,6 +117,18 @@ export class GraphqlSchemaFactory {
                     throw new Error();
                 },
             },
+
+            AfterBuildTask: {
+                __resolveType: (afterBuildTask: AfterBuildTaskTypeInterface): string => {
+                    if ('executeHostCommand' === afterBuildTask.type) {
+                        return 'ExecuteHostCommandAfterBuildTask';
+                    }
+                    if ('executeServiceCommand' === afterBuildTask.type) {
+                        return 'ExecuteServiceCommandAfterBuildTask';
+                    }
+                    throw new Error();
+                },
+            }
         };
     }
 }

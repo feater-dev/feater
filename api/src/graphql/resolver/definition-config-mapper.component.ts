@@ -11,6 +11,10 @@ import {
     CopyBeforeBuildTaskTypeInterface,
     InterpolateBeforeBuildTaskTypeInterface
 } from '../type/nested/definition-config/before-build-task-type.interface';
+import {
+    AfterBuildTaskTypeInterface,
+    ExecuteHostCommandAfterBuildTaskTypeInterface, ExecuteServiceCommandAfterBuildTaskTypeInterface
+} from '../type/nested/definition-config/after-build-task-type.interface';
 
 @Component()
 export class DefinitionConfigMapper {
@@ -25,11 +29,6 @@ export class DefinitionConfigMapper {
             mappedProxiedPorts = mappedProxiedPorts.concat(
                 this.mapProxiedPorts(config.proxiedPorts),
             );
-        }
-
-        const mappedSummaryItems: SummaryItemTypeInterface[] = [];
-        for (const summaryItem of config.summaryItems) {
-            mappedSummaryItems.push(this.mapSummaryItem(summaryItem));
         }
 
         const mappedEnvVariables: EnvVariableTypeInterface[] = [];
@@ -50,12 +49,23 @@ export class DefinitionConfigMapper {
             mappedComposeFiles.push(this.mapComposeFile(config.composeFile));
         }
 
+        const mappedAfterBuildTasks: AfterBuildTaskTypeInterface[] = [];
+        for (const afterBuildTask of config.afterBuildTasks) {
+            mappedAfterBuildTasks.push(this.mapAfterBuildTask(afterBuildTask));
+        }
+
+        const mappedSummaryItems: SummaryItemTypeInterface[] = [];
+        for (const summaryItem of config.summaryItems) {
+            mappedSummaryItems.push(this.mapSummaryItem(summaryItem));
+        }
+
         return {
             sources: mappedSources,
             proxiedPorts: mappedProxiedPorts,
-            summaryItems: mappedSummaryItems,
             envVariables: mappedEnvVariables,
             composeFiles: mappedComposeFiles,
+            afterBuildTasks: mappedAfterBuildTasks,
+            summaryItems: mappedSummaryItems,
         } as ConfigTypeInterface;
     }
 
@@ -90,6 +100,30 @@ export class DefinitionConfigMapper {
                     type: beforeBuildTask.type,
                     relativePath: beforeBuildTask.relativePath,
                 } as InterpolateBeforeBuildTaskTypeInterface;
+
+            default:
+                throw new Error();
+        }
+    }
+
+    protected mapAfterBuildTask(afterBuildTask: any): AfterBuildTaskTypeInterface {
+        switch (afterBuildTask.type) {
+            case 'executeHostCommand':
+                return {
+                    type: afterBuildTask.type,
+                    customEnvVariables: afterBuildTask.customEnvVariables,
+                    inheritedEnvVariables: afterBuildTask.inheritedEnvVariables,
+                    command: afterBuildTask.command,
+                } as ExecuteHostCommandAfterBuildTaskTypeInterface;
+
+            case 'executeServiceCommand':
+                return {
+                    type: afterBuildTask.type,
+                    serviceId: afterBuildTask.serviceId,
+                    customEnvVariables: afterBuildTask.customEnvVariables,
+                    inheritedEnvVariables: afterBuildTask.inheritedEnvVariables,
+                    command: afterBuildTask.command,
+                } as ExecuteServiceCommandAfterBuildTaskTypeInterface;
 
             default:
                 throw new Error();

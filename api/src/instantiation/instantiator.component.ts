@@ -19,6 +19,7 @@ import {ConnectContainersToNetworkJob} from './job/connect-containers-to-network
 import {ProxyPortDomainsJob} from './job/proxy-port-domains.job';
 import {BaseLogger} from '../logger/base-logger';
 import {ExecuteHostCommandAfterBuildTaskJob} from './job/execute-host-command-after-build-task.job';
+import {ExecuteServiceCommandAfterBuildTaskJob} from './job/execute-service-command-after-build-task.job';
 
 @Component()
 export class Instantiator {
@@ -130,6 +131,15 @@ export class Instantiator {
             case 'executeHostCommand':
                 return new ExecuteHostCommandAfterBuildTaskJob(
                     build,
+                    afterBuildTask.customEnvVariables,
+                    afterBuildTask.inheritedEnvVariables,
+                    afterBuildTask.command,
+                );
+
+            case 'executeServiceCommand':
+                return new ExecuteServiceCommandAfterBuildTaskJob(
+                    build,
+                    afterBuildTask.serviceId,
                     afterBuildTask.customEnvVariables,
                     afterBuildTask.inheritedEnvVariables,
                     afterBuildTask.command,

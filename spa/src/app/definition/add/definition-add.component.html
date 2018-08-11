@@ -118,6 +118,47 @@
 
         <div class="row form-section">
             <div class="col-lg-12">
+                <h3 style="display: inline;">After build tasks</h3>
+                <a
+                    class="btn btn-success btn-sm"
+                    (click)="addAfterBuildTaskExecuteHostCommand()"
+                    style="position: relative; bottom: 5px; margin-left: 8px;"
+                >
+                    Add execute host command task
+                </a>
+                <a
+                    class="btn btn-success btn-sm"
+                    (click)="addAfterBuildTaskExecuteServiceCommand()"
+                    style="position: relative; bottom: 5px; margin-left: 8px;"
+                >
+                    Add execute service command task
+                </a>
+            </div>
+
+            <div class="col-lg-12">
+                <p *ngIf="0 === item.config.afterBuildTasks.length">
+                    No after build tasks defined.
+                </p>
+                <div
+                        *ngIf="0 < item.config.afterBuildTasks.length"
+                        class="well well-sm"
+                >
+                    <div *ngFor="let afterBuildTask of item.config.afterBuildTasks">
+
+                        <app-definition-add-after-build-task-execute-host-command-form-element
+                                *ngIf="isAfterBuildTaskExecuteHostCommand(afterBuildTask)"
+                                [item]="afterBuildTask"
+                                [availableEnvVariableNames]="getAvailableEnvVariableNames()"
+                                (deleteItem)="deleteAfterBuildTask($event)"
+                        ></app-definition-add-after-build-task-execute-host-command-form-element>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row form-section">
+            <div class="col-lg-12">
                 <h3 style="display: inline;">Summary items</h3>
                 <a
                     class="btn btn-success btn-sm"

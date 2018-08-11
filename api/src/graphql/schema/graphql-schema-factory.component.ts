@@ -102,7 +102,7 @@ export class GraphqlSchemaFactory {
 
             InstanceLog: {
                 createdAt: this.dateResolverFactory.getTimestampResolver(
-                    (instanceLog: LogTypeInterface) => instanceLog.timestamp,
+                    (instanceLog: LogTypeInterface): number => instanceLog.timestamp,
                 ),
             },
 

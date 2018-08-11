@@ -15,6 +15,7 @@ import {PrepareSummaryItemsJobExecutor} from './job/prepare-summary-items.job';
 import {ProxyPortDomainsJobExecutor} from './job/proxy-port-domains.job';
 import {RunDockerComposeJobExecutor} from './job/run-docker-compose.job';
 import {ExecuteHostCommandAfterBuildTaskJobExecutor} from './job/execute-host-command-after-build-task.job';
+import {ExecuteServiceCommandAfterBuildTaskJobExecutor} from './job/execute-service-command-after-build-task.job';
 
 @Component()
 export class JobExecutorsCollection {
@@ -35,6 +36,7 @@ export class JobExecutorsCollection {
         proxyPortDomainsJobExecutor: ProxyPortDomainsJobExecutor,
         runDockerComposeJobExecutor: RunDockerComposeJobExecutor,
         executeHostCommandAfterBuildTaskJobExecutor: ExecuteHostCommandAfterBuildTaskJobExecutor,
+        executeServiceCommandAfterBuildTaskJobExecutor: ExecuteServiceCommandAfterBuildTaskJobExecutor,
     ) {
         this.jobExecutors = [
             connectContainersToNetworkJobExecutor,
@@ -50,6 +52,7 @@ export class JobExecutorsCollection {
             proxyPortDomainsJobExecutor,
             runDockerComposeJobExecutor,
             executeHostCommandAfterBuildTaskJobExecutor,
+            executeServiceCommandAfterBuildTaskJobExecutor,
         ];
     }
 

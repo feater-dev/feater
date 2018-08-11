@@ -8,6 +8,7 @@ export interface DefinitionAddFormConfigFormElement {
     proxiedPorts: DefinitionAddFormProxiedPortFormElement[];
     envVariables: DefinitionAddFormEnvVariableFormElement[];
     composeFile: DefinitionAddComposeFileFormElement;
+    afterBuildTasks: DefinitionAddFormAfterBuildTaskFormElement[];
     summaryItems: DefinitionAddFormSummaryItemFormElement[];
 }
 
@@ -48,6 +49,27 @@ export interface DefinitionAddComposeFileFormElement {
     sourceId: string;
     envDirRelativePath: string;
     composeFileRelativePaths: string[];
+}
+
+export interface DefinitionAddFormAfterBuildTaskFormElement {
+    type: string;
+    inheritedEnvVariables: {
+        name: string;
+        alias: string;
+    }[];
+    customEnvVariables: {
+        name: string;
+        value: string;
+    }[];
+}
+
+export interface DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
+    command: string[];
+}
+
+export interface DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
+    serviceId: string;
+    command: string[];
 }
 
 export interface DefinitionAddFormBeforeBuildTaskFormElement {

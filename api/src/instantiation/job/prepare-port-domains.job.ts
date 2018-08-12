@@ -52,6 +52,10 @@ export class PreparePortDomainsJobExecutor implements JobExecutorInterface {
                 const shortProxyDomain = `build-${build.hash}-${proxiedPort.id}.${this.config.app.host}`;
                 const longProxyDomain = `build-${build.hash}-${service.cleanId}-${proxiedPort.port}.${this.config.app.host}`;
 
+                console.log(`FEAT__PROXY_DOMAIN__${proxiedPort.id}`, shortProxyDomain);
+                build.envVariables.add(`FEAT__PROXY_DOMAIN__${proxiedPort.id.toUpperCase()}`, shortProxyDomain);
+                console.log(build.envVariables.toString());
+
                 build.addFeatVariable(`proxy_domain__${proxiedPort.id}`, shortProxyDomain);
                 build.addFeatVariable(`proxy_domain_long__${proxiedPort.id}`, longProxyDomain);
 

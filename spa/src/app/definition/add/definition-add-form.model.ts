@@ -61,15 +61,13 @@ export interface DefinitionAddFormAfterBuildTaskFormElement {
         name: string;
         value: string;
     }[];
-}
-
-export interface DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
     command: string[];
 }
+
+export interface DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {}
 
 export interface DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
     serviceId: string;
-    command: string[];
 }
 
 export interface DefinitionAddFormBeforeBuildTaskFormElement {

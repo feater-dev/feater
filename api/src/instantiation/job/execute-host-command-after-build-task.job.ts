@@ -111,7 +111,7 @@ export class ExecuteHostCommandAfterBuildTaskJobExecutor implements JobExecutorI
         }
         const buildEnvVariablesMap = buildJob.build.envVariables.toMap();
         for (const inheritedEnvVariable of buildJob.inheritedEnvVariables) {
-            collectedEnvVariables.add(inheritedEnvVariable.alias, buildEnvVariablesMap[inheritedEnvVariable.name]);
+            collectedEnvVariables.add(inheritedEnvVariable.alias || inheritedEnvVariable.name, buildEnvVariablesMap[inheritedEnvVariable.name]);
         }
 
         return collectedEnvVariables;

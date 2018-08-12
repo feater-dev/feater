@@ -116,7 +116,7 @@ export const typeDefsProvider = {
 
         input AfterBuildTaskInputInheritedEnvVariable {
             name: String!
-            alias: String!
+            alias: String
         }
 
         input SummaryItemInput {
@@ -238,7 +238,7 @@ export const typeDefsProvider = {
 
         type AfterBuildTaskInheritedEnvVariable {
             name: String!
-            alias: String!
+            alias: String
         }
 
         union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask

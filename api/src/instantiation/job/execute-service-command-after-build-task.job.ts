@@ -56,7 +56,12 @@ export class ExecuteServiceCommandAfterBuildTaskJobExecutor implements JobExecut
 
             const collectedEnvVariables = this.collectEnvVariables(buildJob);
             const matchedService = _.find(buildJob.build.services, (service) => service.id === buildJob.serviceId);
-            const command = ['docker', 'exec', matchedService.containerId].concat(buildJob.command);
+            let command = ['docker', 'exec'];
+            for (const envVariable of collectedEnvVariables.toList()) {
+                command = command.concat(['-e', `${envVariable.key}=${envVariable.value}`]);
+            }
+            command.push(matchedService.containerId);
+            command = command.concat(buildJob.command);
 
             logger.info(`Executing service command '${command.join(' ')}' for service '${buildJob.serviceId}' with env variables ${collectedEnvVariables.toString()}.`);
 
@@ -65,7 +70,6 @@ export class ExecuteServiceCommandAfterBuildTaskJobExecutor implements JobExecut
                 command.slice(1),
                 {
                     cwd: buildJob.build.fullBuildPath,
-                    env: collectedEnvVariables.toMap(),
                 },
             );
 
@@ -115,7 +119,7 @@ export class ExecuteServiceCommandAfterBuildTaskJobExecutor implements JobExecut
         }
         const buildEnvVariablesMap = buildJob.build.envVariables.toMap();
         for (const inheritedEnvVariable of buildJob.inheritedEnvVariables) {
-            collectedEnvVariables.add(inheritedEnvVariable.alias, buildEnvVariablesMap[inheritedEnvVariable.name]);
+            collectedEnvVariables.add(inheritedEnvVariable.alias || inheritedEnvVariable.name, buildEnvVariablesMap[inheritedEnvVariable.name]);
         }
 
         return collectedEnvVariables;

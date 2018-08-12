@@ -19,7 +19,7 @@ import {
     GetProjectQueryInterface,
     GetProjectQueryProjectFieldInterface
 } from './get-project.query';
-
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-definition-add',
@@ -205,6 +205,19 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     mapItem(): any {
+        const afterBuildTasks = [];
+        for (const afterBuildTask of this.item.config.afterBuildTasks) {
+
+            afterBuildTask.command = _.filter(afterBuildTask.command, (commandPart) => !/^ *$/.test(commandPart));
+
+            for (const inheritedEnvVariable of afterBuildTask.inheritedEnvVariables) {
+                if (/^ *$/.test(inheritedEnvVariable.alias)) {
+                    inheritedEnvVariable.alias = null;
+                }
+            }
+
+        }
+
         const mappedItem = {
             projectId: this.project.id,
             name: this.item.name,
@@ -212,7 +225,6 @@ export class DefinitionAddComponent implements OnInit {
                 sources: this.item.config.sources,
                 proxiedPorts: this.item.config.proxiedPorts,
                 envVariables: this.item.config.envVariables,
-                summaryItems: this.item.config.summaryItems,
                 composeFiles: [
                     {
                         sourceId: this.item.config.composeFile.sourceId,
@@ -220,6 +232,8 @@ export class DefinitionAddComponent implements OnInit {
                         composeFileRelativePaths: this.item.config.composeFile.composeFileRelativePaths,
                     },
                 ],
+                afterBuildTasks: this.item.config.afterBuildTasks,
+                summaryItems: this.item.config.summaryItems,
             },
         };
 

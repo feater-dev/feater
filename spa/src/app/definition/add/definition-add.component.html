@@ -40,7 +40,7 @@
                     (click)="addSource()"
                     style="position: relative; bottom: 5px; margin-left: 8px;"
                 >
-                    Add source
+                    Add item
                 </a>
             </div>
             <div class="col-lg-12">
@@ -64,7 +64,7 @@
                     (click)="addProxiedPort()"
                     style="position: relative; bottom: 5px; margin-left: 8px;"
                 >
-                    Add proxied port
+                    Add item
                 </a>
             </div>
             <div class="col-lg-12">
@@ -88,7 +88,7 @@
                     (click)="addEnvVariable()"
                     style="position: relative; bottom: 5px; margin-left: 8px;"
                 >
-                    Add environmental variable
+                    Add item
                 </a>
             </div>
             <div class="col-lg-12">
@@ -139,10 +139,7 @@
                 <p *ngIf="0 === item.config.afterBuildTasks.length">
                     No after build tasks defined.
                 </p>
-                <div
-                        *ngIf="0 < item.config.afterBuildTasks.length"
-                        class="well well-sm"
-                >
+                <div *ngIf="0 < item.config.afterBuildTasks.length">
                     <div *ngFor="let afterBuildTask of item.config.afterBuildTasks">
 
                         <app-definition-add-after-build-task-execute-host-command-form-element
@@ -151,6 +148,13 @@
                                 [availableEnvVariableNames]="getAvailableEnvVariableNames()"
                                 (deleteItem)="deleteAfterBuildTask($event)"
                         ></app-definition-add-after-build-task-execute-host-command-form-element>
+
+                        <app-definition-add-after-build-task-execute-service-command-form-element
+                                *ngIf="isAfterBuildTaskExecuteServiceCommand(afterBuildTask)"
+                                [item]="afterBuildTask"
+                                [availableEnvVariableNames]="getAvailableEnvVariableNames()"
+                                (deleteItem)="deleteAfterBuildTask($event)"
+                        ></app-definition-add-after-build-task-execute-service-command-form-element>
 
                     </div>
                 </div>
@@ -165,7 +169,7 @@
                     (click)="addSummaryItem()"
                     style="position: relative; bottom: 5px; margin-left: 8px;"
                 >
-                    Add summary item
+                    Add item
                 </a>
             </div>
             <div class="col-lg-12">

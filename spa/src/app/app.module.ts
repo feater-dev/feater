@@ -62,6 +62,7 @@ import {LinkifyPipe} from './pipes/linkify.pipe';
 import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
 import {RelativeDatePipe} from './pipes/relative-date.pipe';
 import {DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
+import {DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-service-command-form-element.component';
 
 
 const appRoutes: Routes = [
@@ -94,6 +95,7 @@ const appRoutes: Routes = [
         DefinitionAddEnvVariableFormElementComponent,
         DefinitionAddComposeFileFormElementComponent,
         DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent,
+        DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent,
         DefinitionAddSummaryItemFormElementComponent,
         DefinitionDetailComponent,
         DefinitionListComponent,

@@ -27,10 +27,7 @@ export const getInstanceDetailQueryGql = gql`
                 id
                 name
                 port
-                proxyDomains {
-                    short
-                    long
-                }
+                proxyDomain
             }
             summaryItems {
                 name
@@ -89,10 +86,7 @@ export interface GetInstanceDetailQueryInstanceFieldinterface {
             readonly serviceId: string;
             readonly name: string;
             readonly port: number;
-            readonly proxyDomains: {
-                readonly short: string;
-                readonly long: string;
-            };
+            readonly proxyDomain: string;
         }
     ];
     readonly createdAt: string,

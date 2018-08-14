@@ -37,18 +37,45 @@ export const getDefinitionDetailQueryGql = gql`
                     name
                     port
                 }
+                envVariables {
+                    name
+                    value
+                }
                 composeFiles {
                     sourceId
                     envDirRelativePath
                     composeFileRelativePaths
                 }
+                afterBuildTasks {
+                    ... on ExecuteHostCommandAfterBuildTask {
+                        type
+                        customEnvVariables {
+                            name
+                            value
+                        }
+                        inheritedEnvVariables {
+                            name
+                            alias
+                        }
+                        command
+                    }
+                    ... on ExecuteServiceCommandAfterBuildTask {
+                        type
+                        serviceId
+                        customEnvVariables {
+                            name
+                            value
+                        }
+                        inheritedEnvVariables {
+                            name
+                            alias
+                        }
+                        command
+                    }
+               }
                 summaryItems {
                     name
                     text
-                }
-                envVariables {
-                    name
-                    value
                 }
             }
             instances {

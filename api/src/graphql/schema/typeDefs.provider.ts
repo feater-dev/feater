@@ -58,9 +58,10 @@ export const typeDefsProvider = {
         input DefinitionConfigInput {
             sources: [SourceInput!]!
             proxiedPorts: [ProxiedPortInput!]!
-            summaryItems: [SummaryItemInput!]!
             envVariables: [EnvVariableInput!]!
             composeFiles: [ComposeFileInput!]!
+            afterBuildTasks: [AfterBuildTaskInput!]!
+            summaryItems: [SummaryItemInput!]!
         }
 
         input SourceInput {
@@ -89,11 +90,6 @@ export const typeDefsProvider = {
             name: String!
         }
 
-        input SummaryItemInput {
-            name: String!
-            text: String!
-        }
-
         input EnvVariableInput {
             name: String!
             value: String!
@@ -103,6 +99,29 @@ export const typeDefsProvider = {
             sourceId: String!
             envDirRelativePath: String!
             composeFileRelativePaths: [String!]!
+        }
+
+        input AfterBuildTaskInput {
+            type: String!
+            customEnvVariables: [AfterBuildTaskInputCustomEnvVariable]!
+            inheritedEnvVariables: [AfterBuildTaskInputInheritedEnvVariable]!
+            command: [String!]!
+            serviceId: String
+        }
+
+        input AfterBuildTaskInputCustomEnvVariable {
+            name: String!
+            value: String!
+        }
+
+        input AfterBuildTaskInputInheritedEnvVariable {
+            name: String!
+            alias: String
+        }
+
+        input SummaryItemInput {
+            name: String!
+            text: String!
         }
 
         type Mutation {
@@ -174,9 +193,10 @@ export const typeDefsProvider = {
         type DefinitionConfig {
             sources: [Source!]!
             proxiedPorts: [ProxiedPort!]!
-            summaryItems: [SummaryItem!]!
             envVariables: [EnvVariable!]!
             composeFiles: [ComposeFile!]!
+            afterBuildTasks: [AfterBuildTask]!
+            summaryItems: [SummaryItem!]!
         }
 
         type Source {
@@ -211,6 +231,33 @@ export const typeDefsProvider = {
             name: String!
         }
 
+        type AfterBuildTaskCustomEnvVariable {
+            name: String!
+            value: String!
+        }
+
+        type AfterBuildTaskInheritedEnvVariable {
+            name: String!
+            alias: String
+        }
+
+        union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask
+
+        type ExecuteHostCommandAfterBuildTask {
+            type: String!
+            customEnvVariables: [AfterBuildTaskCustomEnvVariable]!
+            inheritedEnvVariables: [AfterBuildTaskInheritedEnvVariable]!
+            command: [String!]!
+        }
+
+        type ExecuteServiceCommandAfterBuildTask {
+            type: String!
+            serviceId: String!
+            customEnvVariables: [AfterBuildTaskCustomEnvVariable]!
+            inheritedEnvVariables: [AfterBuildTaskInheritedEnvVariable]!
+            command: [String!]!
+        }
+
         type SummaryItem {
             name: String!
             text: String!
@@ -241,17 +288,12 @@ export const typeDefsProvider = {
             value: String!
         }
 
-        type InstanceProxyDomains {
-            short: String!
-            long: String!
-        }
-
         type InstanceProxiedPort {
             id: String!
             serviceId: String!
             name: String!
             port: Int!
-            proxyDomains: InstanceProxyDomains!
+            proxyDomain: String!
         }
 
         type InstanceSummaryItem {

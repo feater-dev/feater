@@ -18,6 +18,8 @@ import {GetContainerIdsJob} from './job/get-container-ids.job';
 import {ConnectContainersToNetworkJob} from './job/connect-containers-to-network-job';
 import {ProxyPortDomainsJob} from './job/proxy-port-domains.job';
 import {BaseLogger} from '../logger/base-logger';
+import {ExecuteHostCommandAfterBuildTaskJob} from './job/execute-host-command-after-build-task.job';
+import {ExecuteServiceCommandAfterBuildTaskJob} from './job/execute-service-command-after-build-task.job';
 
 @Component()
 export class Instantiator {
@@ -84,6 +86,12 @@ export class Instantiator {
             new ProxyPortDomainsJob(build),
         ]);
 
+        const afterBuildJobs = [];
+        for (const afterBuildTask of build.config.afterBuildTasks) {
+            afterBuildJobs.push(this.mapAfterBuildTaskToJob(afterBuildTask, build));
+        }
+        stagesList.addSequentialStage('executeAfterBuildTasks', ['buildAndRun'], afterBuildJobs);
+
         // Or maybe we should only save here?
 
         return stagesList
@@ -98,7 +106,7 @@ export class Instantiator {
             );
     }
 
-    private mapBeforeBuildTaskToJob(beforeBuildTask: any, source: Source,): JobInterface {
+    private mapBeforeBuildTaskToJob(beforeBuildTask: any, source: Source): JobInterface {
         switch (beforeBuildTask.type) {
             case 'copy':
                 return new CopyBeforeBuildTaskJob(
@@ -115,6 +123,30 @@ export class Instantiator {
 
             default:
                 throw new Error(`Unknown type of before build task ${beforeBuildTask.type} for source ${source.id}.`);
+        }
+    }
+
+    private mapAfterBuildTaskToJob(afterBuildTask: any, build: Build): JobInterface {
+        switch (afterBuildTask.type) {
+            case 'executeHostCommand':
+                return new ExecuteHostCommandAfterBuildTaskJob(
+                    build,
+                    afterBuildTask.customEnvVariables,
+                    afterBuildTask.inheritedEnvVariables,
+                    afterBuildTask.command,
+                );
+
+            case 'executeServiceCommand':
+                return new ExecuteServiceCommandAfterBuildTaskJob(
+                    build,
+                    afterBuildTask.serviceId,
+                    afterBuildTask.customEnvVariables,
+                    afterBuildTask.inheritedEnvVariables,
+                    afterBuildTask.command,
+                );
+
+            default:
+                throw new Error(`Unknown type of after build task ${afterBuildTask.type} for build ${build.id}.`);
         }
     }
 

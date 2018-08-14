@@ -9,14 +9,17 @@ import {
     DefinitionAddFormSourceFormElement,
     DefinitionAddFormProxiedPortFormElement,
     DefinitionAddFormEnvVariableFormElement,
-    DefinitionAddFormSummaryItemFormElement, DefinitionAddFormConfigFormElement
+    DefinitionAddFormSummaryItemFormElement,
+    DefinitionAddFormConfigFormElement,
+    DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement,
+    DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement, DefinitionAddFormAfterBuildTaskFormElement
 } from './definition-add-form.model';
 import {
     getProjectQueryGql,
     GetProjectQueryInterface,
     GetProjectQueryProjectFieldInterface
 } from './get-project.query';
-
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-definition-add',
@@ -51,8 +54,9 @@ export class DefinitionAddComponent implements OnInit {
                     envDirRelativePath: '',
                     composeFileRelativePaths: [''],
                 },
-                summaryItems: []
-            }
+                afterBuildTasks: [],
+                summaryItems: [],
+            },
         };
     }
 
@@ -126,6 +130,39 @@ export class DefinitionAddComponent implements OnInit {
         }
     }
 
+    addAfterBuildTaskExecuteHostCommand(): void {
+        this.item.config.afterBuildTasks.push({
+            type: 'executeHostCommand',
+            command: ['', '', '', '', '', '', ''],
+            inheritedEnvVariables: [],
+            customEnvVariables: [],
+        } as DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement);
+    }
+
+    addAfterBuildTaskExecuteServiceCommand(): void {
+        this.item.config.afterBuildTasks.push({
+            type: 'executeServiceCommand',
+            command: ['', '', '', '', '', '', ''],
+            inheritedEnvVariables: [],
+            customEnvVariables: [],
+        } as DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement);
+    }
+
+    isAfterBuildTaskExecuteHostCommand(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): boolean {
+        return 'executeHostCommand' === afterBuildTask.type;
+    }
+
+    isAfterBuildTaskExecuteServiceCommand(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): boolean {
+        return 'executeServiceCommand' === afterBuildTask.type;
+    }
+
+    deleteAfterBuildTask(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): void {
+        const index = this.item.config.afterBuildTasks.indexOf(afterBuildTask);
+        if (-1 !== index) {
+            this.item.config.afterBuildTasks.splice(index, 1);
+        }
+    }
+
     addSummaryItem(): void {
         this.item.config.summaryItems.push({
             name: '',
@@ -153,7 +190,34 @@ export class DefinitionAddComponent implements OnInit {
         this.switchMode('form');
     }
 
+    getAvailableEnvVariableNames(): string[] {
+        const availableEnvVariableNames = [];
+        for (const envVariable of this.item.config.envVariables) {
+            availableEnvVariableNames.push(envVariable.name);
+        }
+        availableEnvVariableNames.push('FEAT__INSTANCE_ID');
+        for (const proxiedPort of this.item.config.proxiedPorts) {
+            availableEnvVariableNames.push(`FEAT__PORT__${proxiedPort.id.toUpperCase()}`);
+            availableEnvVariableNames.push(`FEAT__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
+        }
+
+        return availableEnvVariableNames;
+    }
+
     mapItem(): any {
+        const afterBuildTasks = [];
+        for (const afterBuildTask of this.item.config.afterBuildTasks) {
+
+            afterBuildTask.command = _.filter(afterBuildTask.command, (commandPart) => !/^ *$/.test(commandPart));
+
+            for (const inheritedEnvVariable of afterBuildTask.inheritedEnvVariables) {
+                if (/^ *$/.test(inheritedEnvVariable.alias)) {
+                    inheritedEnvVariable.alias = null;
+                }
+            }
+
+        }
+
         const mappedItem = {
             projectId: this.project.id,
             name: this.item.name,
@@ -161,7 +225,6 @@ export class DefinitionAddComponent implements OnInit {
                 sources: this.item.config.sources,
                 proxiedPorts: this.item.config.proxiedPorts,
                 envVariables: this.item.config.envVariables,
-                summaryItems: this.item.config.summaryItems,
                 composeFiles: [
                     {
                         sourceId: this.item.config.composeFile.sourceId,
@@ -169,6 +232,8 @@ export class DefinitionAddComponent implements OnInit {
                         composeFileRelativePaths: this.item.config.composeFile.composeFileRelativePaths,
                     },
                 ],
+                afterBuildTasks: this.item.config.afterBuildTasks,
+                summaryItems: this.item.config.summaryItems,
             },
         };
 
@@ -184,8 +249,9 @@ export class DefinitionAddComponent implements OnInit {
             sources: [],
             proxiedPorts: [],
             envVariables: [],
+            composeFile: null,
+            afterBuildTasks: [],
             summaryItems: [],
-            composeFile: null
         };
 
         for (const source of jsonConfig.sources) {
@@ -200,15 +266,19 @@ export class DefinitionAddComponent implements OnInit {
             mappedJsonConfig.envVariables.push(envVariable);
         }
 
-        for (const summaryItem of jsonConfig.summaryItems) {
-            mappedJsonConfig.summaryItems.push(summaryItem);
-        }
-
         mappedJsonConfig.composeFile = {
             sourceId: jsonConfig.composeFiles[0].sourceId,
             envDirRelativePath: jsonConfig.composeFiles[0].envDirRelativePath,
             composeFileRelativePaths: jsonConfig.composeFiles[0].composeFileRelativePaths,
         };
+
+        for (const afterBuildTask of jsonConfig.afterBuildTasks) {
+            mappedJsonConfig.afterBuildTasks.push(afterBuildTask);
+        }
+
+        for (const summaryItem of jsonConfig.summaryItems) {
+            mappedJsonConfig.summaryItems.push(summaryItem);
+        }
 
         return mappedJsonConfig;
     }

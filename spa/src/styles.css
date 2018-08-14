@@ -22,5 +22,13 @@
 
 .logs .log-timestamp {
     opacity: 0.5;
-    margin-right: 1em;
+    white-space: nowrap;
+    vertical-align: baseline;
+    padding: 4px 8px 4px 4px;
+}
+
+.logs .log-message {
+    white-space: pre-wrap;
+    vertical-align: baseline;
+    padding-left: 4px;
 }

@@ -21,6 +21,8 @@ import {JobExecutorsCollection} from './job-executors-collection.component';
 import {StagesListFactory} from './stages-list-factory.component';
 import {ContainerStatusChecker} from './container-status-checker.component';
 import {ContainerDetailsWorker} from './container-details-worker.component';
+import {ExecuteHostCommandAfterBuildTaskJobExecutor} from './job/execute-host-command-after-build-task.job';
+import {ExecuteServiceCommandAfterBuildTaskJobExecutor} from './job/execute-service-command-after-build-task.job';
 
 @Module({
   imports: [
@@ -42,6 +44,8 @@ import {ContainerDetailsWorker} from './container-details-worker.component';
       PrepareSummaryItemsJobExecutor,
       ProxyPortDomainsJobExecutor,
       RunDockerComposeJobExecutor,
+      ExecuteHostCommandAfterBuildTaskJobExecutor,
+      ExecuteServiceCommandAfterBuildTaskJobExecutor,
       GithubClient,
       Instantiator,
       InterpolationHelper,

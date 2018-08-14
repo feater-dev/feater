@@ -43,4 +43,13 @@ export class EnvVariablesSet {
         return map;
     }
 
+    toString(): string {
+        const list = [];
+        for (const item of this.items) {
+            list.push(`${item.key}=${item.value}`);
+        }
+
+        return list.join(' ');
+    }
+
 }

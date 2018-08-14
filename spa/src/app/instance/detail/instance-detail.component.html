@@ -92,10 +92,7 @@
                                     <td>{{ proxiedPort.serviceId }}</td>
                                     <td>{{ getServiceById(proxiedPort.serviceId).ipAddress }}</td>
                                     <td>{{ proxiedPort.port }}</td>
-                                    <td>
-                                        <div>{{ proxiedPort.proxyDomains.short }}</div>
-                                        <div>{{ proxiedPort.proxyDomains.long }}</div>
-                                    </td>
+                                    <td>{{ proxiedPort.proxyDomain }}</td>
                                 </tr>
                             </tbody>
                         </table>

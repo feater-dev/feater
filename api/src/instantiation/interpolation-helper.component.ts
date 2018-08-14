@@ -43,10 +43,10 @@ export class InterpolationHelper {
 
         const interpolatedFunctions = {
             proxy_url: id => {
-                return `http://${this.getProxiedPort(allProxiedPorts, id).proxyDomains.short}`;
+                return `http://${this.getProxiedPort(allProxiedPorts, id).proxyDomain}`;
             },
             proxy_domain: id => {
-                return this.getProxiedPort(allProxiedPorts, id).proxyDomains.short;
+                return this.getProxiedPort(allProxiedPorts, id).proxyDomain;
             },
         };
 

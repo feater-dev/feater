@@ -15,19 +15,13 @@ const InstanceEnvVariableSchema = new Schema({
     value: String,
 });
 
-const InstanceProxyDomains = new Schema({
-    _id: false,
-    short: String,
-    long: String,
-});
-
 const InstanceProxiedPortSchema = new Schema({
     _id: false,
     serviceId: String,
     id: String,
     name: String,
     port: Number,
-    proxyDomains: InstanceProxyDomains,
+    proxyDomain: String,
 });
 
 const InstanceSummaryItemSchema = new Schema({

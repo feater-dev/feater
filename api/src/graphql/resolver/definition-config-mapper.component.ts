@@ -125,6 +125,14 @@ export class DefinitionConfigMapper {
                     command: afterBuildTask.command,
                 } as ExecuteServiceCommandAfterBuildTaskTypeInterface;
 
+            case 'copyAssetIntoContainer':
+                return {
+                    type: afterBuildTask.type,
+                    serviceId: afterBuildTask.serviceId,
+                    assetId: afterBuildTask.assetId,
+                    destinationPath: afterBuildTask.destinationPath,
+                } as CopyAssetAfterBuildTaskTypeInterface;
+
             default:
                 throw new Error();
         }

@@ -1,13 +1,12 @@
 import {spawn} from 'child_process';
 import {Component} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
-import {BuildJobInterface, JobInterface, SourceJobInterface} from './job';
+import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 import {Build} from '../build';
 import {EnvVariablesSet} from '../env-variables-set';
 import * as _ from 'lodash';
-
-const BUFFER_SIZE = 1048576; // 1M
+import * as split from 'split';
 
 // TODO Maybe move to separate file.
 export interface CustomEnvVariableInterface {
@@ -73,41 +72,35 @@ export class ExecuteServiceCommandAfterBuildTaskJobExecutor implements JobExecut
                 },
             );
 
-            serviceCommand.stdout.on('data', stdoutData => {
-                logger.info(stdoutData.toString());
-            });
+            serviceCommand.stdout
+                .pipe(split())
+                .on('data', line => {
+                    logger.info(line);
+                });
 
-            serviceCommand.stderr.on('data', stderrData => {
-                logger.info(stderrData.toString());
-            });
+            serviceCommand.stderr
+                .pipe(split())
+                .on('data', line => {
+                    logger.info(line);
+                });
 
             serviceCommand.on('error', error => {
-                logger.error(error.message);
+                logger.error(`Failed to execute host command (error message: '${error.message}').`);
                 reject(error);
             });
 
-            serviceCommand.on('exit', code => {
+            const onCloseOrExit = code => {
                 if (0 !== code) {
-                    logger.error('Failed to execute service command.');
+                    logger.error(`Failed to execute host command with code ${code}.`);
                     reject(code);
 
                     return;
                 }
-
                 resolve();
-            });
+            };
 
-            serviceCommand.on('close', code => {
-                if (0 !== code) {
-                    logger.error('Failed to execute service command.');
-                    reject(code);
-
-                    return;
-                }
-
-                resolve();
-            });
-
+            serviceCommand.on('close', onCloseOrExit);
+            serviceCommand.on('exit', onCloseOrExit);
         });
 
     }

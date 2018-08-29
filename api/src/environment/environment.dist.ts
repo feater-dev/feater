@@ -18,6 +18,7 @@ export const environment = {
     guestPaths: {
         build: '/data/build/',
         proxyDomain: '/data/proxyDomain/',
+        asset: '/data/asset/',
     },
     hostPaths: {
         build: '/home/malef/Development/Feat/data/build/',

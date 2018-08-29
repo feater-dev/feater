@@ -17,6 +17,8 @@ import {LogTypeInterface} from '../type/log-type.interface';
 import {DockerDaemonResolverFactory} from '../resolver/docker-daemon-resolver-factory.component';
 import {InstanceServiceTypeInterface} from '../type/instance-service-type.interface';
 import {AfterBuildTaskTypeInterface} from '../type/nested/definition-config/after-build-task-type.interface';
+import {AssetResolverFactory} from '../resolver/asset-resolver-factory.component';
+import {AssetTypeInterface} from '../type/asset-type.interface';
 
 @Component()
 export class GraphqlSchemaFactory {
@@ -27,6 +29,7 @@ export class GraphqlSchemaFactory {
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly definitionResolverFactory: DefinitionResolverFactory,
         private readonly instanceResolverFactory: InstanceResolverFactory,
+        private readonly assetResolverFactory: AssetResolverFactory,
         private readonly logsResolverFactory: LogsResolverFactory,
         private readonly dateResolverFactory: DateResolverFactory,
         private readonly dockerDaemonResolverFactory: DockerDaemonResolverFactory,
@@ -65,11 +68,20 @@ export class GraphqlSchemaFactory {
                 createDefinition: this.definitionResolverFactory.getCreateItemResolver(),
                 createInstance: this.instanceResolverFactory.getCreateItemResolver(),
                 removeInstance: this.instanceResolverFactory.getRemoveItemResolver(),
+                createAsset: this.assetResolverFactory.getCreateItemResolver(),
             },
 
             Project: {
                 definitions: this.definitionResolverFactory.getListResolver(
                     (project: ProjectTypeInterface) => ({projectId: project.id}),
+                ),
+                assets: this.assetResolverFactory.getListResolver(
+                    (project: ProjectTypeInterface) => ({
+                        projectId: project.id,
+                        filename: {
+                            $exists: true,
+                        },
+                    }),
                 ),
             },
 
@@ -126,9 +138,21 @@ export class GraphqlSchemaFactory {
                     if ('executeServiceCommand' === afterBuildTask.type) {
                         return 'ExecuteServiceCommandAfterBuildTask';
                     }
+                    if ('copyAssetIntoContainer' === afterBuildTask.type) {
+                        return 'CopyAssetIntoContainerAfterBuildTask';
+                    }
                     throw new Error();
                 },
-            }
+            },
+
+            Asset: {
+                project: this.projectsResolverFactory.getItemResolver(
+                    (asset: AssetTypeInterface) => asset.projectId,
+                ),
+                createdAt: this.dateResolverFactory.getDateResolver(
+                    (asset: AssetTypeInterface) => asset.createdAt,
+                ),
+            },
         };
     }
 }

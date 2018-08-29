@@ -1,12 +1,11 @@
 import {spawn} from 'child_process';
 import {Component} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
-import {BuildJobInterface, JobInterface, SourceJobInterface} from './job';
+import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 import {Build} from '../build';
 import {EnvVariablesSet} from '../env-variables-set';
-
-const BUFFER_SIZE = 1048576; // 1M
+import * as split from 'split';
 
 // TODO Maybe move to separate file.
 export interface CustomEnvVariableInterface {
@@ -65,41 +64,35 @@ export class ExecuteHostCommandAfterBuildTaskJobExecutor implements JobExecutorI
                 },
             );
 
-            hostCommand.stdout.on('data', stdoutData => {
-                logger.info(stdoutData.toString());
-            });
+            hostCommand.stdout
+                .pipe(split())
+                .on('data', line => {
+                    logger.info(line); // Is it a string or is it necessary to use .toString() like before?
+                });
 
-            hostCommand.stderr.on('data', stderrData => {
-                logger.info(stderrData.toString());
-            });
+            hostCommand.stderr
+                .pipe(split())
+                .on('data', line => {
+                    logger.info(line);
+                });
 
             hostCommand.on('error', error => {
-                logger.error(error.message);
+                logger.error(`Failed to execute host command (error message: '${error.message}').`);
                 reject(error);
             });
 
-            hostCommand.on('exit', code => {
+            const onCloseOrExit = code => {
                 if (0 !== code) {
-                    logger.error('Failed to execute host command.');
+                    logger.error(`Failed to execute host command with code ${code}.`);
                     reject(code);
 
                     return;
                 }
-
                 resolve();
-            });
+            };
 
-            hostCommand.on('close', code => {
-                if (0 !== code) {
-                    logger.error('Failed to execute host command.');
-                    reject(code);
-
-                    return;
-                }
-
-                resolve();
-            });
-
+            hostCommand.on('close', onCloseOrExit);
+            hostCommand.on('exit', onCloseOrExit);
         });
 
     }

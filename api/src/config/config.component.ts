@@ -24,6 +24,7 @@ interface SshKeyConfigInterface {
 interface GuestPathsConfigInterface {
     readonly build: string;
     readonly proxyDomain: string;
+    readonly asset: string;
 }
 
 interface HostPathsConfigInterface {

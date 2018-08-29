@@ -17,6 +17,7 @@ import {PublicSshKeyResolverFactory} from './resolver/public-ssh-key-resolver-fa
 import {ConfigModule} from '../config/config.module';
 import {LogsResolverFactory} from './resolver/logs-resolver-factory.component';
 import {DockerDaemonResolverFactory} from './resolver/docker-daemon-resolver-factory.component';
+import {AssetResolverFactory} from './resolver/asset-resolver-factory.component';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import {DockerDaemonResolverFactory} from './resolver/docker-daemon-resolver-fac
         ProjectsResolverFactory,
         DefinitionResolverFactory,
         InstanceResolverFactory,
+        AssetResolverFactory,
         DateResolverFactory,
         DockerDaemonResolverFactory,
         ResolverPaginationArgumentsHelper,

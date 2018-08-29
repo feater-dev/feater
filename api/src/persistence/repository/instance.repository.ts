@@ -54,8 +54,8 @@ export class InstanceRepository {
     }
 
     async updateServices(build: any): Promise<any> {
-        const persistentBuild = await this.findById(build.id);
-        if (null === persistentBuild) {
+        const persistentInstance = await this.findById(build.id);
+        if (null === persistentInstance) {
             throw new Error();
         }
         const mappedServices = [];
@@ -79,14 +79,14 @@ export class InstanceRepository {
                 });
             }
         }
-        persistentBuild.set({services: mappedServices});
-        persistentBuild.set({proxiedPorts: mappedProxiedPorts});
-        await persistentBuild.save();
+        persistentInstance.set({services: mappedServices});
+        persistentInstance.set({proxiedPorts: mappedProxiedPorts});
+        await persistentInstance.save();
     }
 
     async updateSummaryItems(build: any): Promise<any> {
-        const persistentBuild = await this.findById(build.id);
-        if (null === persistentBuild) {
+        const persistentInstance = await this.findById(build.id);
+        if (null === persistentInstance) {
             throw new Error();
         }
         const mappedSummaryItems = [];
@@ -96,13 +96,13 @@ export class InstanceRepository {
                 text: summaryItem.value,
             });
         }
-        persistentBuild.set({summaryItems: mappedSummaryItems});
-        await persistentBuild.save();
+        persistentInstance.set({summaryItems: mappedSummaryItems});
+        await persistentInstance.save();
     }
 
     async updateEnvVariables(build: any): Promise<any> {
-        const persistentBuild = await this.findById(build.id);
-        if (null === persistentBuild) {
+        const persistentInstance = await this.findById(build.id);
+        if (null === persistentInstance) {
             throw new Error();
         }
         const mappedEnvVariables = [];
@@ -112,7 +112,7 @@ export class InstanceRepository {
                 value: envVariable.value,
             });
         }
-        persistentBuild.set({envVariables: mappedEnvVariables});
-        await persistentBuild.save();
+        persistentInstance.set({envVariables: mappedEnvVariables});
+        await persistentInstance.save();
     }
 }

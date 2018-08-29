@@ -32,7 +32,7 @@ export class ContainerStatusChecker {
                             }
                             const containerInfo = _.find(containerInfos, {namePrefix: containerNamePrefix});
                             if (undefined === containerInfo) {
-                                reject(new Error('Missing container info.'));
+                                resolve(null);
 
                                 return;
                             }

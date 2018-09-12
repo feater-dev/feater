@@ -8,6 +8,7 @@ import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolv
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/resolver-definition-filter-arguments.interface';
 import * as escapeStringRegexp from 'escape-string-regexp';
+import * as jsYaml from 'js-yaml';
 
 @Component()
 export class DefinitionResolverFactory {
@@ -76,6 +77,20 @@ export class DefinitionResolverFactory {
             const definition = await this.definitionRepository.create(createDefinitionInput);
 
             return this.mapPersistentModelToTypeModel(definition);
+        };
+    }
+
+    public getConfigAsJsonResolver(): (obj: any, args: any) => string {
+        return (obj: any, args: any): string => {
+            return JSON.stringify(obj.config, null, 4);
+        };
+    }
+
+    public getConfigAsYamlResolver(): (obj: any, args: any) => string {
+        return (obj: any, args: any): string => {
+            const safeConfig = JSON.parse(JSON.stringify(obj.config));
+
+            return jsYaml.safeDump(safeConfig, {indent: 4});
         };
     }
 

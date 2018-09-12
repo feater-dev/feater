@@ -18,9 +18,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputDefinitionConfig" class="col-lg-2 control-label">Config</label>
+                    <label for="inputDefinitionConfigAsJson" class="col-lg-2 control-label">Config in JSON format</label>
                     <div class="col-lg-10">
-                        <pre class="form-control-static" id="inputDefinitionConfig">{{ definition?.config | json }}</pre>
+                        <pre class="form-control-static" id="inputDefinitionConfigAsJson">{{ definition?.configAsJson }}</pre>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputDefinitionConfigAsYaml" class="col-lg-2 control-label">Config in Yaml format</label>
+                    <div class="col-lg-10">
+                        <pre class="form-control-static" id="inputDefinitionConfigAsYaml">{{ definition?.configAsYaml }}</pre>
                     </div>
                 </div>
                 <div class="form-group">

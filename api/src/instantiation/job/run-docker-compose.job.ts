@@ -7,6 +7,7 @@ import {JobInterface, BuildJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {Config} from '../../config/config.component';
+import * as split from 'split';
 
 export class RunDockerComposeJob implements BuildJobInterface {
 
@@ -69,19 +70,25 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
                 },
             );
 
-            dockerCompose.stdout.on('data', stdoutData => {
-                logger.info(stdoutData.toString());
-            });
+            dockerCompose.stdout
+                .pipe(split())
+                .on('data', line => {
+                    logger.info(line);
+                });
 
-            dockerCompose.stderr.on('data', stderrData => {
-                logger.info(stderrData.toString());
-            });
+            dockerCompose.stderr
+                .pipe(split())
+                .on('data', line => {
+                    logger.info(line.toString());
+                });
 
+            // TODO
             dockerCompose.on('error', error => {
                 logger.error(error.message);
                 reject(error);
             });
 
+            // TODO
             dockerCompose.on('exit', code => {
                 if (0 !== code) {
                     logger.error('Failed to run docker-compose.');
@@ -93,6 +100,7 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
                 resolve();
             });
 
+            // TODO
             dockerCompose.on('close', code => {
                 if (0 !== code) {
                     logger.error('Failed to run docker-compose.');

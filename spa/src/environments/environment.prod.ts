@@ -1,6 +1,9 @@
+const baseUrl = 'http://api.feat';
+
 export const environment = {
     production: true,
-    apiBaseUrl: 'http://api.feat/api',
-    signinUrl: 'http://api.feat/signin',
-    signoutUrl: 'http://api.feat/signout',
+    assetUploadUrl: `${baseUrl}/asset`,
+    apiBaseUrl: `${baseUrl}/api`,
+    signinUrl: `${baseUrl}/signin`,
+    signoutUrl: `${baseUrl}/signout`,
 };

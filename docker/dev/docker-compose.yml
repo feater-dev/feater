@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
 
@@ -6,13 +6,17 @@ services:
     build: api
     volumes:
       - ../../api:/app
-      - ${FEAT_DATA_PATH}/repository:/data/repository
       - ${FEAT_DATA_PATH}/build:/data/build
       - ${FEAT_DATA_PATH}/proxyDomain:/data/proxyDomain
+      - ${FEAT_DATA_PATH}/asset:/data/asset
       - ${FEAT_SSH_KEY_PATH}:/root/.ssh
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - '${FEAT_API_PORT}:3000'
+    depends_on:
+      - mongo
+      - redis
+      - elasticsearch
     networks:
       - featinternal
     container_name: feat_api

@@ -10,6 +10,10 @@ export const getProjectDetailQueryGql = gql`
                 id
                 name
             }
+            assets {
+                id
+                description
+            }
         }
     }
 `;
@@ -21,6 +25,12 @@ export interface GetProjectDetailQueryProjectFieldInterface {
         {
             readonly id: string;
             readonly name: string;
+        }
+    ];
+    readonly assets: [
+        {
+            readonly id: string;
+            readonly description: string;
         }
     ];
 }

@@ -13,6 +13,8 @@ import {ApiTokenRepository} from './repository/api-token.repository';
 import {environment} from '../environment/environment';
 import {LogRepository} from './repository/log.repository';
 import {ConfigModule} from '../config/config.module';
+import {AssetSchema} from './schema/asset.schema';
+import {AssetRepository} from './repository/asset.repository';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import {ConfigModule} from '../config/config.module';
       MongooseModule.forFeature([{ name: 'Project', schema: ProjectSchema }]),
       MongooseModule.forFeature([{ name: 'Definition', schema: DefinitionSchema }]),
       MongooseModule.forFeature([{ name: 'Instance', schema: InstanceSchema }]),
+      MongooseModule.forFeature([{ name: 'Asset', schema: AssetSchema }]),
       ConfigModule,
   ],
   controllers: [],
@@ -31,6 +34,7 @@ import {ConfigModule} from '../config/config.module';
       ProjectRepository,
       DefinitionRepository,
       InstanceRepository,
+      AssetRepository,
       LogRepository,
   ],
   exports: [
@@ -39,6 +43,7 @@ import {ConfigModule} from '../config/config.module';
       ProjectRepository,
       DefinitionRepository,
       InstanceRepository,
+      AssetRepository,
       LogRepository,
   ],
 })

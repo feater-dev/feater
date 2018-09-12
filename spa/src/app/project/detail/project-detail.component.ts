@@ -20,7 +20,6 @@ export class ProjectDetailComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.project') private repository,
         private apollo: Apollo,
     ) {}
 
@@ -36,8 +35,16 @@ export class ProjectDetailComponent implements OnInit {
         this.router.navigate(['/definition', id]);
     }
 
+    goToAssetDetail(id: string) {
+        this.router.navigate(['/asset', id]);
+    }
+
     goToAddDefinition() {
         this.router.navigate(['/project', this.project.id, 'definition', 'add']);
+    }
+
+    goToAddAsset() {
+        this.router.navigate(['/project', this.project.id, 'asset', 'add']);
     }
 
     private getProject() {

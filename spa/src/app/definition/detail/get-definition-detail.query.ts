@@ -72,6 +72,12 @@ export const getDefinitionDetailQueryGql = gql`
                         }
                         command
                     }
+                    ... on CopyAssetIntoContainerAfterBuildTask {
+                        type
+                        serviceId
+                        assetId
+                        destinationPath
+                    }
                }
                 summaryItems {
                     name

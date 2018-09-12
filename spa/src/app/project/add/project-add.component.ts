@@ -24,7 +24,6 @@ export class ProjectAddComponent implements OnInit {
 
     constructor(
         private router: Router,
-        @Inject('repository.project') private repository,
         private apollo: Apollo,
     ) {
         this.item = {

@@ -21,7 +21,6 @@ export class DefinitionListComponent implements OnInit {
 
     constructor(
         private router: Router,
-        @Inject('repository.definition') private repository,
         private apollo: Apollo,
     ) {}
 

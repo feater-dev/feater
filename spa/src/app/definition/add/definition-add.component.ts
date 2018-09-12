@@ -12,7 +12,9 @@ import {
     DefinitionAddFormSummaryItemFormElement,
     DefinitionAddFormConfigFormElement,
     DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement,
-    DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement, DefinitionAddFormAfterBuildTaskFormElement
+    DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement,
+    DefinitionAddFormAfterBuildTaskFormElement,
+    DefinitionAddFormAfterBuildCopyAssetIntoContainerTaskFormElement, DefinitionAddFormAfterBuildExecuteCommandTaskFormElement
 } from './definition-add-form.model';
 import {
     getProjectQueryGql,
@@ -34,13 +36,9 @@ export class DefinitionAddComponent implements OnInit {
 
     mode = 'form';
 
-    errorMessage: string;
-
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.definition') private repository,
-        @Inject('repository.project') private projectRepository,
         private apollo: Apollo,
     ) {
         this.item = {
@@ -148,12 +146,22 @@ export class DefinitionAddComponent implements OnInit {
         } as DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement);
     }
 
+    addAfterBuildTaskCopyAssetIntoContainer(): void {
+        this.item.config.afterBuildTasks.push({
+            type: 'copyAssetIntoContainer',
+        } as DefinitionAddFormAfterBuildCopyAssetIntoContainerTaskFormElement);
+    }
+
     isAfterBuildTaskExecuteHostCommand(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): boolean {
         return 'executeHostCommand' === afterBuildTask.type;
     }
 
     isAfterBuildTaskExecuteServiceCommand(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): boolean {
         return 'executeServiceCommand' === afterBuildTask.type;
+    }
+
+    isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): boolean {
+        return 'copyAssetIntoContainer' === afterBuildTask.type;
     }
 
     deleteAfterBuildTask(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): void {
@@ -204,18 +212,13 @@ export class DefinitionAddComponent implements OnInit {
         return availableEnvVariableNames;
     }
 
-    mapItem(): any {
+    protected mapItem(): any {
         const afterBuildTasks = [];
+
         for (const afterBuildTask of this.item.config.afterBuildTasks) {
-
-            afterBuildTask.command = _.filter(afterBuildTask.command, (commandPart) => !/^ *$/.test(commandPart));
-
-            for (const inheritedEnvVariable of afterBuildTask.inheritedEnvVariables) {
-                if (/^ *$/.test(inheritedEnvVariable.alias)) {
-                    inheritedEnvVariable.alias = null;
-                }
+            if ('executeHostCommand' === afterBuildTask.type || 'executeServiceCommand' === afterBuildTask.type) {
+                this.filterAfterBuildExecuteCommandTask(afterBuildTask as DefinitionAddFormAfterBuildExecuteCommandTaskFormElement);
             }
-
         }
 
         const mappedItem = {
@@ -240,7 +243,16 @@ export class DefinitionAddComponent implements OnInit {
         return mappedItem;
     }
 
-    mapJsonConfig(jsonConfig: any): DefinitionAddFormConfigFormElement {
+    protected filterAfterBuildExecuteCommandTask(afterBuildTask: DefinitionAddFormAfterBuildExecuteCommandTaskFormElement) {
+        afterBuildTask.command = _.filter(afterBuildTask.command, (commandPart) => !/^ *$/.test(commandPart));
+        for (const inheritedEnvVariable of afterBuildTask.inheritedEnvVariables) {
+            if (/^ *$/.test(inheritedEnvVariable.alias)) {
+                inheritedEnvVariable.alias = null;
+            }
+        }
+    }
+
+    protected mapJsonConfig(jsonConfig: any): DefinitionAddFormConfigFormElement {
         // TODO Check schema validity of jsonConfig.
 
         jsonConfig = JSON.parse(jsonConfig);
@@ -318,8 +330,7 @@ export class DefinitionAddComponent implements OnInit {
             .subscribe(
                 (item: GetProjectQueryProjectFieldInterface) => {
                     this.project = item;
-                },
-                (error) => { this.errorMessage = <any>error; }
+                }
             );
     }
 

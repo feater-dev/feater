@@ -20,6 +20,7 @@ import {ProxyPortDomainsJob} from './job/proxy-port-domains.job';
 import {BaseLogger} from '../logger/base-logger';
 import {ExecuteHostCommandAfterBuildTaskJob} from './job/execute-host-command-after-build-task.job';
 import {ExecuteServiceCommandAfterBuildTaskJob} from './job/execute-service-command-after-build-task.job';
+import {CopyTaskIntoContainerAfterBuildTaskJob} from './job/copy-asset-into-container-after-build-task.job';
 
 @Component()
 export class Instantiator {
@@ -143,6 +144,14 @@ export class Instantiator {
                     afterBuildTask.customEnvVariables,
                     afterBuildTask.inheritedEnvVariables,
                     afterBuildTask.command,
+                );
+
+            case 'copyAssetIntoContainer':
+                return new CopyTaskIntoContainerAfterBuildTaskJob(
+                    build,
+                    afterBuildTask.serviceId,
+                    afterBuildTask.assetId,
+                    afterBuildTask.destinationPath,
                 );
 
             default:

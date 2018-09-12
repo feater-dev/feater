@@ -17,7 +17,6 @@ export class UserListComponent implements OnInit {
 
     constructor(
         private router: Router,
-        @Inject('repository.user') private repository,
         private apollo: Apollo,
     ) {}
 

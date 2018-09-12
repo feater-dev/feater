@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="page-header">
+            <h2>Asset <em>{{ asset?.id }}</em></h2>
+        </div>
+    </div>
+</div>
+
+<div class="well bs-component">
+    <form class="form-horizontal">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="inputAssetProject" class="col-lg-2 control-label">Project</label>
+                    <div class="col-lg-10">
+                        <p class="form-control-static" id="inputAssetProject">
+                            <a (click)="goToProjectDetails(asset?.project.id)">{{ asset?.project.name }}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="inputAssetId" class="col-lg-2 control-label">ID</label>
+                    <div class="col-lg-10">
+                        <p class="form-control-static" id="inputAssetId">{{ asset?.id}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="inputAssetDescription" class="col-lg-2 control-label">Description</label>
+                    <div class="col-lg-10">
+                        <p class="form-control-static" id="inputAssetDescription">{{ asset?.description}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

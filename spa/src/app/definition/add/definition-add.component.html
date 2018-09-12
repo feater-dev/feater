@@ -133,6 +133,13 @@
                 >
                     Add execute service command task
                 </a>
+                <a
+                    class="btn btn-success btn-sm"
+                    (click)="addAfterBuildTaskCopyAssetIntoContainer()"
+                    style="position: relative; bottom: 5px; margin-left: 8px;"
+                >
+                    Add copy asset into container task
+                </a>
             </div>
 
             <div class="col-lg-12">
@@ -155,6 +162,12 @@
                                 [availableEnvVariableNames]="getAvailableEnvVariableNames()"
                                 (deleteItem)="deleteAfterBuildTask($event)"
                         ></app-definition-add-after-build-task-execute-service-command-form-element>
+
+                        <app-definition-add-after-build-task-copy-asset-into-container-form-element
+                                *ngIf="isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask)"
+                                [item]="afterBuildTask"
+                                (deleteItem)="deleteAfterBuildTask($event)"
+                        ></app-definition-add-after-build-task-copy-asset-into-container-form-element>
 
                     </div>
                 </div>

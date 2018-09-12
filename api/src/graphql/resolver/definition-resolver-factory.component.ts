@@ -6,7 +6,6 @@ import {DefinitionInterface} from '../../persistence/interface/definition.interf
 import {CreateDefinitionInputTypeInterface} from '../input-type/create-definition-input-type.interface';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
-import {ResolverProjectFilterArgumentsInterface} from './filter-argument/resolver-project-filter-arguments.interface';
 import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/resolver-definition-filter-arguments.interface';
 import * as escapeStringRegexp from 'escape-string-regexp';
 
@@ -46,7 +45,7 @@ export class DefinitionResolverFactory {
             const resolverListOptions = args as ResolverPaginationArgumentsInterface;
             const criteria = this.applyFilterArgumentToCriteria(
                 queryExtractor ? queryExtractor(object) : {},
-                args as ResolverProjectFilterArgumentsInterface,
+                args as ResolverDefinitionFilterArgumentsInterface,
             );
             const definitions = await this.definitionRepository.find(
                 criteria,

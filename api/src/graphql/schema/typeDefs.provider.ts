@@ -53,6 +53,10 @@ export const typeDefsProvider = {
             instance(
                 id: String!
             ): Instance!
+
+            asset(
+                id: String!
+            ): Asset!
         }
 
         input DefinitionConfigInput {
@@ -103,10 +107,12 @@ export const typeDefsProvider = {
 
         input AfterBuildTaskInput {
             type: String!
-            customEnvVariables: [AfterBuildTaskInputCustomEnvVariable]!
-            inheritedEnvVariables: [AfterBuildTaskInputInheritedEnvVariable]!
-            command: [String!]!
+            customEnvVariables: [AfterBuildTaskInputCustomEnvVariable]
+            inheritedEnvVariables: [AfterBuildTaskInputInheritedEnvVariable]
+            command: [String!]
             serviceId: String
+            assetId: String
+            destinationPath: String
         }
 
         input AfterBuildTaskInputCustomEnvVariable {
@@ -134,6 +140,12 @@ export const typeDefsProvider = {
                 name: String!
                 config: DefinitionConfigInput!
             ): Definition!
+
+            createAsset(
+                projectId: String!
+                id: String!
+                description: String
+            ): Asset!
 
             createInstance(
                 definitionId: String!
@@ -176,6 +188,11 @@ export const typeDefsProvider = {
                 offset: Int
                 sortKey: String
             ): [Definition!]!
+            assets(
+                limit: Int
+                offset: Int
+                sortKey: String
+            ): [Asset!]!
         }
 
         type Definition {
@@ -241,7 +258,7 @@ export const typeDefsProvider = {
             alias: String
         }
 
-        union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask
+        union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask | CopyAssetIntoContainerAfterBuildTask
 
         type ExecuteHostCommandAfterBuildTask {
             type: String!
@@ -256,6 +273,13 @@ export const typeDefsProvider = {
             customEnvVariables: [AfterBuildTaskCustomEnvVariable]!
             inheritedEnvVariables: [AfterBuildTaskInheritedEnvVariable]!
             command: [String!]!
+        }
+
+        type CopyAssetIntoContainerAfterBuildTask {
+            type: String!
+            serviceId: String!
+            assetId: String!
+            destinationPath: String!
         }
 
         type SummaryItem {
@@ -274,13 +298,20 @@ export const typeDefsProvider = {
             composeFileRelativePaths: [String!]!
         }
 
+        type Asset {
+            id: String!
+            description: String
+            project: Project!
+            createdAt: String!
+        }
+
         type InstanceService {
             id: String!
             cleanId: String!
             containerNamePrefix: String!
-            containerId: String!
-            ipAddress: String!
-            containerState: String!
+            containerId: String
+            ipAddress: String
+            containerState: String
         }
 
         type InstanceEnvVariable {

@@ -12,7 +12,7 @@ import {
     InterpolateBeforeBuildTaskTypeInterface
 } from '../type/nested/definition-config/before-build-task-type.interface';
 import {
-    AfterBuildTaskTypeInterface,
+    AfterBuildTaskTypeInterface, CopyAssetIntoContainerAfterBuildTaskTypeInterface,
     ExecuteHostCommandAfterBuildTaskTypeInterface, ExecuteServiceCommandAfterBuildTaskTypeInterface
 } from '../type/nested/definition-config/after-build-task-type.interface';
 
@@ -124,6 +124,14 @@ export class DefinitionConfigMapper {
                     inheritedEnvVariables: afterBuildTask.inheritedEnvVariables,
                     command: afterBuildTask.command,
                 } as ExecuteServiceCommandAfterBuildTaskTypeInterface;
+
+            case 'copyAssetIntoContainer':
+                return {
+                    type: afterBuildTask.type,
+                    serviceId: afterBuildTask.serviceId,
+                    assetId: afterBuildTask.assetId,
+                    destinationPath: afterBuildTask.destinationPath,
+                } as CopyAssetIntoContainerAfterBuildTaskTypeInterface;
 
             default:
                 throw new Error();

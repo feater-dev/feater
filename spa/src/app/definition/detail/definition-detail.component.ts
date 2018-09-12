@@ -23,7 +23,6 @@ export class DefinitionDetailComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.definition') private repository,
         private apollo: Apollo,
     ) {}
 

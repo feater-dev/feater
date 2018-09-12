@@ -61,6 +61,9 @@ export class GraphqlSchemaFactory {
                 instance: this.instanceResolverFactory.getItemResolver(
                     (obj: any, args: any): string => args.id,
                 ),
+                asset: this.assetResolverFactory.getItemResolver(
+                    (obj: any, args: any): string => args.id,
+                ),
             },
 
             Mutation: {

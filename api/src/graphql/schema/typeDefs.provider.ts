@@ -53,6 +53,10 @@ export const typeDefsProvider = {
             instance(
                 id: String!
             ): Instance!
+
+            asset(
+                id: String!
+            ): Asset!
         }
 
         input DefinitionConfigInput {
@@ -103,9 +107,9 @@ export const typeDefsProvider = {
 
         input AfterBuildTaskInput {
             type: String!
-            customEnvVariables: [AfterBuildTaskInputCustomEnvVariable]!
-            inheritedEnvVariables: [AfterBuildTaskInputInheritedEnvVariable]!
-            command: [String!]!
+            customEnvVariables: [AfterBuildTaskInputCustomEnvVariable]
+            inheritedEnvVariables: [AfterBuildTaskInputInheritedEnvVariable]
+            command: [String!]
             serviceId: String
             assetId: String
             destinationPath: String

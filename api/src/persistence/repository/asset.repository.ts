@@ -12,7 +12,7 @@ export class AssetRepository {
         @InjectModel(AssetSchema) private readonly assetModel: Model<AssetInterface>,
     ) {}
 
-    find(criteria: object, offset: number, limit: number, sort?: object): Promise<AssetInterface[]> {
+    async find(criteria: object, offset: number, limit: number, sort?: object): Promise<AssetInterface[]> {
         const query = this.assetModel.find(criteria);
         query
             .skip(offset)

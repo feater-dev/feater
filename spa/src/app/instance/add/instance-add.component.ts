@@ -40,8 +40,6 @@ export class InstanceAddComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.build') private repository,
-        @Inject('repository.definition') private definitionRepository,
         private apollo: Apollo,
     ) {
         this.item = {

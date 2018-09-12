@@ -54,6 +54,8 @@ export const DefinitionSchema = new Schema({
                 alias: String,
             }],
             command: [String],
+            assetId: String,
+            destinationPath: String,
         }],
         summaryItems: [{
             _id: false,

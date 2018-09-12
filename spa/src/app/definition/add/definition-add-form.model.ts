@@ -53,6 +53,9 @@ export interface DefinitionAddComposeFileFormElement {
 
 export interface DefinitionAddFormAfterBuildTaskFormElement {
     type: string;
+}
+
+export interface DefinitionAddFormAfterBuildExecuteCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
     inheritedEnvVariables: {
         name: string;
         alias: string;
@@ -64,10 +67,16 @@ export interface DefinitionAddFormAfterBuildTaskFormElement {
     command: string[];
 }
 
-export interface DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {}
+export interface DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement extends DefinitionAddFormAfterBuildExecuteCommandTaskFormElement {}
 
-export interface DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
+export interface DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement extends DefinitionAddFormAfterBuildExecuteCommandTaskFormElement {
     serviceId: string;
+}
+
+export interface DefinitionAddFormAfterBuildCopyAssetIntoContainerTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
+    serviceId: string;
+    assetId: string;
+    destinationPath: string;
 }
 
 export interface DefinitionAddFormBeforeBuildTaskFormElement {

@@ -21,7 +21,6 @@ export class ProjectListComponent implements OnInit {
 
     constructor(
         private router: Router,
-        @Inject('repository.project') private repository,
         private apollo: Apollo,
     ) {}
 

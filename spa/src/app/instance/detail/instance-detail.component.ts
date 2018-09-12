@@ -25,7 +25,6 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        @Inject('repository.build') private repository,
         private apollo: Apollo,
     ) {}
 

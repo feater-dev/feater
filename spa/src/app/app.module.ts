@@ -19,6 +19,10 @@ import {ProjectAddComponent} from './project/add/project-add.component';
 import {ProjectDetailComponent} from './project/detail/project-detail.component';
 import {ProjectListComponent} from './project/list/project-list.component';
 
+import {AssetAddComponent} from './asset/add/asset-add.component';
+import {AssetDetailComponent} from './asset/detail/asset-detail.component';
+import {AssetListComponent} from './asset/list/asset-list.component';
+
 import {DefinitionAddComponent} from './definition/add/definition-add.component';
 import {
     DefinitionAddSourceFormElementComponent
@@ -52,10 +56,6 @@ import {InstanceAddComponent} from './instance/add/instance-add.component';
 import {InstanceDetailComponent} from './instance/detail/instance-detail.component';
 import {InstanceListComponent} from './instance/list/instance-list.component';
 
-import {UserRepositoryService} from './user/repository/user-repository.service';
-import {ProjectRepositoryService} from './project/repository/project-repository.service';
-import {DefinitionRepositoryService} from './definition/repository/definition-repository.service';
-import {InstanceRepositoryService} from './instance/repository/instance-repository.service';
 import {AuthHttpClient} from './api/auth-http-client.service';
 import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
 import {LinkifyPipe} from './pipes/linkify.pipe';
@@ -63,6 +63,7 @@ import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
 import {RelativeDatePipe} from './pipes/relative-date.pipe';
 import {DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
 import {DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-service-command-form-element.component';
+import {DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-copy-asset-into-container-form-element.component';
 
 
 const appRoutes: Routes = [
@@ -72,11 +73,14 @@ const appRoutes: Routes = [
     { path: 'project/add', component: ProjectAddComponent },
     { path: 'project/:id', component: ProjectDetailComponent },
     { path: 'project/:id/definition/add', component: DefinitionAddComponent},
+    { path: 'project/:id/asset/add', component: AssetAddComponent},
     { path: 'definitions', component: DefinitionListComponent },
     { path: 'definition/:id', component: DefinitionDetailComponent},
     { path: 'definition/:id/instance/add', component: InstanceAddComponent},
     { path: 'instances', component: InstanceListComponent },
     { path: 'instance/:id', component: InstanceDetailComponent},
+    { path: 'assets', component: AssetListComponent },
+    { path: 'asset/:id', component: AssetDetailComponent },
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
@@ -96,12 +100,16 @@ const appRoutes: Routes = [
         DefinitionAddComposeFileFormElementComponent,
         DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent,
         DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent,
+        DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent,
         DefinitionAddSummaryItemFormElementComponent,
         DefinitionDetailComponent,
         DefinitionListComponent,
         InstanceAddComponent,
         InstanceDetailComponent,
         InstanceListComponent,
+        AssetAddComponent,
+        AssetDetailComponent,
+        AssetListComponent,
         NavbarComponent,
         AboutComponent,
         LinkifyPipe,
@@ -118,10 +126,6 @@ const appRoutes: Routes = [
     ],
     providers: [
         {provide: 'authHttp', useClass: AuthHttpClient},
-        {provide: 'repository.user', useClass: UserRepositoryService},
-        {provide: 'repository.project', useClass: ProjectRepositoryService},
-        {provide: 'repository.definition', useClass: DefinitionRepositoryService},
-        {provide: 'repository.build', useClass: InstanceRepositoryService},
     ],
     bootstrap: [
         AppComponent,
@@ -150,6 +154,7 @@ export class AppModule {
                         possibleTypes: [
                             {name: 'ExecuteHostCommandAfterBuildTask'},
                             {name: 'ExecuteServiceCommandAfterBuildTask'},
+                            {name: 'CopyAssetIntoContainerAfterBuildTask'},
                         ],
                     },
                 ],
@@ -160,7 +165,7 @@ export class AppModule {
 
         apollo.create({
             link: httpLink.create({ uri: environment.apiBaseUrl }),
-            cache: new InMemoryCache({ fragmentMatcher }),
+            cache: new InMemoryCache({fragmentMatcher}),
         });
     }
 }

@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h2>Add asset for project <em>{{ project?.name}}</em></h2>
+    </div>
+</div>
+
+<form class="form-horizontal">
+
+    <div class="well well-sm">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="addAssetId" class="col-lg-2 control-label">ID</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="addAssetId" name="addAssetId" [(ngModel)]="item.id">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="addAssetDescription" class="col-lg-2 control-label">Description</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="addAssetDescription" name="addAssetDescription" [(ngModel)]="item.description">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="addAssetFile" class="col-lg-2 control-label">File</label>
+                    <div class="col-lg-10">
+                        <input type="file" class="form-control" id="addAssetFile" name="addAssetFile" (change)="onFileChange($event)" #fileInput>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row form-section">
+        <div class="col-lg-12" style="text-align: right;">
+            <button type="reset" class="btn btn-default" (click)="goToList()">Cancel</button>
+            <button type="submit" class="btn btn-success" (click)="addItem()">Submit</button>
+        </div>
+    </div>
+
+</form>

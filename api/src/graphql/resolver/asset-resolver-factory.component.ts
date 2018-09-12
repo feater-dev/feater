@@ -64,9 +64,12 @@ export class AssetResolverFactory {
 
     public getItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, args: any) => Promise<AssetTypeInterface> {
         return async (obj: any, args: any): Promise<AssetTypeInterface> => {
-            return this.mapPersistentModelToTypeModel(
-                await this.assetRepository.findById(idExtractor(obj, args)),
-            );
+            const assets = await this.assetRepository.find({id: idExtractor(obj, args)}, 0, 1);
+            if (assets.length !== 1) {
+                throw new Error();
+            }
+
+            return this.mapPersistentModelToTypeModel(assets[0]);
         };
     }
 

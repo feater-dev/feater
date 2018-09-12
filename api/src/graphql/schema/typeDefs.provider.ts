@@ -205,6 +205,8 @@ export const typeDefsProvider = {
                 sortKey: String
             ): [Instance!]!
             config: DefinitionConfig!
+            configAsJson: String!
+            configAsYaml: String!
         }
 
         type DefinitionConfig {

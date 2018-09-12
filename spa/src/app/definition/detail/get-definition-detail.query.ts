@@ -84,6 +84,8 @@ export const getDefinitionDetailQueryGql = gql`
                     text
                 }
             }
+            configAsJson
+            configAsYaml
             instances {
                 id
                 name

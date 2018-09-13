@@ -84,7 +84,6 @@ export const getDefinitionDetailQueryGql = gql`
                     text
                 }
             }
-            configAsJson
             configAsYaml
             instances {
                 id
@@ -102,6 +101,7 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
     };
     name: string;
     config: any; // TODO Define in this interface.
+    configAsYaml: string;
     instances: [
         {
             readonly id: string;

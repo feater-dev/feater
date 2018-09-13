@@ -95,7 +95,6 @@ export class GraphqlSchemaFactory {
                 instances: this.instanceResolverFactory.getListResolver(
                     (definition: DefinitionTypeInterface) => ({definitionId: definition.id}),
                 ),
-                configAsJson: this.definitionResolverFactory.getConfigAsJsonResolver(),
                 configAsYaml: this.definitionResolverFactory.getConfigAsYamlResolver(),
             },
 

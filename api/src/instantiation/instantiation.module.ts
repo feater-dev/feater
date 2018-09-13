@@ -23,7 +23,8 @@ import {ContainerStatusChecker} from './container-status-checker.component';
 import {ContainerDetailsWorker} from './container-details-worker.component';
 import {ExecuteHostCommandAfterBuildTaskJobExecutor} from './job/execute-host-command-after-build-task.job';
 import {ExecuteServiceCommandAfterBuildTaskJobExecutor} from './job/execute-service-command-after-build-task.job';
-import {CopyTaskIntoContainerAfterBuildTaskJobExecutor} from './job/copy-asset-into-container-after-build-task.job';
+import {CopyAssetIntoContainerAfterBuildTaskJobExecutor} from './job/copy-asset-into-container-after-build-task.job';
+import {CreateVolumeFromAssetAfterBuildTaskJobExecutor} from './job/create-volume-from-asset-after-build-task.job';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import {CopyTaskIntoContainerAfterBuildTaskJobExecutor} from './job/copy-asset-i
       RunDockerComposeJobExecutor,
       ExecuteHostCommandAfterBuildTaskJobExecutor,
       ExecuteServiceCommandAfterBuildTaskJobExecutor,
-      CopyTaskIntoContainerAfterBuildTaskJobExecutor,
+      CopyAssetIntoContainerAfterBuildTaskJobExecutor,
+      CreateVolumeFromAssetAfterBuildTaskJobExecutor,
       GithubClient,
       Instantiator,
       InterpolationHelper,

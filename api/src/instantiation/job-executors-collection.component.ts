@@ -16,7 +16,8 @@ import {ProxyPortDomainsJobExecutor} from './job/proxy-port-domains.job';
 import {RunDockerComposeJobExecutor} from './job/run-docker-compose.job';
 import {ExecuteHostCommandAfterBuildTaskJobExecutor} from './job/execute-host-command-after-build-task.job';
 import {ExecuteServiceCommandAfterBuildTaskJobExecutor} from './job/execute-service-command-after-build-task.job';
-import {CopyTaskIntoContainerAfterBuildTaskJobExecutor} from './job/copy-asset-into-container-after-build-task.job';
+import {CopyAssetIntoContainerAfterBuildTaskJobExecutor} from './job/copy-asset-into-container-after-build-task.job';
+import {CreateVolumeFromAssetAfterBuildTaskJobExecutor} from './job/create-volume-from-asset-after-build-task.job';
 
 @Component()
 export class JobExecutorsCollection {
@@ -38,7 +39,8 @@ export class JobExecutorsCollection {
         runDockerComposeJobExecutor: RunDockerComposeJobExecutor,
         executeHostCommandAfterBuildTaskJobExecutor: ExecuteHostCommandAfterBuildTaskJobExecutor,
         executeServiceCommandAfterBuildTaskJobExecutor: ExecuteServiceCommandAfterBuildTaskJobExecutor,
-        copyTaskIntoContainerAfterBuildTaskJobExecutor: CopyTaskIntoContainerAfterBuildTaskJobExecutor
+        copyTaskIntoContainerAfterBuildTaskJobExecutor: CopyAssetIntoContainerAfterBuildTaskJobExecutor,
+        createVolumeFromAssetAfterBuildTaskJobExecutor: CreateVolumeFromAssetAfterBuildTaskJobExecutor,
     ) {
         this.jobExecutors = [
             connectContainersToNetworkJobExecutor,
@@ -56,6 +58,7 @@ export class JobExecutorsCollection {
             executeHostCommandAfterBuildTaskJobExecutor,
             executeServiceCommandAfterBuildTaskJobExecutor,
             copyTaskIntoContainerAfterBuildTaskJobExecutor,
+            createVolumeFromAssetAfterBuildTaskJobExecutor,
         ];
     }
 

@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as split from 'split';
 
-export class CopyTaskIntoContainerAfterBuildTaskJob implements BuildJobInterface {
+export class CopyAssetIntoContainerAfterBuildTaskJob implements BuildJobInterface {
 
     constructor(
         readonly build: Build,
@@ -22,7 +22,7 @@ export class CopyTaskIntoContainerAfterBuildTaskJob implements BuildJobInterface
 }
 
 @Component()
-export class CopyTaskIntoContainerAfterBuildTaskJobExecutor implements JobExecutorInterface {
+export class CopyAssetIntoContainerAfterBuildTaskJobExecutor implements JobExecutorInterface {
 
     constructor(
         private readonly config: Config,
@@ -31,7 +31,7 @@ export class CopyTaskIntoContainerAfterBuildTaskJobExecutor implements JobExecut
     ) {}
 
     supports(job: JobInterface): boolean {
-        return (job instanceof CopyTaskIntoContainerAfterBuildTaskJob);
+        return (job instanceof CopyAssetIntoContainerAfterBuildTaskJob);
     }
 
     execute(job: JobInterface, data: any): Promise<any> {
@@ -39,7 +39,7 @@ export class CopyTaskIntoContainerAfterBuildTaskJobExecutor implements JobExecut
             throw new Error();
         }
 
-        const buildJob = job as CopyTaskIntoContainerAfterBuildTaskJob;
+        const buildJob = job as CopyAssetIntoContainerAfterBuildTaskJob;
         const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
 
         return new Promise<any>((resolve, reject) => {

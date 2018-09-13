@@ -20,7 +20,8 @@ import {ProxyPortDomainsJob} from './job/proxy-port-domains.job';
 import {BaseLogger} from '../logger/base-logger';
 import {ExecuteHostCommandAfterBuildTaskJob} from './job/execute-host-command-after-build-task.job';
 import {ExecuteServiceCommandAfterBuildTaskJob} from './job/execute-service-command-after-build-task.job';
-import {CopyTaskIntoContainerAfterBuildTaskJob} from './job/copy-asset-into-container-after-build-task.job';
+import {CopyAssetIntoContainerAfterBuildTaskJob} from './job/copy-asset-into-container-after-build-task.job';
+import {CreateVolumeFromAssetAfterBuildTaskJob} from './job/create-volume-from-asset-after-build-task.job';
 
 @Component()
 export class Instantiator {
@@ -147,11 +148,18 @@ export class Instantiator {
                 );
 
             case 'copyAssetIntoContainer':
-                return new CopyTaskIntoContainerAfterBuildTaskJob(
+                return new CopyAssetIntoContainerAfterBuildTaskJob(
                     build,
                     afterBuildTask.serviceId,
                     afterBuildTask.assetId,
                     afterBuildTask.destinationPath,
+                );
+
+            case 'createVolumeFromAsset':
+                return new CreateVolumeFromAssetAfterBuildTaskJob(
+                    build,
+                    afterBuildTask.assetId,
+                    afterBuildTask.volumeName,
                 );
 
             default:

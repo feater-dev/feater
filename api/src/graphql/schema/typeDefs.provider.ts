@@ -259,7 +259,7 @@ export const typeDefsProvider = {
             alias: String
         }
 
-        union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask | CopyAssetIntoContainerAfterBuildTask
+        union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask | CopyAssetIntoContainerAfterBuildTask | CreateVolumeFromAssetAfterBuildTask
 
         type ExecuteHostCommandAfterBuildTask {
             type: String!
@@ -281,6 +281,12 @@ export const typeDefsProvider = {
             serviceId: String!
             assetId: String!
             destinationPath: String!
+        }
+
+        type CreateVolumeFromAssetAfterBuildTask {
+            type: String!
+            assetId: String!
+            volumeName: String!
         }
 
         type SummaryItem {

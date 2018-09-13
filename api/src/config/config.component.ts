@@ -31,6 +31,7 @@ interface HostPathsConfigInterface {
     readonly build: string;
     readonly composerCache: string;
     readonly npmCache: string;
+    readonly asset: string;
 }
 
 interface GoogleOAuth2ConfigInterface {

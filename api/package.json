@@ -51,6 +51,7 @@
     "rxjs": "^5.5.7",
     "split": "^1.0.1",
     "static-eval": "^2.0.0",
+    "tar": "^4.4.6",
     "typescript": "^2.7.2",
     "uuid-token-generator": "^1.0.0",
     "winston": "^2.4.1",

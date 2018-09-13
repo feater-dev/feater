@@ -145,6 +145,9 @@ export class GraphqlSchemaFactory {
                     if ('copyAssetIntoContainer' === afterBuildTask.type) {
                         return 'CopyAssetIntoContainerAfterBuildTask';
                     }
+                    if ('createVolumeFromAsset' === afterBuildTask.type) {
+                        return 'CreateVolumeFromAssetAfterBuildTask';
+                    }
                     throw new Error();
                 },
             },

@@ -40,7 +40,7 @@ export class AssetController {
             }
 
             assetFilePromise = new Promise((resolve, reject) => {
-                const writeStream = fs.createWriteStream(path.join(this.config.guestPaths.asset, assetFilename));
+                const writeStream = fs.createWriteStream(path.join(this.config.guestPaths.asset, assetFilename)); // TODO Add namespace for project
 
                 file.pipe(writeStream);
 

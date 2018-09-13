@@ -12,7 +12,7 @@ import {
     InterpolateBeforeBuildTaskTypeInterface
 } from '../type/nested/definition-config/before-build-task-type.interface';
 import {
-    AfterBuildTaskTypeInterface, CopyAssetIntoContainerAfterBuildTaskTypeInterface,
+    AfterBuildTaskTypeInterface, CopyAssetIntoContainerAfterBuildTaskTypeInterface, CreateVolumeFromAssetAfterBuildTaskTypeInterface,
     ExecuteHostCommandAfterBuildTaskTypeInterface, ExecuteServiceCommandAfterBuildTaskTypeInterface,
 } from '../type/nested/definition-config/after-build-task-type.interface';
 
@@ -132,6 +132,13 @@ export class DefinitionConfigMapper {
                     assetId: afterBuildTask.assetId,
                     destinationPath: afterBuildTask.destinationPath,
                 } as CopyAssetIntoContainerAfterBuildTaskTypeInterface;
+
+            case 'createVolumeFromAsset':
+                return {
+                    type: afterBuildTask.type,
+                    assetId: afterBuildTask.assetId,
+                    volumeName: afterBuildTask.volumeName,
+                } as CreateVolumeFromAssetAfterBuildTaskTypeInterface;
 
             default:
                 throw new Error();

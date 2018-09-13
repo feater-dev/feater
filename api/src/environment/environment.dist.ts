@@ -24,6 +24,7 @@ export const environment = {
         build: '/home/malef/Development/Feat/data/build/',
         composerCache: '/home/malef/Development/Feat/data/composer/',
         npmCache: '/home/malef/Development/Feat/data/npm/',
+        asset: '/home/malef/Development/Feat/data/asset/',
     },
     googleOAuth2: {
         clientId: 'googleOAuth2ClientId',

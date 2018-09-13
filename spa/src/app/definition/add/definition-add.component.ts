@@ -22,6 +22,7 @@ import {
     GetProjectQueryProjectFieldInterface
 } from './get-project.query';
 import * as _ from 'lodash';
+import * as jsYaml from 'js-yaml';
 
 @Component({
     selector: 'app-definition-add',
@@ -190,11 +191,11 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     toggleMode(): void {
-        this.switchMode('json' === this.mode ? 'form' : 'json');
+        this.switchMode('yaml' === this.mode ? 'form' : 'yaml');
     }
 
-    importJsonConfig(jsonConfig): void {
-        this.item.config = this.mapJsonConfig(jsonConfig);
+    importYamlConfig(yamlConfig): void {
+        this.item.config = this.mapYamlConfig(yamlConfig);
         this.switchMode('form');
     }
 
@@ -252,12 +253,12 @@ export class DefinitionAddComponent implements OnInit {
         }
     }
 
-    protected mapJsonConfig(jsonConfig: any): DefinitionAddFormConfigFormElement {
-        // TODO Check schema validity of jsonConfig.
+    protected mapYamlConfig(yamlConfig: any): DefinitionAddFormConfigFormElement {
+        // TODO Check schema validity of Yaml config.
 
-        jsonConfig = JSON.parse(jsonConfig);
+        yamlConfig = jsYaml.safeLoad(yamlConfig);
 
-        const mappedJsonConfig = {
+        const mappedYamlConfig = {
             sources: [],
             proxiedPorts: [],
             envVariables: [],
@@ -266,33 +267,33 @@ export class DefinitionAddComponent implements OnInit {
             summaryItems: [],
         };
 
-        for (const source of jsonConfig.sources) {
-            mappedJsonConfig.sources.push(source);
+        for (const source of yamlConfig.sources) {
+            mappedYamlConfig.sources.push(source);
         }
 
-        for (const proxiedPort of jsonConfig.proxiedPorts) {
-            mappedJsonConfig.proxiedPorts.push(proxiedPort);
+        for (const proxiedPort of yamlConfig.proxiedPorts) {
+            mappedYamlConfig.proxiedPorts.push(proxiedPort);
         }
 
-        for (const envVariable of jsonConfig.envVariables) {
-            mappedJsonConfig.envVariables.push(envVariable);
+        for (const envVariable of yamlConfig.envVariables) {
+            mappedYamlConfig.envVariables.push(envVariable);
         }
 
-        mappedJsonConfig.composeFile = {
-            sourceId: jsonConfig.composeFiles[0].sourceId,
-            envDirRelativePath: jsonConfig.composeFiles[0].envDirRelativePath,
-            composeFileRelativePaths: jsonConfig.composeFiles[0].composeFileRelativePaths,
+        mappedYamlConfig.composeFile = {
+            sourceId: yamlConfig.composeFiles[0].sourceId,
+            envDirRelativePath: yamlConfig.composeFiles[0].envDirRelativePath,
+            composeFileRelativePaths: yamlConfig.composeFiles[0].composeFileRelativePaths,
         };
 
-        for (const afterBuildTask of jsonConfig.afterBuildTasks) {
-            mappedJsonConfig.afterBuildTasks.push(afterBuildTask);
+        for (const afterBuildTask of yamlConfig.afterBuildTasks) {
+            mappedYamlConfig.afterBuildTasks.push(afterBuildTask);
         }
 
-        for (const summaryItem of jsonConfig.summaryItems) {
-            mappedJsonConfig.summaryItems.push(summaryItem);
+        for (const summaryItem of yamlConfig.summaryItems) {
+            mappedYamlConfig.summaryItems.push(summaryItem);
         }
 
-        return mappedJsonConfig;
+        return mappedYamlConfig;
     }
 
     protected getCreateDefinitionMutation(): string {

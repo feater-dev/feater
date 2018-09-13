@@ -25,7 +25,7 @@
     <div class="row form-section">
         <div class="col-lg-12">
             <a class="btn btn-primary btn-sm" (click)="toggleMode()">
-                {{ 'json' === mode ? 'Back to form': 'Import from JSON file' }}
+                {{ 'yaml' === mode ? 'Back to form': 'Import from Yaml' }}
             </a>
         </div>
     </div>
@@ -200,17 +200,17 @@
 
     </div>
 
-    <div [hidden]="'json' !== mode">
+    <div [hidden]="'yaml' !== mode">
 
         <div class="row form-section">
             <div class="col-lg-12">
                 <div class="well well-sm">
                     <div class="form-group">
-                        <label class="col-lg-2 control-label">JSON config</label>
+                        <label class="col-lg-2 control-label">Yaml config</label>
                         <div class="col-lg-10">
-                            <textarea class="form-control" rows="60" #jsonConfig name="addDefinition_jsonConfig" [ngModel]="item.config | json"></textarea>
+                            <textarea class="form-control" rows="60" #yamlConfig name="addDefinition_yamlConfig" [ngModel]="item.config | yaml" style="font-family: monospace;"></textarea>
                             <div style="text-align: right; margin-top: 6px;">
-                                <button type="submit" class="btn btn-success" (click)="importJsonConfig(jsonConfig.value)">Import</button>
+                                <button type="submit" class="btn btn-success" (click)="importYamlConfig(yamlConfig.value)">Import</button>
                             </div>
                         </div>
                     </div>

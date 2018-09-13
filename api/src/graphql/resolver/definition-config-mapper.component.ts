@@ -13,7 +13,7 @@ import {
 } from '../type/nested/definition-config/before-build-task-type.interface';
 import {
     AfterBuildTaskTypeInterface, CopyAssetIntoContainerAfterBuildTaskTypeInterface,
-    ExecuteHostCommandAfterBuildTaskTypeInterface, ExecuteServiceCommandAfterBuildTaskTypeInterface
+    ExecuteHostCommandAfterBuildTaskTypeInterface, ExecuteServiceCommandAfterBuildTaskTypeInterface,
 } from '../type/nested/definition-config/after-build-task-type.interface';
 
 @Component()
@@ -24,10 +24,10 @@ export class DefinitionConfigMapper {
             mappedSources.push(this.mapSource(source));
         }
 
-        let mappedProxiedPorts: ProxiedPortTypeInterface[] = [];
+        const mappedProxiedPorts: ProxiedPortTypeInterface[] = [];
         for (const proxiedPort of config.proxiedPorts) {
-            mappedProxiedPorts = mappedProxiedPorts.concat(
-                this.mapProxiedPorts(config.proxiedPorts),
+            mappedProxiedPorts.push(
+                this.mapProxiedPort(proxiedPort),
             );
         }
 
@@ -145,14 +145,13 @@ export class DefinitionConfigMapper {
         } as SourceReferenceTypeInterface;
     }
 
-    protected mapProxiedPorts(proxiedPorts: any[]): ProxiedPortTypeInterface[] {
-        const mappedProxiedPorts: ProxiedPortTypeInterface[] = [];
-
-        for (const proxiedPort of proxiedPorts) {
-            mappedProxiedPorts.push(proxiedPort as ProxiedPortTypeInterface);
-        }
-
-        return mappedProxiedPorts;
+    protected mapProxiedPort(proxiedPort: any): ProxiedPortTypeInterface {
+        return {
+            id: proxiedPort.id,
+            serviceId: proxiedPort.serviceId,
+            port: proxiedPort.port,
+            name: proxiedPort.name,
+        } as ProxiedPortTypeInterface;
     }
 
     protected mapSummaryItem(summaryItem: any): SummaryItemTypeInterface {

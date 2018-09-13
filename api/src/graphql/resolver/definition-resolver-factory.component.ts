@@ -9,6 +9,7 @@ import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-
 import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/resolver-definition-filter-arguments.interface';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import * as jsYaml from 'js-yaml';
+import * as _ from 'lodash';
 
 @Component()
 export class DefinitionResolverFactory {
@@ -80,17 +81,9 @@ export class DefinitionResolverFactory {
         };
     }
 
-    public getConfigAsJsonResolver(): (obj: any, args: any) => string {
-        return (obj: any, args: any): string => {
-            return JSON.stringify(obj.config, null, 4);
-        };
-    }
-
     public getConfigAsYamlResolver(): (obj: any, args: any) => string {
         return (obj: any, args: any): string => {
-            const safeConfig = JSON.parse(JSON.stringify(obj.config));
-
-            return jsYaml.safeDump(safeConfig, {indent: 4});
+            return jsYaml.safeDump(obj.config, {indent: 4});
         };
     }
 

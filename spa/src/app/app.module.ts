@@ -59,6 +59,7 @@ import {InstanceListComponent} from './instance/list/instance-list.component';
 import {AuthHttpClient} from './api/auth-http-client.service';
 import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
 import {LinkifyPipe} from './pipes/linkify.pipe';
+import {YamlPipe} from './pipes/yaml.pipe';
 import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
 import {RelativeDatePipe} from './pipes/relative-date.pipe';
 import {DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
@@ -113,6 +114,7 @@ const appRoutes: Routes = [
         NavbarComponent,
         AboutComponent,
         LinkifyPipe,
+        YamlPipe,
         AbsoluteDatePipe,
         RelativeDatePipe,
     ],

@@ -18,6 +18,7 @@ export class Build {
         readonly hash: string,
         readonly config: any,
     ) {
+        this.id = id;
         this.sources = {};
         this.services = {};
         this.featVariables = {};

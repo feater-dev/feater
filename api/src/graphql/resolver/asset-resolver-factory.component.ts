@@ -97,7 +97,7 @@ export class AssetResolverFactory {
         return {
             id: asset.id,
             projectId: asset.projectId,
-            filename: asset.filename,
+            uploaded: asset.uploaded,
             description: asset.description,
             createdAt: asset.createdAt,
         } as AssetTypeInterface;

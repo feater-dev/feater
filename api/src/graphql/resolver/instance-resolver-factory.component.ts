@@ -83,7 +83,7 @@ export class InstanceResolverFactory {
 
             process.nextTick(() => {
                 const build = this.instantiator.createBuild(
-                    instance._id,
+                    instance._id.toString(),
                     hash,
                     definition,
                 );

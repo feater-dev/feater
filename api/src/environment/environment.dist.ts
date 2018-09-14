@@ -1,4 +1,6 @@
-export const environment = {
+import {EnvironmentInterface} from '../config/config.component';
+
+export const environment: EnvironmentInterface = {
     app: {
         versionNumber: '0.0',
         scheme: 'https',
@@ -33,10 +35,17 @@ export const environment = {
             'googleOAuth2AllowedDomain1',
             'googleOAuth2AllowedDomain2',
         ],
+        baseUrl: 'http://host/oauth2/google',
+    },
+    githubOAuth2: {
+        clientId: 'githubOAuth2ClientId',
+        clientSecret: 'githubOAuth2ClientSecret',
+        baseUrl: 'http://host/oauth2/github',
     },
     instantiation: {
         composeHttpTimeout: 5000,
         composeBinaryPath: '/usr/local/bin/docker-compose',
+        dockerBinaryPath: '/usr/bin/docker',
         containerNamePrefix: 'featinstance',
         proxyDomainsNetworkName: 'feat_featproxy', // Value of COMPOSE_PROJECT_NAME is prepended by default.
     },

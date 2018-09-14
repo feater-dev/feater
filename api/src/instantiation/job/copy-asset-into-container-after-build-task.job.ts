@@ -1,14 +1,17 @@
+import {spawn} from 'child_process';
+import * as _ from 'lodash';
+
 import {Component} from '@nestjs/common';
+
+import {environment} from '../../environment/environment';
+
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 import {Build} from '../build';
-import {Config} from '../../config/config.component';
-import {AssetRepository} from '../../persistence/repository/asset.repository';
-import {spawn} from 'child_process';
-import * as _ from 'lodash';
-import * as path from 'path';
-import * as split from 'split';
+import {AssetHelper, AssetUploadPathsInterface} from '../asset-helper.component';
+import {SpawnHelper} from '../spawn-helper.component';
+import {LoggerInterface} from '../../logger/logger-interface';
 
 export class CopyAssetIntoContainerAfterBuildTaskJob implements BuildJobInterface {
 
@@ -25,16 +28,16 @@ export class CopyAssetIntoContainerAfterBuildTaskJob implements BuildJobInterfac
 export class CopyAssetIntoContainerAfterBuildTaskJobExecutor implements JobExecutorInterface {
 
     constructor(
-        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
-        private readonly assetRepository: AssetRepository,
+        private readonly assetHelper: AssetHelper,
+        private readonly spawnHelper: SpawnHelper,
     ) {}
 
     supports(job: JobInterface): boolean {
         return (job instanceof CopyAssetIntoContainerAfterBuildTaskJob);
     }
 
-    execute(job: JobInterface, data: any): Promise<any> {
+    async execute(job: JobInterface, data: any): Promise<void> {
         if (!this.supports(job)) {
             throw new Error();
         }
@@ -42,65 +45,44 @@ export class CopyAssetIntoContainerAfterBuildTaskJobExecutor implements JobExecu
         const buildJob = job as CopyAssetIntoContainerAfterBuildTaskJob;
         const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
 
-        return new Promise<any>((resolve, reject) => {
+        logger.info(`Copying asset '${buildJob.assetId}' into container for service ${buildJob.serviceId}.`);
 
-            const matchedService = _.find(buildJob.build.services, (service) => service.id === buildJob.serviceId);
+        const matchedService = _.find(buildJob.build.services, (service) => service.id === buildJob.serviceId);
+        const asset = await this.assetHelper.findUploadedById(buildJob.assetId);
+        const uploadPaths = this.assetHelper.getUploadPaths(asset);
 
-            this.assetRepository
-                .find({id: buildJob.assetId, filename: {$exists: true}}, 0, 1)
-                .then((assets) => {
-                    if (!assets.length) {
-                        logger.error(`Failed to find asset '${buildJob.assetId}'.`);
-                        reject();
-
-                        return;
-                    }
-
-                    const asset = assets[0];
-
-                    logger.info(`Copying asset '${buildJob.assetId}' into container for service ${matchedService.id}.`);
-
-                    const command = 'docker';
-                    const commandArgs = [
-                        'cp',
-                        path.join(this.config.guestPaths.asset, asset.filename),
-                        `${matchedService.containerId}:${buildJob.destinationPath}`,
-                    ];
-
-                    const spawnedCommand = spawn(command, commandArgs, {cwd: buildJob.build.fullBuildPath});
-
-                    spawnedCommand.stdout
-                        .pipe(split())
-                        .on('data', line => {
-                            logger.info(line); // Is it a string or is it necessary to use .toString() like before?
-                        });
-
-                    spawnedCommand.stderr
-                        .pipe(split())
-                        .on('data', line => {
-                            logger.info(line);
-                        });
-
-                    spawnedCommand.on('error', error => {
-                        logger.error(`Failed to copy file into container (error message: '${error.message}').`);
-                        reject(error);
-                    });
-
-                    const onCloseOrExit = code => {
-                        if (0 !== code) {
-                            logger.error(`Failed to copy file into container with code ${code}.`);
-                            reject(code);
-
-                            return;
-                        }
-                        resolve();
-                    };
-
-                    spawnedCommand.on('close', onCloseOrExit);
-                    spawnedCommand.on('exit', onCloseOrExit);
-                });
-        });
-
+        await this.spawnDockerCopy(
+            uploadPaths,
+            matchedService.containerId,
+            buildJob.destinationPath,
+            buildJob.build.fullBuildPath,
+            logger,
+        );
     }
 
+    protected spawnDockerCopy(
+        uploadPaths: AssetUploadPathsInterface,
+        containerId: string,
+        destinationPath: string,
+        workingDirectory: string,
+        logger: LoggerInterface,
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const spawned = spawn(
+                environment.instantiation.dockerBinaryPath,
+                ['cp', uploadPaths.absolute.guest, `${containerId}:${destinationPath}`],
+                {cwd: workingDirectory},
+            );
+
+            this.spawnHelper.handleSpawned(
+                spawned, logger, resolve, reject,
+                (exitCode: number) => {
+                    logger.error(`Failed to copy asset to container, exit code ${exitCode}.`, {});
+                },
+                (error: Error) => {
+                    logger.error(`Failed to copy asset to container, error ${error.message}.`, {});
+                },
+            );
+        });
+    }
 }

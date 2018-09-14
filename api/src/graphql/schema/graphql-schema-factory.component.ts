@@ -81,9 +81,7 @@ export class GraphqlSchemaFactory {
                 assets: this.assetResolverFactory.getListResolver(
                     (project: ProjectTypeInterface) => ({
                         projectId: project.id,
-                        filename: {
-                            $exists: true,
-                        },
+                        uploaded: true,
                     }),
                 ),
             },

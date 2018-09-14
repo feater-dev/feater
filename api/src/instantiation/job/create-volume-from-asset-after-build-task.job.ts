@@ -1,24 +1,27 @@
-import {Component} from '@nestjs/common';
-import {JobLoggerFactory} from '../../logger/job-logger-factory';
-import {BuildJobInterface, JobInterface} from './job';
-import {JobExecutorInterface} from './job-executor';
-import {Build} from '../build';
-import {Config} from '../../config/config.component';
-import {AssetRepository} from '../../persistence/repository/asset.repository';
-import {execSync} from 'child_process';
-import * as _ from 'lodash';
-import * as path from 'path';
-import * as fs from 'fs';
+import {spawn} from 'child_process';
 import * as tar from 'tar';
+import * as mkdirRecursive from 'mkdir-recursive';
 
-const BUFFER_SIZE = 16 * 1024 * 1024; // 16MB
+import {Component} from '@nestjs/common';
+
+import {environment} from '../../environment/environment';
+
+import {AssetRepository} from '../../persistence/repository/asset.repository';
+import {JobExecutorInterface} from './job-executor';
+import {EnvironmentInterface} from '../../config/config.component';
+import {JobLoggerFactory} from '../../logger/job-logger-factory';
+import {LoggerInterface} from '../../logger/logger-interface';
+import {BuildJobInterface, JobInterface} from './job';
+import {Build} from '../build';
+import {SpawnHelper} from '../spawn-helper.component';
+import {AssetHelper} from '../asset-helper.component';
 
 export class CreateVolumeFromAssetAfterBuildTaskJob implements BuildJobInterface {
 
     constructor(
         readonly build: Build,
         readonly assetId: string,
-        readonly volumeName: string, // TODO Does it behave like relative path too?
+        readonly volumeName: string, // TODO Change to volumeId
     ) {}
 
 }
@@ -27,16 +30,17 @@ export class CreateVolumeFromAssetAfterBuildTaskJob implements BuildJobInterface
 export class CreateVolumeFromAssetAfterBuildTaskJobExecutor implements JobExecutorInterface {
 
     constructor(
-        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly assetRepository: AssetRepository,
+        private readonly assetHelper: AssetHelper,
+        private readonly spawnHelper: SpawnHelper,
     ) {}
 
     supports(job: JobInterface): boolean {
         return (job instanceof CreateVolumeFromAssetAfterBuildTaskJob);
     }
 
-    execute(job: JobInterface, data: any): Promise<any> {
+    async execute(job: JobInterface, data: any): Promise<void> {
         if (!this.supports(job)) {
             throw new Error();
         }
@@ -44,70 +48,86 @@ export class CreateVolumeFromAssetAfterBuildTaskJobExecutor implements JobExecut
         const buildJob = job as CreateVolumeFromAssetAfterBuildTaskJob;
         const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
 
-        return new Promise<any>((resolve, reject) => {
+        logger.info(`Creating volume '${buildJob.volumeName}' from asset '${buildJob.assetId}'.`);
 
-            this.assetRepository
-                .find({id: buildJob.assetId, filename: {$exists: true}}, 0, 1)
-                .then(assets => {
+        const asset = await this.assetHelper.findUploadedById(buildJob.assetId);
 
-                    if (!assets.length) {
-                        logger.error(`Failed to find asset '${buildJob.assetId}'.`);
-                        reject();
+        const uploadPaths = this.assetHelper.getUploadPaths(asset);
+        const extractPaths = this.assetHelper.getExtractPaths(asset, buildJob.build.id, buildJob.volumeName);
 
-                        return;
-                    }
+        mkdirRecursive.mkdirSync(extractPaths.absolute.guest);
 
-                    return assets[0];
-                })
-                .then(asset => {
-
-                    const absoluteAssetGuestPath = path.join(this.config.guestPaths.asset, asset.filename); // TODO Add namespace for project.
-
-                    const relativeExtractedAssetPath = buildJob.volumeName; // TODO Improve or use temp dir.
-                    const absoluteExtractedAssetGuestPath = path.join(
-                        buildJob.build.fullBuildPath,
-                        relativeExtractedAssetPath,
-                    );
-                    const absoluteExtractedAssetHostPath = path.join(
-                        buildJob.build.fullBuildHostPath,
-                        relativeExtractedAssetPath,
-                    ); // TODO Add namespace for project.
-
-                    fs.mkdirSync(absoluteExtractedAssetGuestPath);
-
-                    tar
-                        .extract({
-                            file: absoluteAssetGuestPath,
-                            cwd: absoluteExtractedAssetGuestPath,
-                        })
-                        .then(() => {
-                            execSync(
-                                `docker volume create --name ${buildJob.volumeName}`,
-                                {maxBuffer: BUFFER_SIZE},
-                            );
-
-                            execSync(
-                                [
-                                    `docker run --rm`,
-                                    `-v ${absoluteExtractedAssetHostPath}:/source`,
-                                    `-v ${buildJob.volumeName}:/target`,
-                                    `alpine ash -c`,
-                                    `"cp -av /source/* /target"`,
-                                ].join(' '),
-                                {maxBuffer: BUFFER_SIZE},
-                            );
-
-                            // TODO Remove extracted asset.
-
-                            resolve();
-
-                        });
-                })
-                .catch(() => {
-                    reject();
-                });
+        await tar.extract({
+            file: uploadPaths.absolute.guest,
+            cwd: extractPaths.absolute.guest,
         });
 
+        await this.spawnVolumeCreate(
+            buildJob.volumeName,
+            buildJob.build.fullBuildPath,
+            logger,
+        );
+
+        await this.spawnCopyVolumeUsingTemporaryContainer(
+            extractPaths.absolute.host,
+            buildJob.volumeName,
+            buildJob.build.fullBuildPath,
+            logger,
+        );
+    }
+
+    protected spawnVolumeCreate(
+        volumeName: string,
+        workingDirectory: string,
+        logger: LoggerInterface,
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const spawned = spawn(
+                (environment as EnvironmentInterface).instantiation.dockerBinaryPath,
+                ['volume', 'create', '--name', volumeName],
+                {cwd: workingDirectory},
+            );
+
+            this.spawnHelper.handleSpawned(
+                spawned, logger, resolve, reject,
+                (exitCode: number) => {
+                    logger.error(`Failed to extract asset, exit code ${exitCode}.`, {});
+                },
+                (error: Error) => {
+                    logger.error(`Failed to extract asset, error ${error.message}.`, {});
+                },
+            );
+        });
+    }
+
+    protected spawnCopyVolumeUsingTemporaryContainer(
+        absoluteExtractedAssetHostPath: string,
+        volumeName: string,
+        workingDirectory: string,
+        logger: LoggerInterface,
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const spawned = spawn(
+                (environment as EnvironmentInterface).instantiation.dockerBinaryPath,
+                [
+                    'run', '--rm',
+                    '-v', `${absoluteExtractedAssetHostPath}:/source`,
+                    '-v', `${volumeName}:/target`,
+                    'alpine', 'ash', '-c', 'cp -av /source/* /target',
+                ],
+                {cwd: workingDirectory},
+            );
+
+            this.spawnHelper.handleSpawned(
+                spawned, logger, resolve, reject,
+                (exitCode: number) => {
+                    logger.error(`Failed to copy files from asset to volume, exit code ${exitCode}.`, {});
+                },
+                (error: Error) => {
+                    logger.error(`Failed to copy files from asset to volume, error ${error.message}.`, {});
+                },
+            );
+        });
     }
 
 }

@@ -25,6 +25,8 @@ import {ExecuteHostCommandAfterBuildTaskJobExecutor} from './job/execute-host-co
 import {ExecuteServiceCommandAfterBuildTaskJobExecutor} from './job/execute-service-command-after-build-task.job';
 import {CopyAssetIntoContainerAfterBuildTaskJobExecutor} from './job/copy-asset-into-container-after-build-task.job';
 import {CreateVolumeFromAssetAfterBuildTaskJobExecutor} from './job/create-volume-from-asset-after-build-task.job';
+import {SpawnHelper} from './spawn-helper.component';
+import {AssetHelper} from './asset-helper.component';
 
 @Module({
   imports: [
@@ -57,10 +59,13 @@ import {CreateVolumeFromAssetAfterBuildTaskJobExecutor} from './job/create-volum
       StagesListFactory,
       ContainerDetailsWorker,
       ContainerStatusChecker,
+      SpawnHelper,
+      AssetHelper,
   ],
   exports: [
       Instantiator,
       ContainerStatusChecker,
+      AssetHelper,
   ],
 })
 export class InstantiationModule {}

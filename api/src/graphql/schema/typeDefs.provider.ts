@@ -210,11 +210,17 @@ export const typeDefsProvider = {
 
         type DefinitionConfig {
             sources: [Source!]!
+            volumes: [Volume!]!
             proxiedPorts: [ProxiedPort!]!
             envVariables: [EnvVariable!]!
             composeFiles: [ComposeFile!]!
             afterBuildTasks: [AfterBuildTask]!
             summaryItems: [SummaryItem!]!
+        }
+
+        type Volume {
+            id: String!
+            assetId: String!
         }
 
         type Source {
@@ -259,7 +265,7 @@ export const typeDefsProvider = {
             alias: String
         }
 
-        union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask | CopyAssetIntoContainerAfterBuildTask | CreateVolumeFromAssetAfterBuildTask
+        union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask | CopyAssetIntoContainerAfterBuildTask
 
         type ExecuteHostCommandAfterBuildTask {
             type: String!
@@ -281,12 +287,6 @@ export const typeDefsProvider = {
             serviceId: String!
             assetId: String!
             destinationPath: String!
-        }
-
-        type CreateVolumeFromAssetAfterBuildTask {
-            type: String!
-            assetId: String!
-            volumeName: String!
         }
 
         type SummaryItem {

@@ -26,8 +26,3 @@ export interface CopyAssetIntoContainerAfterBuildTaskTypeInterface extends After
     readonly assetId: string;
     readonly destinationPath: string;
 }
-
-export interface CreateVolumeFromAssetAfterBuildTaskTypeInterface extends AfterBuildTaskTypeInterface {
-    readonly assetId: string;
-    readonly volumeName: string;
-}

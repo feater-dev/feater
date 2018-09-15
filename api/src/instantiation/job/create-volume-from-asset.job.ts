@@ -8,7 +8,6 @@ import {environment} from '../../environment/environment';
 
 import {AssetRepository} from '../../persistence/repository/asset.repository';
 import {JobExecutorInterface} from './job-executor';
-import {EnvironmentInterface} from '../../config/config.component';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {LoggerInterface} from '../../logger/logger-interface';
 import {BuildJobInterface, JobInterface} from './job';
@@ -16,18 +15,18 @@ import {Build} from '../build';
 import {SpawnHelper} from '../spawn-helper.component';
 import {AssetHelper} from '../asset-helper.component';
 
-export class CreateVolumeFromAssetAfterBuildTaskJob implements BuildJobInterface {
+export class CreateVolumeFromAssetJob implements BuildJobInterface {
 
     constructor(
         readonly build: Build,
+        readonly volumeId: string,
         readonly assetId: string,
-        readonly volumeName: string, // TODO Change to volumeId
     ) {}
 
 }
 
 @Component()
-export class CreateVolumeFromAssetAfterBuildTaskJobExecutor implements JobExecutorInterface {
+export class CreateVolumeFromAssetJobExecutor implements JobExecutorInterface {
 
     constructor(
         private readonly jobLoggerFactory: JobLoggerFactory,
@@ -37,7 +36,7 @@ export class CreateVolumeFromAssetAfterBuildTaskJobExecutor implements JobExecut
     ) {}
 
     supports(job: JobInterface): boolean {
-        return (job instanceof CreateVolumeFromAssetAfterBuildTaskJob);
+        return (job instanceof CreateVolumeFromAssetJob);
     }
 
     async execute(job: JobInterface, data: any): Promise<void> {
@@ -45,15 +44,16 @@ export class CreateVolumeFromAssetAfterBuildTaskJobExecutor implements JobExecut
             throw new Error();
         }
 
-        const buildJob = job as CreateVolumeFromAssetAfterBuildTaskJob;
+        const buildJob = job as CreateVolumeFromAssetJob;
         const logger = this.jobLoggerFactory.createForBuildJob(buildJob);
 
-        logger.info(`Creating volume '${buildJob.volumeName}' from asset '${buildJob.assetId}'.`);
+        logger.info(`Creating volume '${buildJob.volumeId}' from asset '${buildJob.assetId}'.`);
 
         const asset = await this.assetHelper.findUploadedById(buildJob.assetId);
+        const volumeName = `${environment.instantiation.containerNamePrefix}${buildJob.build.id}_${buildJob.volumeId}`;
 
         const uploadPaths = this.assetHelper.getUploadPaths(asset);
-        const extractPaths = this.assetHelper.getExtractPaths(asset, buildJob.build.id, buildJob.volumeName);
+        const extractPaths = this.assetHelper.getExtractPaths(asset, buildJob.build.id, buildJob.volumeId);
 
         mkdirRecursive.mkdirSync(extractPaths.absolute.guest);
 
@@ -63,27 +63,31 @@ export class CreateVolumeFromAssetAfterBuildTaskJobExecutor implements JobExecut
         });
 
         await this.spawnVolumeCreate(
-            buildJob.volumeName,
+            buildJob.volumeId,
+            volumeName,
             buildJob.build.fullBuildPath,
             logger,
         );
 
         await this.spawnCopyVolumeUsingTemporaryContainer(
             extractPaths.absolute.host,
-            buildJob.volumeName,
+            volumeName,
             buildJob.build.fullBuildPath,
             logger,
         );
+
+        buildJob.build.envVariables.add(`FEAT__ASSET_VOLUME__${buildJob.volumeId.toUpperCase()}`, volumeName);
     }
 
     protected spawnVolumeCreate(
+        volumeId: string,
         volumeName: string,
         workingDirectory: string,
         logger: LoggerInterface,
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             const spawned = spawn(
-                (environment as EnvironmentInterface).instantiation.dockerBinaryPath,
+                environment.instantiation.dockerBinaryPath,
                 ['volume', 'create', '--name', volumeName],
                 {cwd: workingDirectory},
             );
@@ -108,7 +112,7 @@ export class CreateVolumeFromAssetAfterBuildTaskJobExecutor implements JobExecut
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             const spawned = spawn(
-                (environment as EnvironmentInterface).instantiation.dockerBinaryPath,
+                environment.instantiation.dockerBinaryPath,
                 [
                     'run', '--rm',
                     '-v', `${absoluteExtractedAssetHostPath}:/source`,

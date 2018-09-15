@@ -134,18 +134,17 @@ export class GraphqlSchemaFactory {
 
             AfterBuildTask: {
                 __resolveType: (afterBuildTask: AfterBuildTaskTypeInterface): string => {
-                    if ('executeHostCommand' === afterBuildTask.type) {
-                        return 'ExecuteHostCommandAfterBuildTask';
+                    switch (afterBuildTask.type) {
+                        case 'executeHostCommand':
+                            return 'ExecuteHostCommandAfterBuildTask';
+
+                        case 'executeServiceCommand':
+                            return 'ExecuteServiceCommandAfterBuildTask';
+
+                        case 'copyAssetIntoContainer':
+                            return 'CopyAssetIntoContainerAfterBuildTask';
                     }
-                    if ('executeServiceCommand' === afterBuildTask.type) {
-                        return 'ExecuteServiceCommandAfterBuildTask';
-                    }
-                    if ('copyAssetIntoContainer' === afterBuildTask.type) {
-                        return 'CopyAssetIntoContainerAfterBuildTask';
-                    }
-                    if ('createVolumeFromAsset' === afterBuildTask.type) {
-                        return 'CreateVolumeFromAssetAfterBuildTask';
-                    }
+
                     throw new Error();
                 },
             },

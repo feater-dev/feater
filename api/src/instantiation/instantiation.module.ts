@@ -24,7 +24,7 @@ import {ContainerDetailsWorker} from './container-details-worker.component';
 import {ExecuteHostCommandAfterBuildTaskJobExecutor} from './job/execute-host-command-after-build-task.job';
 import {ExecuteServiceCommandAfterBuildTaskJobExecutor} from './job/execute-service-command-after-build-task.job';
 import {CopyAssetIntoContainerAfterBuildTaskJobExecutor} from './job/copy-asset-into-container-after-build-task.job';
-import {CreateVolumeFromAssetAfterBuildTaskJobExecutor} from './job/create-volume-from-asset-after-build-task.job';
+import {CreateVolumeFromAssetJobExecutor} from './job/create-volume-from-asset.job';
 import {SpawnHelper} from './spawn-helper.component';
 import {AssetHelper} from './asset-helper.component';
 
@@ -51,7 +51,7 @@ import {AssetHelper} from './asset-helper.component';
       ExecuteHostCommandAfterBuildTaskJobExecutor,
       ExecuteServiceCommandAfterBuildTaskJobExecutor,
       CopyAssetIntoContainerAfterBuildTaskJobExecutor,
-      CreateVolumeFromAssetAfterBuildTaskJobExecutor,
+      CreateVolumeFromAssetJobExecutor,
       GithubClient,
       Instantiator,
       InterpolationHelper,

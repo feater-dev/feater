@@ -5,6 +5,7 @@ export interface DefinitionAddForm {
 
 export interface DefinitionAddFormConfigFormElement {
     sources: DefinitionAddFormSourceFormElement[];
+    volumes: DefinitionAddFormVolumeFormElement[];
     proxiedPorts: DefinitionAddFormProxiedPortFormElement[];
     envVariables: DefinitionAddFormEnvVariableFormElement[];
     composeFile: DefinitionAddComposeFileFormElement;
@@ -21,6 +22,11 @@ export interface DefinitionAddFormSourceFormElement {
         DefinitionAddFormBeforeBuildCopyTaskFormElement|
         DefinitionAddFormBeforeBuildInterpolateTaskFormElement
     >;
+}
+
+export interface DefinitionAddFormVolumeFormElement {
+    id: string;
+    assetId: string;
 }
 
 export interface DefinitionAddFormComponentReferenceFormElement {

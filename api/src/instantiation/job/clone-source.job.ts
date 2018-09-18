@@ -45,7 +45,7 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
             const cloneOpts = {
                 fetchOpts: {
                     callbacks: {
-                        credentials: (repoUrl, userName) => nodegit.Cred.sshKeyNew(
+                        credentials: (repoUrl, userName) => nodegit.Cred.sshKeyNew( // TODO Change to sshKeyMemoryNew
                             userName,
                             this.config.sshKey.publicKeyPath,
                             this.config.sshKey.privateKeyPath,

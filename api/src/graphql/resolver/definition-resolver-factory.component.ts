@@ -7,15 +7,19 @@ import {CreateDefinitionInputTypeInterface} from '../input-type/create-definitio
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/resolver-definition-filter-arguments.interface';
+import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import * as jsYaml from 'js-yaml';
-import * as _ from 'lodash';
+import * as gitUrlParse from 'git-url-parse';
+import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
+import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
 
 @Component()
 export class DefinitionResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
         private readonly definitionRepository: DefinitionRepository,
+        private readonly deployKeyRepository: DeployKeyRepository,
         private readonly definitionConfigMapper: DefinitionConfigMapper,
     ) { }
 
@@ -72,8 +76,8 @@ export class DefinitionResolverFactory {
         };
     }
 
-    public getCreateItemResolver(): (_: any, createDefinitionInput: CreateDefinitionInputTypeInterface) => Promise<DefinitionTypeInterface> {
-        return async (_: any, createDefinitionInput: CreateDefinitionInputTypeInterface): Promise<DefinitionTypeInterface> => {
+    public getCreateItemResolver(): (obj: any, createDefinitionInput: CreateDefinitionInputTypeInterface) => Promise<DefinitionTypeInterface> {
+        return async (obj: any, createDefinitionInput: CreateDefinitionInputTypeInterface): Promise<DefinitionTypeInterface> => {
             // TODO Add validation.
             const definition = await this.definitionRepository.create(createDefinitionInput);
 
@@ -84,6 +88,18 @@ export class DefinitionResolverFactory {
     public getConfigAsYamlResolver(): (obj: any, args: any) => string {
         return (obj: any, args: any): string => {
             return jsYaml.safeDump(obj.config, {indent: 4});
+        };
+    }
+
+    public getDeployKeysResolver(): (obj: DefinitionInterface, args: any) => Promise<DeployKeyInterface[]> {
+        return async (obj: DefinitionInterface, args: any): Promise<DeployKeyInterface[]> => {
+            const deployKeys: DeployKeyInterface[] = [];
+            for (const source of obj.config.sources) {
+                const {owner: repositoryOwner, name: repositoryName} = gitUrlParse((source as SourceTypeInterface).sshCloneUrl);
+                deployKeys.push(await this.deployKeyRepository.findByRepositoryOwnerAndName(repositoryOwner, repositoryName));
+            }
+
+            return deployKeys;
         };
     }
 

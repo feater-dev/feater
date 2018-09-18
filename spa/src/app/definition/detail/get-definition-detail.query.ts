@@ -3,7 +3,6 @@ import gql from 'graphql-tag';
 
 export const getDefinitionDetailQueryGql = gql`
     query ($id: String!) {
-        publicSshKey
         definition(id: $id) {
             id
             project {
@@ -11,83 +10,15 @@ export const getDefinitionDetailQueryGql = gql`
                 name
             }
             name
-            config {
-                sources {
-                    id
-                    sshCloneUrl
-                    reference {
-                        type
-                        name
-                    }
-                    beforeBuildTasks {
-                        ... on CopyBeforeBuildTask {
-                                type
-                                sourceRelativePath
-                                destinationRelativePath
-                            }
-                        ... on InterpolateBeforeBuildTask {
-                                type
-                                relativePath
-                            }
-                    }
-                }
-                proxiedPorts {
-                    id
-                    serviceId
-                    name
-                    port
-                }
-                envVariables {
-                    name
-                    value
-                }
-                composeFiles {
-                    sourceId
-                    envDirRelativePath
-                    composeFileRelativePaths
-                }
-                afterBuildTasks {
-                    ... on ExecuteHostCommandAfterBuildTask {
-                        type
-                        customEnvVariables {
-                            name
-                            value
-                        }
-                        inheritedEnvVariables {
-                            name
-                            alias
-                        }
-                        command
-                    }
-                    ... on ExecuteServiceCommandAfterBuildTask {
-                        type
-                        serviceId
-                        customEnvVariables {
-                            name
-                            value
-                        }
-                        inheritedEnvVariables {
-                            name
-                            alias
-                        }
-                        command
-                    }
-                    ... on CopyAssetIntoContainerAfterBuildTask {
-                        type
-                        serviceId
-                        assetId
-                        destinationPath
-                    }
-               }
-                summaryItems {
-                    name
-                    text
-                }
-            }
             configAsYaml
             instances {
                 id
                 name
+            }
+            deployKeys {
+                repositoryOwner
+                repositoryName
+                publicKey
             }
         }
     }
@@ -100,7 +31,6 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
         name: string;
     };
     name: string;
-    config: any; // TODO Define in this interface.
     configAsYaml: string;
     instances: [
         {
@@ -108,9 +38,15 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
             readonly name: string;
         }
     ];
+    deployKeys: [
+        {
+            readonly repositoryOwner: string;
+            readonly repositoryName: string;
+            readonly publicKey: string;
+        }
+    ];
 }
 
 export interface GetDefinitionDetailQueryInterface {
-    publicSshKey: string;
     definition: GetDefinitionDetailQueryDefinitionFieldInterface;
 }

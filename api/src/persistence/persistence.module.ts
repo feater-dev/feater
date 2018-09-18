@@ -15,6 +15,8 @@ import {LogRepository} from './repository/log.repository';
 import {ConfigModule} from '../config/config.module';
 import {AssetSchema} from './schema/asset.schema';
 import {AssetRepository} from './repository/asset.repository';
+import {DeployKeySchema} from './schema/deploy-key.schema';
+import {DeployKeyRepository} from './repository/deploy-key.repository';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import {AssetRepository} from './repository/asset.repository';
       MongooseModule.forFeature([{ name: 'Definition', schema: DefinitionSchema }]),
       MongooseModule.forFeature([{ name: 'Instance', schema: InstanceSchema }]),
       MongooseModule.forFeature([{ name: 'Asset', schema: AssetSchema }]),
+      MongooseModule.forFeature([{ name: 'DeployKey', schema: DeployKeySchema }]),
       ConfigModule,
   ],
   controllers: [],
@@ -35,6 +38,7 @@ import {AssetRepository} from './repository/asset.repository';
       DefinitionRepository,
       InstanceRepository,
       AssetRepository,
+      DeployKeyRepository,
       LogRepository,
   ],
   exports: [
@@ -44,6 +48,7 @@ import {AssetRepository} from './repository/asset.repository';
       DefinitionRepository,
       InstanceRepository,
       AssetRepository,
+      DeployKeyRepository,
       LogRepository,
   ],
 })

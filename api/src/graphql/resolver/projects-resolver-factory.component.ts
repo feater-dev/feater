@@ -70,8 +70,8 @@ export class ProjectsResolverFactory {
         };
     }
 
-    public getCreateItemResolver(): (_: any, createProjectInput: CreateProjectInputTypeInterface) => Promise<ProjectTypeInterface> {
-        return async (_: any, createProjectInput: CreateProjectInputTypeInterface): Promise<ProjectTypeInterface> => {
+    public getCreateItemResolver(): (obj: any, createProjectInput: CreateProjectInputTypeInterface) => Promise<ProjectTypeInterface> {
+        return async (obj: any, createProjectInput: CreateProjectInputTypeInterface): Promise<ProjectTypeInterface> => {
             // TODO Add validation.
             const project = await this.projectRepository.create(createProjectInput);
 

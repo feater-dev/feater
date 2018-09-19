@@ -3,6 +3,7 @@ import {Component} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {DeployKeySchema} from '../schema/deploy-key.schema';
 import {DeployKeyInterface} from '../interface/deploy-key.interface';
+import * as nanoid from 'nanoid';
 import * as easyKeygen from 'easy-keygen';
 
 @Component()
@@ -34,12 +35,14 @@ export class DeployKeyRepository {
     }
 
     async create(repositoryOwner: string, repositoryName: string): Promise<DeployKeyInterface> {
-        const {publicKey, privateKey} = await easyKeygen();
+        const passphrase = nanoid(32);
+        const {publicKey, privateKey} = await easyKeygen(null, {passphrase});
         const model = new this.deployKeyModel({
             repositoryName,
             repositoryOwner,
             publicKey,
             privateKey,
+            passphrase,
         } as DeployKeyInterface);
         await model.save();
 

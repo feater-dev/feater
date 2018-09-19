@@ -5,8 +5,8 @@ import {DefinitionSchema} from '../schema/definition.schema';
 import {DefinitionInterface} from '../interface/definition.interface';
 import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/create-definition-input-type.interface';
 import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/source-type.interface';
-import * as gitUrlParse from 'git-url-parse';
 import {DeployKeyRepository} from './deploy-key.repository';
+import * as gitUrlParse from 'git-url-parse';
 
 @Component()
 export class DefinitionRepository {

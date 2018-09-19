@@ -6,4 +6,5 @@ export interface DeployKeyInterface extends Document {
     readonly repositoryName: string;
     readonly publicKey: string;
     readonly privateKey: string;
+    readonly passphrase: string;
 }

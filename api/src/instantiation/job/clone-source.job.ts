@@ -1,10 +1,12 @@
-import * as nodegit from 'nodegit';
-import {mkdirSync} from 'mkdir-recursive';
 import {Component} from '@nestjs/common';
 import {Config} from '../../config/config.component';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {JobInterface, SourceJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
+import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
+import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/source-type.interface';
+import * as nodegit from 'nodegit';
+import * as gitUrlParse from 'git-url-parse';
 
 const PROGRESS_THROTTLE_PERIOD = 10; // In miliseconds.
 
@@ -22,13 +24,14 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
     constructor(
         private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
+        private readonly deployKeyRepository: DeployKeyRepository,
     ) {}
 
     supports(job: JobInterface): boolean {
         return (job instanceof CloneSourceJob);
     }
 
-    execute(job: JobInterface, data: any): Promise<any> {
+    async execute(job: JobInterface, data: any): Promise<any> {
         if (!this.supports(job)) {
             throw new Error();
         }
@@ -36,61 +39,51 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
         const sourceJob = job as CloneSourceJob;
         const logger = this.jobLoggerFactory.createForSourceJob(sourceJob);
         const {source} = sourceJob;
+        const sshCloneUrl = source.config.sshCloneUrl;
+        source.relativePath = source.id; // TODO Required to obtain fullBuildPath, needs to be improved.
 
-        source.relativePath = source.id;
+        logger.info(`Cloning source from ${sshCloneUrl} to ${source.fullBuildPath}.`);
 
-        logger.info(`Cloning source from ${source.config.sshCloneUrl} to ${source.fullBuildPath}.`);
+        const {owner: repositoryOwner, name: repositoryName} = gitUrlParse(sshCloneUrl);
+        const deployKey = await this.deployKeyRepository.findByRepositoryOwnerAndName(repositoryOwner, repositoryName);
 
-        return new Promise((resolve, reject) => {
-            const cloneOpts = {
-                fetchOpts: {
-                    callbacks: {
-                        credentials: (repoUrl, userName) => nodegit.Cred.sshKeyNew( // TODO Change to sshKeyMemoryNew
-                            userName,
-                            this.config.sshKey.publicKeyPath,
-                            this.config.sshKey.privateKeyPath,
-                            this.config.sshKey.passphrase,
-                        ),
-                        transferProgress: {
-                            throttle: PROGRESS_THROTTLE_PERIOD,
-                            callback: (transferProgress) => {
-                                const progress = 100 * (
-                                    (transferProgress.receivedObjects() + transferProgress.indexedObjects()) /
-                                    (transferProgress.totalObjects() * 2)
-                                );
-                                logger.info(`Cloning progress ${progress.toFixed(2)}%.`);
-                            },
+        const cloneOpts = {
+            fetchOpts: {
+                callbacks: {
+                    credentials: (repoUrl, userName) => nodegit.Cred.sshKeyMemoryNew(
+                        userName,
+                        deployKey.publicKey,
+                        deployKey.privateKey,
+                        deployKey.passphrase,
+                    ),
+                    transferProgress: {
+                        throttle: PROGRESS_THROTTLE_PERIOD,
+                        callback: (transferProgress) => {
+                            const progress = 100 * (
+                                (transferProgress.receivedObjects() + transferProgress.indexedObjects()) /
+                                (transferProgress.totalObjects() * 2)
+                            );
+                            logger.info(`Cloning progress ${progress.toFixed(2)}%.`);
                         },
                     },
                 },
-            };
+            },
+        };
 
-            nodegit
-                .Clone(source.config.sshCloneUrl, source.fullBuildPath, cloneOpts)
-                .then(repo => {
-                    // TODO Handle non-existent reference and improve logging and error reporting.
-                    switch (source.config.reference.type) {
-                        case 'branch':
-                            return repo
-                                .getBranch(`refs/remotes/origin/${source.config.reference.name}`)
-                                .then(reference => {
-                                    return repo.checkoutRef(reference);
-                                });
+        const repo = await nodegit.Clone(sshCloneUrl, source.fullBuildPath, cloneOpts);
 
-                        case 'tag': // TODO Allow to checkout tag.
-                        case 'commit': // TODO Allow to checkout commit.
-                        default:
-                            reject();
-                    }
-                })
-                .then(() => {
-                    logger.info(`Completed cloning source from ${source.config.sshCloneUrl}.`);
-                    resolve();
-                })
-                .catch(err => {
-                    logger.info(`Failed to clone source from ${source.config.sshCloneUrl}.`);
-                    reject(err);
-                });
-        });
+        switch (source.config.reference.type) {
+            case 'branch':
+                const reference = await repo.getBranch(`refs/remotes/origin/${source.config.reference.name}`);
+                await repo.checkoutRef(reference);
+                break;
+
+            case 'tag': // TODO Allow to checkout tag.
+            case 'commit': // TODO Allow to checkout commit.
+            default:
+                throw new Error();
+        }
+
+        logger.info(`Completed cloning source from ${sshCloneUrl}.`);
     }
 }

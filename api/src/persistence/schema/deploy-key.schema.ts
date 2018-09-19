@@ -5,4 +5,5 @@ export const DeployKeySchema = new Schema({
     repositoryName: String,
     publicKey: String,
     privateKey: String,
+    passphrase: String,
 });

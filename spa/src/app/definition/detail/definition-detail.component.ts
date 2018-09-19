@@ -16,8 +16,6 @@ import {
 })
 export class DefinitionDetailComponent implements OnInit {
 
-    publicSshKey: string;
-
     definition: GetDefinitionDetailQueryDefinitionFieldInterface;
 
     constructor(
@@ -57,7 +55,6 @@ export class DefinitionDetailComponent implements OnInit {
             .valueChanges
             .subscribe(result => {
                 const resultData: GetDefinitionDetailQueryInterface = result.data;
-                this.publicSshKey = resultData.publicSshKey;
                 this.definition = resultData.definition;
             });
     }

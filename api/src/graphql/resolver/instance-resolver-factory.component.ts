@@ -74,8 +74,8 @@ export class InstanceResolverFactory {
         };
     }
 
-    public getCreateItemResolver(): (_: any, createInstanceInput: CreateInstanceInputTypeInterface) => Promise<InstanceTypeInterface> {
-        return async (_: any, createInstanceInput: CreateInstanceInputTypeInterface): Promise<InstanceTypeInterface> => {
+    public getCreateItemResolver(): (obj: any, createInstanceInput: CreateInstanceInputTypeInterface) => Promise<InstanceTypeInterface> {
+        return async (obj: any, createInstanceInput: CreateInstanceInputTypeInterface): Promise<InstanceTypeInterface> => {
             // TODO Add validation.
             const instance = await this.instanceRepository.create(createInstanceInput);
             const definition = await this.definitionRepository.findByIdOrFail(instance.definitionId);
@@ -83,7 +83,7 @@ export class InstanceResolverFactory {
 
             process.nextTick(() => {
                 const build = this.instantiator.createBuild(
-                    instance._id,
+                    instance._id.toString(),
                     hash,
                     definition,
                 );
@@ -94,8 +94,10 @@ export class InstanceResolverFactory {
         };
     }
 
-    public getRemoveItemResolver(): (_: any, removeInstanceInput: RemoveInstanceInputTypeInterface) => Promise<boolean> {
-        return async (_: any, removeInstanceInput: RemoveInstanceInputTypeInterface): Promise<boolean> => {
+    public getRemoveItemResolver(): (obj: any, removeInstanceInput: RemoveInstanceInputTypeInterface) => Promise<boolean> {
+        return async (obj: any, removeInstanceInput: RemoveInstanceInputTypeInterface): Promise<boolean> => {
+            // TODO Should also remove files, proxies, volumes, networks...
+
             return await this.instanceRepository.remove(removeInstanceInput.id);
         };
     }

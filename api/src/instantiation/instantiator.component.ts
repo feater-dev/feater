@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {Component} from '@nestjs/common';
 import {Config} from '../config/config.component';
 import {StagesListFactory} from './stages-list-factory.component';
-import {Build} from './build';
+import {Build, DefinitionConfigInterface} from './build';
 import {Source} from './source';
 import {JobInterface} from './job/job';
 import {CopyBeforeBuildTaskJob} from './job/copy-before-build-task.job';
@@ -20,7 +20,8 @@ import {ProxyPortDomainsJob} from './job/proxy-port-domains.job';
 import {BaseLogger} from '../logger/base-logger';
 import {ExecuteHostCommandAfterBuildTaskJob} from './job/execute-host-command-after-build-task.job';
 import {ExecuteServiceCommandAfterBuildTaskJob} from './job/execute-service-command-after-build-task.job';
-import {CopyTaskIntoContainerAfterBuildTaskJob} from './job/copy-asset-into-container-after-build-task.job';
+import {CopyAssetIntoContainerAfterBuildTaskJob} from './job/copy-asset-into-container-after-build-task.job';
+import {CreateVolumeFromAssetJob} from './job/create-volume-from-asset.job';
 
 @Component()
 export class Instantiator {
@@ -55,9 +56,15 @@ export class Instantiator {
 
         stagesList.addSequentialStage('createDirectory', [], [new CreateDirectoryJob(build)]);
 
+        for (const volume of (build.config as DefinitionConfigInterface).volumes) {
+            stagesList.addSequentialStage(`prepareVolume_${volume.id}`, ['createDirectory'], [
+                new CreateVolumeFromAssetJob(build, volume.id, volume.assetId),
+            ]);
+        }
+
         for (const sourceId of Object.keys(build.sources)) {
             const source = build.sources[sourceId];
-            stagesList.addSequentialStage(`prepareSource_${sourceId}`, ['createDirectory'], [
+            stagesList.addSequentialStage(`prepareSource_${sourceId}`, ['prepareVolume_'], [
                 new CloneSourceJob(source),
             ]);
         }
@@ -147,7 +154,7 @@ export class Instantiator {
                 );
 
             case 'copyAssetIntoContainer':
-                return new CopyTaskIntoContainerAfterBuildTaskJob(
+                return new CopyAssetIntoContainerAfterBuildTaskJob(
                     build,
                     afterBuildTask.serviceId,
                     afterBuildTask.assetId,

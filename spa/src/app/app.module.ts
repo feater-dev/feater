@@ -65,6 +65,7 @@ import {RelativeDatePipe} from './pipes/relative-date.pipe';
 import {DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
 import {DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-service-command-form-element.component';
 import {DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-copy-asset-into-container-form-element.component';
+import {DefinitionAddVolumeFormElementComponent} from './definition/add/form-element/definition-add.volume-form-element.component';
 
 
 const appRoutes: Routes = [
@@ -94,6 +95,7 @@ const appRoutes: Routes = [
         ProjectListComponent,
         DefinitionAddComponent,
         DefinitionAddSourceFormElementComponent,
+        DefinitionAddVolumeFormElementComponent,
         DefinitionAddBeforeBuildTaskCopyFormElementComponent,
         DefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
         DefinitionAddProxiedPortFormElementComponent,

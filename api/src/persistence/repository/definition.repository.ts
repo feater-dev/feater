@@ -4,13 +4,16 @@ import {Model} from 'mongoose';
 import {DefinitionSchema} from '../schema/definition.schema';
 import {DefinitionInterface} from '../interface/definition.interface';
 import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/create-definition-input-type.interface';
-
+import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/source-type.interface';
+import {DeployKeyRepository} from './deploy-key.repository';
+import * as gitUrlParse from 'git-url-parse';
 
 @Component()
 export class DefinitionRepository {
 
     constructor(
         @InjectModel(DefinitionSchema) private readonly definitionModel: Model<DefinitionInterface>,
+        private readonly deployKeyRepository: DeployKeyRepository,
     ) {}
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<DefinitionInterface[]> {
@@ -38,11 +41,18 @@ export class DefinitionRepository {
         return definition;
     }
 
-    create(createDefinitionInputType: CreateDefinitionInputTypeInterface): Promise<DefinitionInterface> {
+    async create(createDefinitionInputType: CreateDefinitionInputTypeInterface): Promise<DefinitionInterface> {
         const createdDefinition = new this.definitionModel(createDefinitionInputType);
-        return new Promise(resolve => {
-            createdDefinition.save();
-            resolve(createdDefinition);
-        });
+        await createdDefinition.save();
+
+        for (const source of createdDefinition.config.sources) {
+            const {owner: repositoryOwner, name: repositoryName} = gitUrlParse((source as SourceTypeInterface).sshCloneUrl);
+            const deployKeyExists = await this.deployKeyRepository.existsForRepositoryOwnerAndName(repositoryOwner, repositoryName);
+            if (!deployKeyExists) {
+                await this.deployKeyRepository.create(repositoryOwner, repositoryName);
+            }
+        }
+
+        return createdDefinition;
     }
 }

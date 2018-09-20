@@ -1,17 +1,18 @@
-import {Controller, Post, Request, Response, Next, Param} from '@nestjs/common';
-import {Config} from '../../config/config.component';
-import {AssetRepository} from '../../persistence/repository/asset.repository';
-import * as nanoidGenerate from 'nanoid/generate';
-import * as path from 'path';
-import * as Busboy from 'busboy';
 import * as fs from 'fs-extra';
+import * as path from 'path';
+import * as mkdirRecursive from 'mkdir-recursive';
+import * as Busboy from 'busboy';
+
+import {Controller, Post, Request, Response, Next, Param} from '@nestjs/common';
+import {AssetRepository} from '../../persistence/repository/asset.repository';
+import {AssetHelper} from '../../instantiation/asset-helper.component';
 
 @Controller()
 export class AssetController {
 
     constructor(
-        private readonly config: Config,
         private readonly assetRepository: AssetRepository,
+        private readonly assetHelper: AssetHelper,
     ) {}
 
     @Post('asset/:id')
@@ -30,8 +31,6 @@ export class AssetController {
                 return assets[0];
             });
 
-        const assetFilename = nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 32);
-
         const busboy = new Busboy({ headers: req.headers });
 
         busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
@@ -39,9 +38,13 @@ export class AssetController {
                 return;
             }
 
-            assetFilePromise = new Promise((resolve, reject) => {
-                const writeStream = fs.createWriteStream(path.join(this.config.guestPaths.asset, assetFilename));
 
+            assetFilePromise = new Promise((resolve, reject) => {
+                const uploadPaths = this.assetHelper.getUploadPaths(asset);
+
+                mkdirRecursive.mkdirSync(path.dirname(uploadPaths.absolute.guest));
+
+                const writeStream = fs.createWriteStream(uploadPaths.absolute.guest);
                 file.pipe(writeStream);
 
                 writeStream.on('close', () => {
@@ -50,20 +53,17 @@ export class AssetController {
             });
         });
 
-        busboy.on('finish', () => {
+        busboy.on('finish', async () => {
             if (!assetFilePromise) {
                 res.status(500).send();
 
                 return;
             }
 
-            assetFilePromise
-                .then(() => {
-                    return this.assetRepository.updateFilename(asset._id, assetFilename);
-                })
-                .then(() => {
-                    res.status(200).send();
-                });
+            await assetFilePromise;
+            await this.assetRepository.markAsUploaded(asset._id);
+
+            res.status(200).send();
         });
 
         req.pipe(busboy);

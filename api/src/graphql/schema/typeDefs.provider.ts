@@ -9,8 +9,6 @@ export const typeDefsProvider = {
         }
 
         type Query {
-            publicSshKey: String
-
             users(
                 limit: Int
                 offset: Int
@@ -61,6 +59,7 @@ export const typeDefsProvider = {
 
         input DefinitionConfigInput {
             sources: [SourceInput!]!
+            volumes: [VolumeInput!]!
             proxiedPorts: [ProxiedPortInput!]!
             envVariables: [EnvVariableInput!]!
             composeFiles: [ComposeFileInput!]!
@@ -73,6 +72,11 @@ export const typeDefsProvider = {
             sshCloneUrl: String!
             reference: SourceReferenceInput!
             beforeBuildTasks: [BeforeBuildTaskInput!]!
+        }
+
+        input VolumeInput {
+            id: String!
+            assetId: String!
         }
 
         input BeforeBuildTaskInput {
@@ -206,15 +210,28 @@ export const typeDefsProvider = {
             ): [Instance!]!
             config: DefinitionConfig!
             configAsYaml: String!
+            deployKeys: [DeployKey!]!
+        }
+
+        type DeployKey {
+            repositoryName: String!
+            repositoryOwner: String!
+            publicKey: String!
         }
 
         type DefinitionConfig {
             sources: [Source!]!
+            volumes: [Volume!]!
             proxiedPorts: [ProxiedPort!]!
             envVariables: [EnvVariable!]!
             composeFiles: [ComposeFile!]!
             afterBuildTasks: [AfterBuildTask]!
             summaryItems: [SummaryItem!]!
+        }
+
+        type Volume {
+            id: String!
+            assetId: String!
         }
 
         type Source {

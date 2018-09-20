@@ -4,6 +4,6 @@ export const AssetSchema = new Schema({
     projectId: String,
     id: String,
     description: String,
-    filename: String,
+    uploaded: Boolean,
     createdAt: Date,
 });

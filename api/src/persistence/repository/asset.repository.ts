@@ -47,9 +47,9 @@ export class AssetRepository {
         });
     }
 
-    async updateFilename(id: string, filename: string): Promise<any> {
+    async markAsUploaded(id: string): Promise<any> {
         const persistentAsset = await this.findById(id);
-        persistentAsset.set({filename});
+        persistentAsset.set({uploaded: true});
         await persistentAsset.save();
     }
 }

@@ -31,6 +31,7 @@ interface HostPathsConfigInterface {
     readonly build: string;
     readonly composerCache: string;
     readonly npmCache: string;
+    readonly asset: string;
 }
 
 interface GoogleOAuth2ConfigInterface {
@@ -49,6 +50,7 @@ interface GithubOAuth2ConfigInterface {
 interface InstantiationConfigInterface {
     readonly composeHttpTimeout: number;
     readonly composeBinaryPath: string;
+    readonly dockerBinaryPath: string;
     readonly containerNamePrefix: string;
     readonly proxyDomainsNetworkName: string;
 }
@@ -57,6 +59,19 @@ interface LoggerConfigInterface {
     readonly elasticsearchHost: string;
     readonly elasticsearchLogLevel: string;
     readonly consoleLogLevel: string;
+}
+
+export interface EnvironmentInterface {
+    readonly app: AppConfigInterface;
+    readonly mongo: MongoConfigInterface;
+    readonly redis: RedisConfigInterface;
+    readonly sshKey: SshKeyConfigInterface;
+    readonly guestPaths: GuestPathsConfigInterface;
+    readonly hostPaths: HostPathsConfigInterface;
+    readonly googleOAuth2: GoogleOAuth2ConfigInterface;
+    readonly githubOAuth2: GithubOAuth2ConfigInterface;
+    readonly instantiation: InstantiationConfigInterface;
+    readonly logger: LoggerConfigInterface;
 }
 
 @Component()

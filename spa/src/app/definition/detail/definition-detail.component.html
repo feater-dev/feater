@@ -23,17 +23,14 @@
                         <pre class="form-control-static" id="inputDefinitionConfigAsYaml">{{ definition?.configAsYaml }}</pre>
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="publicSshKey" class="col-lg-2 control-label">Public SSH key</label>
-                    <div class="col-lg-10">
-                        <pre class="form-control-static" id="publicSshKey" style="white-space: pre-wrap">{{ publicSshKey }}</pre>
-                        <div class="help-block">
-                            Add it as a deploy key to following source repositories before creating instances:
-                            <ul>
-                                <li *ngFor="let source of definition?.config?.sources">
-                                    {{ source.sshCloneUrl }}
-                                </li>
-                            </ul>
+                    <div *ngFor="let deployKey of definition?.deployKeys; first as isFirst">
+                        <label *ngIf="isFirst" class="col-lg-2 control-label">Deploy keys</label>
+                        <label *ngIf="!isFirst" class="col-lg-2 control-label"></label>
+                        <div class="col-lg-10">
+                            <label class="control-label">for {{ deployKey.repositoryOwner }}/{{ deployKey.repositoryName }} repository</label>
+                            <pre class="form-control-static" style="white-space: pre-wrap">{{ deployKey.publicKey }}</pre>
                         </div>
                     </div>
                 </div>

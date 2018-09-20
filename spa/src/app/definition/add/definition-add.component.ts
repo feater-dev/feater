@@ -7,6 +7,7 @@ import {jsonToGraphQLQuery} from 'json-to-graphql-query';
 import {
     DefinitionAddForm,
     DefinitionAddFormSourceFormElement,
+    DefinitionAddFormVolumeFormElement,
     DefinitionAddFormProxiedPortFormElement,
     DefinitionAddFormEnvVariableFormElement,
     DefinitionAddFormSummaryItemFormElement,
@@ -46,6 +47,7 @@ export class DefinitionAddComponent implements OnInit {
             name: '',
             config: {
                 sources: [],
+                volumes: [],
                 proxiedPorts: [],
                 envVariables: [],
                 composeFile: {
@@ -96,6 +98,20 @@ export class DefinitionAddComponent implements OnInit {
         const index = this.item.config.sources.indexOf(source);
         if (-1 !== index) {
             this.item.config.sources.splice(index, 1);
+        }
+    }
+
+    addVolume(): void {
+        this.item.config.volumes.push({
+            id: '',
+            assetId: '',
+        });
+    }
+
+    deleteVolume(volume: DefinitionAddFormVolumeFormElement): void {
+        const index = this.item.config.volumes.indexOf(volume);
+        if (-1 !== index) {
+            this.item.config.volumes.splice(index, 1);
         }
     }
 
@@ -227,6 +243,7 @@ export class DefinitionAddComponent implements OnInit {
             name: this.item.name,
             config: {
                 sources: this.item.config.sources,
+                volumes: this.item.config.volumes,
                 proxiedPorts: this.item.config.proxiedPorts,
                 envVariables: this.item.config.envVariables,
                 composeFiles: [
@@ -260,6 +277,7 @@ export class DefinitionAddComponent implements OnInit {
 
         const mappedYamlConfig = {
             sources: [],
+            volumes: [],
             proxiedPorts: [],
             envVariables: [],
             composeFile: null,
@@ -269,6 +287,10 @@ export class DefinitionAddComponent implements OnInit {
 
         for (const source of yamlConfig.sources) {
             mappedYamlConfig.sources.push(source);
+        }
+
+        for (const volume of yamlConfig.volumes) {
+            mappedYamlConfig.volumes.push(volume);
         }
 
         for (const proxiedPort of yamlConfig.proxiedPorts) {

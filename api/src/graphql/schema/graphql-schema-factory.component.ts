@@ -11,11 +11,9 @@ import {InstanceResolverFactory} from '../resolver/instance-resolver-factory.com
 import {BeforeBuildTaskTypeInterface} from '../type/nested/definition-config/before-build-task-type.interface';
 import {UsersResolverFactory} from '../resolver/users-resolver-factory.component';
 import {DateResolverFactory} from '../resolver/date-resolver-factory.component';
-import {PublicSshKeyResolverFactory} from '../resolver/public-ssh-key-resolver-factory.component';
 import {LogsResolverFactory} from '../resolver/logs-resolver-factory.component';
 import {LogTypeInterface} from '../type/log-type.interface';
 import {DockerDaemonResolverFactory} from '../resolver/docker-daemon-resolver-factory.component';
-import {InstanceServiceTypeInterface} from '../type/instance-service-type.interface';
 import {AfterBuildTaskTypeInterface} from '../type/nested/definition-config/after-build-task-type.interface';
 import {AssetResolverFactory} from '../resolver/asset-resolver-factory.component';
 import {AssetTypeInterface} from '../type/asset-type.interface';
@@ -24,7 +22,6 @@ import {AssetTypeInterface} from '../type/asset-type.interface';
 export class GraphqlSchemaFactory {
     constructor(
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,
-        private readonly publicSshKeyResolverFactory: PublicSshKeyResolverFactory,
         private readonly usersResolverFactory: UsersResolverFactory,
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly definitionResolverFactory: DefinitionResolverFactory,
@@ -47,7 +44,6 @@ export class GraphqlSchemaFactory {
             JSON: GraphQLJSON,
 
             Query: {
-                publicSshKey: this.publicSshKeyResolverFactory.getResolver(),
                 users: this.usersResolverFactory.getListResolver(),
                 projects: this.projectsResolverFactory.getListResolver(),
                 project: this.projectsResolverFactory.getItemResolver(
@@ -81,9 +77,7 @@ export class GraphqlSchemaFactory {
                 assets: this.assetResolverFactory.getListResolver(
                     (project: ProjectTypeInterface) => ({
                         projectId: project.id,
-                        filename: {
-                            $exists: true,
-                        },
+                        uploaded: true,
                     }),
                 ),
             },
@@ -96,6 +90,7 @@ export class GraphqlSchemaFactory {
                     (definition: DefinitionTypeInterface) => ({definitionId: definition.id}),
                 ),
                 configAsYaml: this.definitionResolverFactory.getConfigAsYamlResolver(),
+                deployKeys: this.definitionResolverFactory.getDeployKeysResolver(),
             },
 
             Instance: {
@@ -136,15 +131,17 @@ export class GraphqlSchemaFactory {
 
             AfterBuildTask: {
                 __resolveType: (afterBuildTask: AfterBuildTaskTypeInterface): string => {
-                    if ('executeHostCommand' === afterBuildTask.type) {
-                        return 'ExecuteHostCommandAfterBuildTask';
+                    switch (afterBuildTask.type) {
+                        case 'executeHostCommand':
+                            return 'ExecuteHostCommandAfterBuildTask';
+
+                        case 'executeServiceCommand':
+                            return 'ExecuteServiceCommandAfterBuildTask';
+
+                        case 'copyAssetIntoContainer':
+                            return 'CopyAssetIntoContainerAfterBuildTask';
                     }
-                    if ('executeServiceCommand' === afterBuildTask.type) {
-                        return 'ExecuteServiceCommandAfterBuildTask';
-                    }
-                    if ('copyAssetIntoContainer' === afterBuildTask.type) {
-                        return 'CopyAssetIntoContainerAfterBuildTask';
-                    }
+
                     throw new Error();
                 },
             },

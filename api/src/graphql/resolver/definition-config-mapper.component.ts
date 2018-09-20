@@ -12,9 +12,12 @@ import {
     InterpolateBeforeBuildTaskTypeInterface
 } from '../type/nested/definition-config/before-build-task-type.interface';
 import {
-    AfterBuildTaskTypeInterface, CopyAssetIntoContainerAfterBuildTaskTypeInterface,
-    ExecuteHostCommandAfterBuildTaskTypeInterface, ExecuteServiceCommandAfterBuildTaskTypeInterface,
+    AfterBuildTaskTypeInterface,
+    CopyAssetIntoContainerAfterBuildTaskTypeInterface,
+    ExecuteHostCommandAfterBuildTaskTypeInterface,
+    ExecuteServiceCommandAfterBuildTaskTypeInterface,
 } from '../type/nested/definition-config/after-build-task-type.interface';
+import {VolumeTypeInterface} from '../type/nested/definition-config/volume-type.interface';
 
 @Component()
 export class DefinitionConfigMapper {
@@ -22,6 +25,11 @@ export class DefinitionConfigMapper {
         const mappedSources: SourceTypeInterface[] = [];
         for (const source of config.sources) {
             mappedSources.push(this.mapSource(source));
+        }
+
+        const mappedVolumes: VolumeTypeInterface[] = [];
+        for (const volume of config.volumes) {
+            mappedVolumes.push(this.mapVolume(volume));
         }
 
         const mappedProxiedPorts: ProxiedPortTypeInterface[] = [];
@@ -61,6 +69,7 @@ export class DefinitionConfigMapper {
 
         return {
             sources: mappedSources,
+            volumes: mappedVolumes,
             proxiedPorts: mappedProxiedPorts,
             envVariables: mappedEnvVariables,
             composeFiles: mappedComposeFiles,
@@ -84,6 +93,13 @@ export class DefinitionConfigMapper {
             reference: this.mapSourceReference(source.reference),
             beforeBuildTasks: mappedBeforeBuildTasks,
         } as SourceTypeInterface;
+    }
+
+    protected mapVolume(volume: any): VolumeTypeInterface {
+        return {
+            id: volume.id,
+            assetId: volume.assetId,
+        } as VolumeTypeInterface;
     }
 
     protected mapBeforeBuildTask(beforeBuildTask: any): BeforeBuildTaskTypeInterface {

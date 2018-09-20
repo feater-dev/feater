@@ -2,6 +2,14 @@ import {EnvVariablesSet} from './env-variables-set';
 import {SummaryItemsSet} from './summary-items-set';
 import {Source} from './source';
 
+export interface DefinitionConfigInterface {
+    readonly volumes: [{
+        readonly id: string;
+        readonly assetId: string;
+    }];
+    // TODO Define all fields.
+}
+
 export class Build {
 
     readonly sources: { [sourceId: string]: Source };
@@ -18,6 +26,7 @@ export class Build {
         readonly hash: string,
         readonly config: any,
     ) {
+        this.id = id;
         this.sources = {};
         this.services = {};
         this.featVariables = {};

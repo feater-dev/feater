@@ -6,52 +6,81 @@
     </div>
 </div>
 
-<div class="form form-horizontal">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="well bs-component">
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Name</label>
-                    <div class="col-lg-9">
-                        <p class="form-control-static">
-                            <a (click)="goToProjectDetails(instance?.definition.project)">{{
-                                instance?.definition.project.name }}</a> /
-                            <a (click)="goToDefinitionDetails(instance?.definition)">{{ instance?.definition.name }}</a> /
-                            <span>{{ instance?.name}}</span>
-                        </p>
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Summary</a></li>
+    <li role="presentation"><a href="#environment" aria-controls="environment" role="tab" data-toggle="tab">Environment</a></li>
+    <li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">Services</a></li>
+    <li role="presentation"><a href="#proxy-domains" aria-controls="proxy-domains" role="tab" data-toggle="tab">Proxy domains</a></li>
+    <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Logs</a></li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="basic-information">
+        <div class="form form-horizontal">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Name</label>
+                        <div class="col-lg-9">
+                            <p class="form-control-static">
+                                <a (click)="goToProjectDetails(instance?.definition.project)">{{
+                                    instance?.definition.project.name }}</a> /
+                                <a (click)="goToDefinitionDetails(instance?.definition)">{{ instance?.definition.name }}</a> /
+                                <span>{{ instance?.name}}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Created at</label>
+                        <div class="col-lg-9">
+                            <p class="form-control-static">{{ instance?.createdAt | absoluteDate }}</p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="instance?.summaryItems?.length">
+                        <div class="form-group" *ngFor="let summaryItem of instance?.summaryItems">
+                            <label class="col-lg-3 control-label">{{ summaryItem.name }}</label>
+                            <div class="col-lg-9">
+                                <div class="form-control-static" innerHTML="{{ summaryItem.text | linkify }}"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Created at</label>
-                    <div class="col-lg-9">
-                        <p class="form-control-static">{{ instance?.createdAt | absoluteDate }}</p>
-                    </div>
-                </div>
-
-                <div class="form-group" [hidden]="!instance?.envVariables?.length">
-                    <label class="col-lg-3 control-label">Environmental variables</label>
-                    <div class="col-lg-9">
+    <div role="tabpanel" class="tab-pane" id="environment">
+        <div class="form form-horizontal">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div *ngIf="instance?.envVariables?.length">
                         <table class="table table-striped">
                             <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Value</th>
-                                </tr>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Value</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let envVariable of instance?.envVariables" class="form-control-static">
-                                    <td>{{ envVariable.name }}</td>
-                                    <td>{{ envVariable.value }}</td>
-                                </tr>
+                            <tr *ngFor="let envVariable of instance?.envVariables" class="form-control-static">
+                                <td>{{ envVariable.name }}</td>
+                                <td>{{ envVariable.value }}</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="form-group" [hidden]="!instance?.services?.length">
-                    <label class="col-lg-3 control-label">Services</label>
-                    <div class="col-lg-9">
+    <div role="tabpanel" class="tab-pane" id="services">
+        <div class="form form-horizontal">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div *ngIf="instance?.services?.length">
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -70,10 +99,15 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="form-group" [hidden]="!instance?.proxiedPorts?.length">
-                    <label class="col-lg-3 control-label">Proxied ports</label>
-                    <div class="col-lg-9">
+    <div role="tabpanel" class="tab-pane" id="proxy-domains">
+        <div class="form form-horizontal">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group" *ngIf="instance?.proxiedPorts?.length">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -98,22 +132,15 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="form-group" [hidden]="!instance?.summaryItems?.length">
-                    <label class="col-lg-3 control-label">Summary</label>
-                    <div class="col-lg-9">
-                        <ul style="list-style-position: outside; list-style-type: none; padding-left: 0">
-                            <li *ngFor="let summaryItem of instance?.summaryItems" class="form-control-static">
-                                <div><strong>{{ summaryItem.name }}</strong></div>
-                                <div innerHTML="{{ summaryItem.text | linkify }}"></div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="form-group" [hidden]="!instance?.logs?.length">
-                    <label class="col-lg-3 control-label">Logs</label>
-                    <div class="col-lg-9">
+    <div role="tabpanel" class="tab-pane" id="logs">
+        <div class="form form-horizontal">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group" [hidden]="!instance?.logs?.length">
                         <table class="logs">
                             <tbody>
                                 <tr *ngFor="let log of instance?.logs">

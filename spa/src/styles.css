@@ -1,3 +1,21 @@
+.fit-column {
+    white-space: nowrap;
+    width: 1%;
+}
+
+.form-group pre.form-control-static {
+    color: #2c3e50;
+    background-color: #ffffff;
+}
+
+.form-section {
+    margin-top: 32px;
+}
+
+.build-defintion-add-form .well {
+    margin-bottom: 6px;
+}
+
 .feat-list-details {
     opacity: 0.5;
 }
@@ -34,5 +52,68 @@
 }
 
 body {
-    padding-bottom: 100px;
+    padding-bottom: 60px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 160px;
+    background: #2c3e50;
+    color: #ffffff;
+    padding: 20px 0 0 0;
+}
+
+.sidebar a {
+    color: #ffffff;
+}
+
+.sidebar a:hover {
+    color: #18bc9c;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sidebar .logo {
+    font-size: 44px;
+    font-weight: bold;
+    margin: -18px 10px 0 10px;
+    color: #ffffff;
+}
+
+.sidebar .main-menu,
+.sidebar .auth-menu {
+    list-style: none;
+    padding: 0 10px;
+}
+
+.sidebar .main-menu {
+    margin: 40px 0 0 0;
+}
+
+.sidebar .auth-menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 0 40px 0;
+}
+
+.sidebar .main-menu li,
+.sidebar .auth-menu li {
+    margin: 0 0 10px 0;
+}
+
+.content {
+    padding-left: 170px;
+}
+
+.page-header {
+    margin-top: 21px;
+}
+
+.tab-pane {
+    padding-top: 20px;
 }

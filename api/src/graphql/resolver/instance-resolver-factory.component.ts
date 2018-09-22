@@ -11,6 +11,12 @@ import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolv
 import {ResolverInstanceFilterArgumentsInterface} from './filter-argument/resolver-instance-filter-arguments.interface';
 import * as nanoidGenerate from 'nanoid/generate';
 import * as escapeStringRegexp from 'escape-string-regexp';
+import {StopServiceInputTypeInterface} from '../input-type/stop-service-input-type.interface';
+import {execSync} from 'child_process';
+import {environment} from '../../environment/environment';
+import {PauseServiceInputTypeInterface} from '../input-type/pause-service-input-type.interface';
+import {StartServiceInputTypeInterface} from '../input-type/start-service-input-type.interface';
+import {UnpauseServiceInputTypeInterface} from '../input-type/unpause-service-input-type.interface';
 
 @Component()
 export class InstanceResolverFactory {
@@ -89,6 +95,70 @@ export class InstanceResolverFactory {
                 );
                 this.instantiator.instantiateBuild(build);
             });
+
+            return this.mapPersistentModelToTypeModel(instance);
+        };
+    }
+
+    public getStopItemServiceResolver(): (obj: any, stopServiceInput: StopServiceInputTypeInterface) => Promise<InstanceTypeInterface> {
+        return async (obj: any, stopServiceInput: StopServiceInputTypeInterface): Promise<InstanceTypeInterface> => {
+            // TODO Add validation.
+            const instance = await this.instanceRepository.findById(stopServiceInput.instanceId);
+            for (const service of instance.services) {
+                if (stopServiceInput.serviceId === service.id) {
+                    execSync(`${environment.instantiation.dockerBinaryPath} stop ${service.containerId}`);
+
+                    break;
+                }
+            }
+
+            return this.mapPersistentModelToTypeModel(instance);
+        };
+    }
+
+    public getPauseItemServiceResolver(): (obj: any, pauseServiceInput: PauseServiceInputTypeInterface) => Promise<InstanceTypeInterface> {
+        return async (obj: any, pauseServiceInput: PauseServiceInputTypeInterface): Promise<InstanceTypeInterface> => {
+            // TODO Add validation.
+            const instance = await this.instanceRepository.findById(pauseServiceInput.instanceId);
+            for (const service of instance.services) {
+                if (pauseServiceInput.serviceId === service.id) {
+                    execSync(`${environment.instantiation.dockerBinaryPath} pause ${service.containerId}`);
+
+                    break;
+                }
+            }
+
+            return this.mapPersistentModelToTypeModel(instance);
+        };
+    }
+
+    public getStartItemServiceResolver(): (obj: any, startServiceInput: StartServiceInputTypeInterface) => Promise<InstanceTypeInterface> {
+        return async (obj: any, startServiceInput: StartServiceInputTypeInterface): Promise<InstanceTypeInterface> => {
+            // TODO Add validation.
+            const instance = await this.instanceRepository.findById(startServiceInput.instanceId);
+            for (const service of instance.services) {
+                if (startServiceInput.serviceId === service.id) {
+                    execSync(`${environment.instantiation.dockerBinaryPath} start ${service.containerId}`);
+
+                    break;
+                }
+            }
+
+            return this.mapPersistentModelToTypeModel(instance);
+        };
+    }
+
+    public getUnpauseItemServiceResolver(): (obj: any, unpauseServiceInput: UnpauseServiceInputTypeInterface) => Promise<InstanceTypeInterface> {
+        return async (obj: any, unpauseServiceInput: UnpauseServiceInputTypeInterface): Promise<InstanceTypeInterface> => {
+            // TODO Add validation.
+            const instance = await this.instanceRepository.findById(unpauseServiceInput.instanceId);
+            for (const service of instance.services) {
+                if (unpauseServiceInput.serviceId === service.id) {
+                    execSync(`${environment.instantiation.dockerBinaryPath} unpause ${service.containerId}`);
+
+                    break;
+                }
+            }
 
             return this.mapPersistentModelToTypeModel(instance);
         };

@@ -8,6 +8,7 @@ import {
 } from './get-instance-detail.query';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
+import gql from 'graphql-tag';
 
 const POLLING_INTERVAL = 5000;
 
@@ -21,6 +22,38 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
     instance: GetInstanceDetailQueryInstanceFieldinterface;
 
     pollingSubscription: Subscription;
+
+    protected readonly stopServiceMutation = gql`
+        mutation ($instanceId: String!, $serviceId: String!) {
+            stopService(instanceId: $instanceId, serviceId: $serviceId, ) {
+                id
+            }
+        }
+    `;
+
+    protected readonly pauseServiceMutation = gql`
+        mutation ($instanceId: String!, $serviceId: String!) {
+            pauseService(instanceId: $instanceId, serviceId: $serviceId, ) {
+                id
+            }
+        }
+    `;
+
+    protected readonly startServiceMutation = gql`
+        mutation ($instanceId: String!, $serviceId: String!) {
+            startService(instanceId: $instanceId, serviceId: $serviceId, ) {
+                id
+            }
+        }
+    `;
+
+    protected readonly unpauseServiceMutation = gql`
+        mutation ($instanceId: String!, $serviceId: String!) {
+            unpauseService(instanceId: $instanceId, serviceId: $serviceId, ) {
+                id
+            }
+        }
+    `;
 
     constructor(
         private route: ActivatedRoute,
@@ -57,6 +90,66 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
             if (id === service.id) {
                 return service;
             }
+        }
+    }
+
+    startOrUnpauseService(service) {
+        switch (service.containerState) {
+            case 'exited':
+                this.apollo.mutate({
+                    mutation: this.startServiceMutation,
+                    variables: {
+                        instanceId: this.instance.id,
+                        serviceId: service.id,
+                    },
+                }).subscribe(
+                    () => { this.getInstance(); }
+                );
+                break;
+
+            case 'paused':
+                this.apollo.mutate({
+                    mutation: this.unpauseServiceMutation,
+                    variables: {
+                        instanceId: this.instance.id,
+                        serviceId: service.id,
+                    },
+                }).subscribe(
+                    () => { this.getInstance(); }
+                );
+                break;
+        }
+    }
+
+    pauseService(service) {
+        if (service.containerState === 'running') {
+            this.apollo.mutate({
+                mutation: this.pauseServiceMutation,
+                variables: {
+                    instanceId: this.instance.id,
+                    serviceId: service.id,
+                },
+            }).subscribe(
+                () => {
+                    this.getInstance();
+                }
+            );
+        }
+    }
+
+    stopService(service) {
+        if (service.containerState === 'running') {
+            this.apollo.mutate({
+                mutation: this.stopServiceMutation,
+                variables: {
+                    instanceId: this.instance.id,
+                    serviceId: service.id,
+                },
+            }).subscribe(
+                () => {
+                    this.getInstance();
+                }
+            );
         }
     }
 

@@ -159,6 +159,26 @@ export const typeDefsProvider = {
             removeInstance(
                 id: String!
             ): Boolean!
+
+            stopService(
+                instanceId: String!
+                serviceId: String!
+            ): Instance!
+
+            pauseService(
+                instanceId: String!
+                serviceId: String!
+            ): Instance!
+
+            startService(
+                instanceId: String!
+                serviceId: String!
+            ): Instance!
+
+            unpauseService(
+                instanceId: String!
+                serviceId: String!
+            ): Instance!
         }
 
         type User {

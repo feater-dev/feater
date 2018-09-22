@@ -117,3 +117,12 @@ body {
 .tab-pane {
     padding-top: 20px;
 }
+
+.service-actions span.disabled {
+    cursor: pointer;
+}
+
+.service-actions span.disabled {
+    opacity: 0.3;
+    cursor: default;
+}

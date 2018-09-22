@@ -67,6 +67,10 @@ export class GraphqlSchemaFactory {
                 createDefinition: this.definitionResolverFactory.getCreateItemResolver(),
                 createInstance: this.instanceResolverFactory.getCreateItemResolver(),
                 removeInstance: this.instanceResolverFactory.getRemoveItemResolver(),
+                stopService: this.instanceResolverFactory.getStopItemServiceResolver(),
+                pauseService: this.instanceResolverFactory.getPauseItemServiceResolver(),
+                startService: this.instanceResolverFactory.getStartItemServiceResolver(),
+                unpauseService: this.instanceResolverFactory.getUnpauseItemServiceResolver(),
                 createAsset: this.assetResolverFactory.getCreateItemResolver(),
             },
 

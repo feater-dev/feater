@@ -15,7 +15,7 @@
 </ul>
 
 <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="basic-information">
+    <div role="tabpanel" class="tab-pane active" id="summary">
         <div class="form form-horizontal">
             <div class="row">
                 <div class="col-lg-12">
@@ -83,18 +83,36 @@
                     <div *ngIf="instance?.services?.length">
                         <table class="table table-striped">
                             <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Container ID</th>
-                                <th scope="col">Container state</th>
-                            </tr>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Container ID</th>
+                                    <th scope="col">Container state</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let service of instance?.services" class="form-control-static">
-                                <td>{{ service.id }}</td>
-                                <td>{{ service.containerId }}</td>
-                                <td>{{ service.containerState }}</td>
-                            </tr>
+                                <tr *ngFor="let service of instance?.services" class="form-control-static">
+                                    <td>{{ service.id }}</td>
+                                    <td>{{ service.containerId }}</td>
+                                    <td>{{ service.containerState }}</td>
+                                    <td class="service-actions">
+                                        <span [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"
+                                              (click)="startOrUnpauseService(service)"
+                                              class="glyphicon glyphicon-play"
+                                              aria-hidden="true"
+                                        ></span>
+
+                                        <span [ngClass]="{disabled: 'running' !== service.containerState}"
+                                              (click)="pauseService(service)"
+                                              class="glyphicon glyphicon-pause"
+                                        aria-hidden="true"></span>
+
+                                        <span [ngClass]="{disabled: 'running' !== service.containerState}"
+                                              (click)="stopService(service)"
+                                              class="glyphicon glyphicon-stop"
+                                              aria-hidden="true"></span>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

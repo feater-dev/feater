@@ -1,10 +1,10 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import {Component} from '@nestjs/common';
-import {Config} from '../../config/config.component';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
+import {environment} from '../../environment/environment';
 
 export class CreateDirectoryJob implements BuildJobInterface {
 
@@ -18,7 +18,6 @@ export class CreateDirectoryJob implements BuildJobInterface {
 export class CreateDirectoryJobExecutor implements JobExecutorInterface {
 
     constructor(
-        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
     ) {}
 
@@ -38,8 +37,8 @@ export class CreateDirectoryJobExecutor implements JobExecutorInterface {
         return new Promise(resolve => {
             logger.info('Creating build directory.');
 
-            build.fullBuildPath = path.join(this.config.guestPaths.build, build.hash);
-            build.fullBuildHostPath = path.join(this.config.hostPaths.build, build.hash);
+            build.fullBuildPath = path.join(environment.guestPaths.build, build.hash);
+            build.fullBuildHostPath = path.join(environment.hostPaths.build, build.hash);
 
             fs.mkdirSync(build.fullBuildPath);
 

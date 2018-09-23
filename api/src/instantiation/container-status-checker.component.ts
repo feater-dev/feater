@@ -1,10 +1,8 @@
 import {Component} from '@nestjs/common';
-import * as got from 'got';
-import * as querystring  from 'querystring';
 import {CachedContainerInfo, ContainerDetailsWorker} from './container-details-worker.component';
-import {Config} from '../config/config.component';
 import * as redis from 'redis';
 import * as _ from 'lodash';
+import {environment} from '../environment/environment';
 
 @Component()
 export class ContainerStatusChecker {
@@ -12,10 +10,9 @@ export class ContainerStatusChecker {
     private redisClient;
 
     constructor(
-        private readonly config: Config,
         private readonly containerDetailsWorker: ContainerDetailsWorker,
     ) {
-        this.redisClient = redis.createClient({url: this.config.redis.url});
+        this.redisClient = redis.createClient({url: environment.redis.url});
     }
 
     check(containerNamePrefix: string): Promise<string> {

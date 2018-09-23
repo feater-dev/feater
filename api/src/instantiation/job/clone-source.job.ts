@@ -1,10 +1,8 @@
 import {Component} from '@nestjs/common';
-import {Config} from '../../config/config.component';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {JobInterface, SourceJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
-import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/source-type.interface';
 import * as nodegit from 'nodegit';
 import * as gitUrlParse from 'git-url-parse';
 
@@ -22,7 +20,6 @@ export class CloneSourceJob implements SourceJobInterface {
 export class CloneSourceJobExecutor implements JobExecutorInterface {
 
     constructor(
-        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly deployKeyRepository: DeployKeyRepository,
     ) {}

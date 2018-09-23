@@ -59,13 +59,13 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th scope="col">Name</th>
+                                <th scope="col" class="fit-column">Name</th>
                                 <th scope="col">Value</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr *ngFor="let envVariable of instance?.envVariables" class="form-control-static">
-                                <td>{{ envVariable.name }}</td>
+                                <td class="fit-column">{{ envVariable.name }}</td>
                                 <td>{{ envVariable.value }}</td>
                             </tr>
                             </tbody>
@@ -84,18 +84,18 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
+                                    <th scope="col" class="fit-column">ID</th>
                                     <th scope="col">Container ID</th>
-                                    <th scope="col">Container state</th>
-                                    <th scope="col">Actions</th>
+                                    <th scope="col" class="fit-column">Container state</th>
+                                    <th scope="col" class="fit-column">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let service of instance?.services" class="form-control-static">
-                                    <td>{{ service.id }}</td>
+                                    <td class="fit-column">{{ service.id }}</td>
                                     <td>{{ service.containerId }}</td>
-                                    <td>{{ service.containerState }}</td>
-                                    <td class="service-actions">
+                                    <td class="fit-column">{{ service.containerState }}</td>
+                                    <td class="service-actions fit-column">
                                         <span [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"
                                               (click)="startOrUnpauseService(service)"
                                               class="glyphicon glyphicon-play"
@@ -129,21 +129,21 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Service ID</th>
-                                    <th scope="col">IP address</th>
-                                    <th scope="col">Port</th>
+                                    <th scope="col" class="fit-column">ID</th>
+                                    <th scope="col" class="fit-column">Name</th>
+                                    <th scope="col" class="fit-column">Service ID</th>
+                                    <th scope="col" class="fit-column">IP address</th>
+                                    <th scope="col" class="fit-column">Port</th>
                                     <th scope="col">Proxy domains</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let proxiedPort of instance?.proxiedPorts" class="form-control-static">
-                                    <td>{{ proxiedPort.id }}</td>
-                                    <td>{{ proxiedPort.name }}</td>
-                                    <td>{{ proxiedPort.serviceId }}</td>
-                                    <td>{{ getServiceById(proxiedPort.serviceId).ipAddress }}</td>
-                                    <td>{{ proxiedPort.port }}</td>
+                                    <td class="fit-column">{{ proxiedPort.id }}</td>
+                                    <td class="fit-column">{{ proxiedPort.name }}</td>
+                                    <td class="fit-column">{{ proxiedPort.serviceId }}</td>
+                                    <td class="fit-column">{{ getServiceById(proxiedPort.serviceId).ipAddress }}</td>
+                                    <td class="fit-column">{{ proxiedPort.port }}</td>
                                     <td>{{ proxiedPort.proxyDomain }}</td>
                                 </tr>
                             </tbody>

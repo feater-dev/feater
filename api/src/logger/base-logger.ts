@@ -3,22 +3,20 @@ import * as elasticsearch from 'elasticsearch';
 import * as winstonElasticsearchTransport from 'winston-elasticsearch';
 import {Component} from '@nestjs/common';
 import {LoggerInterface} from './logger-interface';
-import {Config} from '../config/config.component';
+import {environment} from '../environment/environment';
 
 @Component()
 export class BaseLogger implements LoggerInterface {
 
     private readonly logger: winston.Logger;
 
-    constructor(
-        readonly config: Config,
-    ) {
+    constructor() {
 
         this.logger = new winston.Logger({
             exitOnError: false,
             transports: [
                 new winston.transports.Console({
-                    level: this.config.logger.consoleLogLevel,
+                    level: environment.logger.consoleLogLevel,
                     timestamp: () => {
                         return (new Date()).toISOString();
                     },
@@ -27,8 +25,8 @@ export class BaseLogger implements LoggerInterface {
                     level: 'debug',
                     indexPrefix: 'feat-logs',
                     client: new elasticsearch.Client({
-                        host: this.config.logger.elasticsearchHost,
-                        log: this.config.logger.elasticsearchLogLevel,
+                        host: environment.logger.elasticsearchHost,
+                        log: environment.logger.elasticsearchLogLevel,
                     }),
                 }),
             ],

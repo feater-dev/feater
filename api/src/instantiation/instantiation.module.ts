@@ -1,5 +1,4 @@
 import {Module} from '@nestjs/common';
-import {ConfigModule} from '../config/config.module';
 import {LoggerModule} from '../logger/logger.module';
 import {PersistenceModule} from '../persistence/persistence.module';
 import {RunDockerComposeJobExecutor} from './job/run-docker-compose.job';
@@ -14,7 +13,6 @@ import {PrepareEnvVariablesJobExecutor} from './job/prepare-env-variables.job';
 import {PreparePortDomainsJobExecutor} from './job/prepare-port-domains.job';
 import {PrepareSummaryItemsJobExecutor} from './job/prepare-summary-items.job';
 import {ProxyPortDomainsJobExecutor} from './job/proxy-port-domains.job';
-import {GithubClient} from './github-client.component';
 import {Instantiator} from './instantiator.component';
 import {InterpolationHelper} from './interpolation-helper.component';
 import {JobExecutorsCollection} from './job-executors-collection.component';
@@ -30,7 +28,6 @@ import {AssetHelper} from './asset-helper.component';
 
 @Module({
   imports: [
-      ConfigModule,
       LoggerModule,
       PersistenceModule,
   ],
@@ -52,7 +49,6 @@ import {AssetHelper} from './asset-helper.component';
       ExecuteServiceCommandAfterBuildTaskJobExecutor,
       CopyAssetIntoContainerAfterBuildTaskJobExecutor,
       CreateVolumeFromAssetJobExecutor,
-      GithubClient,
       Instantiator,
       InterpolationHelper,
       JobExecutorsCollection,

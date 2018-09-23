@@ -1,13 +1,11 @@
 import * as passport from 'passport';
 import {Controller, Get, Next, Request, Response} from '@nestjs/common';
-import {Config} from '../../../../config/config.component';
 import {SpaRedirectorComponent} from '../../../base/component/spa-redirector.component';
 
 @Controller('/signin/google')
 export class GoogleSigninController {
 
     constructor(
-        private readonly config: Config,
         private readonly spaRedirectorComponent: SpaRedirectorComponent,
     ) {}
 

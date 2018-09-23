@@ -1,4 +1,4 @@
 export interface LogTypeInterface {
-    readonly timestamp: number;
     readonly message: string;
+    readonly createdAt: Date;
 }

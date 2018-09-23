@@ -1,22 +1,8 @@
-export interface LogInterface {
-    readonly timestamp: Date;
+import {Document} from 'mongoose';
+
+export interface LogInterface extends Document {
+    readonly level: string;
     readonly message: string;
-}
-
-export interface JobLogInterface extends LogInterface {
-    readonly job: string;
-}
-
-export interface BuildJobLogInterface extends JobLogInterface {
-    readonly build: {
-        readonly id: string;
-        readonly hash: string;
-    };
-}
-
-export interface SourceJobLogInterface extends BuildJobLogInterface {
-    readonly source: {
-        readonly id: string;
-        readonly hash: string;
-    };
+    readonly meta: any;
+    readonly timestamp: Date;
 }

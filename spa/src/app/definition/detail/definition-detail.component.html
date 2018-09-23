@@ -4,70 +4,109 @@
     </div>
 </div>
 
-<div class="form form-horizontal">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="well bs-component">
-                <div class="form-group">
-                    <label for="inputDefinitionName" class="col-lg-2 control-label">Name</label>
-                    <div class="col-lg-10">
-                        <p class="form-control-static" id="inputDefinitionName">
-                            <a (click)="goToProjectDetails(definition?.project)">{{ definition?.project.name }}</a> /
-                            <span>{{ definition?.name}}</span>
-                        </p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputDefinitionConfigAsYaml" class="col-lg-2 control-label">Config in Yaml format</label>
-                    <div class="col-lg-10">
-                        <pre class="form-control-static" id="inputDefinitionConfigAsYaml">{{ definition?.configAsYaml }}</pre>
-                    </div>
-                </div>
+<div class="row">
+    <div class="col-lg-12">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Summary</a></li>
+            <li role="presentation"><a href="#configuration" aria-controls="configuration" role="tab" data-toggle="tab">Configuration</a></li>
+            <li role="presentation"><a href="#deploy-keys" aria-controls="deploy-keys" role="tab" data-toggle="tab">Deploy keys</a></li>
+            <li role="presentation"><a href="#instances" aria-controls="instances" role="tab" data-toggle="tab">Instances</a></li>
+        </ul>
+    </div>
+</div>
 
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="summary">
+        <div class="form form-horizontal">
+            <div class="row">
                 <div class="form-group">
-                    <div *ngFor="let deployKey of definition?.deployKeys; first as isFirst">
-                        <label *ngIf="isFirst" class="col-lg-2 control-label">Deploy keys</label>
-                        <label *ngIf="!isFirst" class="col-lg-2 control-label"></label>
-                        <div class="col-lg-10">
-                            <label class="control-label">for {{ deployKey.repositoryOwner }}/{{ deployKey.repositoryName }} repository</label>
-                            <pre class="form-control-static" style="white-space: pre-wrap">{{ deployKey.publicKey }}</pre>
-                        </div>
+                    <label for="inputDefinitionName" class="col-lg-3 control-label">Name</label>
+                    <div class="col-lg-9">
+                        <p class="form-control-static" id="inputDefinitionName">{{ definition?.name}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputDefinitionName" class="col-lg-3 control-label">Project</label>
+                    <div class="col-lg-9">
+                        <p class="form-control-static" id="inputDefinitionProjectName">
+                            <a (click)="goToProjectDetails(definition?.project)">{{ definition?.project.name }}</a>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-12">
-        <h3 id="tables">Instances for definition <em>{{ definition?.name}}</em></h3>
-        <p *ngIf="!definition?.instances.length">
-            <em>No instances to list.</em>
-        </p>
-        <table *ngIf="definition?.instances.length" class="table table-striped table-hover ">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th class="fit-column">ID</th>
-                <th class="fit-column"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let instance of definition?.instances">
-                <td>{{ instance.name }}</td>
-                <td class="fit-column"><small>{{ instance.id }}</small></td>
-                <td class="fit-column">
-                    <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToInstanceDetail(instance.id)" aria-hidden="true"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div role="tabpanel" class="tab-pane" id="configuration">
+        <div class="form form-horizontal">
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputDefinitionConfigAsYaml" class="col-lg-3 control-label">Configuration</label>
+                    <div class="col-lg-9">
+                        <pre class="form-control-static" id="inputDefinitionConfigAsYaml">{{ definition?.configAsYaml }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-12" style="text-align: right;">
-        <a class="btn btn-success" (click)="goToInstanceAdd()">Add instance</a>
+    <div role="tabpanel" class="tab-pane" id="deploy-keys">
+        <div class="row">
+            <div class="col-lg-12">
+                <p *ngIf="!definition?.deployKeys.length">
+                    <em>No deploy keys to list.</em>
+                </p>
+                <table *ngIf="definition?.deployKeys.length" class="table table-striped table-hover ">
+                    <thead>
+                        <tr>
+                            <th class="fit-column">Repository</th>
+                            <th>Deploy key</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let deployKey of definition?.deployKeys">
+                            <td class="fit-column">{{ deployKey.repositoryOwner }}/{{ deployKey.repositoryName }}</td>
+                            <td>
+                                <pre class="form-control-static" style="white-space: pre-wrap">{{ deployKey.publicKey }}</pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="instances">
+        <div class="row">
+            <div class="col-lg-12">
+                <p *ngIf="!definition?.instances.length">
+                    <em>No instances to list.</em>
+                </p>
+                <table *ngIf="definition?.instances.length" class="table table-striped table-hover ">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="fit-column">ID</th>
+                        <th class="fit-column"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let instance of definition?.instances">
+                        <td>{{ instance.name }}</td>
+                        <td class="fit-column"><small>{{ instance.id }}</small></td>
+                        <td class="fit-column">
+                            <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToInstanceDetail(instance.id)" aria-hidden="true"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" style="text-align: right;">
+                <a class="btn btn-success" (click)="goToInstanceAdd()">Add instance</a>
+            </div>
+        </div>
     </div>
 </div>

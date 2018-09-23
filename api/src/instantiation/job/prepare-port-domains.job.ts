@@ -1,9 +1,9 @@
 import {Component} from '@nestjs/common';
-import {Config} from '../../config/config.component';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
+import {environment} from '../../environment/environment';
 
 export class PreparePortDomainsJob implements BuildJobInterface {
 
@@ -17,7 +17,6 @@ export class PreparePortDomainsJob implements BuildJobInterface {
 export class PreparePortDomainsJobExecutor implements JobExecutorInterface {
 
     constructor(
-        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly instanceRepository: InstanceRepository,
     ) {}
@@ -49,7 +48,7 @@ export class PreparePortDomainsJobExecutor implements JobExecutorInterface {
                     return;
                 }
 
-                const proxyDomain = `build-${build.hash}-${proxiedPort.id}.${this.config.app.host}`;
+                const proxyDomain = `build-${build.hash}-${proxiedPort.id}.${environment.app.host}`;
 
                 build.envVariables.add(`FEAT__PROXY_DOMAIN__${proxiedPort.id.toUpperCase()}`, proxyDomain);
                 build.addFeatVariable(`proxy_domain__${proxiedPort.id}`, proxyDomain);
@@ -59,7 +58,7 @@ export class PreparePortDomainsJobExecutor implements JobExecutorInterface {
                     id: proxiedPort.id,
                     name: proxiedPort.name,
                     port: proxiedPort.port,
-                    proxyDomain: proxyDomain,
+                    proxyDomain,
                 });
             }
 

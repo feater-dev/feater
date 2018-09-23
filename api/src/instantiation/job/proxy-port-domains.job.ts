@@ -3,10 +3,10 @@ import * as fs from 'fs';
 import {execSync} from 'child_process';
 import {Component} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
-import {Config} from '../../config/config.component';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
+import {environment} from '../../environment/environment';
 
 const BUFFER_SIZE = 1048576; // 1M
 
@@ -22,7 +22,6 @@ export class ProxyPortDomainsJob implements BuildJobInterface {
 export class ProxyPortDomainsJobExecutor implements JobExecutorInterface {
 
     constructor(
-        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
         private readonly instanceRepository: InstanceRepository,
     ) {}
@@ -67,7 +66,7 @@ server {
             }
 
             fs.writeFileSync(
-                path.join(this.config.guestPaths.proxyDomain, `build-${build.hash}.conf`),
+                path.join(environment.guestPaths.proxyDomain, `build-${build.hash}.conf`),
                 nginxConfs.join('\n\n'),
             );
 

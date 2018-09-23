@@ -6,8 +6,8 @@ import {EnvVariablesSet} from '../env-variables-set';
 import {JobInterface, BuildJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
-import {Config} from '../../config/config.component';
 import * as split from 'split';
+import {environment} from '../../environment/environment';
 
 export class RunDockerComposeJob implements BuildJobInterface {
 
@@ -21,7 +21,6 @@ export class RunDockerComposeJob implements BuildJobInterface {
 export class RunDockerComposeJobExecutor implements JobExecutorInterface {
 
     constructor(
-        private readonly config: Config,
         private readonly jobLoggerFactory: JobLoggerFactory,
     ) {}
 
@@ -55,11 +54,11 @@ export class RunDockerComposeJobExecutor implements JobExecutorInterface {
 
             const commonEnvVariables = new EnvVariablesSet();
 
-            commonEnvVariables.add('COMPOSE_PROJECT_NAME', `${this.config.instantiation.containerNamePrefix}${build.hash}`);
-            commonEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${this.config.instantiation.composeHttpTimeout}`);
+            commonEnvVariables.add('COMPOSE_PROJECT_NAME', `${environment.instantiation.containerNamePrefix}${build.hash}`);
+            commonEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${environment.instantiation.composeHttpTimeout}`);
 
             const dockerCompose = spawn(
-                this.config.instantiation.composeBinaryPath,
+                environment.instantiation.composeBinaryPath,
                 _.flatten(dockerComposeArgs),
                 {
                     cwd: envDirAbsolutePath,

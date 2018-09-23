@@ -1,18 +1,16 @@
 import {Component} from '@nestjs/common';
 import {LogInterface, BuildJobLogInterface, SourceJobLogInterface} from '../interface/log.interface';
 import {Client} from 'elasticsearch';
-import {Config} from '../../config/config.component';
+import {environment} from '../../environment/environment';
 
 @Component()
 export class LogRepository {
 
     private readonly client: Client;
-    constructor(
-        readonly config: Config,
-    ) {
+    constructor() {
         this.client = new Client({
-            host: config.logger.elasticsearchHost,
-            log: config.logger.elasticsearchLogLevel,
+            host: environment.logger.elasticsearchHost,
+            log: environment.logger.elasticsearchLogLevel,
         });
     }
 
@@ -42,7 +40,10 @@ export class LogRepository {
         for (const hit of response.hits.hits) {
             logs.push({
                 timestamp: hit._source['@timestamp'],
-                message: hit._source.message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, ''),
+                message: hit._source.message.replace(
+                    /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+                    '',
+                ),
             } as LogInterface);
         }
 

@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import {Component} from '@nestjs/common';
-import {Config} from '../config/config.component';
 import {StagesListFactory} from './stages-list-factory.component';
 import {Build, DefinitionConfigInterface} from './build';
 import {Source} from './source';
@@ -22,12 +21,12 @@ import {ExecuteHostCommandAfterBuildTaskJob} from './job/execute-host-command-af
 import {ExecuteServiceCommandAfterBuildTaskJob} from './job/execute-service-command-after-build-task.job';
 import {CopyAssetIntoContainerAfterBuildTaskJob} from './job/copy-asset-into-container-after-build-task.job';
 import {CreateVolumeFromAssetJob} from './job/create-volume-from-asset.job';
+import {environment} from '../environment/environment';
 
 @Component()
 export class Instantiator {
 
     constructor(
-        private readonly config: Config,
         private readonly logger: BaseLogger,
         private readonly stagesListFactory: StagesListFactory,
     ) {}
@@ -41,10 +40,10 @@ export class Instantiator {
         }
 
         this.logger.info('Setting basic Feat variables.');
-        build.addFeatVariable('scheme', this.config.app.scheme);
-        build.addFeatVariable('host', this.config.app.host);
-        build.addFeatVariable('npm_cache', this.config.hostPaths.npmCache);
-        build.addFeatVariable('composer_cache', this.config.hostPaths.composerCache);
+        build.addFeatVariable('scheme', environment.app.scheme);
+        build.addFeatVariable('host', environment.app.host);
+        build.addFeatVariable('npm_cache', environment.hostPaths.npmCache);
+        build.addFeatVariable('composer_cache', environment.hostPaths.composerCache);
         build.addFeatVariable('instance_id', build.id);
         build.addFeatVariable('instance_hash', build.hash);
 

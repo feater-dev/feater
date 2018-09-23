@@ -12,7 +12,6 @@ import {InstanceRepository} from './repository/instance.repository';
 import {ApiTokenRepository} from './repository/api-token.repository';
 import {environment} from '../environment/environment';
 import {LogRepository} from './repository/log.repository';
-import {ConfigModule} from '../config/config.module';
 import {AssetSchema} from './schema/asset.schema';
 import {AssetRepository} from './repository/asset.repository';
 import {DeployKeySchema} from './schema/deploy-key.schema';
@@ -20,7 +19,7 @@ import {DeployKeyRepository} from './repository/deploy-key.repository';
 
 @Module({
   imports: [
-      MongooseModule.forRoot(environment.mongo.dsn), // TODO How to use config component instead? Is it needed?
+      MongooseModule.forRoot(environment.mongo.dsn),
       MongooseModule.forFeature([{ name: 'ApiToken', schema: ApiTokenSchema }]),
       MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
       MongooseModule.forFeature([{ name: 'Project', schema: ProjectSchema }]),
@@ -28,7 +27,6 @@ import {DeployKeyRepository} from './repository/deploy-key.repository';
       MongooseModule.forFeature([{ name: 'Instance', schema: InstanceSchema }]),
       MongooseModule.forFeature([{ name: 'Asset', schema: AssetSchema }]),
       MongooseModule.forFeature([{ name: 'DeployKey', schema: DeployKeySchema }]),
-      ConfigModule,
   ],
   controllers: [],
   components: [

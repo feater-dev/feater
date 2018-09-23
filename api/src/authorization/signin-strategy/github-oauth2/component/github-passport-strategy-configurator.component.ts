@@ -1,24 +1,23 @@
 import * as passport from 'passport';
 import {Component} from '@nestjs/common';
 import {Strategy} from 'passport-github';
-import {Config} from '../../../../config/config.component';
 import {UserRepository} from '../../../../persistence/repository/user.repository';
 import {GithubUserProfileInterface} from '../github-user-profile.interface';
+import {environment} from '../../../../environment/environment';
 
 @Component()
 export class GithubPassportStrategyConfigurationComponent {
 
     constructor(
-        private readonly config: Config,
         private readonly userRepository: UserRepository,
     ) {}
 
     configure() {
         passport.use(new Strategy(
             {
-                clientID: this.config.githubOAuth2.clientId,
-                clientSecret: this.config.githubOAuth2.clientSecret,
-                callbackURL: this.config.githubOAuth2.baseUrl + '/signin/github/callback',
+                clientID: environment.githubOAuth2.clientId,
+                clientSecret: environment.githubOAuth2.clientSecret,
+                callbackURL: environment.githubOAuth2.baseUrl + '/signin/github/callback',
             },
             (accessToken, refreshToken, profile, done) => {
 

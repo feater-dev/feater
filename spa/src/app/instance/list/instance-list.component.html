@@ -6,9 +6,9 @@
         <table class="table table-striped table-hover ">
             <thead>
                 <tr>
+                    <th class="fit-column">Name</th>
+                    <th class="fit-column">Definition</th>
                     <th>Project</th>
-                    <th>Definition</th>
-                    <th>Name</th>
                     <th class="fit-column">Created at</th>
                     <th class="fit-column">ID</th>
                     <th class="fit-column"></th>
@@ -16,9 +16,9 @@
             </thead>
             <tbody>
                 <tr *ngFor="let instance of instances">
+                    <td class="fit-column">{{ instance.name }}</td>
+                    <td class="fit-column">{{ instance.definition.name }}</td>
                     <td>{{ instance.definition.project.name }}</td>
-                    <td>{{ instance.definition.name }}</td>
-                    <td>{{ instance.name }}</td>
                     <td class="fit-column"><small>{{ instance.createdAt | relativeDate }}</small></td>
                     <td class="fit-column"><small>{{ instance.id }}</small></td>
                     <td class="fit-column">

@@ -1,12 +1,10 @@
 import {Component} from '@nestjs/common';
-import {Config} from '../../../config/config.component';
 import {ApiTokenRepository} from '../../../persistence/repository/api-token.repository';
 
 @Component()
 export class SpaRedirectorComponent {
 
     constructor(
-        private readonly config: Config,
         private readonly apiTokenRepository: ApiTokenRepository,
     ) {}
 

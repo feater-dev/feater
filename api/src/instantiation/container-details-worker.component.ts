@@ -1,8 +1,8 @@
 import {Component} from '@nestjs/common';
 import * as got from 'got';
-import {Config} from '../config/config.component';
 import * as querystring from 'querystring';
 import * as redis from 'redis';
+import {environment} from '../environment/environment';
 
 export interface CachedContainerInfo {
     readonly namePrefix: string;
@@ -18,11 +18,11 @@ export class ContainerDetailsWorker {
 
     private redisClient;
 
-    constructor(
-        private readonly config: Config,
-    ) {
-        this.containerNameRegExp = new RegExp(`^/${this.config.instantiation.containerNamePrefix}([a-z0-9]{8})_(.+?)_\\d+\$`);
-        this.redisClient = redis.createClient({url: this.config.redis.url});
+    constructor() {
+        this.containerNameRegExp = new RegExp(
+            `^/${environment.instantiation.containerNamePrefix}([a-z0-9]{8})_(.+?)_\\d+\$`,
+        );
+        this.redisClient = redis.createClient({url: environment.redis.url});
     }
 
     updateCache(): Promise<any> {
@@ -58,7 +58,7 @@ export class ContainerDetailsWorker {
         return querystring.stringify({
             all: true,
             filters: JSON.stringify({
-                name: [this.config.instantiation.containerNamePrefix],
+                name: [environment.instantiation.containerNamePrefix],
             }),
         });
     }
@@ -72,7 +72,7 @@ export class ContainerDetailsWorker {
         const serviceName = matches[2];
 
         return {
-            namePrefix: `${this.config.instantiation.containerNamePrefix}${instanceHash}_${serviceName}`,
+            namePrefix: `${environment.instantiation.containerNamePrefix}${instanceHash}_${serviceName}`,
             id: containerInfo.Id,
             state: containerInfo.State,
             status: containerInfo.Status,

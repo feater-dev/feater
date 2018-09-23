@@ -1,4 +1,4 @@
-import {EnvironmentInterface} from '../config/config.component';
+import {EnvironmentInterface} from './environment.interface';
 
 export const environment: EnvironmentInterface = {
     app: {

@@ -2,28 +2,27 @@ import * as _ from 'lodash';
 import * as passport from 'passport';
 import {Component} from '@nestjs/common';
 import {OAuth2Strategy as Strategy} from 'passport-google-oauth';
-import {Config} from '../../../../config/config.component';
 import {GoogleUserProfileInterface} from '../google-user-profile.interface';
 import {UserRepository} from '../../../../persistence/repository/user.repository';
+import {environment} from '../../../../environment/environment';
 
 @Component()
 export class GooglePassportStrategyConfigurationComponent {
 
     constructor(
-        private readonly config: Config,
         private readonly userRepository: UserRepository,
     ) {}
 
     configure() {
         passport.use(new Strategy(
             {
-                clientID: this.config.googleOAuth2.clientId,
-                clientSecret: this.config.googleOAuth2.clientSecret,
-                callbackURL: this.config.googleOAuth2.baseUrl + '/signin/google/callback',
+                clientID: environment.googleOAuth2.clientId,
+                clientSecret: environment.googleOAuth2.clientSecret,
+                callbackURL: environment.googleOAuth2.baseUrl + '/signin/google/callback',
             },
             (accessToken, refreshToken, profile, done) => {
                 const isAllowedDomain = _.find(
-                    this.config.googleOAuth2.allowedDomains,
+                    environment.googleOAuth2.allowedDomains,
                     (allowedDomain) => allowedDomain === profile._json.domain,
                 );
                 if (!isAllowedDomain) {

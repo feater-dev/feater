@@ -76,7 +76,7 @@ export class GraphqlSchemaFactory {
 
             Project: {
                 definitions: this.definitionResolverFactory.getListResolver(
-                    (project: ProjectTypeInterface) => ({projectId: project.id}),
+                    (project: ProjectTypeInterface) => ({projectId: project.id.toString()}),
                 ),
                 assets: this.assetResolverFactory.getListResolver(
                     (project: ProjectTypeInterface) => ({
@@ -91,7 +91,7 @@ export class GraphqlSchemaFactory {
                     (definition: DefinitionTypeInterface) => definition.projectId,
                 ),
                 instances: this.instanceResolverFactory.getListResolver(
-                    (definition: DefinitionTypeInterface) => ({definitionId: definition.id}),
+                    (definition: DefinitionTypeInterface) => ({definitionId: definition.id.toString()}),
                 ),
                 configAsYaml: this.definitionResolverFactory.getConfigAsYamlResolver(),
                 deployKeys: this.definitionResolverFactory.getDeployKeysResolver(),
@@ -105,7 +105,7 @@ export class GraphqlSchemaFactory {
                     (instance: InstanceTypeInterface) => instance.createdAt,
                 ),
                 logs: this.logsResolverFactory.getListResolver(
-                    (instance: InstanceTypeInterface) => ({instanceId: instance.id}),
+                    (instance: InstanceTypeInterface) => ({instanceId: instance.id.toString()}),
                 ),
             },
 
@@ -116,8 +116,8 @@ export class GraphqlSchemaFactory {
             },
 
             InstanceLog: {
-                createdAt: this.dateResolverFactory.getTimestampResolver(
-                    (instanceLog: LogTypeInterface): number => instanceLog.timestamp,
+                createdAt: this.dateResolverFactory.getDateResolver(
+                    (log: LogTypeInterface) => log.createdAt,
                 ),
             },
 

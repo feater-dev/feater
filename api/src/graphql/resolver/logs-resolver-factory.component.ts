@@ -22,7 +22,10 @@ export class LogsResolverFactory {
             const logs = await this.logRepository.findByInstanceId(criteria.instanceId);
             const data: LogTypeInterface[] = [];
             for (const log of logs) {
-                data.push(log as LogTypeInterface);
+                data.push({
+                    message: log.message,
+                    createdAt: log.timestamp,
+                } as LogTypeInterface);
             }
 
             return data;

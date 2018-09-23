@@ -33,22 +33,20 @@
     background: #2c3e50;
     color: #f0f0f0;
     font-family: monospace;
-    font-size: 85%;
-    line-height: 150%;
-    padding: 1em;
+    width: 100%;
 }
 
 .logs .log-timestamp {
     opacity: 0.5;
     white-space: nowrap;
     vertical-align: baseline;
-    padding: 4px 8px 4px 4px;
+    padding: 2px 24px 2px 8px;
 }
 
 .logs .log-message {
     white-space: pre-wrap;
     vertical-align: baseline;
-    padding-left: 4px;
+    padding-left: 2px 8px 2px 0;
 }
 
 body {

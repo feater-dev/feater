@@ -67,7 +67,7 @@ export class PrepareEnvVariablesJobExecutor implements JobExecutorInterface{
 
             logger.debug(
                 'Environmental variables set.',
-                { envVariablesList: JSON.stringify(build.envVariables.toMap()) },
+                { envVariablesList: build.envVariables.toMap() },
             );
 
             logger.info('Persisting environmental variables.');

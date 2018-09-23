@@ -16,7 +16,6 @@ services:
     depends_on:
       - mongo
       - redis
-      - elasticsearch
     networks:
       - featinternal
     container_name: feat_api
@@ -55,23 +54,6 @@ services:
       - featinternal
       - featproxy
     container_name: feat_nginx
-
-  elasticsearch:
-    build:
-      context: ./elasticsearch
-    ports:
-      - '${ELASTICSEARCH_PORT}:9200'
-    networks:
-      - featinternal
-    container_name: feat_elasticsearch
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:6.2.3
-    ports:
-      - '${KIBANA_PORT}:5601'
-    networks:
-      - featinternal
-    container_name: feat_kibana
 
 networks:
   featinternal:

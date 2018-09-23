@@ -45,8 +45,11 @@ export interface EnvironmentInterface {
         readonly proxyDomainsNetworkName: string;
     };
     readonly logger: {
-        readonly elasticsearchHost: string;
-        readonly elasticsearchLogLevel: string;
-        readonly consoleLogLevel: string;
+        readonly console: {
+            readonly logLevel: string;
+        };
+        readonly mongoDb: {
+            readonly logLevel: string;
+        }
     };
 }

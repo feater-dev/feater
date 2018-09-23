@@ -50,8 +50,11 @@ export const environment: EnvironmentInterface = {
         proxyDomainsNetworkName: 'feat_featproxy', // Value of COMPOSE_PROJECT_NAME is prepended by default.
     },
     logger: {
-        elasticsearchHost: 'elasticsearch:9200',
-        elasticsearchLogLevel: 'warning',
-        consoleLogLevel: 'debug',
+        console: {
+            logLevel: 'info',
+        },
+        mongoDb: {
+            logLevel: 'info',
+        },
     },
 };

@@ -62,10 +62,22 @@ import {LinkifyPipe} from './pipes/linkify.pipe';
 import {YamlPipe} from './pipes/yaml.pipe';
 import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
 import {RelativeDatePipe} from './pipes/relative-date.pipe';
-import {DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
-import {DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-service-command-form-element.component';
-import {DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-copy-asset-into-container-form-element.component';
-import {DefinitionAddVolumeFormElementComponent} from './definition/add/form-element/definition-add.volume-form-element.component';
+import {
+    DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent,
+} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
+import {
+    DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent,
+} from './definition/add/form-element/definition-add.after-build-task-execute-service-command-form-element.component';
+import {
+    DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent,
+} from './definition/add/form-element/definition-add.after-build-task-copy-asset-into-container-form-element.component';
+import {
+    DefinitionAddVolumeFormElementComponent,
+} from './definition/add/form-element/definition-add.volume-form-element.component';
+import {
+    DeployKeyListComponent,
+} from './deploy-key/list/deploy-key-list.component';
+import {DeployKeyDetailComponent} from './deploy-key/detail/deploy-key-detail.component';
 
 
 const appRoutes: Routes = [
@@ -83,6 +95,8 @@ const appRoutes: Routes = [
     { path: 'instance/:id', component: InstanceDetailComponent},
     { path: 'assets', component: AssetListComponent },
     { path: 'asset/:id', component: AssetDetailComponent },
+    { path: 'deploy-keys', component: DeployKeyListComponent },
+    { path: 'deploy-key/:id', component: DeployKeyDetailComponent },
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
@@ -113,6 +127,8 @@ const appRoutes: Routes = [
         AssetAddComponent,
         AssetDetailComponent,
         AssetListComponent,
+        DeployKeyListComponent,
+        DeployKeyDetailComponent,
         NavbarComponent,
         AboutComponent,
         LinkifyPipe,

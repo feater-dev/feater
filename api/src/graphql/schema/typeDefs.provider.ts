@@ -55,6 +55,17 @@ export const typeDefsProvider = {
             asset(
                 id: String!
             ): Asset!
+
+            deployKeys(
+                limit: Int
+                offset: Int
+                sortKey: String
+                name: String
+            ): [DeployKey!]!
+
+            deployKey(
+                id: String!
+            ): DeployKey!
         }
 
         input DefinitionConfigInput {
@@ -179,6 +190,10 @@ export const typeDefsProvider = {
                 instanceId: String!
                 serviceId: String!
             ): Instance!
+
+            regenerateDeployKey(
+                id: String!
+            ): DeployKey!
         }
 
         type User {
@@ -234,9 +249,10 @@ export const typeDefsProvider = {
         }
 
         type DeployKey {
-            repositoryName: String!
-            repositoryOwner: String!
+            id: String!
+            sshCloneUrl: String!
             publicKey: String!
+            fingerprint: String!
         }
 
         type DefinitionConfig {

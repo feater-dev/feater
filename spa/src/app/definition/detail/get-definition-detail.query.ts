@@ -16,8 +16,7 @@ export const getDefinitionDetailQueryGql = gql`
                 name
             }
             deployKeys {
-                repositoryOwner
-                repositoryName
+                sshCloneUrl
                 publicKey
             }
         }
@@ -40,8 +39,7 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
     ];
     deployKeys: [
         {
-            readonly repositoryOwner: string;
-            readonly repositoryName: string;
+            readonly sshCloneUrl: string;
             readonly publicKey: string;
         }
     ];

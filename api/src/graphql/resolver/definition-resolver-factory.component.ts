@@ -10,7 +10,6 @@ import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/reso
 import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import * as jsYaml from 'js-yaml';
-import * as gitUrlParse from 'git-url-parse';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
 import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
 
@@ -95,8 +94,9 @@ export class DefinitionResolverFactory {
         return async (obj: DefinitionInterface, args: any): Promise<DeployKeyInterface[]> => {
             const deployKeys: DeployKeyInterface[] = [];
             for (const source of obj.config.sources) {
-                const {owner: repositoryOwner, name: repositoryName} = gitUrlParse((source as SourceTypeInterface).sshCloneUrl);
-                deployKeys.push(await this.deployKeyRepository.findByRepositoryOwnerAndName(repositoryOwner, repositoryName));
+                deployKeys.push(
+                    await this.deployKeyRepository.findBySshCloneUrl((source as SourceTypeInterface).sshCloneUrl)
+                );
             }
 
             return deployKeys;

@@ -65,9 +65,9 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let deployKey of definition?.deployKeys">
-                            <td class="fit-column">{{ deployKey.repositoryOwner }}/{{ deployKey.repositoryName }}</td>
+                            <td class="fit-column">{{ deployKey.sshCloneUrl }}</td>
                             <td>
-                                <pre class="form-control-static" style="white-space: pre-wrap">{{ deployKey.publicKey }}</pre>
+                                <pre style="white-space: pre-wrap; background: none; color: #2c3e50;">{{ deployKey.publicKey }}</pre>
                             </td>
                         </tr>
                     </tbody>

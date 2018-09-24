@@ -124,3 +124,7 @@ body {
     opacity: 0.3;
     cursor: default;
 }
+
+h2 {
+    margin-bottom: 24px;
+}

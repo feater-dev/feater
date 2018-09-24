@@ -17,6 +17,7 @@ import {DockerDaemonResolverFactory} from '../resolver/docker-daemon-resolver-fa
 import {AfterBuildTaskTypeInterface} from '../type/nested/definition-config/after-build-task-type.interface';
 import {AssetResolverFactory} from '../resolver/asset-resolver-factory.component';
 import {AssetTypeInterface} from '../type/asset-type.interface';
+import {DeployKeyResolverFactory} from '../resolver/deploy-key-resolver-factory.component';
 
 @Component()
 export class GraphqlSchemaFactory {
@@ -27,6 +28,7 @@ export class GraphqlSchemaFactory {
         private readonly definitionResolverFactory: DefinitionResolverFactory,
         private readonly instanceResolverFactory: InstanceResolverFactory,
         private readonly assetResolverFactory: AssetResolverFactory,
+        private readonly deployKeyResolverFactory: DeployKeyResolverFactory,
         private readonly logsResolverFactory: LogsResolverFactory,
         private readonly dateResolverFactory: DateResolverFactory,
         private readonly dockerDaemonResolverFactory: DockerDaemonResolverFactory,
@@ -60,6 +62,10 @@ export class GraphqlSchemaFactory {
                 asset: this.assetResolverFactory.getItemResolver(
                     (obj: any, args: any): string => args.id,
                 ),
+                deployKeys: this.deployKeyResolverFactory.getListResolver(),
+                deployKey: this.deployKeyResolverFactory.getItemResolver(
+                    (obj: any, args: any): string => args.id,
+                ),
             },
 
             Mutation: {
@@ -72,6 +78,7 @@ export class GraphqlSchemaFactory {
                 startService: this.instanceResolverFactory.getStartItemServiceResolver(),
                 unpauseService: this.instanceResolverFactory.getUnpauseItemServiceResolver(),
                 createAsset: this.assetResolverFactory.getCreateItemResolver(),
+                regenerateDeployKey: this.deployKeyResolverFactory.getRegenerateItemResolver(),
             },
 
             Project: {
@@ -157,6 +164,10 @@ export class GraphqlSchemaFactory {
                 createdAt: this.dateResolverFactory.getDateResolver(
                     (asset: AssetTypeInterface) => asset.createdAt,
                 ),
+            },
+
+            DeployKey: {
+                fingerprint: this.deployKeyResolverFactory.getItemFingerprintResolver(),
             },
         };
     }

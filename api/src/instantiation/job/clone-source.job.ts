@@ -4,7 +4,6 @@ import {JobInterface, SourceJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
 import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
 import * as nodegit from 'nodegit';
-import * as gitUrlParse from 'git-url-parse';
 
 const PROGRESS_THROTTLE_PERIOD = 10; // In miliseconds.
 
@@ -41,8 +40,7 @@ export class CloneSourceJobExecutor implements JobExecutorInterface {
 
         logger.info(`Cloning source from ${sshCloneUrl} to ${source.fullBuildPath}.`);
 
-        const {owner: repositoryOwner, name: repositoryName} = gitUrlParse(sshCloneUrl);
-        const deployKey = await this.deployKeyRepository.findByRepositoryOwnerAndName(repositoryOwner, repositoryName);
+        const deployKey = await this.deployKeyRepository.findBySshCloneUrl(sshCloneUrl);
 
         const cloneOpts = {
             fetchOpts: {

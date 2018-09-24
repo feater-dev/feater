@@ -16,6 +16,7 @@ import {DateResolverFactory} from './resolver/date-resolver-factory.component';
 import {LogsResolverFactory} from './resolver/logs-resolver-factory.component';
 import {DockerDaemonResolverFactory} from './resolver/docker-daemon-resolver-factory.component';
 import {AssetResolverFactory} from './resolver/asset-resolver-factory.component';
+import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.component';
 
 @Module({
     imports: [
@@ -34,6 +35,7 @@ import {AssetResolverFactory} from './resolver/asset-resolver-factory.component'
         DefinitionResolverFactory,
         InstanceResolverFactory,
         AssetResolverFactory,
+        DeployKeyResolverFactory,
         DateResolverFactory,
         DockerDaemonResolverFactory,
         ResolverPaginationArgumentsHelper,

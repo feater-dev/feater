@@ -61,14 +61,18 @@
                         <tr>
                             <th class="fit-column">Repository</th>
                             <th>Deploy key</th>
+                            <th class="fit-column">Fingerprint</th>
+                            <th class="fit-column">ID</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let deployKey of definition?.deployKeys">
-                            <td class="fit-column">{{ deployKey.repositoryOwner }}/{{ deployKey.repositoryName }}</td>
+                            <td class="fit-column">{{ deployKey.sshCloneUrl }}</td>
                             <td>
-                                <pre class="form-control-static" style="white-space: pre-wrap">{{ deployKey.publicKey }}</pre>
+                                <pre style="white-space: pre-wrap; background: none; color: #2c3e50;">{{ deployKey.publicKey }}</pre>
                             </td>
+                            <td class="fit-column">{{ deployKey.fingerprint }}</td>
+                            <td class="fit-column">{{ deployKey.id }}</td>
                         </tr>
                     </tbody>
                 </table>

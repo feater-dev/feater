@@ -40,4 +40,8 @@ export class NavbarComponent implements OnInit {
         this.router.navigate(['/instances']);
     }
 
+    goToDeployKeyList() {
+        this.router.navigate(['/deploy-keys']);
+    }
+
 }

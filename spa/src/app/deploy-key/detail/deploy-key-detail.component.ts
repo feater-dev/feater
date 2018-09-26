@@ -80,9 +80,7 @@ export class DeployKeyDetailComponent implements OnInit {
             })
             .valueChanges
             .subscribe(result => {
-                console.log('subscribe');
                 const resultData: GetDeployKeyDetailQueryInterface = result.data;
-                console.log(resultData.deployKey.fingerprint);
                 this.item = resultData.deployKey;
             });
     }

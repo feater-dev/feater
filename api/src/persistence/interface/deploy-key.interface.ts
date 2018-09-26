@@ -6,4 +6,6 @@ export interface DeployKeyInterface extends Document {
     readonly publicKey: string;
     readonly privateKey: string;
     readonly passphrase: string;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
 }

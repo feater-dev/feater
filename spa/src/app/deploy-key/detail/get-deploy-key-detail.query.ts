@@ -8,6 +8,8 @@ export const getDeployKeyDetailQueryGql = gql`
             sshCloneUrl
             publicKey
             fingerprint
+            createdAt
+            updatedAt
         }
     }
 `;
@@ -17,6 +19,8 @@ export interface GetDeployKeyDetailQueryDeployKeyFieldInterface {
     readonly sshCloneUrl: string;
     readonly publicKey: string;
     readonly fingerprint: string;
+    readonly createdAt: string;
+    readonly updatedAt: string;
 }
 
 export interface GetDeployKeyDetailQueryInterface {

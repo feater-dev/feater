@@ -6,6 +6,8 @@ import {
     GetDeployKeyListQueryInterface,
     GetDeployKeyListQueryDeployKeysFieldItemInterface,
 } from './get-deploy-key-list.query';
+import {getDeployKeyDetailQueryGql} from '../detail/get-deploy-key-detail.query';
+import gql from 'graphql-tag';
 
 @Component({
     selector: 'app-deploy-key-list',
@@ -14,7 +16,23 @@ import {
 })
 export class DeployKeyListComponent implements OnInit {
 
-    deployKeys: GetDeployKeyListQueryDeployKeysFieldItemInterface[];
+    protected readonly generateMissingDeployKeysMutation = gql`
+        mutation {
+            generateMissingDeployKeys {
+                generated
+            }
+        }
+    `;
+
+    protected readonly removeUnusedDeployKeysMutation = gql`
+        mutation {
+            removeUnusedDeployKeys {
+                removed
+            }
+        }
+    `;
+
+    items: GetDeployKeyListQueryDeployKeysFieldItemInterface[];
 
     constructor(
         private router: Router,
@@ -29,6 +47,26 @@ export class DeployKeyListComponent implements OnInit {
         this.router.navigate(['/deploy-key', deployKey.id]);
     }
 
+    generateMissingItems() {
+        this.apollo.mutate({
+            mutation: this.generateMissingDeployKeysMutation,
+            refetchQueries: [{query: getDeployKeyListQueryGql}],
+        }).subscribe(
+            () => {},
+            (error) => { console.log(error); }
+        );
+    }
+
+    removeUnusedItems() {
+        this.apollo.mutate({
+            mutation: this.removeUnusedDeployKeysMutation,
+            refetchQueries: [{query: getDeployKeyListQueryGql}],
+        }).subscribe(
+            () => {},
+            (error) => { console.log(error); }
+        );
+    }
+
     private getDeployKeys() {
         this.apollo
             .watchQuery<GetDeployKeyListQueryInterface>({
@@ -37,7 +75,7 @@ export class DeployKeyListComponent implements OnInit {
             .valueChanges
             .subscribe(result => {
                 const resultData: GetDeployKeyListQueryInterface = result.data;
-                this.deployKeys = resultData.deployKeys;
+                this.items = resultData.deployKeys;
             });
     }
 }

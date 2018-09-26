@@ -1,40 +1,56 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="page-header">
-            <h2>Deploy key for <em>{{ deployKey?.sshCloneUrl }}</em></h2>
+            <h2>Deploy key for <em>{{ item?.sshCloneUrl }}</em></h2>
         </div>
     </div>
 </div>
 
-<form class="form-horizontal">
+<form>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="inputDeployKey_id" class="control-label">ID</label>
+                <p class="form-control-static" id="inputDeployKey_id">{{ item?.id }}</p>
+            </div>
+            <div class="form-group">
+                <label for="inputDeployKey_sshCloneUrl" class="control-label">SSH clone URL</label>
+                <p class="form-control-static" id="inputDeployKey_sshCloneUrl">{{ item?.sshCloneUrl }}</p>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label for="inputDeployKey_publicKey" class="control-label">Public key</label>
+                <div class="form-control-static" id="inputDeployKey_publicKey">
+                    <pre style="white-space: pre-wrap; background: none; color: #2c3e50;">{{ item?.publicKey }}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="inputDeployKey_createdAt" class="control-label">Created</label>
+                <p class="form-control-static" id="inputDeployKey_createdAt">{{ item?.createdAt | relativeDate }}</p>
+            </div>
+            <div class="form-group">
+                <label for="inputDeployKey_updatedAt" class="control-label">Updated</label>
+                <p class="form-control-static" id="inputDeployKey_updatedAt">{{ item?.updatedAt | relativeDate }}</p>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label for="inputDeployKeyFingerprint" class="control-label">Fingerprint</label>
+                <p class="form-control-static" id="inputDeployKeyFingerprint">{{ item?.fingerprint }}</p>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-lg-12">
-            <div class="form-group">
-                <label for="inputDeployKeySshCloneUrl" class="col-lg-2 control-label">SSH clone URL</label>
-                <div class="col-lg-10">
-                    <p class="form-control-static" id="inputDeployKeySshCloneUrl">{{ deployKey?.sshCloneUrl }}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inputDeployKeyPublicKey" class="col-lg-2 control-label">Public key</label>
-                <div class="col-lg-10">
-                    <div class="form-control-static" id="inputDeployKeyPublicKey">
-                        <pre style="white-space: pre-wrap; background: none; color: #2c3e50;">{{ deployKey?.publicKey }}</pre>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inputDeployKeyFingerprint" class="col-lg-2 control-label">Fingerprint</label>
-                <div class="col-lg-10">
-                    <p class="form-control-static" id="inputDeployKeyFingerprint">{{ deployKey?.fingerprint }}</p>
-                </div>
-            </div>
+            <a class="btn btn-success" (click)="regenerateItem()">Regenerate</a>
+            <a class="btn btn-danger" (click)="removeItem()" style="margin-left: 10px;">Remove</a>
         </div>
     </div>
 </form>
-
-<div class="row">
-    <div class="col-lg-12" style="text-align: right;">
-        <a class="btn btn-success" (click)="regenerate()">Regenerate</a>
-    </div>
-</div>

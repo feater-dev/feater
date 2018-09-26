@@ -6,6 +6,8 @@ import {
     GetDeployKeyDetailQueryInterface,
     GetDeployKeyDetailQueryDeployKeyFieldInterface,
 } from './get-deploy-key-detail.query';
+import gql from 'graphql-tag';
+import {getDeployKeyListQueryGql} from '../list/get-deploy-key-list.query';
 
 
 @Component({
@@ -15,7 +17,23 @@ import {
 })
 export class DeployKeyDetailComponent implements OnInit {
 
-    deployKey: GetDeployKeyDetailQueryDeployKeyFieldInterface;
+    protected readonly regenerateDeployKeyMutation = gql`
+        mutation ($sshCloneUrl: String!) {
+            regenerateDeployKey(sshCloneUrl: $sshCloneUrl) {
+                sshCloneUrl
+            }
+        }
+    `;
+
+    protected readonly removeDeployKeyMutation = gql`
+        mutation ($sshCloneUrl: String!) {
+            removeDeployKey(sshCloneUrl: $sshCloneUrl) {
+                removed
+            }
+        }
+    `;
+
+    item: GetDeployKeyDetailQueryDeployKeyFieldInterface;
 
     constructor(
         private route: ActivatedRoute,
@@ -27,26 +45,49 @@ export class DeployKeyDetailComponent implements OnInit {
         this.getDeployKey();
     }
 
-    goToList() {
-        this.router.navigate(['/deployKeys']);
+    regenerateItem() {
+        this.apollo.mutate({
+            mutation: this.regenerateDeployKeyMutation,
+            variables: {sshCloneUrl: this.item.sshCloneUrl},
+            refetchQueries: [{
+                query: getDeployKeyDetailQueryGql,
+                variables: {id: this.route.snapshot.params['id']},
+            }],
+        }).subscribe(
+            () => {},
+            (error) => { console.log(error); }
+        );
     }
 
-    regenerate() {
-        console.log('TODO::DeployKeyDetailComponent regenerate', this.deployKey); // TODO
+    removeItem() {
+        this.apollo.mutate({
+            mutation: this.removeDeployKeyMutation,
+            variables: {sshCloneUrl: this.item.sshCloneUrl},
+            refetchQueries: [{
+                query: getDeployKeyListQueryGql,
+            }],
+        }).subscribe(
+            () => { this.goToList(); },
+            (error) => { console.log(error); }
+        );
     }
 
-    private getDeployKey() {
+    protected getDeployKey() {
         return this.apollo
             .watchQuery<GetDeployKeyDetailQueryInterface>({
                 query: getDeployKeyDetailQueryGql,
-                variables: {
-                    id: this.route.snapshot.params['id'],
-                },
+                variables: {id: this.route.snapshot.params['id']},
             })
             .valueChanges
             .subscribe(result => {
+                console.log('subscribe');
                 const resultData: GetDeployKeyDetailQueryInterface = result.data;
-                this.deployKey = resultData.deployKey;
+                console.log(resultData.deployKey.fingerprint);
+                this.item = resultData.deployKey;
             });
+    }
+
+    protected goToList() {
+        this.router.navigate(['/deploy-keys']);
     }
 }

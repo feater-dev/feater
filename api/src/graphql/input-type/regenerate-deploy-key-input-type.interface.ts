@@ -1,3 +1,3 @@
 export interface RegenerateDeployKeyInputTypeInterface {
-    readonly id: string;
+    readonly sshCloneUrl: string;
 }

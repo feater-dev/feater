@@ -31,11 +31,11 @@ export class UserRepository {
     }
 
     findByGithubId(id: string): Promise<UserInterface[]> {
-        return this.find({'githubProfile.id': id}, 0, 9999);
+        return this.find({'githubProfile.id': id}, 0, 99999);
     }
 
     findByGoogleId(id: string): Promise<UserInterface[]> {
-        return this.find({'googleProfile.id': id}, 0, 9999);
+        return this.find({'googleProfile.id': id}, 0, 99999);
     }
 
     createForGithubProfile(githubProfile: GithubUserProfileInterface): Promise<UserInterface> {

@@ -95,7 +95,7 @@ export class DefinitionResolverFactory {
             const deployKeys: DeployKeyInterface[] = [];
             for (const source of obj.config.sources) {
                 deployKeys.push(
-                    await this.deployKeyRepository.findBySshCloneUrl((source as SourceTypeInterface).sshCloneUrl)
+                    await this.deployKeyRepository.findBySshCloneUrl((source as SourceTypeInterface).sshCloneUrl),
                 );
             }
 

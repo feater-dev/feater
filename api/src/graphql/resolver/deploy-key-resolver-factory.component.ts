@@ -11,12 +11,17 @@ import {ProjectTypeInterface} from '../type/project-type.interface';
 import {CreateDefinitionInputTypeInterface} from '../input-type/create-definition-input-type.interface';
 import {DefinitionTypeInterface} from '../type/definition-type.interface';
 import {RegenerateDeployKeyInputTypeInterface} from '../input-type/regenerate-deploy-key-input-type.interface';
+import {RemoveDeployKeyInputTypeInterface} from '../input-type/remove-deploy-key-input-type.interface';
+import {DefinitionRepository} from '../../persistence/repository/definition.repository';
+import * as _ from 'lodash';
+import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
 
 @Component()
 export class DeployKeyResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
         private readonly deployKeyRepository: DeployKeyRepository,
+        private readonly definitionRepository: DefinitionRepository,
     ) { }
 
     protected readonly defaultSortKey = 'created_at_asc';
@@ -70,9 +75,67 @@ export class DeployKeyResolverFactory {
 
     getRegenerateItemResolver(): (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface) => Promise<DeployKeyTypeInterface> {
         return async (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface): Promise<DeployKeyTypeInterface> => {
-            const deployKey = await this.deployKeyRepository.create(regenerateDeployKeyInput.id, true);
+            const deployKey = await this.deployKeyRepository.create(regenerateDeployKeyInput.sshCloneUrl, true);
 
             return this.mapPersistentModelToTypeModel(deployKey);
+        };
+    }
+
+    getGenerateMissingItemsResolver(): (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface) => Promise<object> {
+        return async (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface): Promise<object> => {
+            const definitions = await this.definitionRepository.find({}, 0, 99999);
+
+            let referencedSshCloneUrls = [];
+            for (const definition of definitions) {
+                for (const source of definition.config.sources) {
+                    referencedSshCloneUrls.push((source as SourceTypeInterface).sshCloneUrl);
+                }
+            }
+
+            referencedSshCloneUrls = _.uniq(referencedSshCloneUrls);
+            const createPromises = [];
+            for (const referencedSshCloneUrl of referencedSshCloneUrls) {
+                createPromises.push(this.deployKeyRepository.create(referencedSshCloneUrl));
+            }
+            await Promise.all(createPromises);
+
+            return {generated: true};
+        };
+    }
+
+    getRemoveUnusedItemsResolver(): (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface) => Promise<object> {
+        return async (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface): Promise<object> => {
+            const deployKeys = await this.deployKeyRepository.find({}, 0, 99999);
+            const definitions = await this.definitionRepository.find({}, 0, 99999);
+
+            const sshCloneUrls = [];
+            for (const deployKey of deployKeys) {
+                sshCloneUrls.push(deployKey.sshCloneUrl);
+            }
+
+            const referencedSshCloneUrls = [];
+            for (const definition of definitions) {
+                for (const source of definition.config.sources) {
+                    referencedSshCloneUrls.push((source as SourceTypeInterface).sshCloneUrl);
+                }
+            }
+
+            const unreferencedSshCloneUrls = _.difference(sshCloneUrls, referencedSshCloneUrls);
+            const removePromises = [];
+            for (const unreferencedSshCloneUrl of unreferencedSshCloneUrls) {
+                removePromises.push(this.deployKeyRepository.remove(unreferencedSshCloneUrl));
+            }
+            await Promise.all(removePromises);
+
+            return {removed: true};
+        };
+    }
+
+    getRemoveItemResolver(): (obj: any, removeDeployKeyInput: RemoveDeployKeyInputTypeInterface) => Promise<object> {
+        return async (obj: any, removeDeployKeyInput: RemoveDeployKeyInputTypeInterface): Promise<object> => {
+            await this.deployKeyRepository.remove(removeDeployKeyInput.sshCloneUrl);
+
+            return {removed: true};
         };
     }
 
@@ -85,6 +148,8 @@ export class DeployKeyResolverFactory {
             id: deployKey._id.toString(),
             sshCloneUrl: deployKey.sshCloneUrl,
             publicKey: deployKey.publicKey,
+            createdAt: deployKey.createdAt,
+            updatedAt: deployKey.updatedAt,
         } as DeployKeyTypeInterface;
     }
 }

@@ -64,15 +64,20 @@ export class DeployKeyRepository {
         let model;
         if (1 === oldModels.length) {
             model = oldModels[0];
-            model.publicKey = publicKey;
-            model.privateKey = privateKey;
-            model.passphrase = passphrase;
+            if (overwrite) {
+                model.publicKey = publicKey;
+                model.privateKey = privateKey;
+                model.passphrase = passphrase;
+                model.updatedAt = new Date();
+            }
         } else {
             model = new this.deployKeyModel({
                 sshCloneUrl,
                 publicKey,
                 privateKey,
                 passphrase,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             } as DeployKeyInterface);
         }
 
@@ -81,4 +86,16 @@ export class DeployKeyRepository {
         return model;
     }
 
+    async remove(sshCloneUrl: string): Promise<void> {
+        return new Promise<void>(resolve => {
+            this.deployKeyModel
+                .deleteOne({sshCloneUrl}, (err) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    resolve();
+                });
+        });
+    }
 }

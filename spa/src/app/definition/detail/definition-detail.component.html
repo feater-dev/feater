@@ -61,6 +61,8 @@
                         <tr>
                             <th class="fit-column">Repository</th>
                             <th>Deploy key</th>
+                            <th class="fit-column">Fingerprint</th>
+                            <th class="fit-column">ID</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +71,8 @@
                             <td>
                                 <pre style="white-space: pre-wrap; background: none; color: #2c3e50;">{{ deployKey.publicKey }}</pre>
                             </td>
+                            <td class="fit-column">{{ deployKey.fingerprint }}</td>
+                            <td class="fit-column">{{ deployKey.id }}</td>
                         </tr>
                     </tbody>
                 </table>

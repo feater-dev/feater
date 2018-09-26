@@ -16,8 +16,10 @@ export const getDefinitionDetailQueryGql = gql`
                 name
             }
             deployKeys {
+                id
                 sshCloneUrl
                 publicKey
+                fingerprint
             }
         }
     }
@@ -39,8 +41,10 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
     ];
     deployKeys: [
         {
+            readonly id: string;
             readonly sshCloneUrl: string;
             readonly publicKey: string;
+            readonly fingerprint: string;
         }
     ];
 }

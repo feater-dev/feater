@@ -18,6 +18,7 @@ import {AfterBuildTaskTypeInterface} from '../type/nested/definition-config/afte
 import {AssetResolverFactory} from '../resolver/asset-resolver-factory.component';
 import {AssetTypeInterface} from '../type/asset-type.interface';
 import {DeployKeyResolverFactory} from '../resolver/deploy-key-resolver-factory.component';
+import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
 
 @Component()
 export class GraphqlSchemaFactory {
@@ -79,6 +80,9 @@ export class GraphqlSchemaFactory {
                 unpauseService: this.instanceResolverFactory.getUnpauseItemServiceResolver(),
                 createAsset: this.assetResolverFactory.getCreateItemResolver(),
                 regenerateDeployKey: this.deployKeyResolverFactory.getRegenerateItemResolver(),
+                generateMissingDeployKeys: this.deployKeyResolverFactory.getGenerateMissingItemsResolver(),
+                removeUnusedDeployKeys: this.deployKeyResolverFactory.getRemoveUnusedItemsResolver(),
+                removeDeployKey: this.deployKeyResolverFactory.getRemoveItemResolver(),
             },
 
             Project: {
@@ -168,6 +172,12 @@ export class GraphqlSchemaFactory {
 
             DeployKey: {
                 fingerprint: this.deployKeyResolverFactory.getItemFingerprintResolver(),
+                createdAt: this.dateResolverFactory.getDateResolver(
+                    (deployKey: DeployKeyTypeInterface) => deployKey.createdAt,
+                ),
+                updatedAt: this.dateResolverFactory.getDateResolver(
+                    (deployKey: DeployKeyTypeInterface) => deployKey.updatedAt,
+                ),
             },
         };
     }

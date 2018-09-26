@@ -192,8 +192,16 @@ export const typeDefsProvider = {
             ): Instance!
 
             regenerateDeployKey(
-                id: String!
+                sshCloneUrl: String!
             ): DeployKey!
+
+            generateMissingDeployKeys: GenerateMissingDeployKeysResult
+
+            removeUnusedDeployKeys: RemoveUnusedDeployKeysResult
+
+            removeDeployKey(
+                sshCloneUrl: String!
+            ): RemoveDeployKeyResult
         }
 
         type User {
@@ -253,6 +261,8 @@ export const typeDefsProvider = {
             sshCloneUrl: String!
             publicKey: String!
             fingerprint: String!
+            createdAt: String!
+            updatedAt: String!
         }
 
         type DefinitionConfig {
@@ -401,6 +411,18 @@ export const typeDefsProvider = {
             summaryItems: [InstanceSummaryItem!]!
             createdAt: String!
             logs: [InstanceLog!]!
+        }
+
+        type RemoveDeployKeyResult {
+            removed: Boolean!
+        }
+
+        type GenerateMissingDeployKeysResult {
+            generated: Boolean!
+        }
+
+        type RemoveUnusedDeployKeysResult {
+            removed: Boolean!
         }
     `,
 };

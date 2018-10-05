@@ -1,7 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {
     getProjectListQueryGql,
@@ -19,21 +16,10 @@ export class ProjectListComponent implements OnInit {
 
     projects: GetProjectListQueryProjectsFieldItemInterface[];
 
-    constructor(
-        private router: Router,
-        private apollo: Apollo,
-    ) {}
+    constructor(private apollo: Apollo) {}
 
     ngOnInit() {
         this.getProjects();
-    }
-
-    goToDetail(project) {
-        this.router.navigate(['/project', project.id]);
-    }
-
-    goToAdd() {
-        this.router.navigate(['/project/add']);
     }
 
     private getProjects() {

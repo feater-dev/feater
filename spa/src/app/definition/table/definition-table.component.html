@@ -1,0 +1,40 @@
+<div>
+    <div *ngIf="!definitions.length">
+        <p>No definitions to list.</p>
+    </div>
+    <div *ngIf="definitions.length">
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th class="fit-column">Name</th>
+                    <th class="fit-column">Project</th>
+                    <th class="fit-column">Created</th>
+                    <th class="fit-column">Updated</th>
+                    <th>Number of instances</th>
+                    <th class="fit-column">ID</th>
+                    <th class="fit-column"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let definition of definitions">
+                    <td class="fit-column">{{ definition.name }}</td>
+                    <td class="fit-column">
+                        {{ definition.project.name }}
+                        <a routerLink="/project/{{ definition.project.id }}">
+                            <span class="glyphicon glyphicon-question-sign go-to-related"></span>
+                        </a>
+                    </td>
+                    <td class="fit-column">{{ definition.createdAt | relativeDate }}</td>
+                    <td class="fit-column">{{ definition.updatedAt | relativeDate }}</td>
+                    <td>{{ definition.instances.length || '&mdash;' }}</td>
+                    <td class="fit-column"><small>{{ definition.id }}</small></td>
+                    <td class="fit-column">
+                        <a routerLink="/definition/{{ definition.id }}">
+                            <span class="glyphicon glyphicon-chevron-right feat-list-details"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

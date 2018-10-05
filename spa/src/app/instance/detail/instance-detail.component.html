@@ -9,11 +9,11 @@
 <div class="row">
     <div class="col-lg-12">
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Summary</a></li>
-            <li role="presentation"><a href="#environment" aria-controls="environment" role="tab" data-toggle="tab">Environment</a></li>
-            <li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">Services</a></li>
-            <li role="presentation"><a href="#proxy-domains" aria-controls="proxy-domains" role="tab" data-toggle="tab">Proxy domains</a></li>
-            <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Logs</a></li>
+            <li role="presentation" class="active"><a href="#summary" role="tab" data-toggle="tab">Summary</a></li>
+            <li role="presentation"><a href="#environment" role="tab" data-toggle="tab">Environment</a></li>
+            <li role="presentation"><a href="#services" role="tab" data-toggle="tab">Services</a></li>
+            <li role="presentation"><a href="#proxy-domains" role="tab" data-toggle="tab">Proxy domains</a></li>
+            <li role="presentation"><a href="#logs" role="tab" data-toggle="tab">Logs</a></li>
         </ul>
     </div>
 </div>
@@ -33,7 +33,7 @@
                         <label class="col-lg-3 control-label">Definition</label>
                         <div class="col-lg-9">
                             <p class="form-control-static">
-                                <a (click)="goToDefinitionDetails(instance?.definition)">{{ instance?.definition.name }}</a>
+                                <a routerLink="/definition/{{ instance?.definition.id }}">{{ instance?.definition.name }}</a>
                             </p>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                         <label class="col-lg-3 control-label">Project</label>
                         <div class="col-lg-9">
                             <p class="form-control-static">
-                                <a (click)="goToProjectDetails(instance?.definition.project)">
+                                <a routerLink="/project/{{ instance?.definition.project.id }}">
                                     {{instance?.definition.project.name }}
                                 </a>
                             </p>
@@ -49,9 +49,16 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-lg-3 control-label">Created at</label>
+                        <label class="col-lg-3 control-label">Created</label>
                         <div class="col-lg-9">
                             <p class="form-control-static">{{ instance?.createdAt | absoluteDate }}</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Updated</label>
+                        <div class="col-lg-9">
+                            <p class="form-control-static">{{ instance?.updatedAt | absoluteDate }}</p>
                         </div>
                     </div>
 
@@ -116,18 +123,17 @@
                                         <span [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"
                                               (click)="startOrUnpauseService(service)"
                                               class="glyphicon glyphicon-play"
-                                              aria-hidden="true"
                                         ></span>
 
                                         <span [ngClass]="{disabled: 'running' !== service.containerState}"
                                               (click)="pauseService(service)"
                                               class="glyphicon glyphicon-pause"
-                                        aria-hidden="true"></span>
+                                        ></span>
 
                                         <span [ngClass]="{disabled: 'running' !== service.containerState}"
                                               (click)="stopService(service)"
                                               class="glyphicon glyphicon-stop"
-                                              aria-hidden="true"></span>
+                                        ></span>
                                     </td>
                                 </tr>
                             </tbody>

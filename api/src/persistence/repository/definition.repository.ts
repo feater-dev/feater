@@ -42,6 +42,8 @@ export class DefinitionRepository {
 
     async create(createDefinitionInputType: CreateDefinitionInputTypeInterface): Promise<DefinitionInterface> {
         const createdDefinition = new this.definitionModel(createDefinitionInputType);
+        createdDefinition.createdAt = new Date();
+        createdDefinition.updatedAt = new Date();
         await createdDefinition.save();
 
         for (const source of createdDefinition.config.sources) {

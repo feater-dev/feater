@@ -14,7 +14,7 @@
                     <label for="inputAssetProject" class="col-lg-2 control-label">Project</label>
                     <div class="col-lg-10">
                         <p class="form-control-static" id="inputAssetProject">
-                            <a (click)="goToProjectDetails(asset?.project.id)">{{ asset?.project.name }}</a>
+                            <a routerLink="/project/{{asset?.project.id}}">{{ asset?.project.name }}</a>
                         </p>
                     </div>
                 </div>

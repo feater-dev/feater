@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
@@ -25,10 +25,6 @@ export class AssetDetailComponent implements OnInit {
 
     ngOnInit() {
         this.getAsset();
-    }
-
-    goToProjectDetails(id: string) {
-        this.router.navigate(['/project', id]);
     }
 
     private getAsset() {

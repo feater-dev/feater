@@ -6,4 +6,5 @@ export const AssetSchema = new Schema({
     description: String,
     uploaded: Boolean,
     createdAt: Date,
+    updatedAt: Date,
 });

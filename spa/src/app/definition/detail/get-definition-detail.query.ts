@@ -14,41 +14,62 @@ export const getDefinitionDetailQueryGql = gql`
             instances {
                 id
                 name
+                definition {
+                    id
+                    name
+                    project {
+                        id
+                        name
+                    }
+                }
+                createdAt
+                updatedAt
             }
             deployKeys {
                 id
                 sshCloneUrl
-                publicKey
                 fingerprint
+                createdAt
+                updatedAt
             }
+            createdAt
+            updatedAt
         }
     }
 `;
 
 export interface GetDefinitionDetailQueryDefinitionFieldInterface {
-    id: string;
-    project: {
-        id: string;
-        name: string;
+    readonly id: string;
+    readonly project: {
+        readonly id: string;
+        readonly name: string;
     };
-    name: string;
-    configAsYaml: string;
-    instances: [
-        {
+    readonly name: string;
+    readonly configAsYaml: string;
+    readonly instances: [{
+        readonly id: string;
+        readonly name: string;
+        readonly definition: {
             readonly id: string;
             readonly name: string;
+            readonly project: {
+                readonly id: string;
+                readonly name: string;
+            }
         }
-    ];
-    deployKeys: [
-        {
-            readonly id: string;
-            readonly sshCloneUrl: string;
-            readonly publicKey: string;
-            readonly fingerprint: string;
-        }
-    ];
+        readonly createdAt: string;
+        readonly updatedAt: string;
+    }];
+    readonly deployKeys: [{
+        readonly id: string;
+        readonly sshCloneUrl: string;
+        readonly fingerprint: string;
+        readonly updatedAt: string;
+    }];
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
 }
 
 export interface GetDefinitionDetailQueryInterface {
-    definition: GetDefinitionDetailQueryDefinitionFieldInterface;
+    readonly definition: GetDefinitionDetailQueryDefinitionFieldInterface;
 }

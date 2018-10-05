@@ -52,6 +52,14 @@ export const typeDefsProvider = {
                 id: String!
             ): Instance!
 
+            assets(
+                limit: Int
+                offset: Int
+                sortKey: String
+                id: String
+                projectId: String
+            ): [Asset!]!
+
             asset(
                 id: String!
             ): Asset!
@@ -240,6 +248,8 @@ export const typeDefsProvider = {
                 offset: Int
                 sortKey: String
             ): [Asset!]!
+            createdAt: String!
+            updatedAt: String!
         }
 
         type Definition {
@@ -254,6 +264,8 @@ export const typeDefsProvider = {
             config: DefinitionConfig!
             configAsYaml: String!
             deployKeys: [DeployKey!]!
+            createdAt: String!
+            updatedAt: String!
         }
 
         type DeployKey {
@@ -367,6 +379,7 @@ export const typeDefsProvider = {
             description: String
             project: Project!
             createdAt: String!
+            updatedAt: String!
         }
 
         type InstanceService {
@@ -410,6 +423,7 @@ export const typeDefsProvider = {
             proxiedPorts: [InstanceProxiedPort!]!
             summaryItems: [InstanceSummaryItem!]!
             createdAt: String!
+            updatedAt: String!
             logs: [InstanceLog!]!
         }
 

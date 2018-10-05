@@ -128,3 +128,9 @@ body {
 h2 {
     margin-bottom: 24px;
 }
+
+.go-to-related {
+    cursor: pointer;
+    color: #18bc9c;
+    margin-left: 0.2em;
+}

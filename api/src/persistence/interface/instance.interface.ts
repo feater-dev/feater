@@ -22,4 +22,5 @@ export interface InstanceInterface extends Document {
         readonly proxyDomain: string;
     }[];
     readonly createdAt: Date;
+    readonly updatedAt: Date;
 }

@@ -7,4 +7,5 @@ export interface AssetInterface extends Document {
     readonly uploaded: boolean;
     readonly description: string;
     readonly createdAt: Date;
+    readonly updatedAt: Date;
 }

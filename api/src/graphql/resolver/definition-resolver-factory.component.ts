@@ -120,6 +120,8 @@ export class DefinitionResolverFactory {
             name: definition.name,
             projectId: definition.projectId,
             config: this.definitionConfigMapper.map(definition.config),
+            createdAt: definition.createdAt,
+            updatedAt: definition.updatedAt,
         } as DefinitionTypeInterface;
     }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
@@ -48,10 +48,6 @@ export class AssetAddComponent implements OnInit {
 
     ngOnInit() {
         this.getProject();
-    }
-
-    goToList() {
-        this.router.navigate(['/assets']);
     }
 
     addItem() {

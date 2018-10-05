@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
@@ -67,8 +67,12 @@ export class DeployKeyDetailComponent implements OnInit {
                 query: getDeployKeyListQueryGql,
             }],
         }).subscribe(
-            () => { this.goToList(); },
-            (error) => { console.log(error); }
+            () => {
+                this.router.navigate(['/deploy-keys']);
+            },
+            (error) => {
+                console.log(error);
+            },
         );
     }
 
@@ -85,7 +89,4 @@ export class DeployKeyDetailComponent implements OnInit {
             });
     }
 
-    protected goToList() {
-        this.router.navigate(['/deploy-keys']);
-    }
 }

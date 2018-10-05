@@ -6,6 +6,8 @@ export const getProjectListQueryGql = gql`
         projects {
             id
             name
+            createdAt
+            updatedAt
         }
     }
 `;
@@ -13,6 +15,8 @@ export const getProjectListQueryGql = gql`
 export interface GetProjectListQueryProjectsFieldItemInterface {
     id: number;
     name: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface GetProjectListQueryInterface {

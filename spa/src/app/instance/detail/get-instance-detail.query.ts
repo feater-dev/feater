@@ -38,6 +38,7 @@ export const getInstanceDetailQueryGql = gql`
                 value
             }
             createdAt
+            updatedAt
             logs {
                 createdAt
                 message
@@ -89,7 +90,8 @@ export interface GetInstanceDetailQueryInstanceFieldinterface {
             readonly proxyDomain: string;
         }
     ];
-    readonly createdAt: string,
+    readonly createdAt: string;
+    readonly updatedAt: string;
     readonly logs: [
         {
             readonly createdAt: string;

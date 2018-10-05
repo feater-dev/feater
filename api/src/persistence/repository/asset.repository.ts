@@ -40,6 +40,7 @@ export class AssetRepository {
     create(createAssetInputType: CreateAssetInputTypeInterface): Promise<AssetInterface> {
         const createdAsset = new this.assetModel(createAssetInputType);
         createdAsset.createdAt = new Date();
+        createdAsset.updatedAt = new Date();
 
         return new Promise(resolve => {
             createdAsset.save();
@@ -50,6 +51,7 @@ export class AssetRepository {
     async markAsUploaded(id: string): Promise<any> {
         const persistentAsset = await this.findById(id);
         persistentAsset.set({uploaded: true});
+        persistentAsset.set({updatedAt: new Date()});
         await persistentAsset.save();
     }
 }

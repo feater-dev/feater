@@ -91,6 +91,8 @@ export class ProjectsResolverFactory {
         return {
             id: project._id,
             name: project.name,
+            createdAt: project.createdAt,
+            updatedAt: project.updatedAt,
         } as ProjectTypeInterface;
     }
 }

@@ -1,12 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
     getDeployKeyListQueryGql,
     GetDeployKeyListQueryInterface,
     GetDeployKeyListQueryDeployKeysFieldItemInterface,
 } from './get-deploy-key-list.query';
-import {getDeployKeyDetailQueryGql} from '../detail/get-deploy-key-detail.query';
 import gql from 'graphql-tag';
 
 @Component({
@@ -32,19 +30,12 @@ export class DeployKeyListComponent implements OnInit {
         }
     `;
 
-    items: GetDeployKeyListQueryDeployKeysFieldItemInterface[];
+    deployKeys: GetDeployKeyListQueryDeployKeysFieldItemInterface[];
 
-    constructor(
-        private router: Router,
-        private apollo: Apollo,
-    ) {}
+    constructor(private apollo: Apollo) {}
 
     ngOnInit() {
         this.getDeployKeys();
-    }
-
-    goToDetail(deployKey: GetDeployKeyListQueryDeployKeysFieldItemInterface) {
-        this.router.navigate(['/deploy-key', deployKey.id]);
     }
 
     generateMissingItems() {
@@ -75,7 +66,7 @@ export class DeployKeyListComponent implements OnInit {
             .valueChanges
             .subscribe(result => {
                 const resultData: GetDeployKeyListQueryInterface = result.data;
-                this.items = resultData.deployKeys;
+                this.deployKeys = resultData.deployKeys;
             });
     }
 }

@@ -7,6 +7,7 @@ import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolv
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverAssetFilterArgumentsInterface} from './filter-argument/resolver-asset-filter-arguments.interface';
 import * as escapeStringRegexp from 'escape-string-regexp';
+import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/resolver-definition-filter-arguments.interface';
 
 @Component()
 export class AssetResolverFactory {
@@ -97,9 +98,9 @@ export class AssetResolverFactory {
         return {
             id: asset.id,
             projectId: asset.projectId,
-            uploaded: asset.uploaded,
             description: asset.description,
             createdAt: asset.createdAt,
+            updatedAt: asset.updatedAt,
         } as AssetTypeInterface;
     }
 }

@@ -1,21 +1,16 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {Router, ActivatedRoute, Params} from '@angular/router';
-import {map, switchMap} from 'rxjs/operators';
-
+import {Component, OnInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
-
 import {InstanceAddForm} from './instance-add-form.model';
-import {GetDefinitionQueryDefinitionFieldInterface, getDefinitionQueryGql, GetDefinitionQueryInterface} from './get-definition.query';
-
-
-interface Definition {
-    id: string;
-}
-
-interface Query {
-    definition: Definition;
-}
+import {
+    GetDefinitionQueryDefinitionFieldInterface,
+    GetDefinitionQueryInterface,
+    getDefinitionQueryGql,
+} from './get-definition.query';
+import {getDefinitionDetailQueryGql} from '../../definition/detail/get-definition-detail.query';
+import {getInstanceListQueryGql} from '../list/get-instance-list.query';
+import {getDefinitionListQueryGql} from '../../definition/list/get-definition-list.query';
 
 
 @Component({
@@ -51,10 +46,6 @@ export class InstanceAddComponent implements OnInit {
         this.getDefinition();
     }
 
-    goToList() {
-        this.router.navigate(['/instances']);
-    }
-
     addItem() {
         this.apollo.mutate({
             mutation: this.mutation,
@@ -62,6 +53,14 @@ export class InstanceAddComponent implements OnInit {
                 definitionId: this.definition.id,
                 name: this.item.name,
             },
+            refetchQueries: [
+                {
+                    query: getDefinitionDetailQueryGql,
+                    variables: {id: this.definition.id},
+                },
+                {query: getDefinitionListQueryGql},
+                {query: getInstanceListQueryGql},
+            ],
         }).subscribe(
             ({data}) => {
                 this.router.navigate(['/instance', data.createInstance.id]);

@@ -5,16 +5,18 @@ export const getAssetListQueryGql = gql`
     query {
         assets {
             id
-            name
+            createdAt
+            updatedAt
         }
     }
 `;
 
 export interface GetAssetListQueryAssetsFieldItemInterface {
-    id: number;
-    name: string;
+    readonly id: number;
+    readonly createdAt: string;
+    readonly updatedAt: string;
 }
 
 export interface GetAssetListQueryInterface {
-    assets: GetAssetListQueryAssetsFieldItemInterface[];
+    readonly assets: GetAssetListQueryAssetsFieldItemInterface[];
 }

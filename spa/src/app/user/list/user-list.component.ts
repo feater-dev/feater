@@ -1,9 +1,10 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {getuserListQueryGql, GetUserListQueryInterface, GetUserListQueryUsersFieldItemInterface} from './get-user-list.query';
+import {
+    getuserListQueryGql,
+    GetUserListQueryInterface,
+    GetUserListQueryUsersFieldItemInterface,
+} from './get-user-list.query';
 
 
 @Component({
@@ -15,10 +16,7 @@ export class UserListComponent implements OnInit {
 
     users: GetUserListQueryUsersFieldItemInterface[];
 
-    constructor(
-        private router: Router,
-        private apollo: Apollo,
-    ) {}
+    constructor(private apollo: Apollo) {}
 
     ngOnInit() {
         this.getUsers();

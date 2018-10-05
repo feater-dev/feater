@@ -1,0 +1,31 @@
+<div>
+    <div *ngIf="!projects.length">
+        <p>No projects to list.</p>
+    </div>
+    <div *ngIf="projects.length">
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="fit-column">Created</th>
+                    <th class="fit-column">Updated</th>
+                    <th class="fit-column">ID</th>
+                    <th class="fit-column"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let project of projects">
+                    <td>{{ project.name }}</td>
+                    <td class="fit-column">{{ project.createdAt | relativeDate }}</td>
+                    <td class="fit-column">{{ project.updatedAt | relativeDate }}</td>
+                    <td class="fit-column"><small>{{ project.id }}</small></td>
+                    <td class="fit-column">
+                        <a routerLink="/project/{{ project.id }}">
+                            <span class="glyphicon glyphicon-chevron-right feat-table-details"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

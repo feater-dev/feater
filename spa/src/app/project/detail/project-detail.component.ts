@@ -1,5 +1,5 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
     getProjectDetailQueryGql,
@@ -19,32 +19,11 @@ export class ProjectDetailComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
         private apollo: Apollo,
     ) {}
 
     ngOnInit() {
         this.getProject();
-    }
-
-    goToList() {
-        this.router.navigate(['/projects']);
-    }
-
-    goToDefinitionDetail(id: string) {
-        this.router.navigate(['/definition', id]);
-    }
-
-    goToAssetDetail(id: string) {
-        this.router.navigate(['/asset', id]);
-    }
-
-    goToAddDefinition() {
-        this.router.navigate(['/project', this.project.id, 'definition', 'add']);
-    }
-
-    goToAddAsset() {
-        this.router.navigate(['/project', this.project.id, 'asset', 'add']);
     }
 
     private getProject() {

@@ -5,4 +5,6 @@ export interface DefinitionTypeInterface {
     readonly name: string;
     readonly projectId: string;
     readonly config: ConfigTypeInterface;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
 }

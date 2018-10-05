@@ -1,12 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators';
 import {Apollo} from 'apollo-angular';
 import {
     GetDefinitionListQueryDefinitionsFieldItemInterface,
+    GetDefinitionListQueryInterface,
     getDefinitionListQueryGql,
-    GetDefinitionListQueryInterface
 } from './get-definition-list.query';
 
 
@@ -19,17 +16,10 @@ export class DefinitionListComponent implements OnInit {
 
     definitions: GetDefinitionListQueryDefinitionsFieldItemInterface[];
 
-    constructor(
-        private router: Router,
-        private apollo: Apollo,
-    ) {}
+    constructor(private apollo: Apollo) {}
 
     ngOnInit() {
         this.getDefinitions();
-    }
-
-    goToDetail(definition) {
-        this.router.navigate(['/definition', definition.id]);
     }
 
     private getDefinitions() {

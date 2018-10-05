@@ -1,11 +1,11 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import 'rxjs/add/observable/interval';
 import {Apollo} from 'apollo-angular';
 import {
     GetDefinitionDetailQueryDefinitionFieldInterface,
+    GetDefinitionDetailQueryInterface,
     getDefinitionDetailQueryGql,
-    GetDefinitionDetailQueryInterface
 } from './get-definition-detail.query';
 
 
@@ -26,22 +26,6 @@ export class DefinitionDetailComponent implements OnInit {
 
     ngOnInit() {
         this.getDefinitions();
-    }
-
-    goToList() {
-        this.router.navigate(['/definitions']);
-    }
-
-    goToProjectDetails() {
-        this.router.navigate(['/project', this.definition.project.id]);
-    }
-
-    goToInstanceDetail(id: string) {
-        this.router.navigate(['/instance', id]);
-    }
-
-    goToInstanceAdd() {
-        this.router.navigate(['/definition', this.definition.id, 'instance', 'add']);
     }
 
     private getDefinitions() {

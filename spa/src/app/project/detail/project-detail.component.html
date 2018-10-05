@@ -13,7 +13,19 @@
                 <div class="form-group">
                     <label for="inputProjectName" class="col-lg-2 control-label">Name</label>
                     <div class="col-lg-10">
-                        <p class="form-control-static" id="inputProjectName">{{ project?.name}}</p>
+                        <p class="form-control-static" id="inputProjectName">{{ project?.name }}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputProjectCreatedAt" class="col-lg-2 control-label">Created</label>
+                    <div class="col-lg-10">
+                        <p class="form-control-static" id="inputProjectCreatedAt">{{ project?.createdAt | absoluteDate }}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputProjectUpdatedAt" class="col-lg-2 control-label">Updated</label>
+                    <div class="col-lg-10">
+                        <p class="form-control-static" id="inputProjectUpdatedAt">{{ project?.updatedAt | absoluteDate }}</p>
                     </div>
                 </div>
             </form>
@@ -23,40 +35,22 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h3 id="tables">Definitions for project <em>{{ project?.name}}</em></h3>
-        <p *ngIf="!project?.definitions.length">
-            <em>No definitions to list.</em>
-        </p>
-        <table *ngIf="project?.definitions.length" class="table table-striped table-hover">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th class="fit-column">ID</th>
-                <th class="fit-column"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let definition of project?.definitions">
-                <td>{{ definition.name }}</td>
-                <td class="fit-column"><small>{{ definition.id }}</small></td>
-                <td class="fit-column">
-                    <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDefinitionDetail(definition.id)" aria-hidden="true"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <h3>Definitions</h3>
+        <div *ngIf="project">
+            <app-definition-table [definitions]="project?.definitions"></app-definition-table>
+        </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-lg-12" style="text-align: right;">
-        <a class="btn btn-success" (click)="goToAddDefinition()">Add definition</a>
+        <a routerLink="/project/{{ project?.id }}/definition/add" class="btn btn-success">Add definition</a>
     </div>
 </div>
 
 <div class="row">
     <div class="col-lg-12">
-        <h3 id="tables">Assets for project <em>{{ project?.name}}</em></h3>
+        <h3>Assets</h3>
         <p *ngIf="!project?.assets.length">
             <em>No assets to list.</em>
         </p>
@@ -73,7 +67,9 @@
                 <td>{{ asset.id }}</td>
                 <td class="fit-column"><small>{{ asset.description }}</small></td>
                 <td class="fit-column">
-                    <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToAssetDetail(asset.id)" aria-hidden="true"></span>
+                    <a routerLink="/asset/{{ asset.id }}">
+                        <span class="glyphicon glyphicon-chevron-right feat-list-details"></span>
+                    </a>
                 </td>
             </tr>
             </tbody>
@@ -83,6 +79,6 @@
 
 <div class="row">
     <div class="col-lg-12" style="text-align: right;">
-        <a class="btn btn-success" (click)="goToAddAsset()">Add asset</a>
+        <a routerLink="/project/{{ project?.id }}/asset/add" class="btn btn-success">Add asset</a>
     </div>
 </div>

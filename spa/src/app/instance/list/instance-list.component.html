@@ -3,29 +3,8 @@
         <div class="page-header">
             <h2 id="tables">Instances</h2>
         </div>
-        <table class="table table-striped table-hover ">
-            <thead>
-                <tr>
-                    <th class="fit-column">Name</th>
-                    <th class="fit-column">Definition</th>
-                    <th>Project</th>
-                    <th class="fit-column">Created at</th>
-                    <th class="fit-column">ID</th>
-                    <th class="fit-column"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let instance of instances">
-                    <td class="fit-column">{{ instance.name }}</td>
-                    <td class="fit-column">{{ instance.definition.name }}</td>
-                    <td>{{ instance.definition.project.name }}</td>
-                    <td class="fit-column"><small>{{ instance.createdAt | relativeDate }}</small></td>
-                    <td class="fit-column"><small>{{ instance.id }}</small></td>
-                    <td class="fit-column">
-                        <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(instance)" aria-hidden="true"></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div *ngIf="instances">
+            <app-instance-table [instances]="instances"></app-instance-table>
+        </div>
     </div>
 </div>

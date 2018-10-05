@@ -60,6 +60,7 @@ export class GraphqlSchemaFactory {
                 instance: this.instanceResolverFactory.getItemResolver(
                     (obj: any, args: any): string => args.id,
                 ),
+                assets: this.assetResolverFactory.getListResolver(),
                 asset: this.assetResolverFactory.getItemResolver(
                     (obj: any, args: any): string => args.id,
                 ),
@@ -95,6 +96,12 @@ export class GraphqlSchemaFactory {
                         uploaded: true,
                     }),
                 ),
+                createdAt: this.dateResolverFactory.getDateResolver(
+                    (project: ProjectTypeInterface) => project.createdAt,
+                ),
+                updatedAt: this.dateResolverFactory.getDateResolver(
+                    (project: ProjectTypeInterface) => project.updatedAt,
+                ),
             },
 
             Definition: {
@@ -106,6 +113,12 @@ export class GraphqlSchemaFactory {
                 ),
                 configAsYaml: this.definitionResolverFactory.getConfigAsYamlResolver(),
                 deployKeys: this.definitionResolverFactory.getDeployKeysResolver(),
+                createdAt: this.dateResolverFactory.getDateResolver(
+                    (instance: DefinitionTypeInterface) => instance.createdAt,
+                ),
+                updatedAt: this.dateResolverFactory.getDateResolver(
+                    (instance: DefinitionTypeInterface) => instance.updatedAt,
+                ),
             },
 
             Instance: {
@@ -114,6 +127,9 @@ export class GraphqlSchemaFactory {
                 ),
                 createdAt: this.dateResolverFactory.getDateResolver(
                     (instance: InstanceTypeInterface) => instance.createdAt,
+                ),
+                updatedAt: this.dateResolverFactory.getDateResolver(
+                    (instance: InstanceTypeInterface) => instance.updatedAt,
                 ),
                 logs: this.logsResolverFactory.getListResolver(
                     (instance: InstanceTypeInterface) => ({instanceId: instance.id.toString()}),
@@ -167,6 +183,9 @@ export class GraphqlSchemaFactory {
                 ),
                 createdAt: this.dateResolverFactory.getDateResolver(
                     (asset: AssetTypeInterface) => asset.createdAt,
+                ),
+                updatedAt: this.dateResolverFactory.getDateResolver(
+                    (asset: AssetTypeInterface) => asset.updatedAt,
                 ),
             },
 

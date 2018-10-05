@@ -1,6 +1,5 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {map, switchMap} from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
     getInstanceListQueryGql,
@@ -19,16 +18,11 @@ export class InstanceListComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
         private apollo: Apollo,
     ) {}
 
     ngOnInit() {
         this.getInstances();
-    }
-
-    goToDetail(instance) {
-        this.router.navigate(['/instance', instance.id]);
     }
 
     private getInstances() {

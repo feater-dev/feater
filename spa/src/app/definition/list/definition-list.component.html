@@ -3,23 +3,8 @@
         <div class="page-header">
             <h2 id="tables">Definitions</h2>
         </div>
-        <table class="table table-striped table-hover ">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th class="fit-column">ID</th>
-                    <th class="fit-column"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let definition of definitions">
-                    <td>{{ definition.name }}</td>
-                    <td class="fit-column"><small>{{ definition.id }}</small></td>
-                    <td class="fit-column">
-                        <span class="glyphicon glyphicon-chevron-right feat-list-details" (click)="goToDetail(definition)" aria-hidden="true"></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div *ngIf="definitions">
+            <app-definition-table [definitions]="definitions"></app-definition-table>
+        </div>
     </div>
 </div>

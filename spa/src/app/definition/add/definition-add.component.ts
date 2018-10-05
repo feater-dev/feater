@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
 import gql from 'graphql-tag';
@@ -15,7 +15,8 @@ import {
     DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement,
     DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement,
     DefinitionAddFormAfterBuildTaskFormElement,
-    DefinitionAddFormAfterBuildCopyAssetIntoContainerTaskFormElement, DefinitionAddFormAfterBuildExecuteCommandTaskFormElement
+    DefinitionAddFormAfterBuildCopyAssetIntoContainerTaskFormElement,
+    DefinitionAddFormAfterBuildExecuteCommandTaskFormElement,
 } from './definition-add-form.model';
 import {
     getProjectQueryGql,
@@ -24,6 +25,7 @@ import {
 } from './get-project.query';
 import * as _ from 'lodash';
 import * as jsYaml from 'js-yaml';
+
 
 @Component({
     selector: 'app-definition-add',
@@ -63,10 +65,6 @@ export class DefinitionAddComponent implements OnInit {
 
     ngOnInit() {
         this.getProject();
-    }
-
-    goToList(): void {
-        this.router.navigate(['/definitions']);
     }
 
     addItem(): void {

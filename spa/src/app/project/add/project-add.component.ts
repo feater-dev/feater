@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
@@ -10,7 +10,7 @@ import {ProjectAddForm} from './project-add-form.model';
     templateUrl: './project-add.component.html',
     styles: []
 })
-export class ProjectAddComponent implements OnInit {
+export class ProjectAddComponent {
 
     protected readonly createProjectMutation = gql`
         mutation ($name: String!) {
@@ -29,12 +29,6 @@ export class ProjectAddComponent implements OnInit {
         this.item = {
             name: ''
         };
-    }
-
-    ngOnInit() {}
-
-    goToList() {
-        this.router.navigate(['/projects']);
     }
 
     addItem() {

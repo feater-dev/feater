@@ -39,5 +39,6 @@ export const InstanceSchema = new Schema({
     proxiedPorts: [InstanceProxiedPortSchema],
     summaryItems: [InstanceSummaryItemSchema],
     createdAt: Date,
+    updatedAt: Date,
     builtAt: Date,
 });

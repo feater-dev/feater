@@ -196,6 +196,7 @@ export class InstanceResolverFactory {
             envVariables: instance.envVariables,
             proxiedPorts: instance.proxiedPorts,
             createdAt: instance.createdAt,
+            updatedAt: instance.updatedAt,
         } as InstanceTypeInterface;
 
         return mapped;

@@ -1,0 +1,46 @@
+<div>
+    <div *ngIf="!instances.length">
+        <p>No instances to list.</p>
+    </div>
+    <div *ngIf="instances.length">
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th class="fit-column">Name</th>
+                    <th class="fit-column">Definition</th>
+                    <th>Project</th>
+                    <th class="fit-column">Created</th>
+                    <th class="fit-column">Updated</th>
+                    <th class="fit-column">ID</th>
+                    <th class="fit-column"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let instance of instances">
+                    <td class="fit-column">{{ instance.name }}</td>
+                    <td class="fit-column">
+                        <a routerLink="/definition/{{ instance.definition.id }}">
+                            {{ instance.definition.name }}
+                        </a>
+                    </td>
+                    <td>
+                        <a routerLink="/project/{{ instance.definition.project.id }}">
+                            {{ instance.definition.project.name }}
+                        </a>
+                    </td>
+                    <td class="fit-column">
+                        <small>{{ instance.createdAt | relativeDate }}</small>
+                    </td>
+                    <td class="fit-column">
+                        <small>{{ instance.id }}</small>
+                    </td>
+                    <td class="fit-column">
+                        <a routerLink="/instance/{{ instance.id }}">
+                            <span class="glyphicon glyphicon-chevron-right feat-table-details"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

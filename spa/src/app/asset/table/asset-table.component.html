@@ -1,0 +1,35 @@
+<div>
+    <div *ngIf="!assets.length">
+        <p>No assets to list.</p>
+    </div>
+    <div *ngIf="assets.length">
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th class="fit-column">Created</th>
+                    <th class="fit-column">Updated</th>
+                    <!--<th class="fit-column">ID</th>-->
+                    <th class="fit-column"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let asset of assets">
+                    <td>{{ asset.id }}</td>
+                    <td class="fit-column">
+                        <small>{{ asset.createdAt | relativeDate }}</small>
+                    </td>
+                    <td class="fit-column">
+                        <small>{{ asset.updatedAt | relativeDate }}</small>
+                    </td>
+                    <!--<td class="fit-column"><small>{{ asset.id }}</small></td>-->
+                    <td class="fit-column">
+                        <a routerLink="/asset/{{ asset.id }}">
+                            <span class="glyphicon glyphicon-chevron-right feat-table-details"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

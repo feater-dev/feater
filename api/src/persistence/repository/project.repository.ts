@@ -40,6 +40,8 @@ export class ProjectRepository {
 
     create(createProjectInputType: CreateProjectInputTypeInterface): Promise<ProjectInterface> {
         const createdProject = new this.projectModel(createProjectInputType);
+        createdProject.createdAt = new Date();
+        createdProject.updatedAt = new Date();
 
         return new Promise(resolve => {
             createdProject.save();

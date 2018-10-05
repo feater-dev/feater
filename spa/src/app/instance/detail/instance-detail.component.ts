@@ -1,5 +1,5 @@
-import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
     getInstanceDetailQueryGql,
@@ -57,7 +57,6 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
         private apollo: Apollo,
     ) {}
 
@@ -71,18 +70,6 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.pollingSubscription.unsubscribe();
-    }
-
-    goToList() {
-        this.router.navigate(['/instances']);
-    }
-
-    goToProjectDetails() {
-        this.router.navigate(['/project', this.instance.definition.project.id]);
-    }
-
-    goToDefinitionDetails() {
-        this.router.navigate(['/definition', this.instance.definition.id]);
     }
 
     getServiceById(id) {

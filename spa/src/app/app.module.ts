@@ -18,43 +18,38 @@ import {UserListComponent} from './user/list/user-list.component';
 import {ProjectAddComponent} from './project/add/project-add.component';
 import {ProjectDetailComponent} from './project/detail/project-detail.component';
 import {ProjectListComponent} from './project/list/project-list.component';
+import {ProjectTableComponent} from './project/table/project-table.component';
 
 import {AssetAddComponent} from './asset/add/asset-add.component';
 import {AssetDetailComponent} from './asset/detail/asset-detail.component';
 import {AssetListComponent} from './asset/list/asset-list.component';
+import {AssetTableComponent} from './asset/table/asset-table.component';
+
+import {DeployKeyListComponent} from './deploy-key/list/deploy-key-list.component';
+import {DeployKeyDetailComponent} from './deploy-key/detail/deploy-key-detail.component';
+import {DeployKeyTableComponent} from './deploy-key/table/deploy-key-table.component';
+
 
 import {DefinitionAddComponent} from './definition/add/definition-add.component';
-import {
-    DefinitionAddSourceFormElementComponent
-} from './definition/add/form-element/definition-add.source-form-element.component';
-import {
-    DefinitionAddBeforeBuildTaskCopyFormElementComponent
-} from './definition/add/form-element/definition-add.before-build-task-copy-form-element.component';
-import {
-    DefinitionAddBeforeBuildTaskInterpolateFormElementComponent
-} from './definition/add/form-element/definition-add.before-build-task-interpolate-form-element.component';
-import {
-    DefinitionAddProxiedPortFormElementComponent
-} from './definition/add/form-element/definition-add.proxied-port-form-element.component';
-import {
-    DefinitionAddEnvVariableFormElementComponent
-} from './definition/add/form-element/definition-add.environmental-variable-form-element.component';
-import {
-    DefinitionAddSummaryItemFormElementComponent
-} from './definition/add/form-element/definition-add.summary-item-form-element.component';
-import {
-    DefinitionAddComposeFileFormElementComponent
-} from './definition/add/form-element/definition-add.compose-file-form-element.component';
-import {
-    DefinitionDetailComponent
-} from './definition/detail/definition-detail.component';
-import {
-    DefinitionListComponent
-} from './definition/list/definition-list.component';
+import {DefinitionAddSourceFormElementComponent} from './definition/add/form-element/definition-add.source-form-element.component';
+import {DefinitionAddBeforeBuildTaskCopyFormElementComponent} from './definition/add/form-element/definition-add.before-build-task-copy-form-element.component';
+import {DefinitionAddBeforeBuildTaskInterpolateFormElementComponent} from './definition/add/form-element/definition-add.before-build-task-interpolate-form-element.component';
+import {DefinitionAddProxiedPortFormElementComponent} from './definition/add/form-element/definition-add.proxied-port-form-element.component';
+import {DefinitionAddEnvVariableFormElementComponent} from './definition/add/form-element/definition-add.environmental-variable-form-element.component';
+import {DefinitionAddSummaryItemFormElementComponent} from './definition/add/form-element/definition-add.summary-item-form-element.component';
+import {DefinitionAddComposeFileFormElementComponent} from './definition/add/form-element/definition-add.compose-file-form-element.component';
+import {DefinitionDetailComponent} from './definition/detail/definition-detail.component';
+import {DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
+import {DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-service-command-form-element.component';
+import {DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-copy-asset-into-container-form-element.component';
+import {DefinitionAddVolumeFormElementComponent} from './definition/add/form-element/definition-add.volume-form-element.component';
+import {DefinitionListComponent} from './definition/list/definition-list.component';
+import {DefinitionTableComponent} from './definition/table/definition-table.component';
 
 import {InstanceAddComponent} from './instance/add/instance-add.component';
 import {InstanceDetailComponent} from './instance/detail/instance-detail.component';
 import {InstanceListComponent} from './instance/list/instance-list.component';
+import {InstanceTableComponent} from './instance/table/instance-table.component';
 
 import {AuthHttpClient} from './api/auth-http-client.service';
 import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
@@ -62,22 +57,6 @@ import {LinkifyPipe} from './pipes/linkify.pipe';
 import {YamlPipe} from './pipes/yaml.pipe';
 import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
 import {RelativeDatePipe} from './pipes/relative-date.pipe';
-import {
-    DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent,
-} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
-import {
-    DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent,
-} from './definition/add/form-element/definition-add.after-build-task-execute-service-command-form-element.component';
-import {
-    DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent,
-} from './definition/add/form-element/definition-add.after-build-task-copy-asset-into-container-form-element.component';
-import {
-    DefinitionAddVolumeFormElementComponent,
-} from './definition/add/form-element/definition-add.volume-form-element.component';
-import {
-    DeployKeyListComponent,
-} from './deploy-key/list/deploy-key-list.component';
-import {DeployKeyDetailComponent} from './deploy-key/detail/deploy-key-detail.component';
 
 
 const appRoutes: Routes = [
@@ -131,6 +110,11 @@ const appRoutes: Routes = [
         DeployKeyDetailComponent,
         NavbarComponent,
         AboutComponent,
+        ProjectTableComponent,
+        DefinitionTableComponent,
+        InstanceTableComponent,
+        DeployKeyTableComponent,
+        AssetTableComponent,
         LinkifyPipe,
         YamlPipe,
         AbsoluteDatePipe,

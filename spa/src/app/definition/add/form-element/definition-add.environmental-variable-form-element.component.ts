@@ -22,7 +22,7 @@ export class DefinitionAddEnvVariableFormElementComponent implements OnInit {
 
     ngOnInit() {}
 
-    onDeleteItem() {
+    delete() {
         this.deleteItem.emit(this.item);
     }
 }

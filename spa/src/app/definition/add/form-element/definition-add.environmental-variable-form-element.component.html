@@ -1,21 +1,24 @@
-<div class="well well-sm">
-    <div class="form-group">
-        <label class="col-lg-1 control-label">Name</label>
-        <div class="col-lg-3">
-            <input type="text" class="form-control" [(ngModel)]="item.name">
+<div class="well well-sm form-well">
+
+    <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
+        <span class="glyphicon glyphicon-trash"></span>
+    </a>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input type="text" class="form-control" [(ngModel)]="item.name">
+            </div>
         </div>
-        <label class="col-lg-1 control-label">Value</label>
-        <div class="col-lg-4">
-            <input type="text" class="form-control" [(ngModel)]="item.value">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">Value</label>
+                <input type="text" class="form-control" [(ngModel)]="item.value">
+            </div>
         </div>
-        <div class="col-lg-3" style="text-align: right;">
-            <a
-                class="btn btn-danger btn-sm"
-                style="position: relative; top: 8px;"
-                (click)="onDeleteItem()"
-            >
-                Delete
-            </a>
-        </div>
+
     </div>
 </div>

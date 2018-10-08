@@ -9,7 +9,7 @@ export interface DefinitionAddFormConfigFormElement {
     proxiedPorts: DefinitionAddFormProxiedPortFormElement[];
     envVariables: DefinitionAddFormEnvVariableFormElement[];
     composeFile: DefinitionAddComposeFileFormElement;
-    afterBuildTasks: DefinitionAddFormAfterBuildTaskFormElement[];
+    afterBuildTasks: AfterBuildTaskFormElement[];
     summaryItems: DefinitionAddFormSummaryItemFormElement[];
 }
 
@@ -18,9 +18,9 @@ export interface DefinitionAddFormSourceFormElement {
     sshCloneUrl: string;
     reference: DefinitionAddFormComponentReferenceFormElement;
     beforeBuildTasks: Array<
-        DefinitionAddFormBeforeBuildTaskFormElement|
-        DefinitionAddFormBeforeBuildCopyTaskFormElement|
-        DefinitionAddFormBeforeBuildInterpolateTaskFormElement
+        BeforeBuildTaskFormElement|
+        TaskFormElement|
+        InterpolateTaskFormElement
     >;
 }
 
@@ -57,11 +57,11 @@ export interface DefinitionAddComposeFileFormElement {
     composeFileRelativePaths: string[];
 }
 
-export interface DefinitionAddFormAfterBuildTaskFormElement {
+export interface AfterBuildTaskFormElement {
     type: string;
 }
 
-export interface DefinitionAddFormAfterBuildExecuteCommandTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
+export interface ExecuteCommandTaskFormElement extends AfterBuildTaskFormElement {
     inheritedEnvVariables: {
         name: string;
         alias: string;
@@ -73,27 +73,27 @@ export interface DefinitionAddFormAfterBuildExecuteCommandTaskFormElement extend
     command: string[];
 }
 
-export interface DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement extends DefinitionAddFormAfterBuildExecuteCommandTaskFormElement {}
+export interface ExecuteHostCommandTaskFormElement extends ExecuteCommandTaskFormElement {}
 
-export interface DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement extends DefinitionAddFormAfterBuildExecuteCommandTaskFormElement {
+export interface ExecuteServiceCommandTaskFormElement extends ExecuteCommandTaskFormElement {
     serviceId: string;
 }
 
-export interface DefinitionAddFormAfterBuildCopyAssetIntoContainerTaskFormElement extends DefinitionAddFormAfterBuildTaskFormElement {
+export interface CopyAssetIntoContainerTaskFormElement extends AfterBuildTaskFormElement {
     serviceId: string;
     assetId: string;
     destinationPath: string;
 }
 
-export interface DefinitionAddFormBeforeBuildTaskFormElement {
+export interface BeforeBuildTaskFormElement {
     type: string;
 }
 
-export interface DefinitionAddFormBeforeBuildCopyTaskFormElement extends DefinitionAddFormBeforeBuildTaskFormElement {
+export interface TaskFormElement extends BeforeBuildTaskFormElement {
     sourceRelativePath: string;
     destinationRelativePath: string;
 }
 
-export interface DefinitionAddFormBeforeBuildInterpolateTaskFormElement extends DefinitionAddFormBeforeBuildTaskFormElement {
+export interface InterpolateTaskFormElement extends BeforeBuildTaskFormElement {
     relativePath: string;
 }

@@ -1,27 +1,26 @@
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <div class="page-header">
             <h2>Add project</h2>
         </div>
     </div>
 </div>
-<form class="form-horizontal">
+
+<form>
+
     <div class="row">
-        <div class="col-lg-12">
-            <div class="well bs-component">
-                <div class="form-group">
-                    <label for="inputProjectName" class="col-lg-2 control-label">Name</label>
-                    <div class="col-lg-10">
-                        <input type="text" class="form-control" id="inputProjectName" name="name" [(ngModel)]="item.name">
-                    </div>
-                </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="inputProject_name" class="control-label">Name</label>
+                <input type="text" class="form-control" id="inputProject_name" name="name" [(ngModel)]="item.name">
             </div>
         </div>
     </div>
+
     <div class="row">
-        <div class="col-lg-12" style="text-align: right;">
-            <a routerLink="/projects" class="btn btn-default">Cancel</a>
+        <div class="col-md-12">
             <button type="submit" class="btn btn-success" (click)="addItem()">Submit</button>
         </div>
     </div>
+
 </form>

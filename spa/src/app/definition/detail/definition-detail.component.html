@@ -1,11 +1,11 @@
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <h2>Definition <em>{{ definition?.name }}</em></h2>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#summary" role="tab" data-toggle="tab">Summary</a></li>
             <li role="presentation"><a href="#configuration" role="tab" data-toggle="tab">Configuration</a></li>
@@ -19,7 +19,7 @@
     <div role="tabpanel" class="tab-pane active" id="summary">
         <form>
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label for="inputDefinition_name" class="control-label">Name</label>
                         <p class="form-control-static" id="inputDefinition_name">{{ definition?.name}}</p>
@@ -50,7 +50,7 @@
     <div role="tabpanel" class="tab-pane" id="configuration">
         <form>
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label for="inputDefinition_configAsYaml" class="control-label">Configuration in Yaml</label>
                         <pre class="form-control-static" id="inputDefinition_configAsYaml">{{ definition?.configAsYaml }}</pre>
@@ -62,7 +62,7 @@
 
     <div role="tabpanel" class="tab-pane" id="deploy-keys">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div *ngIf="definition">
                     <app-deploy-key-table [deployKeys]="definition.deployKeys"></app-deploy-key-table>
                 </div>
@@ -72,14 +72,14 @@
 
     <div role="tabpanel" class="tab-pane" id="instances">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div *ngIf="definition">
                     <app-instance-table [instances]="definition.instances"></app-instance-table>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12" style="text-align: right;">
+            <div class="col-md-12" style="text-align: right;">
                 <a routerLink="/definition/{{ definition?.id }}/instance/add" class="btn btn-success">Add instance</a>
             </div>
         </div>

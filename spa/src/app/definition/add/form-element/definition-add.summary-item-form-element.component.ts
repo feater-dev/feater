@@ -22,7 +22,7 @@ export class DefinitionAddSummaryItemFormElementComponent implements OnInit {
 
     ngOnInit() {}
 
-    onDeleteItem() {
+    delete() {
         this.deleteItem.emit(this.item);
     }
 

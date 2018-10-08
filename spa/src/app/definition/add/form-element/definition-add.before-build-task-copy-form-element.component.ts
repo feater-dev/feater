@@ -5,7 +5,7 @@ import {
     Output,
     EventEmitter,
 } from '@angular/core';
-import {DefinitionAddFormBeforeBuildCopyTaskFormElement} from '../definition-add-form.model';
+import {TaskFormElement} from '../definition-add-form.model';
 
 
 @Component({
@@ -15,14 +15,14 @@ import {DefinitionAddFormBeforeBuildCopyTaskFormElement} from '../definition-add
 })
 export class DefinitionAddBeforeBuildTaskCopyFormElementComponent implements OnInit {
 
-    @Input() item: DefinitionAddFormBeforeBuildCopyTaskFormElement;
+    @Input() item: TaskFormElement;
 
-    @Output() deleteItem: EventEmitter<DefinitionAddFormBeforeBuildCopyTaskFormElement> =
-        new EventEmitter<DefinitionAddFormBeforeBuildCopyTaskFormElement>();
+    @Output() deleteItem: EventEmitter<TaskFormElement> =
+        new EventEmitter<TaskFormElement>();
 
     ngOnInit() {}
 
-    onDeleteItem() {
+    delete() {
         this.deleteItem.emit(this.item);
     }
 

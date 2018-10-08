@@ -1,29 +1,39 @@
-<div class="well well-sm">
-    <div class="form-group">
-        <label class="col-lg-1 control-label">Service</label>
-        <div class="col-lg-2">
-            <input type="text" class="form-control" [(ngModel)]="item.serviceId">
+<div class="well well-sm form-well">
+
+    <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
+        <span class="glyphicon glyphicon-trash"></span>
+    </a>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="col-md-1 control-label">ID</label>
+                <input type="text" class="form-control" [(ngModel)]="item.id">
+            </div>
         </div>
-        <label class="col-lg-1 control-label">ID</label>
-        <div class="col-lg-2">
-            <input type="text" class="form-control" [(ngModel)]="item.id">
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input type="text" class="form-control" [(ngModel)]="item.name">
+            </div>
         </div>
-        <label class="col-lg-1 control-label">Name</label>
-        <div class="col-lg-2">
-            <input type="text" class="form-control" [(ngModel)]="item.name">
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Service</label>
+                <input type="text" class="form-control" [(ngModel)]="item.serviceId">
+            </div>
         </div>
-        <label class="col-lg-1 control-label">Port</label>
-        <div class="col-lg-1">
-            <input type="text" class="form-control" [(ngModel)]="item.port">
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Proxied port</label>
+                <input type="text" class="form-control" [(ngModel)]="item.port">
+            </div>
         </div>
-        <div class="col-lg-1" style="text-align: right;">
-            <a
-                class="btn btn-danger btn-sm"
-                style="position: relative; top: 8px;"
-                (click)="onDeleteItem()"
-            >
-                Delete
-            </a>
-        </div>
+
     </div>
+
 </div>

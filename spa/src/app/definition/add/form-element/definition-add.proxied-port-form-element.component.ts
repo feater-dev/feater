@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    Output,
-    EventEmitter,
-} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {DefinitionAddFormProxiedPortFormElement} from '../definition-add-form.model';
 
 
@@ -13,16 +7,14 @@ import {DefinitionAddFormProxiedPortFormElement} from '../definition-add-form.mo
     templateUrl: './definition-add.proxied-port-form-element.component.html',
     styles: []
 })
-export class DefinitionAddProxiedPortFormElementComponent implements OnInit {
+export class DefinitionAddProxiedPortFormElementComponent {
 
     @Input() item: DefinitionAddFormProxiedPortFormElement;
 
     @Output() deleteItem: EventEmitter<DefinitionAddFormProxiedPortFormElement> =
         new EventEmitter<DefinitionAddFormProxiedPortFormElement>();
 
-    ngOnInit() {}
-
-    onDeleteItem() {
+    delete() {
         this.deleteItem.emit(this.item);
     }
 

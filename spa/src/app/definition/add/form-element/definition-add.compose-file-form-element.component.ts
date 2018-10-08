@@ -28,7 +28,7 @@ export class DefinitionAddComposeFileFormElementComponent implements OnInit {
         this.item.composeFileRelativePaths.push('');
     }
 
-    onDeleteComposeFileRelativePath(index: number) {
+    deleteComposeFileRelativePath(index: number) {
         this.item.composeFileRelativePaths.splice(index, 1);
     }
 

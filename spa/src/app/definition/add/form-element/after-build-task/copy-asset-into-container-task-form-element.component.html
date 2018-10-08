@@ -1,0 +1,37 @@
+<div class="well well-sm form-well">
+
+    <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
+        <span class="glyphicon glyphicon-trash"></span>
+    </a>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label class="control-label">Type</label>
+                <p class="form-control-static">Copy asset into container</p>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label class="control-label">Service ID</label>
+                <input type="text" class="form-control" [(ngModel)]="item.serviceId">
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label class="control-label">Asset ID</label>
+                <input type="text" class="form-control" [(ngModel)]="item.assetId">
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label class="control-label">Destination path</label>
+                <input type="text" class="form-control" [(ngModel)]="item.destinationPath">
+            </div>
+        </div>
+    </div>
+
+</div>

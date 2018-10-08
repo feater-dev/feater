@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import {
     DefinitionAddFormVolumeFormElement,
-    DefinitionAddFormBeforeBuildTaskFormElement,
-    DefinitionAddFormBeforeBuildCopyTaskFormElement,
-    DefinitionAddFormBeforeBuildInterpolateTaskFormElement,
+    BeforeBuildTaskFormElement,
+    TaskFormElement,
+    InterpolateTaskFormElement,
 } from '../definition-add-form.model';
 
 
@@ -20,15 +20,15 @@ import {
 })
 export class DefinitionAddVolumeFormElementComponent implements OnInit {
 
-    @Input() item: DefinitionAddFormVolumeFormElement;
+    @Input() volume: DefinitionAddFormVolumeFormElement;
 
     @Output() deleteItem: EventEmitter<DefinitionAddFormVolumeFormElement> =
         new EventEmitter<DefinitionAddFormVolumeFormElement>();
 
     ngOnInit() {}
 
-    onDeleteItem() {
-        this.deleteItem.emit(this.item);
+    delete() {
+        this.deleteItem.emit(this.volume);
     }
 
 }

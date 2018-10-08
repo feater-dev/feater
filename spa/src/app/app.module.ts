@@ -39,12 +39,12 @@ import {DefinitionAddEnvVariableFormElementComponent} from './definition/add/for
 import {DefinitionAddSummaryItemFormElementComponent} from './definition/add/form-element/definition-add.summary-item-form-element.component';
 import {DefinitionAddComposeFileFormElementComponent} from './definition/add/form-element/definition-add.compose-file-form-element.component';
 import {DefinitionDetailComponent} from './definition/detail/definition-detail.component';
-import {DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-host-command-form-element.component';
-import {DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-execute-service-command-form-element.component';
-import {DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent} from './definition/add/form-element/definition-add.after-build-task-copy-asset-into-container-form-element.component';
 import {DefinitionAddVolumeFormElementComponent} from './definition/add/form-element/definition-add.volume-form-element.component';
 import {DefinitionListComponent} from './definition/list/definition-list.component';
 import {DefinitionTableComponent} from './definition/table/definition-table.component';
+import {ExecuteHostCommandTaskFormElementComponent} from './definition/add/form-element/after-build-task/execute-host-command-task-form-element.component';
+import {ExecuteServiceCommandTaskFormElementComponent} from './definition/add/form-element/after-build-task/execute-service-command-task-form-element.component';
+import {CopyAssetIntoContainerTaskFormElementComponent} from './definition/add/form-element/after-build-task/copy-asset-into-container-task-form-element.component';
 
 import {InstanceAddComponent} from './instance/add/instance-add.component';
 import {InstanceDetailComponent} from './instance/detail/instance-detail.component';
@@ -57,6 +57,8 @@ import {LinkifyPipe} from './pipes/linkify.pipe';
 import {YamlPipe} from './pipes/yaml.pipe';
 import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
 import {RelativeDatePipe} from './pipes/relative-date.pipe';
+import {InheritedEnvVarsFormElementComponent} from './definition/add/form-element/after-build-task/env/inherited-env-vars-form-element.component';
+import {CustomEnvVarsFormElementComponent} from './definition/add/form-element/after-build-task/env/custom-env-vars-form-element.component';
 
 
 const appRoutes: Routes = [
@@ -94,10 +96,12 @@ const appRoutes: Routes = [
         DefinitionAddProxiedPortFormElementComponent,
         DefinitionAddEnvVariableFormElementComponent,
         DefinitionAddComposeFileFormElementComponent,
-        DefinitionAddAfterBuildTaskExecuteHostCommandFormElementComponent,
-        DefinitionAddAfterBuildTaskExecuteServiceCommandFormElementComponent,
-        DefinitionAddAfterBuildTaskCopyAssetIntoContainerFormElementComponent,
+        ExecuteHostCommandTaskFormElementComponent,
+        ExecuteServiceCommandTaskFormElementComponent,
+        CopyAssetIntoContainerTaskFormElementComponent,
         DefinitionAddSummaryItemFormElementComponent,
+        InheritedEnvVarsFormElementComponent,
+        CustomEnvVarsFormElementComponent,
         DefinitionDetailComponent,
         DefinitionListComponent,
         InstanceAddComponent,

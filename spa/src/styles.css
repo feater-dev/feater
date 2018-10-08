@@ -75,9 +75,9 @@ body {
 }
 
 .sidebar .logo {
-    font-size: 44px;
+    font-size: 32px;
     font-weight: bold;
-    margin: -18px 10px 0 10px;
+    text-align: center;
     color: #ffffff;
 }
 
@@ -88,7 +88,7 @@ body {
 }
 
 .sidebar .main-menu {
-    margin: 40px 0 0 0;
+    margin: 20px 0 0 0;
 }
 
 .sidebar .auth-menu {
@@ -101,7 +101,17 @@ body {
 
 .sidebar .main-menu li,
 .sidebar .auth-menu li {
-    margin: 0 0 10px 0;
+    margin: 0;
+}
+
+.sidebar .main-menu a {
+    display: block;
+    background-color: transparent;
+    padding: 8px;
+}
+
+.sidebar .main-menu a:hover {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .content {
@@ -133,4 +143,19 @@ h2 {
     cursor: pointer;
     color: #18bc9c;
     margin-left: 0.2em;
+}
+
+.form-well {
+    position: relative;
+    margin-top: 12px;
+    padding-top: 16px;
+}
+
+.form-well-delete-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
 }

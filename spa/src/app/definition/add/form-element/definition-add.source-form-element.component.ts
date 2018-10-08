@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import {
     DefinitionAddFormSourceFormElement,
-    DefinitionAddFormBeforeBuildTaskFormElement,
-    DefinitionAddFormBeforeBuildCopyTaskFormElement,
-    DefinitionAddFormBeforeBuildInterpolateTaskFormElement,
+    BeforeBuildTaskFormElement,
+    TaskFormElement,
+    InterpolateTaskFormElement,
 } from '../definition-add-form.model';
 
 
@@ -27,20 +27,20 @@ export class DefinitionAddSourceFormElementComponent implements OnInit {
 
     ngOnInit() {}
 
-    onDeleteItem() {
+    delete() {
         this.deleteItem.emit(this.item);
     }
 
-    isBeforeBuildTaskCopy(beforeBuildTask: DefinitionAddFormBeforeBuildTaskFormElement) {
+    isBeforeBuildTaskCopy(beforeBuildTask: BeforeBuildTaskFormElement) {
         return ('copy' === beforeBuildTask.type);
     }
 
-    isBeforeBuildTaskInterpolate(beforeBuildTask: DefinitionAddFormBeforeBuildTaskFormElement) {
+    isBeforeBuildTaskInterpolate(beforeBuildTask: BeforeBuildTaskFormElement) {
         return ('interpolate' === beforeBuildTask.type);
     }
 
     addBeforeBuildTaskCopy() {
-        this.item.beforeBuildTasks.push(<DefinitionAddFormBeforeBuildCopyTaskFormElement>{
+        this.item.beforeBuildTasks.push(<TaskFormElement>{
             type: 'copy',
             sourceRelativePath: '',
             destinationRelativePath: ''
@@ -48,13 +48,13 @@ export class DefinitionAddSourceFormElementComponent implements OnInit {
     }
 
     addBeforeBuildTaskInterpolate() {
-        this.item.beforeBuildTasks.push(<DefinitionAddFormBeforeBuildInterpolateTaskFormElement>{
+        this.item.beforeBuildTasks.push(<InterpolateTaskFormElement>{
             type: 'interpolate',
             relativePath: ''
         });
     }
 
-    deleteBeforeBuildTask(beforeBuildTask: DefinitionAddFormBeforeBuildTaskFormElement) {
+    deleteBeforeBuildTask(beforeBuildTask: BeforeBuildTaskFormElement) {
         var index = this.item.beforeBuildTasks.indexOf(beforeBuildTask);
         if (-1 !== index) {
             this.item.beforeBuildTasks.splice(index, 1);

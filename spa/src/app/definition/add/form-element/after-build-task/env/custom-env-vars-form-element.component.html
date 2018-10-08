@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group">
+            <h4>Custom env variables</h4>
+            <div *ngIf="!customEnvVars.length">
+                <p>No custom variables to list.</p>
+            </div>
+            <div *ngIf="customEnvVars.length">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label>Variable</label>
+                    </div>
+                    <div class="col-lg-6">
+                        <label>Value</label>
+                    </div>
+                </div>
+                <div *ngFor="let customEnvVar of customEnvVars" class="row">
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" [(ngModel)]="customEnvVar.name">
+                    </div>
+                    <div class="col-lg-6">
+                        <div style="position: relative; padding-right: 40px;">
+                            <input type="text" class="form-control" [(ngModel)]="customEnvVar.value">
+                            <a class="btn btn-danger btn-sm"
+                               (click)="deleteCustomEnvVar(i)"
+                               style="position: absolute; top: 5px; right: 0;"
+                            >
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 8px">
+                <a class="btn btn-success btn-sm"
+                   (click)="addCustomEnvVar()"
+                >
+                    <span class="glyphicon glyphicon-plus"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

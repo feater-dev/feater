@@ -46,7 +46,7 @@ export class AuthHttpClient {
             httpHeaders = new HttpHeaders();
         }
 
-        let httpRequest = new HttpRequest(method, url, body, {
+        const httpRequest = new HttpRequest(method, url, body, {
             headers: httpHeaders.set('x-feat-api-token', this._buildAuthHeader()),
         });
 

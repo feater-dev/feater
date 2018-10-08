@@ -12,11 +12,10 @@ import {
     DefinitionAddFormEnvVariableFormElement,
     DefinitionAddFormSummaryItemFormElement,
     DefinitionAddFormConfigFormElement,
-    DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement,
-    DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement,
-    DefinitionAddFormAfterBuildTaskFormElement,
-    DefinitionAddFormAfterBuildCopyAssetIntoContainerTaskFormElement,
-    DefinitionAddFormAfterBuildExecuteCommandTaskFormElement,
+    ExecuteHostCommandTaskFormElement,
+    ExecuteServiceCommandTaskFormElement,
+    AfterBuildTaskFormElement,
+    CopyAssetIntoContainerTaskFormElement,
 } from './definition-add-form.model';
 import {
     getProjectQueryGql,
@@ -118,7 +117,7 @@ export class DefinitionAddComponent implements OnInit {
             serviceId: '',
             id: '',
             name: '',
-            port: 8000
+            port: null,
         });
     }
 
@@ -146,40 +145,40 @@ export class DefinitionAddComponent implements OnInit {
     addAfterBuildTaskExecuteHostCommand(): void {
         this.item.config.afterBuildTasks.push({
             type: 'executeHostCommand',
-            command: ['', '', '', '', '', '', ''],
+            command: [''],
             inheritedEnvVariables: [],
             customEnvVariables: [],
-        } as DefinitionAddFormAfterBuildExecuteHostCommandTaskFormElement);
+        } as ExecuteHostCommandTaskFormElement);
     }
 
     addAfterBuildTaskExecuteServiceCommand(): void {
         this.item.config.afterBuildTasks.push({
             type: 'executeServiceCommand',
-            command: ['', '', '', '', '', '', ''],
+            command: [''],
             inheritedEnvVariables: [],
             customEnvVariables: [],
-        } as DefinitionAddFormAfterBuildExecuteServiceCommandTaskFormElement);
+        } as ExecuteServiceCommandTaskFormElement);
     }
 
     addAfterBuildTaskCopyAssetIntoContainer(): void {
         this.item.config.afterBuildTasks.push({
             type: 'copyAssetIntoContainer',
-        } as DefinitionAddFormAfterBuildCopyAssetIntoContainerTaskFormElement);
+        } as CopyAssetIntoContainerTaskFormElement);
     }
 
-    isAfterBuildTaskExecuteHostCommand(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): boolean {
+    isAfterBuildTaskExecuteHostCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
         return 'executeHostCommand' === afterBuildTask.type;
     }
 
-    isAfterBuildTaskExecuteServiceCommand(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): boolean {
+    isAfterBuildTaskExecuteServiceCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
         return 'executeServiceCommand' === afterBuildTask.type;
     }
 
-    isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): boolean {
+    isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: AfterBuildTaskFormElement): boolean {
         return 'copyAssetIntoContainer' === afterBuildTask.type;
     }
 
-    deleteAfterBuildTask(afterBuildTask: DefinitionAddFormAfterBuildTaskFormElement): void {
+    deleteAfterBuildTask(afterBuildTask: AfterBuildTaskFormElement): void {
         const index = this.item.config.afterBuildTasks.indexOf(afterBuildTask);
         if (-1 !== index) {
             this.item.config.afterBuildTasks.splice(index, 1);
@@ -232,7 +231,7 @@ export class DefinitionAddComponent implements OnInit {
 
         for (const afterBuildTask of this.item.config.afterBuildTasks) {
             if ('executeHostCommand' === afterBuildTask.type || 'executeServiceCommand' === afterBuildTask.type) {
-                this.filterAfterBuildExecuteCommandTask(afterBuildTask as DefinitionAddFormAfterBuildExecuteCommandTaskFormElement);
+                this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteHostCommandTaskFormElement);
             }
         }
 
@@ -259,7 +258,7 @@ export class DefinitionAddComponent implements OnInit {
         return mappedItem;
     }
 
-    protected filterAfterBuildExecuteCommandTask(afterBuildTask: DefinitionAddFormAfterBuildExecuteCommandTaskFormElement) {
+    protected filterAfterBuildExecuteCommandTask(afterBuildTask: ExecuteHostCommandTaskFormElement) {
         afterBuildTask.command = _.filter(afterBuildTask.command, (commandPart) => !/^ *$/.test(commandPart));
         for (const inheritedEnvVariable of afterBuildTask.inheritedEnvVariables) {
             if (/^ *$/.test(inheritedEnvVariable.alias)) {

@@ -1,11 +1,11 @@
-import * as passport from 'passport';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {Strategy} from 'passport-github';
 import {UserRepository} from '../../../../persistence/repository/user.repository';
 import {GithubUserProfileInterface} from '../github-user-profile.interface';
 import {environment} from '../../../../environment/environment';
+import * as passport from 'passport';
 
-@Component()
+@Injectable()
 export class GithubPassportStrategyConfigurationComponent {
 
     constructor(

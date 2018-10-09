@@ -1,10 +1,10 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {BuildJobInterface, SourceJobInterface} from '../instantiation/job/job';
 import {BaseLogger} from './base-logger';
 import {BuildJobLogger} from './build-job-logger';
 import {SourceJobLogger} from './source-job-logger';
 
-@Component()
+@Injectable()
 export class JobLoggerFactory {
 
     constructor(

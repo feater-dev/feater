@@ -31,7 +31,7 @@ import {LogSchema} from './schema/log.schema';
       MongooseModule.forFeature([{ name: 'Log', schema: LogSchema }]),
   ],
   controllers: [],
-  components: [
+  providers: [
       ApiTokenRepository,
       UserRepository,
       ProjectRepository,

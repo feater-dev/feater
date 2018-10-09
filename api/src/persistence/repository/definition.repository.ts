@@ -1,17 +1,16 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
-import {DefinitionSchema} from '../schema/definition.schema';
 import {DefinitionInterface} from '../interface/definition.interface';
 import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/create-definition-input-type.interface';
 import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/source-type.interface';
 import {DeployKeyRepository} from './deploy-key.repository';
 
-@Component()
+@Injectable()
 export class DefinitionRepository {
 
     constructor(
-        @InjectModel(DefinitionSchema) private readonly definitionModel: Model<DefinitionInterface>,
+        @InjectModel('Definition') private readonly definitionModel: Model<DefinitionInterface>,
         private readonly deployKeyRepository: DeployKeyRepository,
     ) {}
 

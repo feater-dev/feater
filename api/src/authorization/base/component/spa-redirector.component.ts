@@ -1,7 +1,7 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ApiTokenRepository} from '../../../persistence/repository/api-token.repository';
 
-@Component()
+@Injectable()
 export class SpaRedirectorComponent {
 
     constructor(

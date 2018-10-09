@@ -1,17 +1,15 @@
 import {Model} from 'mongoose';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
-import {UserSchema} from '../schema/user.schema';
 import {UserInterface} from '../interface/user.interface';
 import {GithubUserProfileInterface} from '../../authorization/signin-strategy/github-oauth2/github-user-profile.interface';
 import {GoogleUserProfileInterface} from '../../authorization/signin-strategy/google-oauth2/google-user-profile.interface';
-import {ProjectInterface} from '../interface/project.interface';
 
-@Component()
+@Injectable()
 export class UserRepository {
 
     constructor(
-        @InjectModel(UserSchema) private readonly userModel: Model<UserInterface>,
+        @InjectModel('User') private readonly userModel: Model<UserInterface>,
     ) {}
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<UserInterface[]> {

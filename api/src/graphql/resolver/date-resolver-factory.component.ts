@@ -1,6 +1,6 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 
-@Component()
+@Injectable()
 export class DateResolverFactory {
     public getDateResolver(dateExtractor?: (obj: any) => Date): (obj: any) => Promise<string> {
         return async (obj: any): Promise<string> => {

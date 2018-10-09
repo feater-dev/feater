@@ -1,16 +1,15 @@
 import {Model, Types} from 'mongoose';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
-import {DeployKeySchema} from '../schema/deploy-key.schema';
 import {DeployKeyInterface} from '../interface/deploy-key.interface';
 import * as nanoid from 'nanoid';
 import * as easyKeygen from 'easy-keygen';
 
-@Component()
+@Injectable()
 export class DeployKeyRepository {
 
     constructor(
-        @InjectModel(DeployKeySchema) private readonly deployKeyModel: Model<DeployKeyInterface>,
+        @InjectModel('DeployKey') private readonly deployKeyModel: Model<DeployKeyInterface>,
     ) {}
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<DeployKeyInterface[]> {

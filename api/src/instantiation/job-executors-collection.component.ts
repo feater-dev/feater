@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {JobInterface} from './job/job';
 import {JobExecutorInterface} from './job/job-executor';
 import {ConnectContainersToNetworkJobExecutor} from './job/connect-containers-to-network-job';
@@ -19,7 +19,7 @@ import {ExecuteServiceCommandAfterBuildTaskJobExecutor} from './job/execute-serv
 import {CopyAssetIntoContainerAfterBuildTaskJobExecutor} from './job/copy-asset-into-container-after-build-task.job';
 import {CreateVolumeFromAssetJobExecutor} from './job/create-volume-from-asset.job';
 
-@Component()
+@Injectable()
 export class JobExecutorsCollection {
 
     private jobExecutors: JobExecutorInterface[];

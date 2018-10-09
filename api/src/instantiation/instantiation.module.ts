@@ -32,7 +32,7 @@ import {AssetHelper} from './asset-helper.component';
       PersistenceModule,
   ],
   controllers: [],
-  components: [
+  providers: [
       ConnectContainersToNetworkJobExecutor,
       CopyBeforeBuildTaskJobExecutor,
       CreateDirectoryJobExecutor,

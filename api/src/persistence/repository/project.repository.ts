@@ -1,16 +1,14 @@
 import {Model} from 'mongoose';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
-import {ProjectSchema} from '../schema/project.schema';
 import {ProjectInterface} from '../interface/project.interface';
 import {CreateProjectInputTypeInterface} from '../../graphql/input-type/create-project-input-type.interface';
 
-
-@Component()
+@Injectable()
 export class ProjectRepository {
 
     constructor(
-        @InjectModel(ProjectSchema) private readonly projectModel: Model<ProjectInterface>,
+        @InjectModel('Project') private readonly projectModel: Model<ProjectInterface>,
     ) {}
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<ProjectInterface[]> {

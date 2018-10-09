@@ -1,10 +1,10 @@
 import * as winston from 'winston';
 import 'winston-mongodb';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {LoggerInterface} from './logger-interface';
 import {environment} from '../environment/environment';
 
-@Component()
+@Injectable()
 export class BaseLogger implements LoggerInterface {
 
     private readonly logger: winston.Logger;

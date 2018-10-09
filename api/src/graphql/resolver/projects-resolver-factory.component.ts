@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ProjectRepository} from '../../persistence/repository/project.repository';
 import {ProjectTypeInterface} from '../type/project-type.interface';
 import {ProjectInterface} from '../../persistence/interface/project.interface';
@@ -8,8 +8,7 @@ import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolv
 import {ResolverProjectFilterArgumentsInterface} from './filter-argument/resolver-project-filter-arguments.interface';
 import * as escapeStringRegexp from 'escape-string-regexp';
 
-
-@Component()
+@Injectable()
 export class ProjectsResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,

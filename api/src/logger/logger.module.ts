@@ -5,7 +5,7 @@ import {JobLoggerFactory} from './job-logger-factory';
 @Module({
   imports: [],
   controllers: [],
-  components: [
+  providers: [
       BaseLogger,
       JobLoggerFactory,
   ],

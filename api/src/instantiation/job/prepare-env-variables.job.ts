@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {InterpolationHelper} from '../interpolation-helper.component';
@@ -14,7 +14,7 @@ export class PrepareEnvVariablesJob implements BuildJobInterface {
 
 }
 
-@Component()
+@Injectable()
 export class PrepareEnvVariablesJobExecutor implements JobExecutorInterface{
 
     constructor(

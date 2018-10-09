@@ -1,7 +1,7 @@
 import * as passport from 'passport';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 
-@Component()
+@Injectable()
 export class PassportUserSerializationConfigurationComponent {
 
     configure() {

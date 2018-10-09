@@ -1,15 +1,14 @@
-import {Model, Types} from 'mongoose';
-import {Component} from '@nestjs/common';
+import {Model} from 'mongoose';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
-import {InstanceSchema} from '../schema/instance.schema';
 import {InstanceInterface} from '../interface/instance.interface';
 import {CreateInstanceInputTypeInterface} from '../../graphql/input-type/create-instance-input-type.interface';
 
-@Component()
+@Injectable()
 export class InstanceRepository {
 
     constructor(
-        @InjectModel(InstanceSchema) private readonly instanceModel: Model<InstanceInterface>,
+        @InjectModel('Instance') private readonly instanceModel: Model<InstanceInterface>,
     ) {}
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<InstanceInterface[]> {

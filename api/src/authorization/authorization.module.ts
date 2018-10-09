@@ -1,4 +1,4 @@
-import {MiddlewaresConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
 import {LoggerModule} from '../logger/logger.module';
 import {PersistenceModule} from '../persistence/persistence.module';
 import {SigninController} from './base/controller/signin.controller';
@@ -24,7 +24,7 @@ export const apiTokenHeader = 'x-feat-api-token';
       GoogleSigninController,
       GithubSigninController,
   ],
-  components: [
+  providers: [
       PassportInitializeMiddleware,
       PassportUserSerializationConfigurationComponent,
       GooglePassportStrategyConfigurationComponent,
@@ -43,7 +43,7 @@ export class AuthorizationModule implements NestModule {
         private readonly customBearerPassportStrategyConfiguratorComponent: CustomBearerPassportStrategyConfiguratorComponent,
     ) {}
 
-    configure(consumer: MiddlewaresConsumer): void {
+    configure(consumer: MiddlewareConsumer): void {
 
         consumer.apply(PassportInitializeMiddleware).forRoutes({
             path: '*', method: RequestMethod.ALL,

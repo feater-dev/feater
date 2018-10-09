@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
 import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
@@ -16,7 +16,7 @@ import {DefinitionRepository} from '../../persistence/repository/definition.repo
 import * as _ from 'lodash';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
 
-@Component()
+@Injectable()
 export class DeployKeyResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,

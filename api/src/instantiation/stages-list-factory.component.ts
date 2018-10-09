@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {JobInterface} from './job/job';
 import {JobExecutorsCollection} from './job-executors-collection.component';
 
@@ -134,7 +134,7 @@ class StagesList {
 
 }
 
-@Component()
+@Injectable()
 export class StagesListFactory {
 
     constructor(

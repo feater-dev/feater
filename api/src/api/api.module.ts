@@ -13,7 +13,7 @@ import {AssetController} from './controller/asset-controller';
   controllers: [
       AssetController,
   ],
-  components: [
+  providers: [
       Validator,
       EnsureAuthenticatedMiddleware,
   ],

@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {AssetInterface} from '../persistence/interface/asset.interface';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -26,7 +26,7 @@ export interface AssetExtractPathsInterface {
     };
 }
 
-@Component()
+@Injectable()
 export class AssetHelper {
 
     constructor(private readonly assetRepository: AssetRepository) {}

@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ConfigTypeInterface} from '../type/nested/definition-config/config-type.interface';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
 import {SourceReferenceTypeInterface} from '../type/nested/definition-config/source-reference-type.interface';
@@ -19,7 +19,7 @@ import {
 } from '../type/nested/definition-config/after-build-task-type.interface';
 import {VolumeTypeInterface} from '../type/nested/definition-config/volume-type.interface';
 
-@Component()
+@Injectable()
 export class DefinitionConfigMapper {
     public map(config: any): ConfigTypeInterface {
         const mappedSources: SourceTypeInterface[] = [];

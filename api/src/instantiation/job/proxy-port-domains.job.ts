@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import {execSync} from 'child_process';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {BuildJobInterface, JobInterface} from './job';
@@ -18,7 +18,7 @@ export class ProxyPortDomainsJob implements BuildJobInterface {
 
 }
 
-@Component()
+@Injectable()
 export class ProxyPortDomainsJobExecutor implements JobExecutorInterface {
 
     constructor(

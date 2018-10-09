@@ -3,9 +3,9 @@ import * as fs from 'fs-extra';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import {parse} from 'esprima';
 import * as evaluate from 'static-eval';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 
-@Component()
+@Injectable()
 export class InterpolationHelper {
 
     private readonly tokenDelimiters = ['{{{', '}}}'];

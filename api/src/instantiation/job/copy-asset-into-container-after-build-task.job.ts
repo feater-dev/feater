@@ -1,7 +1,7 @@
 import {spawn} from 'child_process';
 import * as _ from 'lodash';
 
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 
 import {environment} from '../../environment/environment';
 
@@ -24,7 +24,7 @@ export class CopyAssetIntoContainerAfterBuildTaskJob implements BuildJobInterfac
 
 }
 
-@Component()
+@Injectable()
 export class CopyAssetIntoContainerAfterBuildTaskJobExecutor implements JobExecutorInterface {
 
     constructor(

@@ -1,8 +1,8 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import * as split from 'split';
 import {LoggerInterface} from '../logger/logger-interface';
 
-@Component()
+@Injectable()
 export class SpawnHelper {
     handleSpawned(
         spawned,

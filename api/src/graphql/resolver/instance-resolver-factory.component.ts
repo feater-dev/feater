@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InstanceTypeInterface} from '../type/instance-type.interface';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {InstanceInterface} from '../../persistence/interface/instance.interface';
@@ -18,7 +18,7 @@ import {PauseServiceInputTypeInterface} from '../input-type/pause-service-input-
 import {StartServiceInputTypeInterface} from '../input-type/start-service-input-type.interface';
 import {UnpauseServiceInputTypeInterface} from '../input-type/unpause-service-input-type.interface';
 
-@Component()
+@Injectable()
 export class InstanceResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,

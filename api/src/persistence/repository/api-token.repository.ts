@@ -1,20 +1,19 @@
 import * as TokenGenerator from 'uuid-token-generator';
 import {Model} from 'mongoose';
-import {Component} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {ApiTokenSchema} from '../schema/api-token.schema';
+import {Injectable} from '@nestjs/common';
 import {ApiTokenInterface} from '../interface/api-token.interface';
 import {UserInterface} from '../interface/user.interface';
+import {InjectModel} from '@nestjs/mongoose';
 
 const apiTokenBitSize = 256;
 
-@Component()
+@Injectable()
 export class ApiTokenRepository {
 
     private readonly tokenGenerator;
 
     constructor(
-        @InjectModel(ApiTokenSchema) private readonly apiTokenModel: Model<ApiTokenInterface>,
+        @InjectModel('ApiToken') private readonly apiTokenModel: Model<ApiTokenInterface>,
     ) {
         this.tokenGenerator = new TokenGenerator(apiTokenBitSize);
     }

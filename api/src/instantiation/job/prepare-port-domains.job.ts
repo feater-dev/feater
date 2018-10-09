@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
 import {BuildJobInterface, JobInterface} from './job';
@@ -13,7 +13,7 @@ export class PreparePortDomainsJob implements BuildJobInterface {
 
 }
 
-@Component()
+@Injectable()
 export class PreparePortDomainsJobExecutor implements JobExecutorInterface {
 
     constructor(

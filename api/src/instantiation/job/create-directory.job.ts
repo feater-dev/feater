@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
@@ -14,7 +14,7 @@ export class CreateDirectoryJob implements BuildJobInterface {
 
 }
 
-@Component()
+@Injectable()
 export class CreateDirectoryJobExecutor implements JobExecutorInterface {
 
     constructor(

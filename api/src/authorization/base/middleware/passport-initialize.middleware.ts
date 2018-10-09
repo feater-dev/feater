@@ -1,9 +1,9 @@
 import * as passport from 'passport';
-import {ExpressMiddleware, Middleware, NestMiddleware} from '@nestjs/common';
+import {Injectable, MiddlewareFunction, NestMiddleware} from '@nestjs/common';
 
-@Middleware()
+@Injectable()
 export class PassportInitializeMiddleware implements NestMiddleware {
-    resolve(): ExpressMiddleware {
+    resolve(): MiddlewareFunction {
         return passport.initialize();
     }
 }

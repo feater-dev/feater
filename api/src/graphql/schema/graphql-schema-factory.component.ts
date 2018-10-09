@@ -1,4 +1,4 @@
-import {Component, Inject} from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import {GraphQLSchema} from 'graphql';
 import * as GraphQLJSON from 'graphql-type-json';
 import {makeExecutableSchema} from 'graphql-tools';
@@ -20,7 +20,7 @@ import {AssetTypeInterface} from '../type/asset-type.interface';
 import {DeployKeyResolverFactory} from '../resolver/deploy-key-resolver-factory.component';
 import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
 
-@Component()
+@Injectable()
 export class GraphqlSchemaFactory {
     constructor(
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,

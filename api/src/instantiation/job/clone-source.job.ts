@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {JobInterface, SourceJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
@@ -15,7 +15,7 @@ export class CloneSourceJob implements SourceJobInterface {
 
 }
 
-@Component()
+@Injectable()
 export class CloneSourceJobExecutor implements JobExecutorInterface {
 
     constructor(

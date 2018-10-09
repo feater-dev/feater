@@ -1,10 +1,10 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {CachedContainerInfo, ContainerDetailsWorker} from './container-details-worker.component';
 import * as redis from 'redis';
 import * as _ from 'lodash';
 import {environment} from '../environment/environment';
 
-@Component()
+@Injectable()
 export class ContainerStatusChecker {
 
     private redisClient;

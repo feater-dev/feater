@@ -1,5 +1,4 @@
-import {Module} from '@nestjs/common';
-import {MiddlewaresConsumer} from '@nestjs/common/interfaces/middlewares';
+import {MiddlewareConsumer, Module} from '@nestjs/common';
 import {GraphqlController} from './graphql.controller';
 import {GraphqlSchemaFactory} from './schema/graphql-schema-factory.component';
 import {typeDefsProvider} from './schema/typeDefs.provider';
@@ -26,7 +25,7 @@ import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.c
     controllers: [
         GraphqlController,
     ],
-    components: [
+    providers: [
         DefinitionConfigMapper,
         GraphqlSchemaFactory,
         UsersResolverFactory,
@@ -43,7 +42,7 @@ import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.c
     ],
 })
 export class GraphqlModule {
-    public configure(consumer: MiddlewaresConsumer) {
+    public configure(consumer: MiddlewareConsumer) {
         consumer.apply(EnsureAuthenticatedMiddleware).forRoutes(GraphqlController);
     }
 }

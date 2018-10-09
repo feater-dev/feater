@@ -2,7 +2,7 @@ import {spawn} from 'child_process';
 import * as tar from 'tar';
 import * as mkdirRecursive from 'mkdir-recursive';
 
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 
 import {environment} from '../../environment/environment';
 
@@ -25,7 +25,7 @@ export class CreateVolumeFromAssetJob implements BuildJobInterface {
 
 }
 
-@Component()
+@Injectable()
 export class CreateVolumeFromAssetJobExecutor implements JobExecutorInterface {
 
     constructor(

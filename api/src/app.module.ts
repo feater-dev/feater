@@ -13,6 +13,6 @@ import {GraphqlModule} from './graphql/graphql.module';
       GraphqlModule,
   ],
   controllers: [],
-  components: [],
+  providers: [],
 })
 export class ApplicationModule {}

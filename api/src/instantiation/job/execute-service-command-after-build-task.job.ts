@@ -1,5 +1,5 @@
 import {spawn} from 'child_process';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {JobLoggerFactory} from '../../logger/job-logger-factory';
 import {BuildJobInterface, JobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
@@ -32,7 +32,7 @@ export class ExecuteServiceCommandAfterBuildTaskJob implements BuildJobInterface
 
 }
 
-@Component()
+@Injectable()
 export class ExecuteServiceCommandAfterBuildTaskJobExecutor implements JobExecutorInterface {
 
     constructor(

@@ -1,9 +1,9 @@
-import {HttpStatus, NestMiddleware, ExpressMiddleware, Middleware} from '@nestjs/common';
+import {HttpStatus, NestMiddleware, Injectable, MiddlewareFunction} from '@nestjs/common';
 
-@Middleware()
+@Injectable()
 export class EnsureAuthenticatedMiddleware implements NestMiddleware {
 
-    resolve(): ExpressMiddleware {
+    resolve(): MiddlewareFunction {
         return (req, res, next) => {
             next();
 

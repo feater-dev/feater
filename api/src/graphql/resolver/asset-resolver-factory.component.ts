@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {AssetTypeInterface} from '../type/asset-type.interface';
 import {AssetRepository} from '../../persistence/repository/asset.repository';
 import {AssetInterface} from '../../persistence/interface/asset.interface';
@@ -9,7 +9,7 @@ import {ResolverAssetFilterArgumentsInterface} from './filter-argument/resolver-
 import * as escapeStringRegexp from 'escape-string-regexp';
 import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/resolver-definition-filter-arguments.interface';
 
-@Component()
+@Injectable()
 export class AssetResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,

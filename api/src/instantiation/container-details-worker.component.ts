@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import * as got from 'got';
 import * as querystring from 'querystring';
 import * as redis from 'redis';
@@ -11,7 +11,7 @@ export interface CachedContainerInfo {
     readonly status: string;
 }
 
-@Component()
+@Injectable()
 export class ContainerDetailsWorker {
 
     private containerNameRegExp;

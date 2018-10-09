@@ -1,15 +1,14 @@
-import {Model, Types} from 'mongoose';
-import {Component} from '@nestjs/common';
+import {Model} from 'mongoose';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
-import {AssetSchema} from '../schema/asset.schema';
 import {AssetInterface} from '../interface/asset.interface';
 import {CreateAssetInputTypeInterface} from '../../graphql/input-type/create-asset-input-type.interface';
 
-@Component()
+@Injectable()
 export class AssetRepository {
 
     constructor(
-        @InjectModel(AssetSchema) private readonly assetModel: Model<AssetInterface>,
+        @InjectModel('Asset') private readonly assetModel: Model<AssetInterface>,
     ) {}
 
     async find(criteria: object, offset: number, limit: number, sort?: object): Promise<AssetInterface[]> {

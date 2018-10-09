@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {StagesListFactory} from './stages-list-factory.component';
 import {Build, DefinitionConfigInterface} from './build';
 import {Source} from './source';
@@ -23,7 +23,7 @@ import {CopyAssetIntoContainerAfterBuildTaskJob} from './job/copy-asset-into-con
 import {CreateVolumeFromAssetJob} from './job/create-volume-from-asset.job';
 import {environment} from '../environment/environment';
 
-@Component()
+@Injectable()
 export class Instantiator {
 
     constructor(

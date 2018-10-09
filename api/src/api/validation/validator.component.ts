@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {Validator as JsonSchemaValidator} from 'jsonschema';
 
 import {createProjectDtoJsonSchema} from './schema/api/create-project-dto.json-schema';
@@ -10,8 +10,7 @@ import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/creat
 import {CreateInstanceInputTypeInterface} from '../../graphql/input-type/create-instance-input-type.interface';
 import {CreateProjectInputTypeInterface} from '../../graphql/input-type/create-project-input-type.interface';
 
-
-@Component()
+@Injectable()
 export class Validator {
 
     private readonly jsonSchemaValidator: JsonSchemaValidator;

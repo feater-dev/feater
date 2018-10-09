@@ -1,11 +1,11 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {LogRepository} from '../../persistence/repository/log.repository';
 import {LogTypeInterface} from '../type/log-type.interface';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverLogFilterArgumentsInterface} from './filter-argument/resolver-log-filter-arguments.interface';
 
-@Component()
+@Injectable()
 export class LogsResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,

@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {UserRepository} from '../../persistence/repository/user.repository';
 import {UserTypeInterface} from '../type/user-type.interface';
 import {UserInterface} from '../../persistence/interface/user.interface';
@@ -9,7 +9,7 @@ import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolv
 import {ResolverUserFilterArgumentsInterface} from './filter-argument/resolver-user-filter-arguments.interface';
 import * as escapeStringRegexp from 'escape-string-regexp';
 
-@Component()
+@Injectable()
 export class UsersResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,

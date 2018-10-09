@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as path from 'path';
 import {spawn} from 'child_process';
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {EnvVariablesSet} from '../env-variables-set';
 import {JobInterface, BuildJobInterface} from './job';
 import {JobExecutorInterface} from './job-executor';
@@ -17,7 +17,7 @@ export class RunDockerComposeJob implements BuildJobInterface {
 
 }
 
-@Component()
+@Injectable()
 export class RunDockerComposeJobExecutor implements JobExecutorInterface {
 
     constructor(

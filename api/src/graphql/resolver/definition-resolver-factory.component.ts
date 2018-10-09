@@ -1,4 +1,4 @@
-import {Component} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {DefinitionTypeInterface} from '../type/definition-type.interface';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
 import {DefinitionConfigMapper} from './definition-config-mapper.component';
@@ -13,7 +13,7 @@ import * as jsYaml from 'js-yaml';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
 import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
 
-@Component()
+@Injectable()
 export class DefinitionResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,

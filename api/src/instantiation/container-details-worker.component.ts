@@ -12,7 +12,7 @@ export interface CachedContainerInfo {
 }
 
 @Injectable()
-export class ContainerDetailsWorker {
+export class ContainerDetailsWorkerComponent {
 
     private containerNameRegExp;
 

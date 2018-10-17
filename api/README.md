@@ -1,4 +1,4 @@
-# XSolve Feat API component
+# Feater API component
 
 ## Requirements
 - Yarn

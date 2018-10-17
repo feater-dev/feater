@@ -93,8 +93,8 @@ export const definitionConfigJsonSchema = {
             type: 'object',
             required: [
                 'sourceId',
-                'envDirRelativePath',
-                'composeFileRelativePaths',
+                'relativeEnvDirPath',
+                'relativeComposeFilePaths',
             ],
             properties: {
                 sourceId: {

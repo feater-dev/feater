@@ -63,7 +63,6 @@ export class InstanceRepository {
             const service = build.services[serviceId];
             mappedServices.push({
                 id: serviceId,
-                cleanId: service.cleanId,
                 containerNamePrefix: service.containerNamePrefix,
                 containerId: service.containerId,
                 ipAddress: service.ipAddress,
@@ -114,4 +113,7 @@ export class InstanceRepository {
         persistentInstance.set({envVariables: mappedEnvVariables});
         await persistentInstance.save();
     }
+
+    async setIpAddressForServices(serviceIdAndIpAddressList: any[]): Promise<void> {} // TODO
+
 }

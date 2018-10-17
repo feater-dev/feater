@@ -4,10 +4,10 @@ export const environment: EnvironmentInterface = {
     app: {
         versionNumber: '0.0',
         scheme: 'https',
-        host: 'feat.org',
+        host: 'feater.org',
     },
     mongo: {
-        dsn: 'mongodb://user:password@host:27017/feat',
+        dsn: 'mongodb://user:password@host:27017/feater',
     },
     redis: {
         url: 'redis://user:password@host:6379/1',
@@ -23,17 +23,17 @@ export const environment: EnvironmentInterface = {
         asset: '/data/asset/',
     },
     hostPaths: {
-        build: '/home/malef/Development/Feat/data/build/',
-        composerCache: '/home/malef/Development/Feat/data/composer/',
-        npmCache: '/home/malef/Development/Feat/data/npm/',
-        asset: '/home/malef/Development/Feat/data/asset/',
+        build: '/home/me/feater/data/build/',
+        composerCache: '/home/me/feater/data/composer/',
+        npmCache: '/home/me/feater/data/npm/',
+        asset: '/home/me/feater/data/asset/',
     },
     instantiation: {
         composeHttpTimeout: 5000,
         composeBinaryPath: '/usr/local/bin/docker-compose',
         dockerBinaryPath: '/usr/bin/docker',
-        containerNamePrefix: 'featinstance',
-        proxyDomainsNetworkName: 'feat_featproxy', // Value of COMPOSE_PROJECT_NAME is prepended by default.
+        containerNamePrefix: 'featerinstance',
+        proxyDomainsNetworkName: 'feater_featerproxy', // Value of COMPOSE_PROJECT_NAME is prepended by default.
     },
     logger: {
         console: {

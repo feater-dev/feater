@@ -1,17 +1,17 @@
 import {Module} from '@nestjs/common';
 import {BaseLogger} from './base-logger';
-import {JobLoggerFactory} from './job-logger-factory';
+import {CommandLoggerFactoryComponent} from './command-logger-factory.component';
 
 @Module({
   imports: [],
   controllers: [],
   providers: [
       BaseLogger,
-      JobLoggerFactory,
+      CommandLoggerFactoryComponent,
   ],
   exports: [
       BaseLogger,
-      JobLoggerFactory,
+      CommandLoggerFactoryComponent,
   ],
 })
 export class LoggerModule {}

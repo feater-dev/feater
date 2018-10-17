@@ -354,7 +354,6 @@ export const typeDefsProvider = {
 
         type InstanceService {
             id: String!
-            cleanId: String!
             containerNamePrefix: String!
             containerId: String
             ipAddress: String

@@ -1,13 +1,14 @@
 import {Schema} from 'mongoose';
 
-const InstanceServiceSchema = new Schema({
-    _id: false,
-    id: String,
-    cleanId: String,
-    containerNamePrefix: String,
-    containerId: String, // TODO Probably should be determined on runtime.
-    ipAddress: String, // TODO Probably should be determined on runtime.
-});
+const InstanceServiceSchema = new Schema(
+    {
+        id: String,
+        containerNamePrefix: String,
+        containerId: String, // TODO Probably should be determined on runtime.
+        ipAddress: String, // TODO Probably should be determined on runtime.
+    }, {
+        _id: false, // TODO Apply for other schemas.
+    });
 
 const InstanceEnvVariableSchema = new Schema({
     _id: false,

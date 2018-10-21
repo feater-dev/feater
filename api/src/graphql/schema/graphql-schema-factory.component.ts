@@ -9,7 +9,6 @@ import {ProjectsResolverFactory} from '../resolver/projects-resolver-factory.com
 import {DefinitionResolverFactory} from '../resolver/definition-resolver-factory.component';
 import {InstanceResolverFactory} from '../resolver/instance-resolver-factory.component';
 import {BeforeBuildTaskTypeInterface} from '../type/nested/definition-config/before-build-task-type.interface';
-import {UsersResolverFactory} from '../resolver/users-resolver-factory.component';
 import {DateResolverFactory} from '../resolver/date-resolver-factory.component';
 import {LogsResolverFactory} from '../resolver/logs-resolver-factory.component';
 import {LogTypeInterface} from '../type/log-type.interface';
@@ -24,7 +23,6 @@ import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
 export class GraphqlSchemaFactory {
     constructor(
         @Inject('TypeDefsProvider') private readonly typeDefsProvider,
-        private readonly usersResolverFactory: UsersResolverFactory,
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly definitionResolverFactory: DefinitionResolverFactory,
         private readonly instanceResolverFactory: InstanceResolverFactory,
@@ -47,7 +45,6 @@ export class GraphqlSchemaFactory {
             JSON: GraphQLJSON,
 
             Query: {
-                users: this.usersResolverFactory.getListResolver(),
                 projects: this.projectsResolverFactory.getListResolver(),
                 project: this.projectsResolverFactory.getItemResolver(
                     (obj: any, args: any): string => args.id,

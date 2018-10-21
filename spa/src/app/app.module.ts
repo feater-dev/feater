@@ -13,8 +13,6 @@ import {AppComponent} from './app.component';
 import {NavbarComponent} from './navbar/navbar.component';
 import {AboutComponent} from './about/about.component';
 
-import {UserListComponent} from './user/list/user-list.component';
-
 import {ProjectAddComponent} from './project/add/project-add.component';
 import {ProjectDetailComponent} from './project/detail/project-detail.component';
 import {ProjectListComponent} from './project/list/project-list.component';
@@ -63,7 +61,6 @@ import {CustomEnvVarsFormElementComponent} from './definition/add/form-element/a
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
-    { path: 'users', component: UserListComponent },
     { path: 'projects', component: ProjectListComponent },
     { path: 'project/add', component: ProjectAddComponent },
     { path: 'project/:id', component: ProjectDetailComponent },
@@ -84,7 +81,6 @@ const appRoutes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        UserListComponent,
         ProjectAddComponent,
         ProjectDetailComponent,
         ProjectListComponent,

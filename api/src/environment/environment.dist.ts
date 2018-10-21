@@ -28,20 +28,6 @@ export const environment: EnvironmentInterface = {
         npmCache: '/home/malef/Development/Feat/data/npm/',
         asset: '/home/malef/Development/Feat/data/asset/',
     },
-    googleOAuth2: {
-        clientId: 'googleOAuth2ClientId',
-        clientSecret: 'googleOAuth2ClientSecret',
-        allowedDomains: [
-            'googleOAuth2AllowedDomain1',
-            'googleOAuth2AllowedDomain2',
-        ],
-        baseUrl: 'http://host/oauth2/google',
-    },
-    githubOAuth2: {
-        clientId: 'githubOAuth2ClientId',
-        clientSecret: 'githubOAuth2ClientSecret',
-        baseUrl: 'http://host/oauth2/github',
-    },
     instantiation: {
         composeHttpTimeout: 5000,
         composeBinaryPath: '/usr/local/bin/docker-compose',

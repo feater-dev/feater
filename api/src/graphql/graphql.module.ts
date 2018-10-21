@@ -2,13 +2,11 @@ import {MiddlewareConsumer, Module} from '@nestjs/common';
 import {GraphqlController} from './graphql.controller';
 import {GraphqlSchemaFactory} from './schema/graphql-schema-factory.component';
 import {typeDefsProvider} from './schema/typeDefs.provider';
-import {EnsureAuthenticatedMiddleware} from '../api/middleware/ensure-authenticated.middleware';
 import {PersistenceModule} from '../persistence/persistence.module';
 import {DefinitionConfigMapper} from './resolver/definition-config-mapper.component';
 import {ProjectsResolverFactory} from './resolver/projects-resolver-factory.component';
 import {DefinitionResolverFactory} from './resolver/definition-resolver-factory.component';
 import {InstanceResolverFactory} from './resolver/instance-resolver-factory.component';
-import {UsersResolverFactory} from './resolver/users-resolver-factory.component';
 import {InstantiationModule} from '../instantiation/instantiation.module';
 import {ResolverPaginationArgumentsHelper} from './resolver/pagination-argument/resolver-pagination-arguments-helper.component';
 import {DateResolverFactory} from './resolver/date-resolver-factory.component';
@@ -28,7 +26,6 @@ import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.c
     providers: [
         DefinitionConfigMapper,
         GraphqlSchemaFactory,
-        UsersResolverFactory,
         LogsResolverFactory,
         ProjectsResolverFactory,
         DefinitionResolverFactory,
@@ -41,8 +38,4 @@ import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.c
         typeDefsProvider,
     ],
 })
-export class GraphqlModule {
-    public configure(consumer: MiddlewareConsumer) {
-        consumer.apply(EnsureAuthenticatedMiddleware).forRoutes(GraphqlController);
-    }
-}
+export class GraphqlModule {}

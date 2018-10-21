@@ -26,17 +26,6 @@ export interface EnvironmentInterface {
         readonly npmCache: string;
         readonly asset: string;
     };
-    readonly googleOAuth2: {
-        readonly clientId: string;
-        readonly clientSecret: string;
-        readonly allowedDomains: string[];
-        readonly baseUrl: string;
-    };
-    readonly githubOAuth2: {
-        readonly clientId: string;
-        readonly clientSecret: string;
-        readonly baseUrl: string;
-    };
     readonly instantiation: {
         readonly composeHttpTimeout: number;
         readonly composeBinaryPath: string;

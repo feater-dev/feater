@@ -81,8 +81,7 @@ body {
     color: #ffffff;
 }
 
-.sidebar .main-menu,
-.sidebar .auth-menu {
+.sidebar .main-menu {
     list-style: none;
     padding: 0 10px;
 }
@@ -91,16 +90,7 @@ body {
     margin: 20px 0 0 0;
 }
 
-.sidebar .auth-menu {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: 0 0 40px 0;
-}
-
-.sidebar .main-menu li,
-.sidebar .auth-menu li {
+.sidebar .main-menu li {
     margin: 0;
 }
 

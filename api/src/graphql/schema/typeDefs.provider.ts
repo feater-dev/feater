@@ -9,13 +9,6 @@ export const typeDefsProvider = {
         }
 
         type Query {
-            users(
-                limit: Int
-                offset: Int
-                sortKey: String
-                name: String
-            ): [User!]!
-
             projects(
                 limit: Int
                 offset: Int
@@ -210,29 +203,6 @@ export const typeDefsProvider = {
             removeDeployKey(
                 sshCloneUrl: String!
             ): RemoveDeployKeyResult
-        }
-
-        type User {
-            id: String!
-            name: String!
-            githubProfile: GithubProfile
-            googleProfile: GoogleProfile
-        }
-
-        type GithubProfile {
-            username: String!
-            id: String!
-            displayName: String!
-            emailAddresses: [String!]!
-        }
-
-        type GoogleProfile {
-            id: String!
-            firstName: String!
-            lastName: String!
-            displayName: String!
-            emailAddress: String!
-            domain: String!
         }
 
         type Project {

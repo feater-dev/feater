@@ -16,11 +16,11 @@
     margin-bottom: 6px;
 }
 
-.feat-list-details {
+.feater-list-details {
     opacity: 0.5;
 }
 
-.feat-list-details:hover {
+.feater-list-details:hover {
     cursor: pointer;
     opacity: 1;
 }

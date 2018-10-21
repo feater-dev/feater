@@ -173,7 +173,7 @@ export class DefinitionConfigMapper {
     protected mapSummaryItem(summaryItem: any): SummaryItemTypeInterface {
         return {
             name: summaryItem.name,
-            text: summaryItem.text,
+            value: summaryItem.value,
         } as SummaryItemTypeInterface;
     }
 

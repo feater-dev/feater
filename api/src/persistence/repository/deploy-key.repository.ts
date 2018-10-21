@@ -34,11 +34,15 @@ export class DeployKeyRepository {
         return deployKeys[0];
     }
 
-    async findBySshCloneUrl(sshCloneUrl: string): Promise<DeployKeyInterface> {
+    async findBySshCloneUrl(sshCloneUrl: string): Promise<DeployKeyInterface[]> {
+        return await this.find({sshCloneUrl}, 0, 2);
+    }
+
+    async findOneBySshCloneUrl(sshCloneUrl: string): Promise<DeployKeyInterface> {
         return await this.findOne({sshCloneUrl});
     }
 
-    async findById(id: string): Promise<DeployKeyInterface> {
+    async findOneById(id: string): Promise<DeployKeyInterface> {
         return await this.findOne({_id: id});
     }
 

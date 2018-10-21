@@ -1,6 +1,6 @@
+import * as GraphQLJSON from 'graphql-type-json';
 import {Inject, Injectable} from '@nestjs/common';
 import {GraphQLSchema} from 'graphql';
-import * as GraphQLJSON from 'graphql-type-json';
 import {makeExecutableSchema} from 'graphql-tools';
 import {ProjectTypeInterface} from '../type/project-type.interface';
 import {DefinitionTypeInterface} from '../type/definition-type.interface';

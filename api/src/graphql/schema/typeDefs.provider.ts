@@ -143,7 +143,7 @@ export const typeDefsProvider = {
 
         input SummaryItemInput {
             name: String!
-            text: String!
+            value: String!
         }
 
         type Mutation {
@@ -330,7 +330,7 @@ export const typeDefsProvider = {
 
         type SummaryItem {
             name: String!
-            text: String!
+            value: String!
         }
 
         type EnvVariable {
@@ -375,7 +375,7 @@ export const typeDefsProvider = {
 
         type InstanceSummaryItem {
             name: String!
-            text: String!
+            value: String!
         }
 
         type InstanceLog {

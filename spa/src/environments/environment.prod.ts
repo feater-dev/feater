@@ -1,4 +1,4 @@
-const baseUrl = 'http://api.feat';
+const baseUrl = 'http://api.feater';
 
 export const environment = {
     production: true,

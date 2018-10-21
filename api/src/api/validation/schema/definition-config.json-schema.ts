@@ -117,7 +117,7 @@ export const definitionConfigJsonSchema = {
         envVariables: {
             type: 'object',
             patternProperties: {
-                '^(?!FEAT__)[A-Z\\d_]+$': {
+                '^(?!FEATER__)[A-Z\\d_]+$': {
                     type: 'string',
                 },
             },

@@ -62,7 +62,7 @@ export class DeployKeyResolverFactory {
     public getItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, args: any) => Promise<DeployKeyTypeInterface> {
         return async (obj: any, args: any): Promise<DeployKeyTypeInterface> => {
             return this.mapPersistentModelToTypeModel(
-                await this.deployKeyRepository.findById(idExtractor(obj, args)),
+                await this.deployKeyRepository.findOneById(idExtractor(obj, args)),
             );
         };
     }

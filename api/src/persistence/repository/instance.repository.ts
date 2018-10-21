@@ -91,7 +91,7 @@ export class InstanceRepository {
         for (const summaryItem of build.summaryItems.toList()) {
             mappedSummaryItems.push({
                 name: summaryItem.name,
-                text: summaryItem.value,
+                value: summaryItem.value,
             });
         }
         persistentInstance.set({summaryItems: mappedSummaryItems});

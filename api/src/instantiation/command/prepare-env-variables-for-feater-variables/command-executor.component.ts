@@ -18,7 +18,7 @@ export class PrepareEnvVariablesForFeaterVariablesCommandExecutorComponent imple
         return new Promise<any>(resolve => {
             const envVariables = new EnvVariablesSet();
             for (const featerVariable of typedCommand.featerVariables.toList()) {
-                envVariables.add(`FEAT__${featerVariable.name.toUpperCase()}`, featerVariable.value);
+                envVariables.add(`FEATER__${featerVariable.name.toUpperCase()}`, featerVariable.value);
             }
 
             resolve({envVariables} as PrepareEnvVariablesForFeaterVariablesCommandResultInterface);

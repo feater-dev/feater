@@ -24,7 +24,7 @@ export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandE
 
             const collectedEnvVariablesMap = typedCommand.collectedEnvVariables.toMap();
             for (const {name, alias} of typedCommand.inheritedEnvVariables) {
-                envVariables.add(alias, collectedEnvVariablesMap[name]);
+                envVariables.add(alias || name, collectedEnvVariablesMap[name]);
             }
 
             let cmd = ['docker', 'exec'];

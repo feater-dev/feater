@@ -26,7 +26,7 @@ export class EnableProxyDomainsCommandExecutorComponent implements SimpleCommand
             );
 
             execSync(
-                `docker exec -t feat_nginx /etc/init.d/nginx restart`,
+                `docker exec -t feater_nginx /etc/init.d/nginx restart`,
                 { maxBuffer: BUFFER_SIZE },
             );
 

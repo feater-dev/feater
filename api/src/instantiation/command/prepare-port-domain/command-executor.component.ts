@@ -18,10 +18,10 @@ export class PrepareProxyDomainCommandExecutorComponent implements SimpleCommand
         const typedCommand = command as PrepareProxyDomainCommand;
 
         return new Promise<any>((resolve, reject) => {
-            const proxyDomain = `instance-${typedCommand.instanceHash}-${typedCommand.portId}.${environment.app.host}`;
+            const proxyDomain = `feater-${typedCommand.instanceHash}-${typedCommand.portId}.${environment.app.host}`; // TODO Move to environment.
 
             const envVariables = new EnvVariablesSet();
-            envVariables.add(`FEAT__PROXY_DOMAIN__${typedCommand.portId.toUpperCase()}`, proxyDomain);
+            envVariables.add(`FEATER__PROXY_DOMAIN__${typedCommand.portId.toUpperCase()}`, proxyDomain);
 
             const featerVariables = new FeaterVariablesSet();
             featerVariables.add(`proxy_domain__${typedCommand.portId}`, proxyDomain);

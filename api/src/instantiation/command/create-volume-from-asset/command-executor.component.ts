@@ -1,6 +1,5 @@
 import {spawn} from 'child_process';
 import * as tar from 'tar';
-import * as path from 'path';
 import * as mkdirRecursive from 'mkdir-recursive';
 import {Injectable} from '@nestjs/common';
 import {environment} from '../../../environment/environment';
@@ -53,7 +52,7 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
         );
 
         const envVariables = new EnvVariablesSet();
-        envVariables.add(`FEAT__ASSET_VOLUME__${typedCommand.volumeId.toUpperCase()}`, volumeName);
+        envVariables.add(`FEATER__ASSET_VOLUME__${typedCommand.volumeId.toUpperCase()}`, volumeName);
 
         return {envVariables} as CreateVolumeFromAssetCommandResultInterface;
     }

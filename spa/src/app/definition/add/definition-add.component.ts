@@ -217,10 +217,10 @@ export class DefinitionAddComponent implements OnInit {
         for (const envVariable of this.item.config.envVariables) {
             availableEnvVariableNames.push(envVariable.name);
         }
-        availableEnvVariableNames.push('FEAT__INSTANCE_ID');
+        availableEnvVariableNames.push('FEATER__INSTANCE_ID');
         for (const proxiedPort of this.item.config.proxiedPorts) {
-            availableEnvVariableNames.push(`FEAT__PORT__${proxiedPort.id.toUpperCase()}`);
-            availableEnvVariableNames.push(`FEAT__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
+            availableEnvVariableNames.push(`FEATER__PORT__${proxiedPort.id.toUpperCase()}`);
+            availableEnvVariableNames.push(`FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
         }
 
         return availableEnvVariableNames;

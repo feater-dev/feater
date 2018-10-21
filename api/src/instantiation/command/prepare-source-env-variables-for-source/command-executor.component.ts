@@ -20,11 +20,11 @@ export class PrepareEnvVariablesForSourceCommandExecutorComponent implements Sim
         return new Promise<any>(resolve => {
             const envVariables = new EnvVariablesSet();
             envVariables.add(
-                `FEAT__BUILD_PATH__${typedCommand.sourceId.toUpperCase()}`, // TODO Rename to FEATER__GUEST_PATH__
+                `FEATER__GUEST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
                 typedCommand.sourceAbsoluteGuestPath,
             );
             envVariables.add(
-                `FEAT__VOLUME_PATH__${typedCommand.sourceId.toUpperCase()}`, // TODO Rename to FEATER__HOST_PATH__
+                `FEATER__HOST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
                 typedCommand.sourceAbsoluteHostPath,
             );
 

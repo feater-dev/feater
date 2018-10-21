@@ -22,7 +22,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = (command as CloneSourceCommand);
-        const deployKey = await this.deployKeyRepository.findBySshCloneUrl(typedCommand.sshCloneUrl);
+        const deployKey = await this.deployKeyRepository.findOneBySshCloneUrl(typedCommand.sshCloneUrl);
         const repository = await this.cloneRepository(typedCommand, deployKey);
 
         await this.checkoutReference(typedCommand, repository);

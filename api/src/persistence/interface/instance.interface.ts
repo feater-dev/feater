@@ -8,7 +8,7 @@ export interface InstanceInterface extends Document {
     readonly services: any;
     readonly summaryItems: {
         readonly name: string;
-        readonly text: string;
+        readonly value: string;
     }[];
     readonly envVariables: {
         readonly name: string;

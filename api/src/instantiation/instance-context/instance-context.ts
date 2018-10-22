@@ -21,7 +21,7 @@ export class InstanceContext {
     services: InstanceContextServiceInterface[];
     proxiedPorts: InstanceContextProxiedPortInterface[];
     afterBuildTasks: InstanceContextAfterBuildTaskInterface[];
-    composeFiles: InstanceContextComposeFileInterface[]; // TODO
+    composeFiles: InstanceContextComposeFileInterface[];
     envVariables: InstanceContextEnvVariableInterface[];
     featerVariables: InstanceContextFeaterVariableInterface[];
     summaryItems: InstanceContextSummaryItemInterface[];

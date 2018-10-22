@@ -14,7 +14,7 @@ import {CloneSourceCommandExecutorComponent} from './command/clone-source/comman
 import {GetContainerIdsCommandExecutorComponent} from './command/get-container-id/command-executor.component';
 import {InterpolateFileCommandExecutorComponent} from './command/before-build/interpolate-file/command-executor.component';
 import {ParseDockerComposeCommandExecutorComponent} from './command/parse-docker-compose/command-executor.component';
-import {PrepareEnvVariablesForSourceCommandExecutorComponent} from './command/prepare-source-env-variables-for-source/command-executor.component';
+import {PrepareEnvVariablesForSourceCommandExecutorComponent} from './command/prepare-source-env-vars-for-source/command-executor.component';
 import {PrepareProxyDomainCommandExecutorComponent} from './command/prepare-port-domain/command-executor.component';
 import {ConfigureProxyDomainCommandExecutorComponent} from './command/configure-proxy-domain/command-executor.component';
 import {PrepareSummaryItemsCommandExecutorComponent} from './command/prepare-summary-items/command-executor.component';
@@ -23,7 +23,7 @@ import {ExecuteHostCmdCommandExecutorComponent} from './command/after-build/exec
 import {ExecuteServiceCmdCommandExecutorComponent} from './command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from './command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateVolumeFromAssetCommandExecutorComponent} from './command/create-volume-from-asset/command-executor.component';
-import {PrepareEnvVariablesForFeaterVariablesCommandExecutorComponent} from './command/prepare-env-variables-for-feater-variables/command-executor.component';
+import {PrepareEnvVariablesForFeaterVariablesCommandExecutorComponent} from './command/prepare-env-vars-for-feater-vars/command-executor.component';
 import {CopyFileCommandFactoryComponent} from './command/before-build/copy-file/command-factory.component';
 import {InterpolateFileCommandFactoryComponent} from './command/before-build/interpolate-file/command-factory.component';
 import {CopyAssetIntoContainerCommandFactoryComponent} from './command/after-build/copy-asset-into-container/command-factory.component';

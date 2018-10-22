@@ -167,11 +167,11 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     isAfterBuildTaskExecuteHostCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'executeHostCommand' === afterBuildTask.type;
+        return 'executeHostCmd' === afterBuildTask.type;
     }
 
     isAfterBuildTaskExecuteServiceCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'executeServiceCommand' === afterBuildTask.type;
+        return 'executeServiceCmd' === afterBuildTask.type;
     }
 
     isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: AfterBuildTaskFormElement): boolean {

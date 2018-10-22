@@ -1,5 +1,4 @@
 import * as path from 'path';
-import * as _ from 'lodash';
 import {Injectable} from '@nestjs/common';
 import {BaseLogger} from '../logger/base-logger';
 import {FeaterVariablesSet} from './sets/feater-variables-set';
@@ -21,10 +20,10 @@ import {ConnectToNetworkCommand} from './command/connect-containers-to-network/c
 import {GetContainerIdsCommand} from './command/get-container-id/command';
 import {GetContainerIdsCommandResultInterface} from './command/get-container-id/command-result.interface';
 import {ConnectToNetworkCommandResultInterface} from './command/connect-containers-to-network/command-result.interface';
-import {PrepareEnvVariablesForSourceCommand} from './command/prepare-source-env-variables-for-source/command';
-import {PrepareEnvVariablesForSourceCommandResultInterface} from './command/prepare-source-env-variables-for-source/command-result.interface';
-import {PrepareEnvVariablesForFeaterVariablesCommand} from './command/prepare-env-variables-for-feater-variables/command';
-import {PrepareEnvVariablesForFeaterVariablesCommandResultInterface} from './command/prepare-env-variables-for-feater-variables/command-result.interface';
+import {PrepareEnvVarsForSourceCommand} from './command/prepare-source-env-vars-for-source/command';
+import {PrepareEnvVarsForSourceCommandResultInterface} from './command/prepare-source-env-vars-for-source/command-result.interface';
+import {PrepareEnvVarsForFeaterVarsCommand} from './command/prepare-env-vars-for-feater-vars/command';
+import {PrepareEnvVarsForFeaterVarsCommandResultInterface} from './command/prepare-env-vars-for-feater-vars/command-result.interface';
 import {PrepareSummaryItemsCommand} from './command/prepare-summary-items/command';
 import {CommandInterface} from './executor/command.interface';
 import {CopyFileCommandFactoryComponent} from './command/before-build/copy-file/command-factory.component';
@@ -43,24 +42,7 @@ import {InstanceContext} from './instance-context/instance-context';
 import {InstanceContextFactory} from './instance-context-factory.component';
 import {EnableProxyDomainsCommand} from './command/enable-proxy-domains/command';
 import {SummaryItemsSet} from './sets/summary-items-set';
-
-export interface DefinitionConfigInterface {
-    readonly sources: {
-        readonly id: string;
-        readonly sshCloneUrl: string;
-        // TODO Define all fields.
-    }[];
-    readonly volumes: {
-        readonly id: string;
-        readonly assetId: string;
-    }[];
-    composeFiles: {
-        readonly sourceId: string;
-        readonly envDirRelativePath: string;
-        readonly composeFileRelativePaths: string[];
-    }[];
-    // TODO Define all fields.
-}
+import {InstanceRepository} from '../persistence/repository/instance.repository';
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -69,6 +51,7 @@ export class InstanceCreatorComponent {
     protected readonly afterBuildTaskCommandFactoryComponents: AfterBuildTaskCommandFactoryInterface[];
 
     constructor(
+        protected readonly instanceRepository: InstanceRepository,
         protected readonly instanceContextFactory: InstanceContextFactory,
         protected readonly logger: BaseLogger,
         protected readonly commandExecutorComponent: CommandExecutorComponent,
@@ -101,8 +84,8 @@ export class InstanceCreatorComponent {
         this.addCloneSources(createInstanceCommand, instanceContext);
         this.addParseDockerCompose(createInstanceCommand, instanceContext);
         this.addPrepareProxyDomains(createInstanceCommand, instanceContext);
-        this.addPrepareEnvVariablesForSources(createInstanceCommand, instanceContext);
-        this.addPrepareEnvVariablesForFeaterVariables(createInstanceCommand, instanceContext);
+        this.addPrepareEnvVarsForSources(createInstanceCommand, instanceContext);
+        this.addPrepareEnvVarsForFeaterVars(createInstanceCommand, instanceContext);
         this.addPrepareSummaryItems(createInstanceCommand, instanceContext);
         this.addBeforeBuildTasks(createInstanceCommand, instanceContext);
         this.addRunDockerCompose(createInstanceCommand, instanceContext);
@@ -115,16 +98,17 @@ export class InstanceCreatorComponent {
         return this.commandExecutorComponent
             .execute(createInstanceCommand, instanceContext)
             .then(
-                (): InstanceContext => {
+                async (): Promise<InstanceContext> => {
                     this.logger.info('Build instantiated and started.');
-                    console.log(JSON.stringify(instanceContext));
+                    const persistentInstance = await this.instanceRepository.findById(instanceContext.id);
+                    await this.instanceRepository.updateFromInstanceContext(persistentInstance, instanceContext);
 
                     return instanceContext;
                 },
                 error => {
-                    this.logger.error(`Failed to instantiate and start build.`, {error: _.toString(error)});
-                    console.log(error);
-                    console.log(JSON.stringify(instanceContext));
+                    this.logger.error('Failed to instantiate and start build.');
+
+                    throw error;
                 },
             );
     }
@@ -264,7 +248,7 @@ export class InstanceCreatorComponent {
     /**
      * Paths to source for guest and host are made available as env variables.
      */
-    protected addPrepareEnvVariablesForSources(
+    protected addPrepareEnvVarsForSources(
         createInstanceCommand: ComplexCommand,
         instanceContext: InstanceContext,
     ) {
@@ -272,13 +256,13 @@ export class InstanceCreatorComponent {
             new ComplexCommand(
                 instanceContext.sources.map(
                     source => new ContextAwareCommand(
-                        (instanceContext: InstanceContext) => new PrepareEnvVariablesForSourceCommand(
+                        (instanceContext: InstanceContext) => new PrepareEnvVarsForSourceCommand(
                             source.id,
                             source.paths.dir.absolute.guest,
                             source.paths.dir.absolute.host,
                         ),
                         (
-                            result: PrepareEnvVariablesForSourceCommandResultInterface,
+                            result: PrepareEnvVarsForSourceCommandResultInterface,
                             instanceContext: InstanceContext,
                         ) => {
                             instanceContext.mergeEnvVariablesSet(result.envVariables);
@@ -293,17 +277,17 @@ export class InstanceCreatorComponent {
     /**
      * For each Feater variables a corresponding env variable is made available.
      */
-    protected addPrepareEnvVariablesForFeaterVariables(
+    protected addPrepareEnvVarsForFeaterVars(
         createInstanceCommand: ComplexCommand,
         instanceContext: InstanceContext,
     ) {
         createInstanceCommand.addChild(
             new ContextAwareCommand(
-                (instanceContext: InstanceContext) => new PrepareEnvVariablesForFeaterVariablesCommand(
+                (instanceContext: InstanceContext) => new PrepareEnvVarsForFeaterVarsCommand(
                     FeaterVariablesSet.fromList(instanceContext.featerVariables),
                 ),
                 (
-                    result: PrepareEnvVariablesForFeaterVariablesCommandResultInterface,
+                    result: PrepareEnvVarsForFeaterVarsCommandResultInterface,
                     instanceContext: InstanceContext,
                 ) => {
                     instanceContext.mergeEnvVariablesSet(result.envVariables);

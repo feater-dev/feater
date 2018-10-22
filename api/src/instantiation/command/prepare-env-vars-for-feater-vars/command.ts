@@ -1,7 +1,7 @@
 import {SimpleCommand} from '../../executor/simple-command';
 import {FeaterVariablesSet} from '../../sets/feater-variables-set';
 
-export class PrepareEnvVariablesForFeaterVariablesCommand extends SimpleCommand {
+export class PrepareEnvVarsForFeaterVarsCommand extends SimpleCommand {
 
     constructor(
         readonly featerVariables: FeaterVariablesSet,

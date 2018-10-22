@@ -1,19 +1,19 @@
 import {Injectable} from '@nestjs/common';
 import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
 import {SimpleCommand} from '../../executor/simple-command';
-import {PrepareEnvVariablesForFeaterVariablesCommand} from './command';
+import {PrepareEnvVarsForFeaterVarsCommand} from './command';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
-import {PrepareEnvVariablesForFeaterVariablesCommandResultInterface} from './command-result.interface';
+import {PrepareEnvVarsForFeaterVarsCommandResultInterface} from './command-result.interface';
 
 @Injectable()
 export class PrepareEnvVariablesForFeaterVariablesCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
 
     supports(command: SimpleCommand): boolean {
-        return (command instanceof PrepareEnvVariablesForFeaterVariablesCommand);
+        return (command instanceof PrepareEnvVarsForFeaterVarsCommand);
     }
 
     execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as PrepareEnvVariablesForFeaterVariablesCommand;
+        const typedCommand = command as PrepareEnvVarsForFeaterVarsCommand;
 
         return new Promise<any>(resolve => {
             const envVariables = new EnvVariablesSet();
@@ -21,7 +21,7 @@ export class PrepareEnvVariablesForFeaterVariablesCommandExecutorComponent imple
                 envVariables.add(`FEATER__${featerVariable.name.toUpperCase()}`, featerVariable.value);
             }
 
-            resolve({envVariables} as PrepareEnvVariablesForFeaterVariablesCommandResultInterface);
+            resolve({envVariables} as PrepareEnvVarsForFeaterVarsCommandResultInterface);
         });
     }
 }

@@ -2,20 +2,20 @@ import {Injectable} from '@nestjs/common';
 import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
 import {SimpleCommand} from '../../executor/simple-command';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
-import {PrepareEnvVariablesForSourceCommand} from './command';
-import {PrepareEnvVariablesForSourceCommandResultInterface} from './command-result.interface';
+import {PrepareEnvVarsForSourceCommand} from './command';
+import {PrepareEnvVarsForSourceCommandResultInterface} from './command-result.interface';
 
 @Injectable()
 export class PrepareEnvVariablesForSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
 
     supports(command: SimpleCommand): boolean {
-        return (command instanceof PrepareEnvVariablesForSourceCommand);
+        return (command instanceof PrepareEnvVarsForSourceCommand);
     }
 
     execute(command: SimpleCommand): Promise<any> {
         // TODO Maybe replace this with volumes?
 
-        const typedCommand = command as PrepareEnvVariablesForSourceCommand;
+        const typedCommand = command as PrepareEnvVarsForSourceCommand;
 
         return new Promise<any>(resolve => {
             const envVariables = new EnvVariablesSet();
@@ -28,7 +28,7 @@ export class PrepareEnvVariablesForSourceCommandExecutorComponent implements Sim
                 typedCommand.sourceAbsoluteHostPath,
             );
 
-            resolve({envVariables} as PrepareEnvVariablesForSourceCommandResultInterface);
+            resolve({envVariables} as PrepareEnvVarsForSourceCommandResultInterface);
         });
     }
 

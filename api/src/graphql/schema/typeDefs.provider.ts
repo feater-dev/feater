@@ -370,7 +370,7 @@ export const typeDefsProvider = {
             serviceId: String!
             name: String!
             port: Int!
-            proxyDomain: String!
+            domain: String!
         }
 
         type InstanceSummaryItem {

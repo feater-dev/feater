@@ -3,6 +3,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {InstanceInterface} from '../interface/instance.interface';
 import {CreateInstanceInputTypeInterface} from '../../graphql/input-type/create-instance-input-type.interface';
+import {InstanceContext} from '../../instantiation/instance-context/instance-context';
 
 @Injectable()
 export class InstanceRepository {
@@ -36,14 +37,25 @@ export class InstanceRepository {
         return instance;
     }
 
-    create(createInstanceInputType: CreateInstanceInputTypeInterface): Promise<InstanceInterface> {
-        const createdInstance = new this.instanceModel(createInstanceInputType);
-        createdInstance.createdAt = new Date();
+    async create(createInstanceInputType: CreateInstanceInputTypeInterface): Promise<InstanceInterface> {
+        const instance = new this.instanceModel(createInstanceInputType);
+        instance.createdAt = new Date();
+        await instance.save();
 
-        return new Promise(resolve => {
-            createdInstance.save();
-            resolve(createdInstance);
-        });
+        return instance;
+    }
+
+    async updateFromInstanceContext(instance: InstanceInterface, instanceContext: InstanceContext): Promise<void> {
+        // TODO Add sources. We would like to store to which commit hash reference was resolved.
+
+        instance.services = instanceContext.services;
+        instance.envVariables = instanceContext.envVariables;
+        instance.summaryItems = instanceContext.summaryItems;
+        instance.proxiedPorts = instanceContext.proxiedPorts;
+
+        instance.updatedAt = new Date();
+
+        await instance.save();
     }
 
     async remove(id: string): Promise<boolean> {
@@ -51,69 +63,4 @@ export class InstanceRepository {
 
         return true;
     }
-
-    async updateServices(build: any): Promise<any> {
-        const persistentInstance = await this.findById(build.id);
-        if (null === persistentInstance) {
-            throw new Error();
-        }
-        const mappedServices = [];
-        const mappedProxiedPorts = [];
-        for (const serviceId of Object.keys(build.services)) {
-            const service = build.services[serviceId];
-            mappedServices.push({
-                id: serviceId,
-                containerNamePrefix: service.containerNamePrefix,
-                containerId: service.containerId,
-                ipAddress: service.ipAddress,
-            });
-            for (const proxiedPort of service.proxiedPorts) {
-                mappedProxiedPorts.push({
-                    id: proxiedPort.id,
-                    name: proxiedPort.name,
-                    serviceId: proxiedPort.serviceId,
-                    port: proxiedPort.port,
-                    proxyDomain: proxiedPort.proxyDomain,
-                });
-            }
-        }
-        persistentInstance.set({services: mappedServices});
-        persistentInstance.set({proxiedPorts: mappedProxiedPorts});
-        await persistentInstance.save();
-    }
-
-    async updateSummaryItems(build: any): Promise<any> {
-        const persistentInstance = await this.findById(build.id);
-        if (null === persistentInstance) {
-            throw new Error();
-        }
-        const mappedSummaryItems = [];
-        for (const summaryItem of build.summaryItems.toList()) {
-            mappedSummaryItems.push({
-                name: summaryItem.name,
-                value: summaryItem.value,
-            });
-        }
-        persistentInstance.set({summaryItems: mappedSummaryItems});
-        await persistentInstance.save();
-    }
-
-    async updateEnvVariables(build: any): Promise<any> {
-        const persistentInstance = await this.findById(build.id);
-        if (null === persistentInstance) {
-            throw new Error();
-        }
-        const mappedEnvVariables = [];
-        for (const envVariable of build.envVariables.toList()) {
-            mappedEnvVariables.push({
-                name: envVariable.key,
-                value: envVariable.value,
-            });
-        }
-        persistentInstance.set({envVariables: mappedEnvVariables});
-        await persistentInstance.save();
-    }
-
-    async setIpAddressForServices(serviceIdAndIpAddressList: any[]): Promise<void> {} // TODO
-
 }

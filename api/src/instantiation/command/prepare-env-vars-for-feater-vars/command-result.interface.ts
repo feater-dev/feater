@@ -1,5 +1,5 @@
 import {EnvVariablesSet} from '../../sets/env-variables-set';
 
-export interface PrepareEnvVariablesForSourceCommandResultInterface {
+export interface PrepareEnvVarsForFeaterVarsCommandResultInterface {
     envVariables: EnvVariablesSet;
 }

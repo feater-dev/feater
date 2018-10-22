@@ -24,7 +24,8 @@ const InstanceProxiedPortSchema = new Schema(
         id: String,
         name: String,
         port: Number,
-        proxyDomain: String,
+        domain: String,
+        nginxConfig: String,
     }, {
         _id: false,
     });

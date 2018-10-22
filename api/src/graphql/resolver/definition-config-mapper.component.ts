@@ -124,7 +124,7 @@ export class DefinitionConfigMapper {
 
     protected mapAfterBuildTask(afterBuildTask: any): AfterBuildTaskTypeInterface {
         switch (afterBuildTask.type) {
-            case 'executeHostCommand':
+            case 'executeHostCmd':
                 return {
                     type: afterBuildTask.type,
                     customEnvVariables: afterBuildTask.customEnvVariables,
@@ -132,7 +132,7 @@ export class DefinitionConfigMapper {
                     command: afterBuildTask.command,
                 } as ExecuteHostCommandAfterBuildTaskTypeInterface;
 
-            case 'executeServiceCommand':
+            case 'executeServiceCmd':
                 return {
                     type: afterBuildTask.type,
                     serviceId: afterBuildTask.serviceId,

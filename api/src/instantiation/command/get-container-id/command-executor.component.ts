@@ -46,6 +46,8 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
                 }
             }
 
+            // TODO Set container ids as env variables and Feater variables.
+
             resolve({serviceContainerIds} as GetContainerIdsCommandResultInterface);
         });
     }

@@ -5,7 +5,7 @@ export const getDeployKeyDetailQueryGql = gql`
     query ($id: String!) {
         deployKey(id: $id) {
             id
-            sshCloneUrl
+            cloneUrl
             publicKey
             fingerprint
             createdAt
@@ -16,7 +16,7 @@ export const getDeployKeyDetailQueryGql = gql`
 
 export interface GetDeployKeyDetailQueryDeployKeyFieldInterface {
     readonly id: string;
-    readonly sshCloneUrl: string;
+    readonly cloneUrl: string;
     readonly publicKey: string;
     readonly fingerprint: string;
     readonly createdAt: string;

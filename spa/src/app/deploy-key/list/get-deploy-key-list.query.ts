@@ -5,7 +5,7 @@ export const getDeployKeyListQueryGql = gql`
     query {
         deployKeys {
             id
-            sshCloneUrl
+            cloneUrl
             fingerprint
             updatedAt
         }
@@ -14,7 +14,7 @@ export const getDeployKeyListQueryGql = gql`
 
 export interface GetDeployKeyListQueryDeployKeysFieldItemInterface {
     id: string;
-    sshCloneUrl: string;
+    cloneUrl: string;
     fingerprint: string;
     updatedAt: string;
 }

@@ -81,7 +81,7 @@ export const typeDefsProvider = {
 
         input SourceInput {
             id: String!
-            sshCloneUrl: String!
+            cloneUrl: String!
             reference: SourceReferenceInput!
             beforeBuildTasks: [BeforeBuildTaskInput!]!
         }
@@ -143,7 +143,7 @@ export const typeDefsProvider = {
 
         input SummaryItemInput {
             name: String!
-            text: String!
+            value: String!
         }
 
         type Mutation {
@@ -193,7 +193,7 @@ export const typeDefsProvider = {
             ): Instance!
 
             regenerateDeployKey(
-                sshCloneUrl: String!
+                cloneUrl: String!
             ): DeployKey!
 
             generateMissingDeployKeys: GenerateMissingDeployKeysResult
@@ -201,7 +201,7 @@ export const typeDefsProvider = {
             removeUnusedDeployKeys: RemoveUnusedDeployKeysResult
 
             removeDeployKey(
-                sshCloneUrl: String!
+                cloneUrl: String!
             ): RemoveDeployKeyResult
         }
 
@@ -240,7 +240,7 @@ export const typeDefsProvider = {
 
         type DeployKey {
             id: String!
-            sshCloneUrl: String!
+            cloneUrl: String!
             publicKey: String!
             fingerprint: String!
             createdAt: String!
@@ -264,7 +264,7 @@ export const typeDefsProvider = {
 
         type Source {
             id: String!
-            sshCloneUrl: String!
+            cloneUrl: String!
             reference: SourceReference!
             beforeBuildTasks: [BeforeBuildTask!]!
         }
@@ -330,7 +330,7 @@ export const typeDefsProvider = {
 
         type SummaryItem {
             name: String!
-            text: String!
+            value: String!
         }
 
         type EnvVariable {
@@ -354,7 +354,6 @@ export const typeDefsProvider = {
 
         type InstanceService {
             id: String!
-            cleanId: String!
             containerNamePrefix: String!
             containerId: String
             ipAddress: String
@@ -371,12 +370,12 @@ export const typeDefsProvider = {
             serviceId: String!
             name: String!
             port: Int!
-            proxyDomain: String!
+            domain: String!
         }
 
         type InstanceSummaryItem {
             name: String!
-            text: String!
+            value: String!
         }
 
         type InstanceLog {

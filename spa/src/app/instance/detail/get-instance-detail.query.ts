@@ -16,7 +16,6 @@ export const getInstanceDetailQueryGql = gql`
             }
             services {
                 id
-                cleanId
                 containerId
                 containerNamePrefix
                 containerState
@@ -27,11 +26,11 @@ export const getInstanceDetailQueryGql = gql`
                 id
                 name
                 port
-                proxyDomain
+                domain
             }
             summaryItems {
                 name
-                text
+                value
             }
             envVariables {
                 name
@@ -62,7 +61,6 @@ export interface GetInstanceDetailQueryInstanceFieldinterface {
     readonly services: [
         {
             readonly id: string;
-            readonly cleanId: string;
             readonly containerId: string;
             readonly containerNamePrefix: string;
             readonly ipAddress: string;
@@ -72,7 +70,7 @@ export interface GetInstanceDetailQueryInstanceFieldinterface {
     readonly summaryItems: [
         {
             readonly name: string;
-            readonly text: string;
+            readonly value: string;
         }
     ];
     readonly envVariables: [
@@ -87,7 +85,7 @@ export interface GetInstanceDetailQueryInstanceFieldinterface {
             readonly serviceId: string;
             readonly name: string;
             readonly port: number;
-            readonly proxyDomain: string;
+            readonly domain: string;
         }
     ];
     readonly createdAt: string;

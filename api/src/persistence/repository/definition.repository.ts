@@ -5,6 +5,7 @@ import {DefinitionInterface} from '../interface/definition.interface';
 import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/create-definition-input-type.interface';
 import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/source-type.interface';
 import {DeployKeyRepository} from './deploy-key.repository';
+import * as gitUrlParse from 'git-url-parse';
 
 @Injectable()
 export class DefinitionRepository {
@@ -46,10 +47,12 @@ export class DefinitionRepository {
         await createdDefinition.save();
 
         for (const source of createdDefinition.config.sources) {
-            const sshCloneUrl = (source as SourceTypeInterface).sshCloneUrl;
-            const deployKeyExists = await this.deployKeyRepository.existsForSshCloneUrl(sshCloneUrl);
-            if (!deployKeyExists) {
-                await this.deployKeyRepository.create(sshCloneUrl);
+            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
+            if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+                const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(cloneUrl);
+                if (!deployKeyExists) {
+                    await this.deployKeyRepository.create(cloneUrl);
+                }
             }
         }
 

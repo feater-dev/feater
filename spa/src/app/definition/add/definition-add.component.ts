@@ -20,7 +20,7 @@ import {
 import {
     getProjectQueryGql,
     GetProjectQueryInterface,
-    GetProjectQueryProjectFieldInterface
+    GetProjectQueryProjectFieldInterface,
 } from './get-project.query';
 import * as _ from 'lodash';
 import * as jsYaml from 'js-yaml';
@@ -82,7 +82,7 @@ export class DefinitionAddComponent implements OnInit {
     addSource(): void {
         this.item.config.sources.push({
             id: '',
-            sshCloneUrl: '',
+            cloneUrl: '',
             reference: {
                 type: '',
                 name: ''
@@ -217,10 +217,10 @@ export class DefinitionAddComponent implements OnInit {
         for (const envVariable of this.item.config.envVariables) {
             availableEnvVariableNames.push(envVariable.name);
         }
-        availableEnvVariableNames.push('FEAT__INSTANCE_ID');
+        availableEnvVariableNames.push('FEATER__INSTANCE_ID');
         for (const proxiedPort of this.item.config.proxiedPorts) {
-            availableEnvVariableNames.push(`FEAT__PORT__${proxiedPort.id.toUpperCase()}`);
-            availableEnvVariableNames.push(`FEAT__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
+            availableEnvVariableNames.push(`FEATER__PORT__${proxiedPort.id.toUpperCase()}`);
+            availableEnvVariableNames.push(`FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
         }
 
         return availableEnvVariableNames;
@@ -244,11 +244,7 @@ export class DefinitionAddComponent implements OnInit {
                 proxiedPorts: this.item.config.proxiedPorts,
                 envVariables: this.item.config.envVariables,
                 composeFiles: [
-                    {
-                        sourceId: this.item.config.composeFile.sourceId,
-                        envDirRelativePath: this.item.config.composeFile.envDirRelativePath,
-                        composeFileRelativePaths: this.item.config.composeFile.composeFileRelativePaths,
-                    },
+                    this.item.config.composeFile,
                 ],
                 afterBuildTasks: this.item.config.afterBuildTasks,
                 summaryItems: this.item.config.summaryItems,

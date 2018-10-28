@@ -1,10 +1,10 @@
 import {Injectable} from '@nestjs/common';
-import {ContainerStatusChecker} from '../../instantiation/container-status-checker.component';
+import {ContainerStatusCheckerComponent} from '../../instantiation/container-status-checker.component';
 
 @Injectable()
 export class DockerDaemonResolverFactory {
     constructor(
-        private readonly containerStatusChecker: ContainerStatusChecker,
+        private readonly containerStatusChecker: ContainerStatusCheckerComponent,
     ) { }
 
     public getContainerStateResolver(containerNamePrefixExtractor?: (object: any) => string): (object: any) => Promise<string> {

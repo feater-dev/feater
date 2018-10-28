@@ -13,12 +13,12 @@ export const definitionConfigJsonSchema = {
             patternProperties: {
                 '^[_a-zA-Z\\d]+$': {
                     required: [
-                        'sshCloneUrl',
+                        'cloneUrl',
                         'reference',
                         'beforeBuildTasks',
                     ],
                     properties: {
-                        sshCloneUrl: {
+                        cloneUrl: {
                             type: 'string',
                             minLegth: 1,
                         },
@@ -93,8 +93,8 @@ export const definitionConfigJsonSchema = {
             type: 'object',
             required: [
                 'sourceId',
-                'envDirRelativePath',
-                'composeFileRelativePaths',
+                'relativeEnvDirPath',
+                'relativeComposeFilePaths',
             ],
             properties: {
                 sourceId: {
@@ -117,7 +117,7 @@ export const definitionConfigJsonSchema = {
         envVariables: {
             type: 'object',
             patternProperties: {
-                '^(?!FEAT__)[A-Z\\d_]+$': {
+                '^(?!FEATER__)[A-Z\\d_]+$': {
                     type: 'string',
                 },
             },

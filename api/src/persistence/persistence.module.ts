@@ -17,12 +17,30 @@ import {LogSchema} from './schema/log.schema';
 @Module({
   imports: [
       MongooseModule.forRoot(environment.mongo.dsn),
-      MongooseModule.forFeature([{ name: 'Project', schema: ProjectSchema }]),
-      MongooseModule.forFeature([{ name: 'Definition', schema: DefinitionSchema }]),
-      MongooseModule.forFeature([{ name: 'Instance', schema: InstanceSchema }]),
-      MongooseModule.forFeature([{ name: 'Asset', schema: AssetSchema }]),
-      MongooseModule.forFeature([{ name: 'DeployKey', schema: DeployKeySchema }]),
-      MongooseModule.forFeature([{ name: 'Log', schema: LogSchema }]),
+      MongooseModule.forFeature([{
+          name: 'Project',
+          schema: ProjectSchema },
+      ]),
+      MongooseModule.forFeature([{
+          name: 'Definition',
+          schema: DefinitionSchema },
+      ]),
+      MongooseModule.forFeature([{
+          name: 'Instance',
+          schema: InstanceSchema },
+      ]),
+      MongooseModule.forFeature([{
+          name: 'Asset',
+          schema: AssetSchema },
+      ]),
+      MongooseModule.forFeature([{
+          name: 'DeployKey',
+          schema: DeployKeySchema },
+      ]),
+      MongooseModule.forFeature([{
+          name: 'Log',
+          schema: LogSchema },
+      ]),
   ],
   controllers: [],
   providers: [

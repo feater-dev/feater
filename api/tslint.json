@@ -49,6 +49,18 @@
         ],
         "one-variable-per-declaration": [
             false
+        ],
+        "no-shadowed-variable": [
+            false,
+            {
+                "class": true,
+                "enum": true,
+                "function": false,
+                "interface": false,
+                "namespace": true,
+                "typeAlias": false,
+                "typeParameter": false
+            }
         ]
     },
     "rulesDirectory": []

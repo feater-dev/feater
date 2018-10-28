@@ -66,7 +66,7 @@
                         <div class="form-group" *ngFor="let summaryItem of instance?.summaryItems">
                             <label class="col-md-3 control-label">{{ summaryItem.name }}</label>
                             <div class="col-md-9">
-                                <div class="form-control-static" innerHTML="{{ summaryItem.text | linkify }}"></div>
+                                <div class="form-control-static" innerHTML="{{ summaryItem.value | linkify }}"></div>
                             </div>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                             <tbody>
                                 <tr *ngFor="let service of instance?.services" class="form-control-static">
                                     <td class="fit-column">{{ service.id }}</td>
-                                    <td>{{ service.containerId }}</td>
+                                    <td>{{ service.containerId | slice:0:12 }}</td>
                                     <td class="fit-column">{{ service.containerState }}</td>
                                     <td class="service-actions fit-column">
                                         <span [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"
@@ -166,7 +166,7 @@
                                 <td class="fit-column">{{ proxiedPort.serviceId }}</td>
                                 <td class="fit-column">{{ getServiceById(proxiedPort.serviceId).ipAddress }}</td>
                                 <td class="fit-column">{{ proxiedPort.port }}</td>
-                                <td>{{ proxiedPort.proxyDomain }}</td>
+                                <td>{{ proxiedPort.domain }}</td>
                             </tr>
                         </tbody>
                     </table>

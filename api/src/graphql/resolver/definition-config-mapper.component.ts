@@ -89,7 +89,7 @@ export class DefinitionConfigMapper {
 
         return {
             id: source.id,
-            sshCloneUrl: source.sshCloneUrl,
+            cloneUrl: source.cloneUrl,
             reference: this.mapSourceReference(source.reference),
             beforeBuildTasks: mappedBeforeBuildTasks,
         } as SourceTypeInterface;
@@ -173,7 +173,7 @@ export class DefinitionConfigMapper {
     protected mapSummaryItem(summaryItem: any): SummaryItemTypeInterface {
         return {
             name: summaryItem.name,
-            text: summaryItem.text,
+            value: summaryItem.value,
         } as SummaryItemTypeInterface;
     }
 

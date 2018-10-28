@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="page-header">
-            <h2>Deploy key for <em>{{ item?.sshCloneUrl }}</em></h2>
+            <h2>Deploy key for <em>{{ item?.cloneUrl }}</em></h2>
         </div>
     </div>
 </div>
@@ -14,8 +14,8 @@
                 <p class="form-control-static" id="inputDeployKey_id">{{ item?.id }}</p>
             </div>
             <div class="form-group">
-                <label for="inputDeployKey_sshCloneUrl" class="control-label">SSH clone URL</label>
-                <p class="form-control-static" id="inputDeployKey_sshCloneUrl">{{ item?.sshCloneUrl }}</p>
+                <label for="inputDeployKey_cloneUrl" class="control-label">Clone URL</label>
+                <p class="form-control-static" id="inputDeployKey_cloneUrl">{{ item?.cloneUrl }}</p>
             </div>
         </div>
         <div class="col-lg-8">

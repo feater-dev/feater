@@ -24,13 +24,14 @@ export interface EnvironmentInterface {
         readonly build: string;
         readonly composerCache: string;
         readonly npmCache: string;
+        readonly yarnCache: string;
         readonly asset: string;
     };
     readonly instantiation: {
         readonly composeHttpTimeout: number;
         readonly composeBinaryPath: string;
         readonly dockerBinaryPath: string;
-        readonly containerNamePrefix: string;
+        readonly containerNamePrefix: string; // TODO Rename to composeProjectNamePrefix.
         readonly proxyDomainsNetworkName: string;
     };
     readonly logger: {

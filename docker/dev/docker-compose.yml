@@ -6,55 +6,54 @@ services:
     build: api
     volumes:
       - ../../api:/app
-      - ${FEAT_DATA_PATH}/build:/data/build
-      - ${FEAT_DATA_PATH}/proxyDomain:/data/proxyDomain
-      - ${FEAT_DATA_PATH}/asset:/data/asset
-      - ${FEAT_SSH_KEY_PATH}:/root/.ssh
+      - ${FEATER_DATA_PATH}/build:/data/build
+      - ${FEATER_DATA_PATH}/proxyDomain:/data/proxyDomain
+      - ${FEATER_DATA_PATH}/asset:/data/asset
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - '${FEAT_API_PORT}:3000'
+      - '${FEATER_API_PORT}:3000'
     depends_on:
       - mongo
       - redis
     networks:
-      - featinternal
-    container_name: feat_api
+      - featerinternal
+    container_name: feater_api
 
   spa:
     build: spa
     volumes:
       - ../../spa:/app
     ports:
-      - '${FEAT_SPA_PORT}:4200'
+      - '${FEATER_SPA_PORT}:4200'
     networks:
-      - featinternal
-    container_name: feat_spa
+      - featerinternal
+    container_name: feater_spa
 
   mongo:
     image: mongo:3.6
     ports:
-      - '${FEAT_MONGO_PORT}:27017'
+      - '${FEATER_MONGO_PORT}:27017'
     networks:
-      - featinternal
-    container_name: feat_mongo
+      - featerinternal
+    container_name: feater_mongo
 
   redis:
     image: redis:4
     networks:
-      - featinternal
-    container_name: feat_redis
+      - featerinternal
+    container_name: feater_redis
 
   nginx:
     build: nginx
     volumes:
-      - ${FEAT_DATA_PATH}/proxyDomain:/etc/nginx/conf.d/proxyDomain
+      - ${FEATER_DATA_PATH}/proxyDomain:/etc/nginx/conf.d/proxyDomain
     ports:
-      - '${FEAT_NGINX_PORT}:80'
+      - '${FEATER_NGINX_PORT}:80'
     networks:
-      - featinternal
-      - featproxy
-    container_name: feat_nginx
+      - featerinternal
+      - featerproxy
+    container_name: feater_nginx
 
 networks:
-  featinternal:
-  featproxy:
+  featerinternal:
+  featerproxy:

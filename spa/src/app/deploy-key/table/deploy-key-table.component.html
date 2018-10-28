@@ -6,7 +6,7 @@
         <table class="table table-striped table-hover ">
             <thead>
                 <tr>
-                    <th class="fit-column">SSH clone URL</th>
+                    <th class="fit-column">Clone URL</th>
                     <th>Fingerprint</th>
                     <th class="fit-column">Created</th>
                     <th class="fit-column">Updated</th>
@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let deployKey of deployKeys">
-                    <td class="fit-column">{{ deployKey.sshCloneUrl }}</td>
+                    <td class="fit-column">{{ deployKey.cloneUrl }}</td>
                     <td>{{ deployKey.fingerprint }}</td>
                     <td class="fit-column">
                         <small>{{ deployKey.createdAt | relativeDate }}</small>
@@ -29,7 +29,7 @@
                     </td>
                     <td class="fit-column">
                         <a routerLink="/deploy-key/{{ deployKey.id }}">
-                            <span class="glyphicon glyphicon-chevron-right feat-table-details"></span>
+                            <span class="glyphicon glyphicon-chevron-right feater-table-details"></span>
                         </a>
                     </td>
                 </tr>

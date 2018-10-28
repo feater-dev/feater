@@ -5,22 +5,23 @@ export interface InstanceInterface extends Document {
     readonly definitionId: string;
     readonly hash: string;
     readonly name: string;
-    readonly services: any;
-    readonly summaryItems: {
-        readonly name: string;
-        readonly text: string;
-    }[];
-    readonly envVariables: {
+    services: any;
+    summaryItems: {
         readonly name: string;
         readonly value: string;
     }[];
-    readonly proxiedPorts: {
+    envVariables: {
+        readonly name: string;
+        readonly value: string;
+    }[];
+    proxiedPorts: {
         readonly id: string;
         readonly serviceId: string;
         readonly name: string;
         readonly port: number;
-        readonly proxyDomain: string;
+        readonly domain?: string;
+        readonly nginxConfig?: string;
     }[];
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }

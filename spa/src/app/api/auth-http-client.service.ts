@@ -47,7 +47,7 @@ export class AuthHttpClient {
         }
 
         const httpRequest = new HttpRequest(method, url, body, {
-            headers: httpHeaders.set('x-feat-api-token', this._buildAuthHeader()),
+            headers: httpHeaders.set('x-feater-api-token', this._buildAuthHeader()),
         });
 
         return Observable.create((observer) => {

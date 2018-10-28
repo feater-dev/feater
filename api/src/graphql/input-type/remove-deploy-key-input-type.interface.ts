@@ -1,3 +1,3 @@
 export interface RemoveDeployKeyInputTypeInterface {
-    readonly sshCloneUrl: string;
+    readonly cloneUrl: string;
 }

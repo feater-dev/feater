@@ -4,7 +4,7 @@ import {InstanceRepository} from '../../persistence/repository/instance.reposito
 import {InstanceInterface} from '../../persistence/interface/instance.interface';
 import {CreateInstanceInputTypeInterface} from '../input-type/create-instance-input-type.interface';
 import {RemoveInstanceInputTypeInterface} from '../input-type/remove-instance-input-type.interface';
-import {Instantiator} from '../../instantiation/instantiator.component';
+import {InstanceCreatorComponent} from '../../instantiation/instance-creator.component';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
@@ -24,7 +24,7 @@ export class InstanceResolverFactory {
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
         private readonly instanceRepository: InstanceRepository,
         private readonly definitionRepository: DefinitionRepository,
-        private readonly instantiator: Instantiator,
+        private readonly instantiator: InstanceCreatorComponent,
     ) { }
 
     protected readonly defaultSortKey = 'name_asc';
@@ -88,12 +88,11 @@ export class InstanceResolverFactory {
             const hash = nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 8);
 
             process.nextTick(() => {
-                const build = this.instantiator.createBuild(
+                this.instantiator.runInstance(
                     instance._id.toString(),
                     hash,
                     definition,
                 );
-                this.instantiator.instantiateBuild(build);
             });
 
             return this.mapPersistentModelToTypeModel(instance);

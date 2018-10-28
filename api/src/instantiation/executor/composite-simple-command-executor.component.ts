@@ -8,7 +8,7 @@ import {CloneSourceCommandExecutorComponent} from '../command/clone-source/comma
 import {GetContainerIdsCommandExecutorComponent} from '../command/get-container-id/command-executor.component';
 import {InterpolateFileCommandExecutorComponent} from '../command/before-build/interpolate-file/command-executor.component';
 import {ParseDockerComposeCommandExecutorComponent} from '../command/parse-docker-compose/command-executor.component';
-import {PrepareEnvVariablesForSourceCommandExecutorComponent} from '../command/prepare-source-env-vars-for-source/command-executor.component';
+import {PrepareSourceEnvVarsCommandExecutorComponent} from '../command/prepare-source-env-vars/command-executor.component';
 import {PrepareProxyDomainCommandExecutorComponent} from '../command/prepare-port-domain/command-executor.component';
 import {ConfigureProxyDomainCommandExecutorComponent} from '../command/configure-proxy-domain/command-executor.component';
 import {PrepareSummaryItemsCommandExecutorComponent} from '../command/prepare-summary-items/command-executor.component';
@@ -17,7 +17,6 @@ import {ExecuteHostCmdCommandExecutorComponent} from '../command/after-build/exe
 import {ExecuteServiceCmdCommandExecutorComponent} from '../command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from '../command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateVolumeFromAssetCommandExecutorComponent} from '../command/create-volume-from-asset/command-executor.component';
-import {PrepareEnvVariablesForFeaterVariablesCommandExecutorComponent} from '../command/prepare-env-vars-for-feater-vars/command-executor.component';
 import {EnableProxyDomainsCommandExecutorComponent} from '../command/enable-proxy-domains/command-executor.component';
 
 @Injectable()
@@ -33,8 +32,7 @@ export class CompositeSimpleCommandExecutorComponent {
         getContainerIdsCommandExecutorComponent: GetContainerIdsCommandExecutorComponent,
         interpolateBeforeBuildTaskCommandExecutorComponent: InterpolateFileCommandExecutorComponent,
         parseDockerComposeCommandExecutorComponent: ParseDockerComposeCommandExecutorComponent,
-        prepareEnvVariablesForSourceCommandExecutorComponent: PrepareEnvVariablesForSourceCommandExecutorComponent,
-        prepareEnvVariablesForFeaterVariablesCommandExecutorComponent: PrepareEnvVariablesForFeaterVariablesCommandExecutorComponent,
+        prepareEnvVariablesForSourceCommandExecutorComponent: PrepareSourceEnvVarsCommandExecutorComponent,
         prepareProxyDomainCommandExecutorComponent: PrepareProxyDomainCommandExecutorComponent,
         prepareProxyDomainConfigCommandExecutorComponent: ConfigureProxyDomainCommandExecutorComponent,
         prepareSummaryItemsCommandExecutorComponent: PrepareSummaryItemsCommandExecutorComponent,
@@ -54,7 +52,6 @@ export class CompositeSimpleCommandExecutorComponent {
             interpolateBeforeBuildTaskCommandExecutorComponent,
             parseDockerComposeCommandExecutorComponent,
             prepareEnvVariablesForSourceCommandExecutorComponent,
-            prepareEnvVariablesForFeaterVariablesCommandExecutorComponent,
             prepareProxyDomainCommandExecutorComponent,
             prepareProxyDomainConfigCommandExecutorComponent,
             prepareSummaryItemsCommandExecutorComponent,

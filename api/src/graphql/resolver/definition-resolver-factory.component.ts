@@ -94,7 +94,7 @@ export class DefinitionResolverFactory {
         return async (obj: DefinitionInterface, args: any): Promise<DeployKeyInterface[]> => {
             const deployKeys: DeployKeyInterface[] = [];
             for (const source of obj.config.sources) {
-                const sourceDeployKeys = await this.deployKeyRepository.findBySshCloneUrl((source as SourceTypeInterface).sshCloneUrl);
+                const sourceDeployKeys = await this.deployKeyRepository.findByCloneUrl((source as SourceTypeInterface).cloneUrl);
                 if (1 < sourceDeployKeys.length) {
                     throw new Error('More than one deploy key found.');
                 }

@@ -1,6 +1,6 @@
 import {SimpleCommand} from '../../executor/simple-command';
 
-export class PrepareEnvVarsForSourceCommand extends SimpleCommand {
+export class PrepareSourceEnvVarsCommand extends SimpleCommand {
 
     constructor(
         readonly sourceId: string,

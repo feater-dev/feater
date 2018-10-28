@@ -1,7 +1,7 @@
 import {Schema} from 'mongoose';
 
 export const DeployKeySchema = new Schema({
-    sshCloneUrl: String,
+    cloneUrl: String,
     publicKey: String,
     privateKey: String,
     passphrase: String,

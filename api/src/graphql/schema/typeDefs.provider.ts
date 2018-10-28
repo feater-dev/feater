@@ -81,7 +81,7 @@ export const typeDefsProvider = {
 
         input SourceInput {
             id: String!
-            sshCloneUrl: String!
+            cloneUrl: String!
             reference: SourceReferenceInput!
             beforeBuildTasks: [BeforeBuildTaskInput!]!
         }
@@ -193,7 +193,7 @@ export const typeDefsProvider = {
             ): Instance!
 
             regenerateDeployKey(
-                sshCloneUrl: String!
+                cloneUrl: String!
             ): DeployKey!
 
             generateMissingDeployKeys: GenerateMissingDeployKeysResult
@@ -201,7 +201,7 @@ export const typeDefsProvider = {
             removeUnusedDeployKeys: RemoveUnusedDeployKeysResult
 
             removeDeployKey(
-                sshCloneUrl: String!
+                cloneUrl: String!
             ): RemoveDeployKeyResult
         }
 
@@ -240,7 +240,7 @@ export const typeDefsProvider = {
 
         type DeployKey {
             id: String!
-            sshCloneUrl: String!
+            cloneUrl: String!
             publicKey: String!
             fingerprint: String!
             createdAt: String!
@@ -264,7 +264,7 @@ export const typeDefsProvider = {
 
         type Source {
             id: String!
-            sshCloneUrl: String!
+            cloneUrl: String!
             reference: SourceReference!
             beforeBuildTasks: [BeforeBuildTask!]!
         }

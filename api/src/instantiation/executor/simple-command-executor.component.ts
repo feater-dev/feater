@@ -9,8 +9,14 @@ export class SimpleCommandExecutorComponent {
     ) {}
 
     execute(command: SimpleCommand): Promise<any> {
-        console.log(`SimpleCommandExecutorComponent::execute(${command.constructor.name})`);
+        console.log(`SimpleCommandExecutorComponent::execute(${command.constructor.name}) -- started`);
+        const result = this.compositeSimpleCommandExecutorComponent.execute(command);
+        result.then(
+            () => {
+                console.log(`SimpleCommandExecutorComponent::execute(${command.constructor.name}) -- done`);
+            },
+        );
 
-        return this.compositeSimpleCommandExecutorComponent.execute(command);
+        return result;
     }
 }

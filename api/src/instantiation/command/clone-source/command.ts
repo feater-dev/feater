@@ -5,7 +5,7 @@ export class CloneSourceCommand extends SimpleCommand {
     readonly NAME = 'clone_source';
 
     constructor(
-        readonly sshCloneUrl: string,
+        readonly cloneUrl: string,
         readonly referenceType: string,
         readonly referenceName: string,
         readonly absoluteGuestInstanceDirPath: string,

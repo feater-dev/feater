@@ -3,7 +3,7 @@ import {InstanceContextBeforeBuildTaskInterface} from './before-build/instance-c
 
 export interface InstanceContextSourceInterface {
     readonly id: string;
-    readonly sshCloneUrl: string;
+    readonly cloneUrl: string;
     readonly reference: {
         readonly type: string;
         readonly name: string;

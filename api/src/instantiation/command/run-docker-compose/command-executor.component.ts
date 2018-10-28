@@ -29,10 +29,16 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
             }
             dockerComposeArgs.push(['up', '-d', '--no-color']);
 
-            // TODO Move somewhere else.
-            const commonEnvVariables = new EnvVariablesSet();
-            commonEnvVariables.add('COMPOSE_PROJECT_NAME', typedCommand.composeProjectName);
-            commonEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${environment.instantiation.composeHttpTimeout}`);
+            const runEnvVariables = new EnvVariablesSet();
+            runEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${environment.instantiation.composeHttpTimeout}`);
+
+            console.log(
+                EnvVariablesSet.merge(
+                    typedCommand.envVariables,
+                    runEnvVariables,
+                ).toString(),
+                _.flatten(dockerComposeArgs).join(' ')
+            );
 
             // TODO Handle spawn result using helper class.
             const dockerCompose = spawn(
@@ -42,7 +48,7 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
                     cwd: typedCommand.absoluteGuestEnvDirPath,
                     env: EnvVariablesSet.merge(
                         typedCommand.envVariables,
-                        commonEnvVariables,
+                        runEnvVariables,
                     ).toMap(),
                 },
             );

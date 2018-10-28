@@ -48,23 +48,23 @@ export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandE
             serviceCommand.stdout
                 .pipe(split())
                 .on('data', line => {
-                    // logger.info(line);
+                    console.log(line);
                 });
 
             serviceCommand.stderr
                 .pipe(split())
                 .on('data', line => {
-                    // logger.info(line);
+                    console.log(line);
                 });
 
             serviceCommand.on('error', error => {
-                // logger.error(`Failed to execute host testCommand (error message: '${error.message}').`);
+                console.log(`Failed to execute host testCommand (error message: '${error.message}').`);
                 reject(error);
             });
 
             const onCloseOrExit = code => {
                 if (0 !== code) {
-                    // logger.error(`Failed to execute host testCommand with code ${code}.`);
+                    console.log(`Failed to execute host testCommand with code ${code}.`);
                     reject(code);
 
                     return;

@@ -27,7 +27,7 @@ export const getDefinitionDetailQueryGql = gql`
             }
             deployKeys {
                 id
-                sshCloneUrl
+                cloneUrl
                 fingerprint
                 createdAt
                 updatedAt
@@ -62,7 +62,7 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
     }];
     readonly deployKeys: [{
         readonly id: string;
-        readonly sshCloneUrl: string;
+        readonly cloneUrl: string;
         readonly fingerprint: string;
         readonly updatedAt: string;
     }];

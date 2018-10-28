@@ -20,10 +20,8 @@ import {ConnectToNetworkCommand} from './command/connect-containers-to-network/c
 import {GetContainerIdsCommand} from './command/get-container-id/command';
 import {GetContainerIdsCommandResultInterface} from './command/get-container-id/command-result.interface';
 import {ConnectToNetworkCommandResultInterface} from './command/connect-containers-to-network/command-result.interface';
-import {PrepareEnvVarsForSourceCommand} from './command/prepare-source-env-vars-for-source/command';
-import {PrepareEnvVarsForSourceCommandResultInterface} from './command/prepare-source-env-vars-for-source/command-result.interface';
-import {PrepareEnvVarsForFeaterVarsCommand} from './command/prepare-env-vars-for-feater-vars/command';
-import {PrepareEnvVarsForFeaterVarsCommandResultInterface} from './command/prepare-env-vars-for-feater-vars/command-result.interface';
+import {PrepareSourceEnvVarsCommand} from './command/prepare-source-env-vars/command';
+import {PrepareSourceEnvVarsCommandResultInterface} from './command/prepare-source-env-vars/command-result.interface';
 import {PrepareSummaryItemsCommand} from './command/prepare-summary-items/command';
 import {CommandInterface} from './executor/command.interface';
 import {CopyFileCommandFactoryComponent} from './command/before-build/copy-file/command-factory.component';
@@ -85,7 +83,6 @@ export class InstanceCreatorComponent {
         this.addParseDockerCompose(createInstanceCommand, instanceContext);
         this.addPrepareProxyDomains(createInstanceCommand, instanceContext);
         this.addPrepareEnvVarsForSources(createInstanceCommand, instanceContext);
-        this.addPrepareEnvVarsForFeaterVars(createInstanceCommand, instanceContext);
         this.addPrepareSummaryItems(createInstanceCommand, instanceContext);
         this.addBeforeBuildTasks(createInstanceCommand, instanceContext);
         this.addRunDockerCompose(createInstanceCommand, instanceContext);
@@ -147,6 +144,7 @@ export class InstanceCreatorComponent {
                             instanceContext: InstanceContext,
                         ) => {
                             instanceContext.mergeEnvVariablesSet(result.envVariables);
+                            instanceContext.mergeFeaterVariablesSet(result.featerVariables);
                         },
                     ),
                 ),
@@ -164,7 +162,7 @@ export class InstanceCreatorComponent {
                 instanceContext.sources.map(
                     source => new ContextAwareCommand(
                         (instanceContext: InstanceContext) => new CloneSourceCommand(
-                            source.sshCloneUrl,
+                            source.cloneUrl,
                             source.reference.type,
                             source.reference.name,
                             source.paths.dir.absolute.guest,
@@ -256,42 +254,21 @@ export class InstanceCreatorComponent {
             new ComplexCommand(
                 instanceContext.sources.map(
                     source => new ContextAwareCommand(
-                        (instanceContext: InstanceContext) => new PrepareEnvVarsForSourceCommand(
+                        (instanceContext: InstanceContext) => new PrepareSourceEnvVarsCommand(
                             source.id,
                             source.paths.dir.absolute.guest,
                             source.paths.dir.absolute.host,
                         ),
                         (
-                            result: PrepareEnvVarsForSourceCommandResultInterface,
+                            result: PrepareSourceEnvVarsCommandResultInterface,
                             instanceContext: InstanceContext,
                         ) => {
                             instanceContext.mergeEnvVariablesSet(result.envVariables);
+                            instanceContext.mergeFeaterVariablesSet(result.featerVariables);
                         },
                     ),
                 ),
                 true,
-            ),
-        );
-    }
-
-    /**
-     * For each Feater variables a corresponding env variable is made available.
-     */
-    protected addPrepareEnvVarsForFeaterVars(
-        createInstanceCommand: ComplexCommand,
-        instanceContext: InstanceContext,
-    ) {
-        createInstanceCommand.addChild(
-            new ContextAwareCommand(
-                (instanceContext: InstanceContext) => new PrepareEnvVarsForFeaterVarsCommand(
-                    FeaterVariablesSet.fromList(instanceContext.featerVariables),
-                ),
-                (
-                    result: PrepareEnvVarsForFeaterVarsCommandResultInterface,
-                    instanceContext: InstanceContext,
-                ) => {
-                    instanceContext.mergeEnvVariablesSet(result.envVariables);
-                },
             ),
         );
     }
@@ -392,6 +369,8 @@ export class InstanceCreatorComponent {
                         const service = instanceContext.findService(serviceId);
                         service.containerId = containerId;
                     }
+                    instanceContext.mergeEnvVariablesSet(result.envVariables);
+                    instanceContext.mergeFeaterVariablesSet(result.featerVariables);
                 },
             ),
         );

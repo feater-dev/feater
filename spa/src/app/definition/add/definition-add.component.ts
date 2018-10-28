@@ -20,7 +20,7 @@ import {
 import {
     getProjectQueryGql,
     GetProjectQueryInterface,
-    GetProjectQueryProjectFieldInterface
+    GetProjectQueryProjectFieldInterface,
 } from './get-project.query';
 import * as _ from 'lodash';
 import * as jsYaml from 'js-yaml';
@@ -82,7 +82,7 @@ export class DefinitionAddComponent implements OnInit {
     addSource(): void {
         this.item.config.sources.push({
             id: '',
-            sshCloneUrl: '',
+            cloneUrl: '',
             reference: {
                 type: '',
                 name: ''
@@ -167,11 +167,11 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     isAfterBuildTaskExecuteHostCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'executeHostCmd' === afterBuildTask.type;
+        return 'executeHostCommand' === afterBuildTask.type;
     }
 
     isAfterBuildTaskExecuteServiceCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'executeServiceCmd' === afterBuildTask.type;
+        return 'executeServiceCommand' === afterBuildTask.type;
     }
 
     isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: AfterBuildTaskFormElement): boolean {
@@ -244,11 +244,7 @@ export class DefinitionAddComponent implements OnInit {
                 proxiedPorts: this.item.config.proxiedPorts,
                 envVariables: this.item.config.envVariables,
                 composeFiles: [
-                    {
-                        sourceId: this.item.config.composeFile.sourceId,
-                        envDirRelativePath: this.item.config.composeFile.envDirRelativePath,
-                        composeFileRelativePaths: this.item.config.composeFile.composeFileRelativePaths,
-                    },
+                    this.item.config.composeFile,
                 ],
                 afterBuildTasks: this.item.config.afterBuildTasks,
                 summaryItems: this.item.config.summaryItems,

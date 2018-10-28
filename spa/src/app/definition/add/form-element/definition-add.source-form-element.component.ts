@@ -49,13 +49,14 @@ export class DefinitionAddSourceFormElementComponent implements OnInit {
 
     addBeforeBuildTaskInterpolate() {
         this.item.beforeBuildTasks.push(<InterpolateTaskFormElement>{
+
             type: 'interpolate',
             relativePath: ''
         });
     }
 
     deleteBeforeBuildTask(beforeBuildTask: BeforeBuildTaskFormElement) {
-        var index = this.item.beforeBuildTasks.indexOf(beforeBuildTask);
+        const index = this.item.beforeBuildTasks.indexOf(beforeBuildTask);
         if (-1 !== index) {
             this.item.beforeBuildTasks.splice(index, 1);
         }

@@ -26,6 +26,7 @@ export const environment: EnvironmentInterface = {
         build: '/home/me/feater/data/build/',
         composerCache: '/home/me/feater/data/composer/',
         npmCache: '/home/me/feater/data/npm/',
+        yarnCache: '/home/me/feater/data/yarn/',
         asset: '/home/me/feater/data/asset/',
     },
     instantiation: {

@@ -12,6 +12,7 @@ import {BaseLogger} from '../../../logger/base-logger';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {CreateVolumeFromAssetCommandResultInterface} from './command-result.interface';
 import {CreateVolumeFromAssetCommand} from './command';
+import {FeaterVariablesSet} from '../../sets/feater-variables-set';
 
 @Injectable()
 export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
@@ -52,9 +53,11 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
         );
 
         const envVariables = new EnvVariablesSet();
+        const featerVariables = new FeaterVariablesSet();
         envVariables.add(`FEATER__ASSET_VOLUME__${typedCommand.volumeId.toUpperCase()}`, volumeName);
+        featerVariables.add(`asset_volume__${typedCommand.volumeId.toLowerCase()}`, volumeName);
 
-        return {envVariables} as CreateVolumeFromAssetCommandResultInterface;
+        return {envVariables, featerVariables} as CreateVolumeFromAssetCommandResultInterface;
     }
 
     protected spawnVolumeCreate(

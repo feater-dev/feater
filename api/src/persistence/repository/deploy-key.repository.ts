@@ -34,20 +34,20 @@ export class DeployKeyRepository {
         return deployKeys[0];
     }
 
-    async findBySshCloneUrl(sshCloneUrl: string): Promise<DeployKeyInterface[]> {
-        return await this.find({sshCloneUrl}, 0, 2);
+    async findByCloneUrl(cloneUrl: string): Promise<DeployKeyInterface[]> {
+        return await this.find({cloneUrl}, 0, 2);
     }
 
-    async findOneBySshCloneUrl(sshCloneUrl: string): Promise<DeployKeyInterface> {
-        return await this.findOne({sshCloneUrl});
+    async findOneByCloneUrl(cloneUrl: string): Promise<DeployKeyInterface> {
+        return await this.findOne({cloneUrl});
     }
 
     async findOneById(id: string): Promise<DeployKeyInterface> {
         return await this.findOne({_id: id});
     }
 
-    async existsForSshCloneUrl(sshCloneUrl: string): Promise<boolean> {
-        const deployKeys = await this.find({sshCloneUrl}, 0, 2);
+    async existsForCloneUrl(cloneUrl: string): Promise<boolean> {
+        const deployKeys = await this.find({cloneUrl}, 0, 2);
         if (1 < deployKeys.length) {
             throw new Error();
         }
@@ -55,8 +55,8 @@ export class DeployKeyRepository {
         return (1 === deployKeys.length);
     }
 
-    async create(sshCloneUrl: string, overwrite: boolean = false): Promise<DeployKeyInterface> {
-        const oldModels = await this.find({sshCloneUrl}, 0, 2);
+    async create(cloneUrl: string, overwrite: boolean = false): Promise<DeployKeyInterface> {
+        const oldModels = await this.find({cloneUrl}, 0, 2);
         if (1 < oldModels.length) {
             throw new Error('More than one deploy key found.');
         }
@@ -75,7 +75,7 @@ export class DeployKeyRepository {
             }
         } else {
             model = new this.deployKeyModel({
-                sshCloneUrl,
+                cloneUrl,
                 publicKey,
                 privateKey,
                 passphrase,
@@ -89,10 +89,10 @@ export class DeployKeyRepository {
         return model;
     }
 
-    async remove(sshCloneUrl: string): Promise<void> {
+    async remove(cloneUrl: string): Promise<void> {
         return new Promise<void>(resolve => {
             this.deployKeyModel
-                .deleteOne({sshCloneUrl}, (err) => {
+                .deleteOne({cloneUrl}, (err) => {
                     if (err) {
                         throw err;
                     }

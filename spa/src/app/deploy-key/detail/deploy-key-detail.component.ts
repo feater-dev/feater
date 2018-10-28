@@ -18,16 +18,16 @@ import {getDeployKeyListQueryGql} from '../list/get-deploy-key-list.query';
 export class DeployKeyDetailComponent implements OnInit {
 
     protected readonly regenerateDeployKeyMutation = gql`
-        mutation ($sshCloneUrl: String!) {
-            regenerateDeployKey(sshCloneUrl: $sshCloneUrl) {
-                sshCloneUrl
+        mutation ($cloneUrl: String!) {
+            regenerateDeployKey(cloneUrl: $cloneUrl) {
+                cloneUrl
             }
         }
     `;
 
     protected readonly removeDeployKeyMutation = gql`
-        mutation ($sshCloneUrl: String!) {
-            removeDeployKey(sshCloneUrl: $sshCloneUrl) {
+        mutation ($cloneUrl: String!) {
+            removeDeployKey(cloneUrl: $cloneUrl) {
                 removed
             }
         }
@@ -48,7 +48,7 @@ export class DeployKeyDetailComponent implements OnInit {
     regenerateItem() {
         this.apollo.mutate({
             mutation: this.regenerateDeployKeyMutation,
-            variables: {sshCloneUrl: this.item.sshCloneUrl},
+            variables: {cloneUrl: this.item.cloneUrl},
             refetchQueries: [{
                 query: getDeployKeyDetailQueryGql,
                 variables: {id: this.route.snapshot.params['id']},
@@ -62,7 +62,7 @@ export class DeployKeyDetailComponent implements OnInit {
     removeItem() {
         this.apollo.mutate({
             mutation: this.removeDeployKeyMutation,
-            variables: {sshCloneUrl: this.item.sshCloneUrl},
+            variables: {cloneUrl: this.item.cloneUrl},
             refetchQueries: [{
                 query: getDeployKeyListQueryGql,
             }],

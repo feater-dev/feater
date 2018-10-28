@@ -4,17 +4,14 @@ import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repos
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverDeployKeyFilterArgumentsInterface} from './filter-argument/resolver-deploy-key-filter-arguments.interface';
-import * as escapeStringRegexp from 'escape-string-regexp';
 import * as sshFingerprint from 'ssh-fingerprint';
 import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
-import {ProjectTypeInterface} from '../type/project-type.interface';
-import {CreateDefinitionInputTypeInterface} from '../input-type/create-definition-input-type.interface';
-import {DefinitionTypeInterface} from '../type/definition-type.interface';
 import {RegenerateDeployKeyInputTypeInterface} from '../input-type/regenerate-deploy-key-input-type.interface';
 import {RemoveDeployKeyInputTypeInterface} from '../input-type/remove-deploy-key-input-type.interface';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
 import * as _ from 'lodash';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
+import * as gitUrlParse from 'git-url-parse';
 
 @Injectable()
 export class DeployKeyResolverFactory {
@@ -75,7 +72,7 @@ export class DeployKeyResolverFactory {
 
     getRegenerateItemResolver(): (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface) => Promise<DeployKeyTypeInterface> {
         return async (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface): Promise<DeployKeyTypeInterface> => {
-            const deployKey = await this.deployKeyRepository.create(regenerateDeployKeyInput.sshCloneUrl, true);
+            const deployKey = await this.deployKeyRepository.create(regenerateDeployKeyInput.cloneUrl, true);
 
             return this.mapPersistentModelToTypeModel(deployKey);
         };
@@ -85,17 +82,20 @@ export class DeployKeyResolverFactory {
         return async (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface): Promise<object> => {
             const definitions = await this.definitionRepository.find({}, 0, 99999);
 
-            let referencedSshCloneUrls = [];
+            let referencedCloneUrls = [];
             for (const definition of definitions) {
                 for (const source of definition.config.sources) {
-                    referencedSshCloneUrls.push((source as SourceTypeInterface).sshCloneUrl);
+                    const cloneUrl = (source as SourceTypeInterface).cloneUrl;
+                    if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+                        referencedCloneUrls.push(cloneUrl);
+                    }
                 }
             }
 
-            referencedSshCloneUrls = _.uniq(referencedSshCloneUrls);
+            referencedCloneUrls = _.uniq(referencedCloneUrls);
             const createPromises = [];
-            for (const referencedSshCloneUrl of referencedSshCloneUrls) {
-                createPromises.push(this.deployKeyRepository.create(referencedSshCloneUrl));
+            for (const referencedCloneUrl of referencedCloneUrls) {
+                createPromises.push(this.deployKeyRepository.create(referencedCloneUrl));
             }
             await Promise.all(createPromises);
 
@@ -108,22 +108,25 @@ export class DeployKeyResolverFactory {
             const deployKeys = await this.deployKeyRepository.find({}, 0, 99999);
             const definitions = await this.definitionRepository.find({}, 0, 99999);
 
-            const sshCloneUrls = [];
+            const cloneUrls = [];
             for (const deployKey of deployKeys) {
-                sshCloneUrls.push(deployKey.sshCloneUrl);
+                cloneUrls.push(deployKey.cloneUrl);
             }
 
-            const referencedSshCloneUrls = [];
+            const referencedCloneUrls = [];
             for (const definition of definitions) {
                 for (const source of definition.config.sources) {
-                    referencedSshCloneUrls.push((source as SourceTypeInterface).sshCloneUrl);
+                    const cloneUrl = (source as SourceTypeInterface).cloneUrl;
+                    if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+                        referencedCloneUrls.push(cloneUrl);
+                    }
                 }
             }
 
-            const unreferencedSshCloneUrls = _.difference(sshCloneUrls, referencedSshCloneUrls);
+            const unreferencedCloneUrls = _.difference(cloneUrls, referencedCloneUrls);
             const removePromises = [];
-            for (const unreferencedSshCloneUrl of unreferencedSshCloneUrls) {
-                removePromises.push(this.deployKeyRepository.remove(unreferencedSshCloneUrl));
+            for (const unreferencedCloneUrl of unreferencedCloneUrls) {
+                removePromises.push(this.deployKeyRepository.remove(unreferencedCloneUrl));
             }
             await Promise.all(removePromises);
 
@@ -133,7 +136,7 @@ export class DeployKeyResolverFactory {
 
     getRemoveItemResolver(): (obj: any, removeDeployKeyInput: RemoveDeployKeyInputTypeInterface) => Promise<object> {
         return async (obj: any, removeDeployKeyInput: RemoveDeployKeyInputTypeInterface): Promise<object> => {
-            await this.deployKeyRepository.remove(removeDeployKeyInput.sshCloneUrl);
+            await this.deployKeyRepository.remove(removeDeployKeyInput.cloneUrl);
 
             return {removed: true};
         };
@@ -146,7 +149,7 @@ export class DeployKeyResolverFactory {
     protected mapPersistentModelToTypeModel(deployKey: DeployKeyInterface): DeployKeyTypeInterface {
         return {
             id: deployKey._id.toString(),
-            sshCloneUrl: deployKey.sshCloneUrl,
+            cloneUrl: deployKey.cloneUrl,
             publicKey: deployKey.publicKey,
             createdAt: deployKey.createdAt,
             updatedAt: deployKey.updatedAt,

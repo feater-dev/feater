@@ -24,6 +24,7 @@ export interface EnvironmentInterface {
         readonly build: string;
         readonly composerCache: string;
         readonly npmCache: string;
+        readonly yarnCache: string;
         readonly asset: string;
     };
     readonly instantiation: {

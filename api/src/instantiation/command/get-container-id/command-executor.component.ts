@@ -6,6 +6,8 @@ import {SimpleCommand} from '../../executor/simple-command';
 import {GetContainerIdsCommandResultInterface, GetContainerIdsCommandResultServiceContainerIdInterface} from './command-result.interface';
 import {GetContainerIdsCommand} from './command';
 import {environment} from '../../../environment/environment';
+import {EnvVariablesSet} from '../../sets/env-variables-set';
+import {FeaterVariablesSet} from '../../sets/feater-variables-set';
 
 const BUFFER_SIZE = 16 * 1048576; // 16M
 
@@ -33,22 +35,22 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
                 ).toString(),
             );
 
+            const envVariables = new EnvVariablesSet();
+            const featerVariables = new FeaterVariablesSet();
             const serviceContainerIds: GetContainerIdsCommandResultServiceContainerIdInterface[] = [];
             for (const {serviceId, containerNamePrefix} of typedCommand.serviceContainerNamePrefixes) {
                 const containerNameRegExp = new RegExp(`^/${escapeStringRegexp(containerNamePrefix)}_1+$`);
                 for (const containerInspect of containerInspects) {
+                    const containerId: string = containerInspect.Id;
                     if (containerNameRegExp.test(containerInspect.Name)) {
-                        serviceContainerIds.push({
-                            serviceId,
-                            containerId: containerInspect.Id,
-                        });
+                        serviceContainerIds.push({serviceId, containerId});
+                        envVariables.add(`FEATER__CONTAINER_ID__${serviceId.toUpperCase()}`, containerId);
+                        featerVariables.add(`container_id__${serviceId.toLowerCase()}`, containerId);
                     }
                 }
             }
 
-            // TODO Set container ids as env variables and Feater variables.
-
-            resolve({serviceContainerIds} as GetContainerIdsCommandResultInterface);
+            resolve({serviceContainerIds, envVariables, featerVariables} as GetContainerIdsCommandResultInterface);
         });
     }
 

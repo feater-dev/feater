@@ -7,7 +7,7 @@ import {SimpleCommandExecutorComponentInterface} from '../simple-command-executo
 import {EnableProxyDomainsCommand} from './command';
 import {SimpleCommand} from '../../executor/simple-command';
 
-const BUFFER_SIZE = 1048576; // 1M
+const BUFFER_SIZE = 16 * 1048576; // 16M
 
 @Injectable()
 export class EnableProxyDomainsCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
@@ -16,22 +16,27 @@ export class EnableProxyDomainsCommandExecutorComponent implements SimpleCommand
         return (command instanceof EnableProxyDomainsCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as EnableProxyDomainsCommand;
+        const logger = typedCommand.commandLogger;
 
-        return new Promise<any>(resolve => {
-            fs.writeFileSync(
-                path.join(environment.guestPaths.proxyDomain, `instance-${typedCommand.instanceHash}.conf`),
-                typedCommand.nginxConfigs.join('\n\n'),
-            );
+        const nginxConfigAbsoluteGuestPath = path.join(
+            environment.guestPaths.proxyDomain,
+            `instance-${typedCommand.instanceHash}.conf`,
+        );
+        logger.info(`Absolute guest Nginx configuration path: ${nginxConfigAbsoluteGuestPath}`);
+        fs.writeFileSync(
+            nginxConfigAbsoluteGuestPath,
+            typedCommand.nginxConfigs.join('\n\n'),
+        );
 
-            execSync(
-                `docker exec -t feater_nginx /etc/init.d/nginx restart`,
-                { maxBuffer: BUFFER_SIZE },
-            );
+        logger.info(`Restarting Nginx.`);
+        execSync(
+            `docker exec -t feater_nginx /etc/init.d/nginx restart`,
+            { maxBuffer: BUFFER_SIZE },
+        );
 
-            resolve({});
-        });
+        return {};
     }
 
 }

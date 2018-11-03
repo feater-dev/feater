@@ -17,21 +17,25 @@ export class PrepareSummaryItemsCommandExecutorComponent implements SimpleComman
         return (command instanceof PrepareSummaryItemsCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as PrepareSummaryItemsCommand;
+        const logger = typedCommand.commandLogger;
 
-        return new Promise(resolve => {
-            const interpolatedSummaryItems = new SummaryItemsSet();
-            for (const summaryItem of typedCommand.summaryItems.toList()) {
-                interpolatedSummaryItems.add(
-                    summaryItem.name,
-                    this.interpolationHelper.interpolateText(summaryItem.value, typedCommand.featerVariables),
-                );
-            }
+        const interpolatedSummaryItems = new SummaryItemsSet();
+        logger.info(`Available Feater variables:${
+            typedCommand.featerVariables.isEmpty()
+                ? ' none'
+                : '\n' + JSON.stringify(typedCommand.featerVariables.toMap(), null, 2)
+        }`);
+        for (const summaryItem of typedCommand.summaryItems.toList()) {
+            interpolatedSummaryItems.add(
+                summaryItem.name,
+                this.interpolationHelper.interpolateText(summaryItem.value, typedCommand.featerVariables),
+            );
+        }
 
-            resolve({
-                summaryItems: interpolatedSummaryItems,
-            } as PrepareSummaryItemsCommandResultInterface);
-        });
+        return {
+            summaryItems: interpolatedSummaryItems,
+        } as PrepareSummaryItemsCommandResultInterface;
     }
 }

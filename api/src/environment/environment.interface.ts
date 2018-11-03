@@ -1,8 +1,6 @@
 export interface EnvironmentInterface {
     readonly app: {
         readonly versionNumber: string;
-        readonly scheme: string;
-        readonly host: string;
     };
     readonly mongo: {
         readonly dsn: string;
@@ -32,6 +30,7 @@ export interface EnvironmentInterface {
         readonly composeBinaryPath: string;
         readonly dockerBinaryPath: string;
         readonly containerNamePrefix: string; // TODO Rename to composeProjectNamePrefix.
+        readonly proxyDomainPattern: string;
         readonly proxyDomainsNetworkName: string;
     };
     readonly logger: {

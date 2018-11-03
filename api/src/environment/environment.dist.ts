@@ -2,9 +2,7 @@ import {EnvironmentInterface} from './environment.interface';
 
 export const environment: EnvironmentInterface = {
     app: {
-        versionNumber: '0.0',
-        scheme: 'https',
-        host: 'feater.org',
+        versionNumber: '0.0.1',
     },
     mongo: {
         dsn: 'mongodb://user:password@host:27017/feater',
@@ -34,6 +32,7 @@ export const environment: EnvironmentInterface = {
         composeBinaryPath: '/usr/local/bin/docker-compose',
         dockerBinaryPath: '/usr/bin/docker',
         containerNamePrefix: 'featerinstance',
+        proxyDomainPattern: `{instance_hash}-{port_id}.feater.org`,
         proxyDomainsNetworkName: 'feater_featerproxy', // Value of COMPOSE_PROJECT_NAME is prepended by default.
     },
     logger: {

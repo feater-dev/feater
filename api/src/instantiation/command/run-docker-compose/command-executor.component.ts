@@ -8,9 +8,14 @@ import {SimpleCommandExecutorComponentInterface} from '../simple-command-executo
 import {environment} from '../../../environment/environment';
 import {SimpleCommand} from '../../executor/simple-command';
 import {RunDockerComposeCommand} from './command';
+import {SpawnHelper} from '../../helper/spawn-helper.component';
 
 @Injectable()
 export class RunDockerComposeCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
+
+    constructor(
+        private readonly spawnHelper: SpawnHelper,
+    ) {}
 
     supports(command: SimpleCommand): boolean {
         return (command instanceof RunDockerComposeCommand);
@@ -18,9 +23,10 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
 
     execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as RunDockerComposeCommand;
+        const logger = typedCommand.commandLogger;
 
         return new Promise((resolve, reject) => {
-            const dockerComposeArgs = [];
+            let dockerComposeArgs = [];
 
             for (const absoluteGuestComposeFilePath of typedCommand.absoluteGuestComposeFilePaths) {
                 dockerComposeArgs.push(
@@ -32,56 +38,46 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
             const runEnvVariables = new EnvVariablesSet();
             runEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${environment.instantiation.composeHttpTimeout}`);
 
-            console.log(
-                EnvVariablesSet.merge(
-                    typedCommand.envVariables,
-                    runEnvVariables,
-                ).toString(),
-                _.flatten(dockerComposeArgs).join(' ')
+            dockerComposeArgs = _.flatten(dockerComposeArgs);
+
+            const envVariables = EnvVariablesSet.merge(
+                typedCommand.envVariables,
+                runEnvVariables,
             );
 
-            // TODO Handle spawn result using helper class.
-            const dockerCompose = spawn(
+            logger.info(`Binary: ${environment.instantiation.composeBinaryPath}`);
+            logger.info(`Arguments: ${JSON.stringify(dockerComposeArgs)}`);
+            logger.info(`Guest working directory: ${typedCommand.absoluteGuestEnvDirPath}`);
+            logger.info(`Environmental variables:${
+                envVariables.isEmpty()
+                    ? ' none'
+                    : '\n' + JSON.stringify(envVariables.toString(), null, 2)
+            }`);
+
+            const spawnedDockerCompose = spawn(
                 environment.instantiation.composeBinaryPath,
-                _.flatten(dockerComposeArgs),
+                dockerComposeArgs,
                 {
                     cwd: typedCommand.absoluteGuestEnvDirPath,
-                    env: EnvVariablesSet.merge(
-                        typedCommand.envVariables,
-                        runEnvVariables,
-                    ).toMap(),
+                    env: envVariables.toMap(),
                 },
             );
 
-            dockerCompose.stdout
-                .pipe(split())
-                .on('data', line => {
-                    // logger.info(line);
-                });
-
-            dockerCompose.stderr
-                .pipe(split())
-                .on('data', line => {
-                    // logger.info(line.toString());
-                });
-
-            dockerCompose.on('error', error => {
-                // logger.error(error.message);
-                reject(error);
-            });
-
-            const onCloseOrExit = code => {
-                if (0 !== code) {
-                    // logger.error(`Failed to run docker-compose.`);
-                    reject(code);
-
-                    return;
-                }
-                resolve({});
-            };
-
-            dockerCompose.on('close', onCloseOrExit);
-            dockerCompose.on('exit', onCloseOrExit);
+            this.spawnHelper.handleSpawned(
+                spawnedDockerCompose,
+                logger,
+                resolve,
+                reject,
+                () => {},
+                (exitCode: number) => {
+                    logger.error(`Failed to run docker-compose.'`, {});
+                    logger.error(`Exit code: ${exitCode}`, {});
+                },
+                (error: Error) => {
+                    logger.error(`Failed to run docker-compose.`);
+                    logger.error(`Error message: ${error.message}`, {});
+                },
+            );
         });
 
     }

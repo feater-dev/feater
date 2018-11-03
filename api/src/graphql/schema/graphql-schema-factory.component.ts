@@ -10,14 +10,16 @@ import {DefinitionResolverFactory} from '../resolver/definition-resolver-factory
 import {InstanceResolverFactory} from '../resolver/instance-resolver-factory.component';
 import {BeforeBuildTaskTypeInterface} from '../type/nested/definition-config/before-build-task-type.interface';
 import {DateResolverFactory} from '../resolver/date-resolver-factory.component';
-import {LogsResolverFactory} from '../resolver/logs-resolver-factory.component';
-import {LogTypeInterface} from '../type/log-type.interface';
 import {DockerDaemonResolverFactory} from '../resolver/docker-daemon-resolver-factory.component';
 import {AfterBuildTaskTypeInterface} from '../type/nested/definition-config/after-build-task-type.interface';
 import {AssetResolverFactory} from '../resolver/asset-resolver-factory.component';
 import {AssetTypeInterface} from '../type/asset-type.interface';
 import {DeployKeyResolverFactory} from '../resolver/deploy-key-resolver-factory.component';
 import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
+import {CommandLogInterface} from '../../persistence/interface/command-log.interface';
+import {CommandLogsResolverFactory} from '../resolver/command-logs-resolver-factory.component';
+import {CommandLogTypeInterface} from '../type/command-log-type.interface';
+import {CommandLogEntriesResolverFactory} from '../resolver/command-log-entries-resolver-factory.component';
 
 @Injectable()
 export class GraphqlSchemaFactory {
@@ -28,7 +30,8 @@ export class GraphqlSchemaFactory {
         private readonly instanceResolverFactory: InstanceResolverFactory,
         private readonly assetResolverFactory: AssetResolverFactory,
         private readonly deployKeyResolverFactory: DeployKeyResolverFactory,
-        private readonly logsResolverFactory: LogsResolverFactory,
+        private readonly commandLogsResolverFactory: CommandLogsResolverFactory,
+        private readonly commandLogEntriesResolverFactory: CommandLogEntriesResolverFactory,
         private readonly dateResolverFactory: DateResolverFactory,
         private readonly dockerDaemonResolverFactory: DockerDaemonResolverFactory,
     ) { }
@@ -128,7 +131,7 @@ export class GraphqlSchemaFactory {
                 updatedAt: this.dateResolverFactory.getDateResolver(
                     (instance: InstanceTypeInterface) => instance.updatedAt,
                 ),
-                logs: this.logsResolverFactory.getListResolver(
+                commandLogs: this.commandLogsResolverFactory.getListResolver(
                     (instance: InstanceTypeInterface) => ({instanceId: instance.id.toString()}),
                 ),
             },
@@ -139,9 +142,18 @@ export class GraphqlSchemaFactory {
                 ),
             },
 
-            InstanceLog: {
+            InstanceCommandLog: {
                 createdAt: this.dateResolverFactory.getDateResolver(
-                    (log: LogTypeInterface) => log.createdAt,
+                    (commandLog: CommandLogInterface) => commandLog.createdAt,
+                ),
+                completedAt: this.dateResolverFactory.getDateResolver(
+                    (commandLog: CommandLogInterface) => commandLog.completedAt,
+                ),
+                failedAt: this.dateResolverFactory.getDateResolver(
+                    (commandLog: CommandLogInterface) => commandLog.failedAt,
+                ),
+                entries: this.commandLogEntriesResolverFactory.getListResolver(
+                    (commandLog: CommandLogTypeInterface) => ({'meta.commandLogId': commandLog.id}),
                 ),
             },
 

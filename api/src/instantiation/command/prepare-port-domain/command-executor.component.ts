@@ -14,23 +14,36 @@ export class PrepareProxyDomainCommandExecutorComponent implements SimpleCommand
         return (command instanceof PrepareProxyDomainCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as PrepareProxyDomainCommand;
+        const logger = typedCommand.commandLogger;
 
-        return new Promise<any>((resolve, reject) => {
-            const proxyDomain = `feater-${typedCommand.instanceHash}-${typedCommand.portId}.${environment.app.host}`; // TODO Move to environment.
+        const proxyDomain = environment.instantiation.proxyDomainPattern
+            .replace('{instance_hash}', typedCommand.instanceHash)
+            .replace('{port_id}', typedCommand.portId);
 
-            const envVariables = new EnvVariablesSet();
-            envVariables.add(`FEATER__PROXY_DOMAIN__${typedCommand.portId.toUpperCase()}`, proxyDomain);
+        const envVariables = new EnvVariablesSet();
+        envVariables.add(`FEATER__PROXY_DOMAIN__${typedCommand.portId.toUpperCase()}`, proxyDomain);
 
-            const featerVariables = new FeaterVariablesSet();
-            featerVariables.add(`proxy_domain__${typedCommand.portId}`, proxyDomain);
+        const featerVariables = new FeaterVariablesSet();
+        featerVariables.add(`proxy_domain__${typedCommand.portId}`, proxyDomain);
 
-            resolve({
-                proxyDomain,
-                envVariables,
-                featerVariables,
-            } as PrepareProxyDomainCommandResultInterface);
-        });
+        logger.info(`Proxy domain: ${proxyDomain}`);
+        logger.info(`Added environmental variables:${
+            envVariables.isEmpty()
+                ? ' none'
+                : '\n' + JSON.stringify(envVariables.toMap(), null, 2)
+        }`);
+        logger.info(`Added Feater variables:${
+            featerVariables.isEmpty()
+                ? ' none'
+                : '\n' + JSON.stringify(featerVariables.toMap(), null, 2)
+        }`);
+
+        return {
+            proxyDomain,
+            envVariables,
+            featerVariables,
+        } as PrepareProxyDomainCommandResultInterface;
     }
 }

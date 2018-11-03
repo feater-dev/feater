@@ -19,23 +19,32 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
 
     async execute(command: SimpleCommand): Promise<ParseDockerComposeCommandResultInterface> {
         const typedCommand = command as ParseDockerComposeCommand;
+        const logger = typedCommand.commandLogger;
 
-        const serviceIds: any = {};
+        const processedServiceIds: any = {};
         const services: ParseDockerComposeCommandResultServiceInterface[] = [];
         for (const absoluteGuestComposeFilePath of typedCommand.absoluteGuestComposeFilePaths) {
+            logger.info(`Parsing compose file.`);
+            logger.info(`Parsed compose file absolute guest path: ${absoluteGuestComposeFilePath}`);
+
             const compose = jsYaml.safeLoad(
                 fs.readFileSync(absoluteGuestComposeFilePath).toString(),
             );
+            const serviceIds = Object.keys(compose.services);
 
-            for (const serviceId of Object.keys(compose.services)) {
-                if (serviceIds[serviceId]) {
+            logger.info(`Service IDs found: ${serviceIds.join(', ')}`);
+
+            for (const serviceId of serviceIds) {
+                if (processedServiceIds[serviceId]) {
                     continue;
                 }
-                serviceIds[serviceId] = true;
+                processedServiceIds[serviceId] = true;
+                const containerNamePrefix = `${typedCommand.composeProjectName}_${serviceId}`;
                 services.push({
                     id: serviceId,
-                    containerNamePrefix: `${typedCommand.composeProjectName}_${serviceId}`,
+                    containerNamePrefix,
                 });
+                logger.info(`Container name prefix for service ${serviceId}: ${containerNamePrefix}`);
             }
         }
 

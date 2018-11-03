@@ -25,9 +25,15 @@
                         </a>
                     </td>
                     <td>{{ definition.instances.length || '&mdash;' }}</td>
-                    <td class="fit-column">{{ definition.createdAt | relativeDate }}</td>
-                    <td class="fit-column">{{ definition.updatedAt | relativeDate }}</td>
-                    <td class="fit-column"><small>{{ definition.id }}</small></td>
+                    <td class="fit-column">
+                        <small>{{ definition.createdAt | relativeDate }}</small>
+                    </td>
+                    <td class="fit-column">
+                        <small>{{ definition.updatedAt | relativeDate }}</small>
+                    </td>
+                    <td class="fit-column">
+                        <small>{{ definition.id }}</small>
+                    </td>
                     <td class="fit-column">
                         <a routerLink="/definition/{{ definition.id }}">
                             <span class="glyphicon glyphicon-chevron-right feater-list-details"></span>

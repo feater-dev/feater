@@ -88,10 +88,6 @@ export class InstanceContextFactory {
         }
 
         // Add some basic Feater variables and env variables.
-        envVariables.add('FEATER__SCHEME', environment.app.scheme);
-        featerVariables.add('scheme', environment.app.scheme);
-        envVariables.add('FEATER__HOST', environment.app.host);
-        featerVariables.add('host', environment.app.host);
         envVariables.add('FEATER__NPM_CACHE_HOST_PATH', environment.hostPaths.npmCache);
         featerVariables.add('npm_cache_host_path', environment.hostPaths.npmCache);
         envVariables.add('FEATER__YARN_CACHE_HOST_PATH', environment.hostPaths.yarnCache);

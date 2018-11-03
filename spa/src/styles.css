@@ -149,3 +149,35 @@ h2 {
     border-top-left-radius: 0;
     border-bottom-right-radius: 0;
 }
+
+.command-log {
+    position: relative;
+}
+
+.command-log .panel-body {
+    background-color: #f9fafa;
+}
+
+.command-log-description {
+    margin-right: 10em;
+}
+
+.command-log-description p {
+    margin-bottom: 0;
+}
+
+.command-log-entries {
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 80%;
+    background: none;
+    border: 0;
+    color: inherit;
+    padding: 0;
+}
+
+.command-log-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}

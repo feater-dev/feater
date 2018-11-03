@@ -14,6 +14,8 @@ import {LogsResolverFactory} from './resolver/logs-resolver-factory.component';
 import {DockerDaemonResolverFactory} from './resolver/docker-daemon-resolver-factory.component';
 import {AssetResolverFactory} from './resolver/asset-resolver-factory.component';
 import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.component';
+import {CommandLogsResolverFactory} from './resolver/command-logs-resolver-factory.component';
+import {CommandLogEntriesResolverFactory} from './resolver/command-log-entries-resolver-factory.component';
 
 @Module({
     imports: [
@@ -26,7 +28,8 @@ import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.c
     providers: [
         DefinitionConfigMapper,
         GraphqlSchemaFactory,
-        LogsResolverFactory,
+        CommandLogsResolverFactory,
+        CommandLogEntriesResolverFactory,
         ProjectsResolverFactory,
         DefinitionResolverFactory,
         InstanceResolverFactory,

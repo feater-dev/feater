@@ -27,6 +27,7 @@ export class InterpolateFileCommandFactoryComponent implements BeforeBuildTaskCo
         const typedBeforeBuildTask = beforeBuildTask as InstanceContextInterpolateFileInterface;
 
         return new ContextAwareCommand(
+            `Interpolate file for source \`${source.id}\``,
             (instance: InstanceContext) => new InterpolateFileCommand(
                 FeaterVariablesSet.fromList(instance.featerVariables),
                 path.join(source.paths.dir.absolute.guest, typedBeforeBuildTask.relativePath),

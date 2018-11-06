@@ -2,7 +2,7 @@ import {EnvironmentInterface} from './environment.interface';
 
 export const environment: EnvironmentInterface = {
     app: {
-        versionNumber: '0.0.1',
+        versionNumber: '0.1.0',
     },
     mongo: {
         dsn: 'mongodb://user:password@host:27017/feater',

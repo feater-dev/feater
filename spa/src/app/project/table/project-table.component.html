@@ -16,8 +16,12 @@
             <tbody>
                 <tr *ngFor="let project of projects">
                     <td>{{ project.name }}</td>
-                    <td class="fit-column">{{ project.createdAt | relativeDate }}</td>
-                    <td class="fit-column">{{ project.updatedAt | relativeDate }}</td>
+                    <td class="fit-column">
+                        <small>{{ project.createdAt | relativeDate }}</small>
+                    </td>
+                    <td class="fit-column">
+                        <small>{{ project.updatedAt | relativeDate }}</small>
+                    </td>
                     <td class="fit-column"><small>{{ project.id }}</small></td>
                     <td class="fit-column">
                         <a routerLink="/project/{{ project.id }}">

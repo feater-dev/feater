@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {PathHelper} from './helper/path-helper.component';
-import {environment} from '../environment/environment';
+import {environment} from '../environments/environment';
 import {InstanceContextBeforeBuildTaskInterface} from './instance-context/before-build/instance-context-before-build-task.interface';
 import {AfterBuildTaskTypeInterface} from '../graphql/type/nested/definition-config/after-build-task-type.interface';
 import {FeaterVariablesSet} from './sets/feater-variables-set';
@@ -88,16 +88,6 @@ export class InstanceContextFactory {
         }
 
         // Add some basic Feater variables and env variables.
-        envVariables.add('FEATER__SCHEME', environment.app.scheme);
-        featerVariables.add('scheme', environment.app.scheme);
-        envVariables.add('FEATER__HOST', environment.app.host);
-        featerVariables.add('host', environment.app.host);
-        envVariables.add('FEATER__NPM_CACHE_HOST_PATH', environment.hostPaths.npmCache);
-        featerVariables.add('npm_cache_host_path', environment.hostPaths.npmCache);
-        envVariables.add('FEATER__YARN_CACHE_HOST_PATH', environment.hostPaths.yarnCache);
-        featerVariables.add('yarn_cache_host_path', environment.hostPaths.yarnCache);
-        envVariables.add('FEATER__COMPOSER_CACHE_HOST_PATH', environment.hostPaths.composerCache);
-        featerVariables.add('composer_cache', environment.hostPaths.composerCache);
         envVariables.add('FEATER__INSTANCE_ID', instanceContext.id);
         featerVariables.add('instance_id', instanceContext.id);
         envVariables.add('FEATER__INSTANCE_HASH', instanceContext.hash);

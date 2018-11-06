@@ -2,12 +2,16 @@ import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
 import {SimpleCommandExecutorComponentInterface} from '../../simple-command-executor-component.interface';
 import {EnvVariablesSet} from '../../../sets/env-variables-set';
-import * as split from 'split';
 import {SimpleCommand} from '../../../executor/simple-command';
 import {ExecuteServiceCmdCommand} from './command';
+import {SpawnHelper} from '../../../helper/spawn-helper.component';
 
 @Injectable()
 export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
+
+    constructor(
+        private readonly spawnHelper: SpawnHelper,
+    ) {}
 
     supports(command: SimpleCommand): boolean {
         return (command instanceof ExecuteServiceCmdCommand);
@@ -15,17 +19,32 @@ export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandE
 
     execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as ExecuteServiceCmdCommand;
+        const logger = typedCommand.commandLogger;
 
         return new Promise<any>((resolve, reject) => {
+            logger.info(`Collecting environmental variables.`);
             const envVariables = new EnvVariablesSet();
             for (const {name, value} of typedCommand.customEnvVariables.toList()) {
                 envVariables.add(name, value);
             }
+            logger.info(`Custom environmental variables collected.`);
 
             const collectedEnvVariablesMap = typedCommand.collectedEnvVariables.toMap();
             for (const {name, alias} of typedCommand.inheritedEnvVariables) {
                 envVariables.add(alias || name, collectedEnvVariablesMap[name]);
             }
+            logger.info(`Inherited environmental variables collected.`);
+
+            logger.info(`Executing service command.`);
+            logger.info(`Container ID: ${typedCommand.containerId}`);
+            logger.info(`Command: ${typedCommand.command[0]}`);
+            logger.info(`Arguments: ${JSON.stringify(typedCommand.command.slice(1))}`);
+            logger.info(`Guest working directory: ${typedCommand.absoluteGuestInstancePath}`);
+            logger.info(`Environmental variables:${
+                envVariables.isEmpty()
+                    ? ' none'
+                    : '\n' + JSON.stringify(envVariables.toMap(), null, 2)
+            }`);
 
             let cmd = ['docker', 'exec'];
 
@@ -36,8 +55,7 @@ export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandE
             cmd.push(typedCommand.containerId);
             cmd = cmd.concat(typedCommand.command);
 
-            // TODO Handle spawn result using helper class.
-            const serviceCommand = spawn(
+            const spawnedServiceCommand = spawn(
                 cmd[0],
                 cmd.slice(1),
                 {
@@ -45,37 +63,22 @@ export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandE
                 },
             );
 
-            serviceCommand.stdout
-                .pipe(split())
-                .on('data', line => {
-                    console.log(line);
-                });
-
-            serviceCommand.stderr
-                .pipe(split())
-                .on('data', line => {
-                    console.log(line);
-                });
-
-            serviceCommand.on('error', error => {
-                console.log(`Failed to execute host testCommand (error message: '${error.message}').`);
-                reject(error);
-            });
-
-            const onCloseOrExit = code => {
-                if (0 !== code) {
-                    console.log(`Failed to execute host testCommand with code ${code}.`);
-                    reject(code);
-
-                    return;
-                }
-                resolve({});
-            };
-
-            serviceCommand.on('close', onCloseOrExit);
-            serviceCommand.on('exit', onCloseOrExit);
+            this.spawnHelper.handleSpawned(
+                spawnedServiceCommand,
+                typedCommand.commandLogger,
+                resolve,
+                reject,
+                () => {},
+                (exitCode: number) => {
+                    logger.error(`Failed to execute host command.`, {});
+                    logger.error(`Exit code: ${exitCode}`, {});
+                },
+                (error: Error) => {
+                    logger.error(`Failed to execute host command.`, {});
+                    logger.error(`Error message: ${error.message}`, {});
+                },
+            );
         });
-
     }
 
 }

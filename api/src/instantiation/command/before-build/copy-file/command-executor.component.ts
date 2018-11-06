@@ -11,17 +11,19 @@ export class CopyFileCommandExecutorComponent implements SimpleCommandExecutorCo
         return (command instanceof CopyFileCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as CopyFileCommand;
+        const logger = typedCommand.commandLogger;
 
-        return new Promise(resolve => {
-            fs.copySync(
-                typedCommand.absoluteGuestSourcePath,
-                typedCommand.absoluteGuestDestinationPath,
-            );
+        logger.info(`Absolute guest source path: ${typedCommand.absoluteGuestSourcePath}`);
+        logger.info(`Absolute guest destination path: ${typedCommand.absoluteGuestDestinationPath}`);
 
-            resolve({});
-        });
+        fs.copySync(
+            typedCommand.absoluteGuestSourcePath,
+            typedCommand.absoluteGuestDestinationPath,
+        );
+
+        return {};
     }
 
 }

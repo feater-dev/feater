@@ -8,7 +8,8 @@ const InstanceServiceSchema = new Schema(
         ipAddress: String, // TODO Should maybe be determined on runtime.
     }, {
         _id: false,
-    });
+    },
+);
 
 const InstanceEnvVariableSchema = new Schema(
     {
@@ -16,7 +17,8 @@ const InstanceEnvVariableSchema = new Schema(
         value: String,
     }, {
         _id: false,
-    });
+    },
+);
 
 const InstanceProxiedPortSchema = new Schema(
     {
@@ -28,7 +30,8 @@ const InstanceProxiedPortSchema = new Schema(
         nginxConfig: String,
     }, {
         _id: false,
-    });
+    },
+);
 
 const InstanceSummaryItemSchema = new Schema(
     {
@@ -36,7 +39,8 @@ const InstanceSummaryItemSchema = new Schema(
         value: String,
     }, {
         _id: false,
-    });
+    },
+);
 
 export const InstanceSchema = new Schema({
     definitionId: String,

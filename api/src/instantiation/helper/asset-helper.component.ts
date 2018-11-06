@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {AssetInterface} from '../../persistence/interface/asset.interface';
 import * as path from 'path';
-import {environment} from '../../environment/environment';
+import {environment} from '../../environments/environment';
 import {AssetRepository} from '../../persistence/repository/asset.repository';
 
 export interface AssetUploadPathsInterface {

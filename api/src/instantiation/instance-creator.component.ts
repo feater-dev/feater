@@ -78,8 +78,8 @@ export class InstanceCreatorComponent {
         const createInstanceCommand = new ComplexCommand([], false);
 
         this.addCreateDirectory(createInstanceCommand, instanceContext);
-        this.addCreateVolumeFromAssets(createInstanceCommand, instanceContext);
         this.addCloneSources(createInstanceCommand, instanceContext);
+        this.addCreateVolumeFromAssets(createInstanceCommand, instanceContext);
         this.addParseDockerCompose(createInstanceCommand, instanceContext);
         this.addPrepareProxyDomains(createInstanceCommand, instanceContext);
         this.addPrepareEnvVarsForSources(createInstanceCommand, instanceContext);
@@ -115,6 +115,7 @@ export class InstanceCreatorComponent {
         instanceContext: InstanceContext,
     ) {
         createInstanceCommand.addChild(new ContextAwareCommand(
+            `Create instance build directory`,
             (instanceContext: InstanceContext) => new CreateDirectoryCommand(
                 instanceContext.paths.dir.absolute.guest,
             ),
@@ -129,6 +130,7 @@ export class InstanceCreatorComponent {
             new ComplexCommand(
                 instanceContext.volumes.map(
                     volume => new ContextAwareCommand(
+                        `Create asset volume \`${volume.id}\``,
                         (instanceContext: InstanceContext) => {
                             return new CreateVolumeFromAssetCommand(
                                 volume.id,
@@ -161,6 +163,7 @@ export class InstanceCreatorComponent {
             new ComplexCommand(
                 instanceContext.sources.map(
                     source => new ContextAwareCommand(
+                        `Clone repository for source \`${source.id}\``,
                         (instanceContext: InstanceContext) => new CloneSourceCommand(
                             source.cloneUrl,
                             source.reference.type,
@@ -184,6 +187,7 @@ export class InstanceCreatorComponent {
     ) {
         createInstanceCommand.addChild(
             new ContextAwareCommand(
+                `Parse docker-compose configuration`,
                 (instanceContext: InstanceContext) => {
                     const source = instanceContext.findSource(instanceContext.composeFiles[0].sourceId);
 
@@ -224,6 +228,7 @@ export class InstanceCreatorComponent {
             new ComplexCommand(
                 instanceContext.proxiedPorts.map(
                     proxiedPort => new ContextAwareCommand(
+                        `Prepare domain for proxied port \`${proxiedPort.id}\``,
                         (instanceContext: InstanceContext) => new PrepareProxyDomainCommand(
                             instanceContext.hash,
                             proxiedPort.id,
@@ -254,6 +259,7 @@ export class InstanceCreatorComponent {
             new ComplexCommand(
                 instanceContext.sources.map(
                     source => new ContextAwareCommand(
+                        `Prepare environment variables for source \`${source.id}\``,
                         (instanceContext: InstanceContext) => new PrepareSourceEnvVarsCommand(
                             source.id,
                             source.paths.dir.absolute.guest,
@@ -279,6 +285,7 @@ export class InstanceCreatorComponent {
     ) {
         createInstanceCommand.addChild(
             new ContextAwareCommand(
+                `Prepare summary items`,
                 (instanceContext: InstanceContext) => new PrepareSummaryItemsCommand(
                     FeaterVariablesSet.fromList(instanceContext.featerVariables),
                     SummaryItemsSet.fromList(instanceContext.summaryItems),
@@ -322,6 +329,7 @@ export class InstanceCreatorComponent {
     ) {
         createInstanceCommand.addChild(
             new ContextAwareCommand(
+                `Run docker-compose`,
                 (instanceContext: InstanceContext) => {
                     const composeFile = instanceContext.composeFiles[0]; // TODO Handle multiple compose files.
                     const source = instanceContext.findSource(composeFile.sourceId);
@@ -352,6 +360,7 @@ export class InstanceCreatorComponent {
     ) {
         createInstanceCommand.addChild(
             new ContextAwareCommand(
+                `Get container ids`,
                 (instanceContext: InstanceContext) => new GetContainerIdsCommand(
                     instanceContext.composeProjectName,
                     instanceContext.services.map(
@@ -388,6 +397,7 @@ export class InstanceCreatorComponent {
             new ComplexCommand(
                 instanceContext.proxiedPorts.map(
                     proxiedPort => new ContextAwareCommand(
+                        `Connect service \`${proxiedPort.serviceId}\` to proxy network`,
                         (instanceContext: InstanceContext) => {
                             const service = instanceContext.findService(proxiedPort.serviceId);
 
@@ -419,6 +429,7 @@ export class InstanceCreatorComponent {
             new ComplexCommand(
                 instanceContext.proxiedPorts.map(
                     proxiedPort => new ContextAwareCommand(
+                        `Prepare configuration for proxied port \`${proxiedPort.id}\``,
                         (instanceContext: InstanceContext) => {
                             const service = instanceContext.findService(proxiedPort.serviceId);
 
@@ -465,6 +476,7 @@ export class InstanceCreatorComponent {
     ) {
         createInstanceCommand.addChild(
             new ContextAwareCommand(
+                `Enable configuration for proxied ports`,
                 (instanceContext: InstanceContext) => new EnableProxyDomainsCommand(
                     instanceContext.hash,
                     instanceContext.proxiedPorts.map(

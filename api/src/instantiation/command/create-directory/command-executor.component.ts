@@ -11,14 +11,12 @@ export class CreateDirectoryCommandExecutorComponent implements SimpleCommandExe
         return (command instanceof CreateDirectoryCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as CreateDirectoryCommand;
+        typedCommand.commandLogger.info(`Absolute guest path: ${typedCommand.absoluteGuestDirPath}`);
+        fs.mkdirSync(typedCommand.absoluteGuestDirPath);
 
-        return new Promise(resolve => {
-            fs.mkdirSync(typedCommand.absoluteGuestDirPath);
-
-            resolve({});
-        });
+        return {};
     }
 
 }

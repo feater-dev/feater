@@ -378,9 +378,16 @@ export const typeDefsProvider = {
             value: String!
         }
 
-        type InstanceLog {
-            createdAt: String!
+        type InstanceCommandLogEntry {
             message: String!
+        }
+
+        type InstanceCommandLog {
+            description: String!
+            createdAt: String!
+            completedAt: String
+            failedAt: String
+            entries: [InstanceCommandLogEntry!]!
         }
 
         type Instance {
@@ -391,9 +398,9 @@ export const typeDefsProvider = {
             envVariables: [InstanceEnvVariable!]!
             proxiedPorts: [InstanceProxiedPort!]!
             summaryItems: [InstanceSummaryItem!]!
-            createdAt: String!
-            updatedAt: String!
-            logs: [InstanceLog!]!
+            createdAt: String
+            updatedAt: String
+            commandLogs: [InstanceCommandLog!]!
         }
 
         type RemoveDeployKeyResult {

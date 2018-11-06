@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 
-
 export const getInstanceDetailQueryGql = gql`
     query ($id: String!) {
         instance(id: $id) {
@@ -38,9 +37,14 @@ export const getInstanceDetailQueryGql = gql`
             }
             createdAt
             updatedAt
-            logs {
+            commandLogs {
+                description
                 createdAt
-                message
+                completedAt
+                failedAt
+                entries {
+                    message
+                }
             }
         }
     }
@@ -90,10 +94,17 @@ export interface GetInstanceDetailQueryInstanceFieldinterface {
     ];
     readonly createdAt: string;
     readonly updatedAt: string;
-    readonly logs: [
+    readonly commandLogs: [
         {
+            readonly description: string;
             readonly createdAt: string;
-            readonly message: string;
+            readonly completedAt: string;
+            readonly failedAt: string;
+            readonly entries: [
+                {
+                    message: string;
+                }
+            ];
         }
     ];
 }

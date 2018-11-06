@@ -10,7 +10,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import gql from 'graphql-tag';
 
-const POLLING_INTERVAL = 5000;
+const POLLING_INTERVAL = 3000;
 
 @Component({
     selector: 'app-instance-detail',
@@ -138,6 +138,10 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
                 }
             );
         }
+    }
+
+    joinCommandLogEntryMessages(commandLogEntries) {
+        return commandLogEntries.map(entry => entry.message).join('\n');
     }
 
     private getInstance() {

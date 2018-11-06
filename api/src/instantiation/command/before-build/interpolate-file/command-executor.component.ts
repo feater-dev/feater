@@ -16,16 +16,18 @@ export class InterpolateFileCommandExecutorComponent implements SimpleCommandExe
         return (command instanceof InterpolateFileCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as InterpolateFileCommand;
+        const logger = typedCommand.commandLogger;
 
-        return new Promise(resolve => {
-            const interpolatedText = this.interpolationHelper.interpolateFile(
-                typedCommand.absoluteGuestPath,
-                typedCommand.featerVariables,
-            );
+        const interpolatedText = this.interpolationHelper.interpolateFile(
+            typedCommand.absoluteGuestPath,
+            typedCommand.featerVariables,
+        );
 
-            resolve({interpolatedText} as InterpolateFileCommandResultInterface);
-        });
+        logger.info(`Interpolated text:\n${interpolatedText}`);
+
+        return {interpolatedText} as InterpolateFileCommandResultInterface;
     }
+
 }

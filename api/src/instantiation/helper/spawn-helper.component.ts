@@ -9,7 +9,8 @@ export class SpawnHelper {
         logger: LoggerInterface,
         resolve: (payload?: any) => void,
         reject: (error?: any) => void,
-        exitHandler: (exitCode: number) => void,
+        successfulExitHandler: () => void,
+        failedExitHandler: (exitCode: number) => void,
         errorHandler: (error: Error) => void,
     ): void {
         spawned.stdout
@@ -27,12 +28,13 @@ export class SpawnHelper {
 
         const handleExit = exitCode => {
             if (0 !== exitCode) {
-                exitHandler(exitCode);
+                failedExitHandler(exitCode);
                 reject(exitCode);
 
                 return;
             }
 
+            successfulExitHandler();
             resolve();
         };
 

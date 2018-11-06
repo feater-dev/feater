@@ -57,7 +57,9 @@ import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
 import {RelativeDatePipe} from './pipes/relative-date.pipe';
 import {InheritedEnvVarsFormElementComponent} from './definition/add/form-element/after-build-task/env/inherited-env-vars-form-element.component';
 import {CustomEnvVarsFormElementComponent} from './definition/add/form-element/after-build-task/env/custom-env-vars-form-element.component';
+import {ElapsedTimePipe} from './pipes/elapsed-time.pipe';
 
+import {MarkdownToHtmlModule} from 'markdown-to-html-pipe';
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
@@ -119,6 +121,7 @@ const appRoutes: Routes = [
         YamlPipe,
         AbsoluteDatePipe,
         RelativeDatePipe,
+        ElapsedTimePipe,
     ],
     imports: [
         BrowserModule,
@@ -127,6 +130,7 @@ const appRoutes: Routes = [
         HttpClientModule,
         HttpLinkModule,
         RouterModule.forRoot(appRoutes),
+        MarkdownToHtmlModule
     ],
     providers: [
         {provide: 'authHttp', useClass: AuthHttpClient},

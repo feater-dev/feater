@@ -2,7 +2,7 @@ import {spawn} from 'child_process';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 import {Injectable} from '@nestjs/common';
-import {environment} from '../../../../environment/environment';
+import {environment} from '../../../../environments/environment';
 import {SimpleCommandExecutorComponentInterface} from '../../simple-command-executor-component.interface';
 import {AssetHelper, AssetUploadPathsInterface} from '../../../helper/asset-helper.component';
 import {SpawnHelper} from '../../../helper/spawn-helper.component';
@@ -10,6 +10,7 @@ import {SimpleCommand} from '../../../executor/simple-command';
 import {CopyAssetIntoContainerCommand} from './command';
 import {BaseLogger} from '../../../../logger/base-logger';
 import * as mkdirRecursive from 'mkdir-recursive';
+import {CommandLogger} from '../../../logger/command-logger';
 
 @Injectable()
 export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
@@ -25,6 +26,7 @@ export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCom
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as CopyAssetIntoContainerCommand;
+        const logger = typedCommand.commandLogger;
 
         const asset = await this.assetHelper.findUploadedById(typedCommand.assetId);
         const uploadPaths = this.assetHelper.getUploadPaths(asset);
@@ -34,6 +36,7 @@ export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCom
             typedCommand.containerId,
             typedCommand.destinationPath,
             typedCommand.absoluteGuestInstanceDirPath,
+            logger,
         );
 
         return {};
@@ -44,6 +47,7 @@ export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCom
         containerId: string,
         destinationPath: string,
         workingDirectory: string,
+        logger: CommandLogger,
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             const spawned = spawn(
@@ -54,14 +58,17 @@ export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCom
 
             this.spawnHelper.handleSpawned(
                 spawned,
-                new BaseLogger(), // TODO Provide real logger.
+                logger,
                 resolve,
                 reject,
+                () => {},
                 (exitCode: number) => {
-                    // logger.error(`Failed to copy asset to container, exit code ${exitCode}.`, {});
+                    logger.error(`Failed to copy asset to container.`, {});
+                    logger.error(`Exit code ${exitCode}`, {});
                 },
                 (error: Error) => {
-                    // logger.error(`Failed to copy asset to container, error ${error.message}.`, {});
+                    logger.error(`Failed to copy asset to container.`, {});
+                    logger.error(`Error ${error.message}`, {});
                 },
             );
         });

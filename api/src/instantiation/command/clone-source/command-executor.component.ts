@@ -7,6 +7,8 @@ import {SimpleCommand} from '../../executor/simple-command';
 import {BaseLogger} from '../../../logger/base-logger';
 import * as nodegit from 'nodegit';
 import * as gitUrlParse from 'git-url-parse';
+import * as sshFingerprint from 'ssh-fingerprint';
+import {CommandLogger} from '../../logger/command-logger';
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
@@ -23,28 +25,32 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = (command as CloneSourceCommand);
-        const deployKey = ('ssh' === gitUrlParse(typedCommand.cloneUrl).protocol)
-            ? await this.deployKeyRepository.findOneByCloneUrl(typedCommand.cloneUrl)
-            : null;
-        const repository = await this.cloneRepository(typedCommand, deployKey);
+        const logger = typedCommand.commandLogger;
+
+        let deployKey;
+
+        logger.info(`Clone URL: ${typedCommand.cloneUrl}`);
+        if ('ssh' === gitUrlParse(typedCommand.cloneUrl).protocol) {
+            logger.info(`Using deploy key} to clone over SSH.`);
+            deployKey = await this.deployKeyRepository.findOneByCloneUrl(typedCommand.cloneUrl);
+            logger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
+        } else {
+            deployKey = null;
+            logger.info(`Not using deploy key.`);
+        }
+        const repository = await nodegit.Clone.clone(
+            typedCommand.cloneUrl,
+            typedCommand.absoluteGuestInstanceDirPath,
+            this.createCloneOptions(typedCommand.commandLogger, deployKey),
+        );
+        logger.info(`Cloning completed.`);
 
         await this.checkoutReference(typedCommand, repository);
 
         return {};
     }
 
-    protected cloneRepository(
-        command: CloneSourceCommand,
-        deployKey?: DeployKeyInterface,
-    ): Promise<nodegit.Repository> {
-        return nodegit.Clone.clone(
-            command.cloneUrl,
-            command.absoluteGuestInstanceDirPath,
-            this.createCloneOptions(deployKey),
-        );
-    }
-
-    protected createCloneOptions(deployKey?: DeployKeyInterface): any {
+    protected createCloneOptions(commandLogger: CommandLogger, deployKey?: DeployKeyInterface): any {
         const logger = new BaseLogger(); // TODO Replace with real logger.
         let lastProgress: string;
 
@@ -56,11 +62,11 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
                 const progress = (100 * (
                     (transferProgress.receivedObjects() + transferProgress.indexedObjects()) /
                     (transferProgress.totalObjects() * 2)
-                )).toFixed(1);
+                )).toFixed(2);
 
                 if (progress !== lastProgress) {
                     lastProgress = progress;
-                    logger.info(`Cloning progress ${progress}%.`);
+                    commandLogger.info(`Cloning progress ${progress}%.`);
                 }
             },
         };
@@ -86,6 +92,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
             case 'branch':
                 const reference = await repo.getBranch(`refs/remotes/origin/${command.referenceName}`);
                 await repo.checkoutRef(reference);
+                command.commandLogger.info(`Checked out branch: ${command.referenceName}`);
 
                 return;
 

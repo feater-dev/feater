@@ -35,6 +35,10 @@ export class EnvVariablesSet {
         return set;
     }
 
+    isEmpty(): boolean {
+        return 0 === this.items.length;
+    }
+
     add(name: string, value: string) {
         this.items.push(new EnvVariablesSetItem(name, value));
     }

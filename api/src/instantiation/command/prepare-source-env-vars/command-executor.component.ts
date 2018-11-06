@@ -13,33 +13,43 @@ export class PrepareSourceEnvVarsCommandExecutorComponent implements SimpleComma
         return (command instanceof PrepareSourceEnvVarsCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         // TODO Maybe replace this with volumes?
 
         const typedCommand = command as PrepareSourceEnvVarsCommand;
+        const logger = typedCommand.commandLogger;
 
-        return new Promise<any>(resolve => {
-            const envVariables = new EnvVariablesSet();
-            const featerVariables = new FeaterVariablesSet();
-            envVariables.add(
-                `FEATER__GUEST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
-                typedCommand.sourceAbsoluteGuestPath,
-            );
-            featerVariables.add(
-                `guest_source_path__${typedCommand.sourceId.toLowerCase()}`,
-                typedCommand.sourceAbsoluteGuestPath,
-            );
-            envVariables.add(
-                `FEATER__HOST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
-                typedCommand.sourceAbsoluteHostPath,
-            );
-            featerVariables.add(
-                `host_source_path__${typedCommand.sourceId.toLowerCase()}`,
-                typedCommand.sourceAbsoluteHostPath,
-            );
+        const envVariables = new EnvVariablesSet();
+        const featerVariables = new FeaterVariablesSet();
+        envVariables.add(
+            `FEATER__GUEST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
+            typedCommand.sourceAbsoluteGuestPath,
+        );
+        featerVariables.add(
+            `guest_source_path__${typedCommand.sourceId.toLowerCase()}`,
+            typedCommand.sourceAbsoluteGuestPath,
+        );
+        envVariables.add(
+            `FEATER__HOST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
+            typedCommand.sourceAbsoluteHostPath,
+        );
+        featerVariables.add(
+            `host_source_path__${typedCommand.sourceId.toLowerCase()}`,
+            typedCommand.sourceAbsoluteHostPath,
+        );
 
-            resolve({envVariables, featerVariables} as PrepareSourceEnvVarsCommandResultInterface);
-        });
+        logger.info(`Added environmental variables:${
+            envVariables.isEmpty()
+                ? ' none'
+                : '\n' + JSON.stringify(envVariables.toMap(), null, 2)
+        }`);
+        logger.info(`Added Feater variables:${
+            featerVariables.isEmpty()
+                ? ' none'
+                : '\n' + JSON.stringify(featerVariables.toMap(), null, 2)
+        }`);
+
+        return {envVariables, featerVariables} as PrepareSourceEnvVarsCommandResultInterface;
     }
 
 }

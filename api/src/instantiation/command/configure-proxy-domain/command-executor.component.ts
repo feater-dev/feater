@@ -10,11 +10,16 @@ export class ConfigureProxyDomainCommandExecutorComponent implements SimpleComma
         return (command instanceof ConfigureProxyDomainCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as ConfigureProxyDomainCommand;
+        const logger = typedCommand.commandLogger;
 
-        return new Promise<any>(resolve => {
-            const nginxConfig =
+        logger.info(`Port: ${typedCommand.port}`);
+        logger.info(`Service ID: ${typedCommand.serviceId}`);
+        logger.info(`IP address: ${typedCommand.ipAddress}`);
+        logger.info(`Proxy domain: ${typedCommand.proxyDomain}`);
+
+        const nginxConfig =
 `
 # Proxy domain for
 # port ${typedCommand.port}
@@ -31,7 +36,10 @@ server {
     }
 }
 `;
-            resolve({nginxConfig});
-        });
+
+        logger.info(`Nginx configuration:\n${nginxConfig}`);
+
+        return {nginxConfig};
     }
+
 }

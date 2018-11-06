@@ -1,5 +1,5 @@
 import * as path from 'path';
-import {environment} from '../../environment/environment';
+import {environment} from '../../environments/environment';
 import {Injectable} from '@nestjs/common';
 import {AbsolutePathsInterface} from './absolute-paths.interface';
 

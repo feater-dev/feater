@@ -2,7 +2,7 @@ import * as winston from 'winston';
 import 'winston-mongodb';
 import {Injectable} from '@nestjs/common';
 import {LoggerInterface} from './logger-interface';
-import {environment} from '../environment/environment';
+import {environment} from '../environments/environment';
 
 @Injectable()
 export class BaseLogger implements LoggerInterface {

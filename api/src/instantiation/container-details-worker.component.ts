@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import * as got from 'got';
 import * as querystring from 'querystring';
 import * as redis from 'redis';
-import {environment} from '../environment/environment';
+import {environment} from '../environments/environment';
 
 export interface CachedContainerInfo {
     readonly namePrefix: string;

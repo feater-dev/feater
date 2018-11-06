@@ -2,7 +2,7 @@ import {spawn} from 'child_process';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 import {Injectable} from '@nestjs/common';
-import {environment} from '../../../../environment/environment';
+import {environment} from '../../../../environments/environment';
 import {SimpleCommandExecutorComponentInterface} from '../../simple-command-executor-component.interface';
 import {AssetHelper, AssetUploadPathsInterface} from '../../../helper/asset-helper.component';
 import {SpawnHelper} from '../../../helper/spawn-helper.component';

@@ -13,7 +13,7 @@ import * as nanoidGenerate from 'nanoid/generate';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import {StopServiceInputTypeInterface} from '../input-type/stop-service-input-type.interface';
 import {execSync} from 'child_process';
-import {environment} from '../../environment/environment';
+import {environment} from '../../environments/environment';
 import {PauseServiceInputTypeInterface} from '../input-type/pause-service-input-type.interface';
 import {StartServiceInputTypeInterface} from '../input-type/start-service-input-type.interface';
 import {UnpauseServiceInputTypeInterface} from '../input-type/unpause-service-input-type.interface';

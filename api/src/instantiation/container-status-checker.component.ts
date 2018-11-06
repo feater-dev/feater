@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {CachedContainerInfo, ContainerDetailsWorkerComponent} from './container-details-worker.component';
 import * as redis from 'redis';
 import * as _ from 'lodash';
-import {environment} from '../environment/environment';
+import {environment} from '../environments/environment';
 
 @Injectable()
 export class ContainerStatusCheckerComponent {

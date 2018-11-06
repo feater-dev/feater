@@ -8,11 +8,6 @@ export interface EnvironmentInterface {
     readonly redis: {
         readonly url: string;
     };
-    readonly sshKey: {
-        readonly publicKeyPath: string;
-        readonly privateKeyPath: string;
-        readonly passphrase: string;
-    };
     readonly guestPaths: {
         readonly build: string;
         readonly proxyDomain: string;
@@ -20,14 +15,11 @@ export interface EnvironmentInterface {
     };
     readonly hostPaths: {
         readonly build: string;
-        readonly composerCache: string;
-        readonly npmCache: string;
-        readonly yarnCache: string;
         readonly asset: string;
     };
     readonly instantiation: {
-        readonly composeHttpTimeout: number;
         readonly composeBinaryPath: string;
+        readonly composeHttpTimeout: number;
         readonly dockerBinaryPath: string;
         readonly containerNamePrefix: string; // TODO Rename to composeProjectNamePrefix.
         readonly proxyDomainPattern: string;

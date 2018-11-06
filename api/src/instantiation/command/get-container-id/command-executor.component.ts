@@ -5,7 +5,7 @@ import {SimpleCommandExecutorComponentInterface} from '../simple-command-executo
 import {SimpleCommand} from '../../executor/simple-command';
 import {GetContainerIdsCommandResultInterface, GetContainerIdsCommandResultServiceContainerIdInterface} from './command-result.interface';
 import {GetContainerIdsCommand} from './command';
-import {environment} from '../../../environment/environment';
+import {environment} from '../../../environments/environment';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {FeaterVariablesSet} from '../../sets/feater-variables-set';
 

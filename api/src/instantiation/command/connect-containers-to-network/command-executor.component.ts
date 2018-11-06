@@ -1,4 +1,4 @@
-import {environment} from '../../../environment/environment';
+import {environment} from '../../../environments/environment';
 import {execSync} from 'child_process';
 import {Injectable} from '@nestjs/common';
 import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';

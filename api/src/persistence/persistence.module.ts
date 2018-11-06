@@ -6,7 +6,7 @@ import {InstanceSchema} from './schema/instance.schema';
 import {ProjectRepository} from './repository/project.repository';
 import {DefinitionRepository} from './repository/definition.repository';
 import {InstanceRepository} from './repository/instance.repository';
-import {environment} from '../environment/environment';
+import {environment} from '../environments/environment';
 import {LogRepository} from './repository/log.repository';
 import {AssetSchema} from './schema/asset.schema';
 import {AssetRepository} from './repository/asset.repository';

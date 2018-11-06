@@ -5,7 +5,7 @@ import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
-import {environment} from '../../../environment/environment';
+import {environment} from '../../../environments/environment';
 import {SimpleCommand} from '../../executor/simple-command';
 import {RunDockerComposeCommand} from './command';
 import {SpawnHelper} from '../../helper/spawn-helper.component';

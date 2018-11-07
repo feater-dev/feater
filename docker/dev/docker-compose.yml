@@ -5,55 +5,57 @@ services:
   api:
     build: api
     volumes:
-      - ../../api:/app
-      - ${FEATER_DATA_PATH}/build:/data/build
-      - ${FEATER_DATA_PATH}/proxyDomain:/data/proxyDomain
-      - ${FEATER_DATA_PATH}/asset:/data/asset
-      - /var/run/docker.sock:/var/run/docker.sock
+    - "../../api:/app"
+    - "${FEATER_BUILD_DATA_PATH}:/data/build"
+    - "${FEATER_PROXY_DOMAIN_DATA_PATH}:/data/proxyDomain"
+    - "${FEATER_ASSET_DATA_PATH}:/data/asset"
+    - "${FEATER_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
     ports:
-      - '${FEATER_API_PORT}:3000'
+    - '${FEATER_API_PORT}:3000'
     depends_on:
-      - mongo
-      - redis
+    - mongo
+    - redis
     networks:
-      - featerinternal
+    - internal
     container_name: feater_api
 
   spa:
     build: spa
     volumes:
-      - ../../spa:/app
+    - "../../spa:/app"
     ports:
-      - '${FEATER_SPA_PORT}:4200'
+    - '${FEATER_SPA_PORT}:4200'
     networks:
-      - featerinternal
+    - internal
     container_name: feater_spa
 
   mongo:
     image: mongo:3.6
+    volumes:
+    - "${FEATER_MONGO_DATA_PATH}:/data/db"
     ports:
-      - '${FEATER_MONGO_PORT}:27017'
+    - '${FEATER_MONGO_PORT}:27017'
     networks:
-      - featerinternal
+    - internal
     container_name: feater_mongo
 
   redis:
     image: redis:4
     networks:
-      - featerinternal
+    - internal
     container_name: feater_redis
 
   nginx:
     build: nginx
     volumes:
-      - ${FEATER_DATA_PATH}/proxyDomain:/etc/nginx/conf.d/proxyDomain
+    - "${FEATER_PROXY_DOMAIN_DATA_PATH}:/etc/nginx/conf.d/proxyDomain"
     ports:
-      - '${FEATER_NGINX_PORT}:80'
+    - '${FEATER_NGINX_PORT}:80'
     networks:
-      - featerinternal
-      - featerproxy
+    - internal
+    - proxy
     container_name: feater_nginx
 
 networks:
-  featerinternal:
-  featerproxy:
+  internal:
+  proxy:

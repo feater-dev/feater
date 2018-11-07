@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
-cd /app
+set -ex
+
 yarn install
-/app/run-server.sh
+yarn start:dev:watch

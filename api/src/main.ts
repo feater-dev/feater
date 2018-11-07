@@ -26,13 +26,6 @@ async function bootstrap() {
         stream: process.stdout,
     }));
 
-    app.set('view engine', 'handlebars');
-    app.engine('handlebars', expressHandlebars({
-        defaultLayout: 'main',
-        layoutsDir: __dirname + '/views/layouts',
-    }));
-    app.set('views', __dirname + '/views');
-
     // TODO Get port from config. How to get config here?
     await app.listen(3000);
 }

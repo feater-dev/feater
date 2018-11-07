@@ -1,11 +1,13 @@
 import * as cors from 'cors';
 import * as morgan from 'morgan';
-import * as expressHandlebars from 'express-handlebars';
+import * as dotenv from 'dotenv';
 import {NestFactory} from '@nestjs/core';
 import {ApplicationModule} from './app.module';
 import {INestApplication} from '@nestjs/common';
 
 async function bootstrap() {
+    dotenv.config();
+
     const app: INestApplication = await NestFactory.create(ApplicationModule);
 
     app.use(cors({
@@ -26,15 +28,7 @@ async function bootstrap() {
         stream: process.stdout,
     }));
 
-    app.set('view engine', 'handlebars');
-    app.engine('handlebars', expressHandlebars({
-        defaultLayout: 'main',
-        layoutsDir: __dirname + '/views/layouts',
-    }));
-    app.set('views', __dirname + '/views');
-
-    // TODO Get port from config. How to get config here?
-    await app.listen(3000);
+    await app.listen(process.env.PORT);
 }
 
 bootstrap();

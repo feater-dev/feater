@@ -6,12 +6,12 @@ export interface CommandLogDetailItemInterface {
 }
 
 export interface CommandLogInterface extends Document {
-    readonly taskId: string;
-    readonly instanceId: string;
-    readonly instanceHash: string;
-    readonly description: string;
-    readonly details: [CommandLogDetailItemInterface];
-    readonly createdAt: Date;
+    taskId: string;
+    instanceId: string;
+    instanceHash: string;
+    description: string;
+    details: [CommandLogDetailItemInterface];
+    createdAt: Date;
     updatedAt?: Date;
     completedAt?: Date;
     failedAt?: Date;

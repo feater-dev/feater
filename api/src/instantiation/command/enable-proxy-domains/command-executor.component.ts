@@ -32,7 +32,7 @@ export class EnableProxyDomainsCommandExecutorComponent implements SimpleCommand
 
         logger.info(`Restarting Nginx.`);
         execSync(
-            `docker exec -t feater_nginx /etc/init.d/nginx restart`,
+            `docker exec feater_nginx service nginx reload`,
             { maxBuffer: BUFFER_SIZE },
         );
 

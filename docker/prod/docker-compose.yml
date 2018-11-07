@@ -3,15 +3,16 @@ version: '3'
 services:
 
   api:
-    build: api
+    image: feater_api:latest
     volumes:
-      - "../../api:/app"
       - "${FEATER_DATA_PATH}/build:/data/build"
       - "${FEATER_DATA_PATH}/proxyDomain:/data/proxyDomain"
       - "${FEATER_DATA_PATH}/asset:/data/asset"
       - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
-      - '${FEATER_API_PORT}:3000'
+      - "${FEATER_API_PORT}:3000"
+    environment:
+      PORT: 3000
     depends_on:
       - mongo
       - redis
@@ -24,7 +25,7 @@ services:
     volumes:
       - "../../spa:/app"
     ports:
-      - '${FEATER_SPA_PORT}:4200'
+      - "${FEATER_SPA_PORT}:4200"
     networks:
       - internal
     container_name: feater_spa
@@ -34,7 +35,7 @@ services:
     volumes:
       - "mongo_data:/data/db"
     ports:
-      - '${FEATER_MONGO_PORT}:27017'
+      - "${FEATER_MONGO_PORT}:27017"
     networks:
       - internal
     container_name: feater_mongo
@@ -48,9 +49,9 @@ services:
   nginx:
     build: nginx
     volumes:
-      - ${FEATER_DATA_PATH}/proxyDomain:/etc/nginx/conf.d/proxyDomain
+      - "${FEATER_DATA_PATH}/proxyDomain:/etc/nginx/conf.d/proxyDomain"
     ports:
-      - '${FEATER_NGINX_PORT}:80'
+      - "${FEATER_NGINX_PORT}:80"
     networks:
       - internal
       - proxy

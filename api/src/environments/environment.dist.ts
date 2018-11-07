@@ -25,7 +25,7 @@ export const environment: EnvironmentInterface = {
         dockerBinaryPath: '/usr/bin/docker',
         containerNamePrefix: 'featerinstance',
         proxyDomainPattern: `{instance_hash}-{port_id}.feater.org`,
-        proxyDomainsNetworkName: 'feater_featerproxy', // Value of COMPOSE_PROJECT_NAME is prepended by default.
+        proxyDomainsNetworkName: 'feater_proxy', // Value of COMPOSE_PROJECT_NAME is prepended by default.
     },
     logger: {
         console: {

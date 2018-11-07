@@ -10,7 +10,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import gql from 'graphql-tag';
 
-const POLLING_INTERVAL = 3000;
+const POLLING_INTERVAL = 10000; // 10 seconds
 
 @Component({
     selector: 'app-instance-detail',

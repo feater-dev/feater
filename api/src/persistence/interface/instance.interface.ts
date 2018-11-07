@@ -1,26 +1,26 @@
 import {Document} from 'mongoose';
 
 export interface InstanceInterface extends Document {
-    readonly _id: string;
-    readonly definitionId: string;
-    readonly hash: string;
-    readonly name: string;
+    _id: string;
+    definitionId: string;
+    hash: string;
+    name: string;
     services: any;
     summaryItems: {
-        readonly name: string;
-        readonly value: string;
+        name: string;
+        value: string;
     }[];
     envVariables: {
-        readonly name: string;
-        readonly value: string;
+        name: string;
+        value: string;
     }[];
     proxiedPorts: {
-        readonly id: string;
-        readonly serviceId: string;
-        readonly name: string;
-        readonly port: number;
-        readonly domain?: string;
-        readonly nginxConfig?: string;
+        id: string;
+        serviceId: string;
+        name: string;
+        port: number;
+        domain?: string;
+        nginxConfig?: string;
     }[];
     createdAt: Date;
     updatedAt: Date;

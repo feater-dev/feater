@@ -1,6 +1,4 @@
 import {spawn} from 'child_process';
-import * as path from 'path';
-import * as rimraf from 'rimraf';
 import {Injectable} from '@nestjs/common';
 import {environment} from '../../../../environments/environment';
 import {SimpleCommandExecutorComponentInterface} from '../../simple-command-executor-component.interface';
@@ -8,8 +6,6 @@ import {AssetHelper, AssetUploadPathsInterface} from '../../../helper/asset-help
 import {SpawnHelper} from '../../../helper/spawn-helper.component';
 import {SimpleCommand} from '../../../executor/simple-command';
 import {CopyAssetIntoContainerCommand} from './command';
-import {BaseLogger} from '../../../../logger/base-logger';
-import * as mkdirRecursive from 'mkdir-recursive';
 import {CommandLogger} from '../../../logger/command-logger';
 
 @Injectable()

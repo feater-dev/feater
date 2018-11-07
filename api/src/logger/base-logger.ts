@@ -16,6 +16,7 @@ export class BaseLogger implements LoggerInterface {
                 new winston.transports.Console({
                     level: environment.logger.console.logLevel,
                 }),
+                // @ts-ignore
                 new winston.transports.MongoDB({
                     level: environment.logger.mongoDb.logLevel,
                     db: environment.mongo.dsn,

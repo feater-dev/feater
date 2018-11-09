@@ -7,15 +7,20 @@ import {
     GetInstanceDetailServicesQueryInterface,
 } from './get-instance-detail-services.query';
 import gql from 'graphql-tag';
+import {Observable, Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-instance-detail-services',
     templateUrl: './instance-detail-services.component.html',
     styles: []
 })
-export class InstanceDetailServicesComponent implements OnInit {
+export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
+
+    readonly POLLING_INTERVAL = 5000; // 5 seconds.
 
     instance: GetInstanceDetailServicesQueryInstanceFieldinterface;
+
+    pollingSubscription: Subscription;
 
     protected readonly stopServiceMutation = gql`
         mutation ($instanceId: String!, $serviceId: String!) {
@@ -56,6 +61,14 @@ export class InstanceDetailServicesComponent implements OnInit {
 
     ngOnInit() {
         this.getInstance();
+        const polling = Observable.interval(this.POLLING_INTERVAL);
+        this.pollingSubscription = polling.subscribe(
+            () => { this.getInstance(); },
+        );
+    }
+
+    ngOnDestroy() {
+        this.pollingSubscription.unsubscribe();
     }
 
     startOrUnpauseService(service) {

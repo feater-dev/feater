@@ -6,15 +6,20 @@ import {
     GetInstanceDetailProxyDomainsQueryInstanceFieldinterface,
     GetInstanceDetailProxyDomainsQueryInterface,
 } from './get-instance-detail-proxy-domains.query';
+import {Observable, Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-instance-detail-proxy-domains',
     templateUrl: './instance-detail-proxy-domains.component.html',
     styles: []
 })
-export class InstanceDetailProxyDomainsComponent implements OnInit {
+export class InstanceDetailProxyDomainsComponent implements OnInit, OnDestroy {
+
+    readonly POLLING_INTERVAL = 5000; // 5 seconds.
 
     instance: GetInstanceDetailProxyDomainsQueryInstanceFieldinterface;
+
+    pollingSubscription: Subscription;
 
     constructor(
         private route: ActivatedRoute,
@@ -23,6 +28,14 @@ export class InstanceDetailProxyDomainsComponent implements OnInit {
 
     ngOnInit() {
         this.getInstance();
+        const polling = Observable.interval(this.POLLING_INTERVAL);
+        this.pollingSubscription = polling.subscribe(
+            () => { this.getInstance(); },
+        );
+    }
+
+    ngOnDestroy() {
+        this.pollingSubscription.unsubscribe();
     }
 
     getServiceById(id) {

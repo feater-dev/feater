@@ -2,26 +2,20 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
-    getInstanceDetailQueryGql,
-    GetInstanceDetailQueryInstanceFieldinterface,
-    GetInstanceDetailQueryInterface,
-} from './get-instance-detail.query';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+    getInstanceDetailServicesQueryGql,
+    GetInstanceDetailServicesQueryInstanceFieldinterface,
+    GetInstanceDetailServicesQueryInterface,
+} from './get-instance-detail-services.query';
 import gql from 'graphql-tag';
 
-const POLLING_INTERVAL = 8000; // 8 seconds.
-
 @Component({
-    selector: 'app-instance-detail',
-    templateUrl: './instance-detail.component.html',
+    selector: 'app-instance-detail-services',
+    templateUrl: './instance-detail-services.component.html',
     styles: []
 })
-export class InstanceDetailComponent implements OnInit, OnDestroy {
+export class InstanceDetailServicesComponent implements OnInit {
 
-    instance: GetInstanceDetailQueryInstanceFieldinterface;
-
-    pollingSubscription: Subscription;
+    instance: GetInstanceDetailServicesQueryInstanceFieldinterface;
 
     protected readonly stopServiceMutation = gql`
         mutation ($instanceId: String!, $serviceId: String!) {
@@ -62,22 +56,6 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
-        const polling = Observable.interval(POLLING_INTERVAL);
-        this.pollingSubscription = polling.subscribe(
-            () => { this.getInstance(); },
-        );
-    }
-
-    ngOnDestroy() {
-        this.pollingSubscription.unsubscribe();
-    }
-
-    getServiceById(id) {
-        for (const service of this.instance.services) {
-            if (id === service.id) {
-                return service;
-            }
-        }
     }
 
     startOrUnpauseService(service) {
@@ -140,14 +118,10 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
         }
     }
 
-    joinCommandLogEntryMessages(commandLogEntries) {
-        return commandLogEntries.map(entry => entry.message).join('\n');
-    }
-
     private getInstance() {
         this.apollo
-            .watchQuery<GetInstanceDetailQueryInterface>({
-                query: getInstanceDetailQueryGql,
+            .watchQuery<GetInstanceDetailServicesQueryInterface>({
+                query: getInstanceDetailServicesQueryGql,
                 variables: {
                     id: this.route.snapshot.params['id'],
                 },
@@ -155,7 +129,7 @@ export class InstanceDetailComponent implements OnInit, OnDestroy {
             })
             .valueChanges
             .subscribe(result => {
-                const resultData: GetInstanceDetailQueryInterface = result.data;
+                const resultData: GetInstanceDetailServicesQueryInterface = result.data;
                 this.instance = resultData.instance;
             });
     }

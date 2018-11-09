@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>Instance <em>{{ instance?.name }}</em></h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li><a routerLink="/instance/{{ instance?.id }}">Summary</a></li>
+            <li><a routerLink="/instance/{{ instance?.id }}/environment">Environment</a></li>
+            <li class="active"><a routerLink="/instance/{{ instance?.id }}/services">Services</a></li>
+            <li><a routerLink="/instance/{{ instance?.id }}/proxy-domains">Proxy domains</a></li>
+            <li><a routerLink="/instance/{{ instance?.id }}/logs">Logs</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="form form-horizontal">
+    <div class="row">
+        <div class="col-md-12">
+            <div *ngIf="instance?.services?.length">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="fit-column">ID</th>
+                            <th scope="col">Container ID</th>
+                            <th scope="col" class="fit-column">Container state</th>
+                            <th scope="col" class="fit-column">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let service of instance?.services" class="form-control-static">
+                            <td class="fit-column">{{ service.id }}</td>
+                            <td>{{ service.containerId | slice:0:12 }}</td>
+                            <td class="fit-column">{{ service.containerState }}</td>
+                            <td class="service-actions fit-column">
+                                <span [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"
+                                      (click)="startOrUnpauseService(service)"
+                                      class="glyphicon glyphicon-play"
+                                ></span>
+
+                                <span [ngClass]="{disabled: 'running' !== service.containerState}"
+                                      (click)="pauseService(service)"
+                                      class="glyphicon glyphicon-pause"
+                                ></span>
+
+                                <span [ngClass]="{disabled: 'running' !== service.containerState}"
+                                      (click)="stopService(service)"
+                                      class="glyphicon glyphicon-stop"
+                                ></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

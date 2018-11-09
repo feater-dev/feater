@@ -45,7 +45,6 @@ import {ExecuteServiceCommandTaskFormElementComponent} from './definition/add/fo
 import {CopyAssetIntoContainerTaskFormElementComponent} from './definition/add/form-element/after-build-task/copy-asset-into-container-task-form-element.component';
 
 import {InstanceAddComponent} from './instance/add/instance-add.component';
-import {InstanceDetailComponent} from './instance/detail/instance-detail.component';
 import {InstanceListComponent} from './instance/list/instance-list.component';
 import {InstanceTableComponent} from './instance/table/instance-table.component';
 
@@ -60,6 +59,11 @@ import {CustomEnvVarsFormElementComponent} from './definition/add/form-element/a
 import {ElapsedTimePipe} from './pipes/elapsed-time.pipe';
 
 import {MarkdownToHtmlModule} from 'markdown-to-html-pipe';
+import {InstanceDetailSummaryComponent} from './instance/detail/summary/instance-detail-summary.component';
+import {InstanceDetailEnvironmentComponent} from './instance/detail/environment/instance-detail-environment.component';
+import {InstanceDetailLogsComponent} from './instance/detail/logs/instance-detail-logs.component';
+import {InstanceDetailServicesComponent} from './instance/detail/services/instance-detail-services.component';
+import {InstanceDetailProxyDomainsComponent} from './instance/detail/proxy-domains/instance-detail-proxy-domains.component';
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
@@ -72,7 +76,11 @@ const appRoutes: Routes = [
     { path: 'definition/:id', component: DefinitionDetailComponent},
     { path: 'definition/:id/instance/add', component: InstanceAddComponent},
     { path: 'instances', component: InstanceListComponent },
-    { path: 'instance/:id', component: InstanceDetailComponent},
+    { path: 'instance/:id', component: InstanceDetailSummaryComponent},
+    { path: 'instance/:id/environment', component: InstanceDetailEnvironmentComponent},
+    { path: 'instance/:id/services', component: InstanceDetailServicesComponent},
+    { path: 'instance/:id/proxy-domains', component: InstanceDetailProxyDomainsComponent},
+    { path: 'instance/:id/logs', component: InstanceDetailLogsComponent},
     { path: 'assets', component: AssetListComponent },
     { path: 'asset/:id', component: AssetDetailComponent },
     { path: 'deploy-keys', component: DeployKeyListComponent },
@@ -103,7 +111,11 @@ const appRoutes: Routes = [
         DefinitionDetailComponent,
         DefinitionListComponent,
         InstanceAddComponent,
-        InstanceDetailComponent,
+        InstanceDetailSummaryComponent,
+        InstanceDetailEnvironmentComponent,
+        InstanceDetailServicesComponent,
+        InstanceDetailProxyDomainsComponent,
+        InstanceDetailLogsComponent,
         InstanceListComponent,
         AssetAddComponent,
         AssetDetailComponent,

@@ -1,6 +1,5 @@
 import * as cors from 'cors';
 import * as morgan from 'morgan';
-import * as expressHandlebars from 'express-handlebars';
 import {NestFactory} from '@nestjs/core';
 import {ApplicationModule} from './app.module';
 import {INestApplication} from '@nestjs/common';

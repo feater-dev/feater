@@ -32,7 +32,7 @@ server {
 
     location / {
         proxy_pass http://${typedCommand.ipAddress}:${typedCommand.port};
-        proxy_set_header Host $host:80;
+        proxy_set_header Host $host;
     }
 }
 `;

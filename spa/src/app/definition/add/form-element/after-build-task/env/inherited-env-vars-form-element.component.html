@@ -16,6 +16,8 @@
                 </div>
                 <div *ngFor="let inheritedEnvVar of inheritedEnvVars" class="row">
                     <div class="col-lg-6">
+                        <input type="text" class="form-control" [(ngModel)]="inheritedEnvVar.name">
+                        <!-- TODO Replace with input with autocomplete
                         <select class="form-control" [(ngModel)]="inheritedEnvVar.name">
                             <option *ngFor="let availableEnvVarName of availableEnvVarNames"
                                     [value]="availableEnvVarName"
@@ -24,6 +26,7 @@
                                 {{ availableEnvVarName }}
                             </option>
                         </select>
+                        -->
                     </div>
                     <div class="col-lg-6">
                         <div style="position: relative; padding-right: 40px;">

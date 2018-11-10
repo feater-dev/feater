@@ -9,7 +9,7 @@ import {EnvVariableTypeInterface} from '../type/nested/definition-config/env-var
 import {
     BeforeBuildTaskTypeInterface,
     CopyBeforeBuildTaskTypeInterface,
-    InterpolateBeforeBuildTaskTypeInterface
+    InterpolateBeforeBuildTaskTypeInterface,
 } from '../type/nested/definition-config/before-build-task-type.interface';
 import {
     AfterBuildTaskTypeInterface,
@@ -123,35 +123,55 @@ export class DefinitionConfigMapper {
     }
 
     protected mapAfterBuildTask(afterBuildTask: any): AfterBuildTaskTypeInterface {
+        let mapped: AfterBuildTaskTypeInterface;
+
+        const commonMapped: AfterBuildTaskTypeInterface = {
+            type: afterBuildTask.type,
+        };
+        if (afterBuildTask.id) {
+            commonMapped.id = afterBuildTask.id;
+        }
+        if (afterBuildTask.dependsOn) {
+            commonMapped.dependsOn = afterBuildTask.dependsOn;
+        }
+
         switch (afterBuildTask.type) {
             case 'executeHostCommand':
-                return {
-                    type: afterBuildTask.type,
-                    customEnvVariables: afterBuildTask.customEnvVariables,
-                    inheritedEnvVariables: afterBuildTask.inheritedEnvVariables,
-                    command: afterBuildTask.command,
-                } as ExecuteHostCommandAfterBuildTaskTypeInterface;
+                 mapped = {
+                     ...commonMapped,
+                     customEnvVariables: afterBuildTask.customEnvVariables,
+                     inheritedEnvVariables: afterBuildTask.inheritedEnvVariables,
+                     command: afterBuildTask.command,
+                 } as ExecuteHostCommandAfterBuildTaskTypeInterface;
+
+                 break;
 
             case 'executeServiceCommand':
-                return {
-                    type: afterBuildTask.type,
+                mapped = {
+                    ...commonMapped,
                     serviceId: afterBuildTask.serviceId,
                     customEnvVariables: afterBuildTask.customEnvVariables,
                     inheritedEnvVariables: afterBuildTask.inheritedEnvVariables,
                     command: afterBuildTask.command,
                 } as ExecuteServiceCommandAfterBuildTaskTypeInterface;
 
+                break;
+
             case 'copyAssetIntoContainer':
-                return {
-                    type: afterBuildTask.type,
+                mapped = {
+                    ...commonMapped,
                     serviceId: afterBuildTask.serviceId,
                     assetId: afterBuildTask.assetId,
                     destinationPath: afterBuildTask.destinationPath,
                 } as CopyAssetIntoContainerAfterBuildTaskTypeInterface;
 
+                break;
+
             default:
                 throw new Error();
         }
+
+        return mapped;
     }
 
     protected mapSourceReference(reference: any): SourceReferenceTypeInterface {

@@ -123,6 +123,8 @@ export const typeDefsProvider = {
 
         input AfterBuildTaskInput {
             type: String!
+            id: String
+            dependsOn: [String]
             customEnvVariables: [AfterBuildTaskInputCustomEnvVariable]
             inheritedEnvVariables: [AfterBuildTaskInputInheritedEnvVariable]
             command: [String!]

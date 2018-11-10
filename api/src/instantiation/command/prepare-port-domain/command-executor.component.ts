@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {environment} from '../../../environments/environment';
 import {SimpleCommand} from '../../executor/simple-command';
 import {EnvVariablesSet} from '../../sets/env-variables-set';

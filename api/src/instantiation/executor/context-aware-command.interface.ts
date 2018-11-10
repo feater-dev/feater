@@ -1,16 +1,17 @@
-import {CommandInterface} from './command.interface';
-import {SimpleCommand} from './simple-command';
 import {CommandLogInterface} from '../../persistence/interface/command-log.interface';
 import {CommandLogRepository} from '../../persistence/repository/command-log.repository';
+import {SimpleCommand} from './simple-command';
 
-export class ContextAwareCommand implements CommandInterface {
+export class ContextAwareCommand {
     constructor(
+        readonly taskId: string,
+        readonly instanceId: string,
         readonly description: string,
-        readonly createWrappedCommand: (context: any) => SimpleCommand,
-        readonly processResult: (result: any, context: any) => void = () => {},
+        readonly createWrappedCommand: () => SimpleCommand, // TODO Replace with CommandType if possible.
+        readonly processResult: (result: any) => void = () => {},
     ) {}
 
-    createCommandLog(context: any, commandLogRepository: CommandLogRepository): Promise<CommandLogInterface> {
-        return commandLogRepository.create('instance_creation', context.id, context.hash, this.description);
+    createCommandLog(commandLogRepository: CommandLogRepository): Promise<CommandLogInterface> {
+        return commandLogRepository.create(this.taskId, this.instanceId, this.description);
     }
 }

@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../command/simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from './simple-command-executor-component.interface';
 import {SimpleCommand} from './simple-command';
 import {ConnectToNetworkCommandExecutorComponent} from '../command/connect-containers-to-network/command-executor.component';
 import {CopyFileCommandExecutorComponent} from '../command/before-build/copy-file/command-executor.component';

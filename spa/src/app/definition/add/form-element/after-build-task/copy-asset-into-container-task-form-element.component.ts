@@ -14,6 +14,14 @@ export class CopyAssetIntoContainerTaskFormElementComponent {
     @Output() deleteItem: EventEmitter<CopyAssetIntoContainerTaskFormElement> =
         new EventEmitter<CopyAssetIntoContainerTaskFormElement>();
 
+    addDependsOn(): void {
+        this.item.dependsOn.push('');
+    }
+
+    deleteDependsOn(i: number) {
+        this.item.dependsOn.splice(i, 1);
+    }
+
     delete(): void {
         this.deleteItem.emit(this.item);
     }

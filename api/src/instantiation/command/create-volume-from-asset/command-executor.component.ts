@@ -2,7 +2,7 @@ import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
 import {environment} from '../../../environments/environment';
 import {AssetRepository} from '../../../persistence/repository/asset.repository';
-import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SpawnHelper} from '../../helper/spawn-helper.component';
 import {AssetHelper} from '../../helper/asset-helper.component';
 import {SimpleCommand} from '../../executor/simple-command';

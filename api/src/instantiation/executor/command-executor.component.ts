@@ -1,55 +1,52 @@
-import {SimpleCommandExecutorComponent} from './simple-command-executor.component';
-import {ContextAwareCommandExecutorComponent} from './context-aware-command-executor-component.service';
-import {CommandInterface} from './command.interface';
+import {ContextAwareCommandExecutorComponent} from './context-aware-command-executor.component';
 import {SimpleCommand} from './simple-command';
 import {ContextAwareCommand} from './context-aware-command.interface';
-import {ComplexCommand} from './complex-command.interface';
+import {CommandsList} from './commands-list';
+import {CommandType} from './command.type';
+import {CommandsListExecutorComponent} from './commands-list-executor.component';
+import {CommandsMapExecutorComponent} from './commands-map-executor.component';
+import {CommandsMap} from './commands-map';
+import {CompositeSimpleCommandExecutorComponent} from './composite-simple-command-executor.component';
 import {Injectable} from '@nestjs/common';
 
 @Injectable()
 export class CommandExecutorComponent {
+
     constructor(
-        readonly simpleCommandExecutorComponent: SimpleCommandExecutorComponent,
-        readonly wrappingCommandExecutorComponent: ContextAwareCommandExecutorComponent,
-    ) {}
+        readonly compositeSimpleCommandExecutorComponent: CompositeSimpleCommandExecutorComponent,
+        readonly contextAwareCommandExecutorComponent: ContextAwareCommandExecutorComponent,
+        readonly commandsListExecutorComponent: CommandsListExecutorComponent,
+        readonly commandsMapExecutorComponent: CommandsMapExecutorComponent,
+    ) {
+        this.contextAwareCommandExecutorComponent.setCommandExecutorComponent(this);
+        this.commandsListExecutorComponent.setCommandExecutorComponent(this);
+        this.commandsMapExecutorComponent.setCommandExecutorComponent(this);
+    }
 
-    async execute(command: CommandInterface, context: any): Promise<any> {
+    async execute(command: CommandType): Promise<any> {
         if (command instanceof SimpleCommand) {
-            await this.simpleCommandExecutorComponent.execute(command);
-
-            return context;
+            return await this.compositeSimpleCommandExecutorComponent.execute(command);
         }
 
         if (command instanceof ContextAwareCommand) {
-            await this.wrappingCommandExecutorComponent.execute(command, context);
+            await this.contextAwareCommandExecutorComponent.execute(command);
 
-            return context;
+            return;
         }
 
-        if (command instanceof ComplexCommand) {
-            if (command.isParallelAllowed()) {
-                await this.executeCommandsInParallel(command.children, context);
-            } else {
-                await this.executeCommandsInSequence(command.children, context);
-            }
+        if (command instanceof CommandsList) {
+            await this.commandsListExecutorComponent.execute(command);
 
-            return context;
+            return;
+        }
+
+        if (command instanceof CommandsMap) {
+            await this.commandsMapExecutorComponent.execute(command);
+
+            return;
         }
 
         throw new Error('Unknown class of command.');
     }
 
-    protected async executeCommandsInSequence(commands: CommandInterface[], context: any): Promise<void> {
-        for (const command of commands) {
-            await this.execute(command, context);
-        }
-    }
-
-    protected async executeCommandsInParallel(commands: CommandInterface[], context: any): Promise<void> {
-        const promises = commands.map((command: CommandInterface): Promise<void> => {
-            return this.execute(command, context);
-        });
-
-        await Promise.all(promises);
-    }
 }

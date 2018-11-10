@@ -10,7 +10,7 @@ export interface CommandLogInterface extends Document {
     readonly instanceId: string;
     readonly instanceHash: string;
     readonly description: string;
-    readonly details: [CommandLogDetailItemInterface];
+    readonly details: CommandLogDetailItemInterface[];
     readonly createdAt: Date;
     updatedAt?: Date;
     completedAt?: Date;

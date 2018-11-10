@@ -6,7 +6,7 @@ export class CollectEnvVariablesCommand extends SimpleCommand {
     constructor(
         readonly envVariables: EnvVariablesSet,
         readonly envVariablesForFeaterVariables: EnvVariablesSet,
-        readonly envVariablesForSources: [EnvVariablesSet],
+        readonly envVariablesForSources: EnvVariablesSet[],
     ) {
         super();
     }

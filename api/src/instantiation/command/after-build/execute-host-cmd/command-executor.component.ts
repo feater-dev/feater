@@ -1,6 +1,6 @@
 import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../../executor/simple-command-executor-component.interface';
 import {EnvVariablesSet} from '../../../sets/env-variables-set';
 import {SimpleCommand} from '../../../executor/simple-command';
 import {ExecuteHostCmdCommand} from './command';

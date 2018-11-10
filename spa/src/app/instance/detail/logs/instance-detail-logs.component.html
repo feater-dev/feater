@@ -39,8 +39,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class="panel-body">
-                        <pre class="command-log-entries" [innerHTML]="joinCommandLogEntryMessages(commandLog.entries)"></pre>
+                    <div *ngIf="!commandLog.completedAt" class="panel-body">
+                        <pre class="command-log-entries" [innerHTML]="joinRecentCommandLogEntryMessages(commandLog.entries)"></pre>
                     </div>
                 </div>
             </div>

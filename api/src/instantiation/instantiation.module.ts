@@ -28,13 +28,14 @@ import {InterpolateFileCommandFactoryComponent} from './command/before-build/int
 import {CopyAssetIntoContainerCommandFactoryComponent} from './command/after-build/copy-asset-into-container/command-factory.component';
 import {ExecuteHostCmdCommandFactoryComponent} from './command/after-build/execute-host-cmd/command-factory.component';
 import {ExecuteServiceCmdCommandFactoryComponent} from './command/after-build/execute-service-cmd/command-factory.component';
-import {CommandExecutorComponent} from './executor/command-executor.component';
-import {SimpleCommandExecutorComponent} from './executor/simple-command-executor.component';
-import {ContextAwareCommandExecutorComponent} from './executor/context-aware-command-executor-component.service';
+import {ContextAwareCommandExecutorComponent} from './executor/context-aware-command-executor.component';
 import {CompositeSimpleCommandExecutorComponent} from './executor/composite-simple-command-executor.component';
 import {PathHelper} from './helper/path-helper.component';
 import {InstanceContextFactory} from './instance-context-factory.component';
 import {EnableProxyDomainsCommandExecutorComponent} from './command/enable-proxy-domains/command-executor.component';
+import {CommandsMapExecutorComponent} from './executor/commands-map-executor.component';
+import {CommandsListExecutorComponent} from './executor/commands-list-executor.component';
+import {CommandExecutorComponent} from './executor/command-executor.component';
 
 @Module({
     imports: [
@@ -74,7 +75,8 @@ import {EnableProxyDomainsCommandExecutorComponent} from './command/enable-proxy
         ExecuteHostCmdCommandFactoryComponent,
         ExecuteServiceCmdCommandFactoryComponent,
         CommandExecutorComponent,
-        SimpleCommandExecutorComponent,
+        CommandsMapExecutorComponent,
+        CommandsListExecutorComponent,
         ContextAwareCommandExecutorComponent,
         CompositeSimpleCommandExecutorComponent,
     ],

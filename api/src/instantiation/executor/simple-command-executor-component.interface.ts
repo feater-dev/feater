@@ -1,4 +1,4 @@
-import {SimpleCommand} from '../executor/simple-command';
+import {SimpleCommand} from './simple-command';
 
 export interface SimpleCommandExecutorComponentInterface {
 

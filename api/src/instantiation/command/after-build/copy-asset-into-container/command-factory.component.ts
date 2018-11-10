@@ -1,10 +1,10 @@
 import {AfterBuildTaskCommandFactoryInterface} from '../command-factory.interface';
-import {CommandInterface} from '../../../executor/command.interface';
 import {CopyAssetIntoContainerCommand} from './command';
 import {InstanceContextAfterBuildTaskInterface} from '../../../instance-context/after-build/instance-context-after-build-task.interface';
 import {InstanceContext} from '../../../instance-context/instance-context';
 import {InstanceContextCopyAssetIntoContainerInterface} from '../../../instance-context/after-build/instance-context-copy-asset-into-container.interface';
 import {ContextAwareCommand} from '../../../executor/context-aware-command.interface';
+import {CommandType} from '../../../executor/command.type';
 
 export class CopyAssetIntoContainerCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
 
@@ -17,13 +17,16 @@ export class CopyAssetIntoContainerCommandFactoryComponent implements AfterBuild
     createCommand(
         type: string,
         afterBuildTask: InstanceContextAfterBuildTaskInterface,
+        taskId: string,
         instanceContext: InstanceContext,
-    ): CommandInterface {
+    ): CommandType {
         const typedAfterBuildTask = afterBuildTask as InstanceContextCopyAssetIntoContainerInterface;
 
         return new ContextAwareCommand(
+            taskId,
+            instanceContext.id,
             `Copy asset \`${typedAfterBuildTask.assetId}\` for service \`${typedAfterBuildTask.serviceId}\``,
-            (instanceContext: InstanceContext) => {
+            () => {
                 const service = instanceContext.findService(typedAfterBuildTask.serviceId);
 
                 return new CopyAssetIntoContainerCommand(

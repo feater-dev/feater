@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as jsYaml from 'js-yaml';
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {ParseDockerComposeCommand} from './command';
 import {
     ParseDockerComposeCommandResultInterface,

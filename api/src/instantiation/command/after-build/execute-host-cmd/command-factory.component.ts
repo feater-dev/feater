@@ -1,11 +1,11 @@
 import {AfterBuildTaskCommandFactoryInterface} from '../command-factory.interface';
-import {CommandInterface} from '../../../executor/command.interface';
 import {ExecuteHostCmdCommand} from './command';
 import {InstanceContextAfterBuildTaskInterface} from '../../../instance-context/after-build/instance-context-after-build-task.interface';
 import {InstanceContext} from '../../../instance-context/instance-context';
 import {InstanceContextExecuteHostCmdInterface} from '../../../instance-context/after-build/instance-context-execute-host-cmd.Interface';
 import {ContextAwareCommand} from '../../../executor/context-aware-command.interface';
 import {EnvVariablesSet} from '../../../sets/env-variables-set';
+import {CommandType} from '../../../executor/command.type';
 
 export class ExecuteHostCmdCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
 
@@ -18,13 +18,16 @@ export class ExecuteHostCmdCommandFactoryComponent implements AfterBuildTaskComm
     createCommand(
         type: string,
         afterBuildTask: InstanceContextAfterBuildTaskInterface,
+        taskId: string,
         instanceContext: InstanceContext,
-    ): CommandInterface {
+    ): CommandType {
         const typedAfterBuildTask = afterBuildTask as InstanceContextExecuteHostCmdInterface;
 
         return new ContextAwareCommand(
+            taskId,
+            instanceContext.id,
             `Execute host command`,
-            (instanceContext: InstanceContext) => new ExecuteHostCmdCommand(
+            () => new ExecuteHostCmdCommand(
                 EnvVariablesSet.fromList(instanceContext.envVariables),
                 EnvVariablesSet.fromList(typedAfterBuildTask.customEnvVariables),
                 typedAfterBuildTask.inheritedEnvVariables,

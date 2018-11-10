@@ -59,6 +59,8 @@ export interface DefinitionAddComposeFileFormElement {
 
 export interface AfterBuildTaskFormElement {
     type: string;
+    id?: string;
+    dependsOn?: string[];
 }
 
 export interface ExecuteCommandTaskFormElement extends AfterBuildTaskFormElement {

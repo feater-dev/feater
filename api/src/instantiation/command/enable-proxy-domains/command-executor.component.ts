@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import {execSync} from 'child_process';
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {EnableProxyDomainsCommand} from './command';
 import {SimpleCommand} from '../../executor/simple-command';
 

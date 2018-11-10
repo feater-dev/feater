@@ -39,8 +39,8 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
         this.pollingSubscription.unsubscribe();
     }
 
-    joinCommandLogEntryMessages(commandLogEntries) {
-        return commandLogEntries.map(entry => entry.message).join('\n');
+    joinRecentCommandLogEntryMessages(commandLogEntries) {
+        return commandLogEntries.slice(-10).map(entry => entry.message).join('\n');
     }
 
     trackByIndex(index: number, obj: any): any {

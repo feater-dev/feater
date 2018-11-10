@@ -145,6 +145,8 @@ export class DefinitionAddComponent implements OnInit {
     addAfterBuildTaskExecuteHostCommand(): void {
         this.item.config.afterBuildTasks.push({
             type: 'executeHostCommand',
+            id: '',
+            dependsOn: [],
             command: [''],
             inheritedEnvVariables: [],
             customEnvVariables: [],
@@ -154,6 +156,8 @@ export class DefinitionAddComponent implements OnInit {
     addAfterBuildTaskExecuteServiceCommand(): void {
         this.item.config.afterBuildTasks.push({
             type: 'executeServiceCommand',
+            id: '',
+            dependsOn: [],
             command: [''],
             inheritedEnvVariables: [],
             customEnvVariables: [],
@@ -163,6 +167,11 @@ export class DefinitionAddComponent implements OnInit {
     addAfterBuildTaskCopyAssetIntoContainer(): void {
         this.item.config.afterBuildTasks.push({
             type: 'copyAssetIntoContainer',
+            id: '',
+            dependsOn: [],
+            serviceId: '',
+            assetId: '',
+            destinationPath: '',
         } as CopyAssetIntoContainerTaskFormElement);
     }
 
@@ -246,10 +255,19 @@ export class DefinitionAddComponent implements OnInit {
                 composeFiles: [
                     this.item.config.composeFile,
                 ],
-                afterBuildTasks: this.item.config.afterBuildTasks,
+                afterBuildTasks: _.cloneDeep(this.item.config.afterBuildTasks),
                 summaryItems: this.item.config.summaryItems,
             },
         };
+
+        for (const afterBuildTask of mappedItem.config.afterBuildTasks) {
+            if ('' === afterBuildTask.id) {
+                delete afterBuildTask.id;
+            }
+            if (0 === afterBuildTask.dependsOn.length) {
+                delete afterBuildTask.dependsOn;
+            }
+        }
 
         return mappedItem;
     }
@@ -301,7 +319,17 @@ export class DefinitionAddComponent implements OnInit {
         };
 
         for (const afterBuildTask of yamlConfig.afterBuildTasks) {
-            mappedYamlConfig.afterBuildTasks.push(afterBuildTask);
+            const mappedAfterBuildTask = afterBuildTask;
+
+            if (!afterBuildTask.id) {
+                mappedAfterBuildTask.id = '';
+            }
+
+            if (!afterBuildTask.dependsOn) {
+                mappedAfterBuildTask.dependsOn = [];
+            }
+
+            mappedYamlConfig.afterBuildTasks.push(mappedAfterBuildTask);
         }
 
         for (const summaryItem of yamlConfig.summaryItems) {

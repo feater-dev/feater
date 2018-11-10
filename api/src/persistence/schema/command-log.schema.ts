@@ -12,7 +12,6 @@ const CommandLogDetailItemSchema = new Schema(
 export const CommandLogSchema = new Schema({
     taskId: String,
     instanceId: String,
-    instanceHash: String,
     description: String,
     details: [CommandLogDetailItemSchema],
     createdAt: Date,

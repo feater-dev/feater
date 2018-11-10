@@ -23,7 +23,7 @@ export class ContainerStatusCheckerComponent {
                     this.redisClient.get(
                         'containerInfos',
                         (err, reply) => {
-                            const containerInfos: [CachedContainerInfo] = JSON.parse(reply);
+                            const containerInfos: CachedContainerInfo[] = JSON.parse(reply);
                             if (err) {
                                 reject(err);
                             }

@@ -28,6 +28,14 @@ export class ExecuteServiceCommandTaskFormElementComponent {
         this.item.command.splice(i, 1);
     }
 
+    addDependsOn(): void {
+        this.item.dependsOn.push('');
+    }
+
+    deleteDependsOn(i: number) {
+        this.item.dependsOn.splice(i, 1);
+    }
+
     trackByIndex(index: number, obj: any): any {
         return index;
     }

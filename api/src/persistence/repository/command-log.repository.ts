@@ -25,13 +25,11 @@ export class CommandLogRepository {
     create(
         taskId: string,
         instanceId: string,
-        instanceHash: string,
         description: string,
     ): Promise<CommandLogInterface> {
         const createdCommandLog = new this.commandLogModel({
             taskId,
             instanceId,
-            instanceHash,
             description,
             details: [],
             createdAt: new Date(),

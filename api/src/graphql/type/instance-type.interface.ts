@@ -5,7 +5,7 @@ export interface InstanceTypeInterface {
     readonly hash: string;
     readonly name: string;
     readonly definitionId: string;
-    readonly services: [InstanceServiceTypeInterface];
+    readonly services: InstanceServiceTypeInterface[];
     readonly summaryItems: any;
     readonly envVariables: any;
     readonly proxiedPorts: any;

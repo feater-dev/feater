@@ -1,7 +1,7 @@
 import * as escapeStringRegexp from 'escape-string-regexp';
 import {execSync} from 'child_process';
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SimpleCommand} from '../../executor/simple-command';
 import {GetContainerIdsCommandResultInterface, GetContainerIdsCommandResultServiceContainerIdInterface} from './command-result.interface';
 import {GetContainerIdsCommand} from './command';

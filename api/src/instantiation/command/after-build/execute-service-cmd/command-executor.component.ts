@@ -1,6 +1,6 @@
 import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../../executor/simple-command-executor-component.interface';
 import {EnvVariablesSet} from '../../../sets/env-variables-set';
 import {SimpleCommand} from '../../../executor/simple-command';
 import {ExecuteServiceCmdCommand} from './command';
@@ -70,11 +70,11 @@ export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandE
                 reject,
                 () => {},
                 (exitCode: number) => {
-                    logger.error(`Failed to execute host command.`, {});
+                    logger.error(`Failed to execute service command.`, {});
                     logger.error(`Exit code: ${exitCode}`, {});
                 },
                 (error: Error) => {
-                    logger.error(`Failed to execute host command.`, {});
+                    logger.error(`Failed to execute service command.`, {});
                     logger.error(`Error message: ${error.message}`, {});
                 },
             );

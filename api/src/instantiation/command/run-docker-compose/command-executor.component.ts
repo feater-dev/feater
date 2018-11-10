@@ -4,7 +4,7 @@ import * as split from 'split';
 import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
-import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {environment} from '../../../environments/environment';
 import {SimpleCommand} from '../../executor/simple-command';
 import {RunDockerComposeCommand} from './command';

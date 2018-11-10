@@ -1,11 +1,11 @@
 import {AfterBuildTaskCommandFactoryInterface} from '../command-factory.interface';
-import {CommandInterface} from '../../../executor/command.interface';
 import {ExecuteServiceCmdCommand} from './command';
 import {InstanceContextAfterBuildTaskInterface} from '../../../instance-context/after-build/instance-context-after-build-task.interface';
 import {InstanceContext} from '../../../instance-context/instance-context';
 import {InstanceContextExecuteServiceCmdInterface} from '../../../instance-context/after-build/instance-context-execute-service-cmd.Interface';
 import {ContextAwareCommand} from '../../../executor/context-aware-command.interface';
 import {EnvVariablesSet} from '../../../sets/env-variables-set';
+import {CommandType} from '../../../executor/command.type';
 
 export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
 
@@ -18,13 +18,16 @@ export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskC
     createCommand(
         type: string,
         afterBuildTask: InstanceContextAfterBuildTaskInterface,
+        taskId: string,
         instanceContext: InstanceContext,
-    ): CommandInterface {
+    ): CommandType {
         const typedAfterBuildTask = afterBuildTask as InstanceContextExecuteServiceCmdInterface;
 
         return new ContextAwareCommand(
+            taskId,
+            instanceContext.id,
             `Execute service command for service \`${typedAfterBuildTask.serviceId}\``,
-            (instanceContext: InstanceContext) => {
+            () => {
                 const service = instanceContext.findService(typedAfterBuildTask.serviceId);
 
                 return new ExecuteServiceCmdCommand(

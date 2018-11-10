@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {DeployKeyRepository} from '../../../persistence/repository/deploy-key.repository';
 import {CloneSourceCommand} from './command';
 import {DeployKeyInterface} from '../../../persistence/interface/deploy-key.interface';

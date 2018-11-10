@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
 import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SimpleCommand} from '../../executor/simple-command';
 import {CreateDirectoryCommand} from './command';
 

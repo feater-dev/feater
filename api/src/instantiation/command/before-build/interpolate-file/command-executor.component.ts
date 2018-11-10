@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InterpolationHelper} from '../../../helper/interpolation-helper.component';
-import {SimpleCommandExecutorComponentInterface} from '../../simple-command-executor-component.interface';
+import {SimpleCommandExecutorComponentInterface} from '../../../executor/simple-command-executor-component.interface';
 import {SimpleCommand} from '../../../executor/simple-command';
 import {InterpolateFileCommand} from './command';
 import {InterpolateFileCommandResultInterface} from './command-result.interface';

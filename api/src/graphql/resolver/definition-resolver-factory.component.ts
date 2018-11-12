@@ -10,6 +10,7 @@ import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/reso
 import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import * as jsYaml from 'js-yaml';
+import * as snakeCaseKeys from 'snakecase-keys';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
 import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
 
@@ -86,7 +87,7 @@ export class DefinitionResolverFactory {
 
     public getConfigAsYamlResolver(): (obj: any, args: any) => string {
         return (obj: any, args: any): string => {
-            return jsYaml.safeDump(obj.config, {indent: 4});
+            return jsYaml.safeDump(snakeCaseKeys(obj.config), {indent: 4, flowLevel: -1});
         };
     }
 

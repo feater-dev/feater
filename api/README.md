@@ -30,7 +30,7 @@ Respective entry in Feater definition configuration will look as follows:
 volumes:
   - id: lipsum_docs       # This is the id of provided named volume
                           # which can be used to determine it's full name.
-    assetId: lipsum       # This has to correspond with asset id.```
+    asset_id: lipsum      # This has to correspond with asset id.```
 
 This will result in named volume being created, which name is prefixed to be unique accross all provided instances.
 
@@ -116,7 +116,7 @@ Our Feater definition configuration would include following section:
 ```yaml
 volumes:
   - id: test_db
-    assetId: test_db_asset
+    asset_id: test_db_asset
 ```
 
 Corresponding `docker-compose.yml` may look like this:

@@ -24,6 +24,7 @@ import {
 } from './get-project.query';
 import * as _ from 'lodash';
 import * as jsYaml from 'js-yaml';
+import * as camelCaseKeys from 'camelcase-keys';
 
 
 @Component({
@@ -284,7 +285,7 @@ export class DefinitionAddComponent implements OnInit {
     protected mapYamlConfig(yamlConfig: any): DefinitionAddFormConfigFormElement {
         // TODO Check schema validity of Yaml config.
 
-        yamlConfig = jsYaml.safeLoad(yamlConfig);
+        const camelCaseYamlConfig = camelCaseKeys(jsYaml.safeLoad(yamlConfig), {deep: true});
 
         const mappedYamlConfig = {
             sources: [],
@@ -296,29 +297,29 @@ export class DefinitionAddComponent implements OnInit {
             summaryItems: [],
         };
 
-        for (const source of yamlConfig.sources) {
+        for (const source of camelCaseYamlConfig.sources) {
             mappedYamlConfig.sources.push(source);
         }
 
-        for (const volume of yamlConfig.volumes) {
+        for (const volume of camelCaseYamlConfig.volumes) {
             mappedYamlConfig.volumes.push(volume);
         }
 
-        for (const proxiedPort of yamlConfig.proxiedPorts) {
+        for (const proxiedPort of camelCaseYamlConfig.proxiedPorts) {
             mappedYamlConfig.proxiedPorts.push(proxiedPort);
         }
 
-        for (const envVariable of yamlConfig.envVariables) {
+        for (const envVariable of camelCaseYamlConfig.envVariables) {
             mappedYamlConfig.envVariables.push(envVariable);
         }
 
         mappedYamlConfig.composeFile = {
-            sourceId: yamlConfig.composeFiles[0].sourceId,
-            envDirRelativePath: yamlConfig.composeFiles[0].envDirRelativePath,
-            composeFileRelativePaths: yamlConfig.composeFiles[0].composeFileRelativePaths,
+            sourceId: camelCaseYamlConfig.composeFiles[0].sourceId,
+            envDirRelativePath: camelCaseYamlConfig.composeFiles[0].envDirRelativePath,
+            composeFileRelativePaths: camelCaseYamlConfig.composeFiles[0].composeFileRelativePaths,
         };
 
-        for (const afterBuildTask of yamlConfig.afterBuildTasks) {
+        for (const afterBuildTask of camelCaseYamlConfig.afterBuildTasks) {
             const mappedAfterBuildTask = afterBuildTask;
 
             if (!afterBuildTask.id) {
@@ -332,7 +333,7 @@ export class DefinitionAddComponent implements OnInit {
             mappedYamlConfig.afterBuildTasks.push(mappedAfterBuildTask);
         }
 
-        for (const summaryItem of yamlConfig.summaryItems) {
+        for (const summaryItem of camelCaseYamlConfig.summaryItems) {
             mappedYamlConfig.summaryItems.push(summaryItem);
         }
 

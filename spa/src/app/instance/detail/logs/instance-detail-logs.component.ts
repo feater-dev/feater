@@ -8,7 +8,6 @@ import {
 } from './get-instance-detail-logs.query';
 import {
     updateInstanceDetailLogsQueryGql,
-    UpdateInstanceDetailLogsQueryInstanceFieldInterface,
     UpdateInstanceDetailLogsQueryInterface,
 } from './update-instance-detail-logs.query';
 import {Observable} from 'rxjs/Observable';
@@ -39,10 +38,6 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
-        const polling = Observable.interval(this.POLLING_INTERVAL);
-        this.pollingSubscription = polling.subscribe(
-            () => { this.updateInstance(); },
-        );
     }
 
     ngOnDestroy() {
@@ -53,8 +48,8 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
         return _.map(commandLogEntries, 'message').join('\n');
     }
 
-    trackByIndex(index: number, obj: any): any {
-        return index;
+    trackById(index: number, obj: any): any {
+        return obj.id;
     }
 
     expand(commandLogId: string): void {
@@ -82,6 +77,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 const resultData: GetInstanceDetailLogsQueryInterface = result.data;
                 this.instance = _.cloneDeep(resultData.instance);
+                this.updateLastCommandLogEntryId(resultData);
                 for (const commandLog of this.instance.commandLogs) {
                     if (commandLog.completedAt) {
                         this.collapse(commandLog.id);
@@ -89,7 +85,11 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                         this.expand(commandLog.id);
                     }
                 }
-                this.updateLastCommandLogEntryId(resultData);
+
+                const polling = Observable.interval(this.POLLING_INTERVAL);
+                this.pollingSubscription = polling.subscribe(
+                    () => { this.updateInstance(); },
+                );
             });
     }
 
@@ -111,8 +111,13 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                     const instanceCommandLog = _.find(this.instance.commandLogs, {id: commandLog.id});
                     if (!instanceCommandLog) {
                         this.instance.commandLogs.push(_.cloneDeep(commandLog));
+                        if (commandLog.completedAt) {
+                            this.collapse(commandLog.id);
+                        } else {
+                            this.expand(commandLog.id);
+                        }
                     } else {
-                        if (commandLog.completedAt && !instanceCommandLog.completedAt) {
+                        if (!instanceCommandLog.completedAt && commandLog.completedAt) {
                             this.collapse(commandLog.id);
                         }
                         instanceCommandLog.completedAt = commandLog.completedAt;
@@ -135,7 +140,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
             'id'
         );
         if (0 !== newEntryIds.length) {
-            this.lastCommandLogEntryId = _.max(newEntryIds);
+            this.lastCommandLogEntryId = _.maxBy(newEntryIds, id => parseInt(id, 16));
         }
     }
 }

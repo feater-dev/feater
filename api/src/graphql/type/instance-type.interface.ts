@@ -11,4 +11,6 @@ export interface InstanceTypeInterface {
     readonly proxiedPorts: any;
     readonly createdAt: Date;
     readonly updatedAt: Date;
+    readonly completedAt: Date;
+    readonly failedAt: Date;
 }

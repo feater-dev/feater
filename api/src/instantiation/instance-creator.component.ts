@@ -74,7 +74,11 @@ export class InstanceCreatorComponent {
         ];
     }
 
-    async runInstance(instance: InstanceInterface, hash: string, definition: DefinitionInterface): Promise<any> {
+    async createInstance(
+        instance: InstanceInterface,
+        hash: string,
+        definition: DefinitionInterface,
+    ): Promise<any> {
         const {config: definitionConfig} = definition;
         const id = instance.id;
         const taskId = 'instance_creation';
@@ -189,8 +193,6 @@ export class InstanceCreatorComponent {
                     this.logger.error('Failed to instantiate and start build.');
                     instance.failedAt = new Date();
                     await this.instanceRepository.save(instance);
-
-                    throw error;
                 },
             );
     }

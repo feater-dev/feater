@@ -89,11 +89,7 @@ export class InstanceResolverFactory {
             const hash = nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 8);
 
             process.nextTick(() => {
-                this.instantiator.runInstance(
-                    instance,
-                    hash,
-                    definition,
-                );
+                this.instantiator.createInstance(instance, hash, definition);
             });
 
             return this.mapPersistentModelToTypeModel(instance);
@@ -219,6 +215,8 @@ export class InstanceResolverFactory {
             proxiedPorts: instance.proxiedPorts,
             createdAt: instance.createdAt,
             updatedAt: instance.updatedAt,
+            completedAt: instance.completedAt,
+            failedAt: instance.failedAt,
         } as InstanceTypeInterface;
 
         return mapped;

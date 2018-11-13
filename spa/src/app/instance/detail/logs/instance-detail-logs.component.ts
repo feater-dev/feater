@@ -23,13 +23,16 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
 
     readonly POLLING_INTERVAL = 5000; // 5 seconds.
 
+    readonly COLLAPSED = 1;
+    readonly EXPANDED = 2;
+
     instance: GetInstanceDetailLogsQueryInstanceFieldInterface;
 
     pollingSubscription: Subscription;
 
     lastCommandLogEntryId: string = null;
 
-    expandedCommandLogIds: {[id: string]: boolean} = {};
+    expandToggles: {[commandLogId: string]: number} = {};
 
     constructor(
         private route: ActivatedRoute,
@@ -38,6 +41,11 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
+
+        const polling = Observable.interval(this.POLLING_INTERVAL);
+        this.pollingSubscription = polling.subscribe(
+            () => { this.updateInstance(); },
+        );
     }
 
     ngOnDestroy() {
@@ -52,16 +60,23 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
         return obj.id;
     }
 
-    expand(commandLogId: string): void {
-        this.expandedCommandLogIds[commandLogId] = true;
+    expand(commandLog: {id: string, completedAt?: Date}): void {
+        this.expandToggles[commandLog.id] = this.EXPANDED;
     }
 
-    collapse(commandLogId: string): void {
-        this.expandedCommandLogIds[commandLogId] = false;
+    collapse(commandLog: {id: string, completedAt?: Date}): void {
+        this.expandToggles[commandLog.id] = this.COLLAPSED;
     }
 
-    isExpanded(commandLogId: string): boolean {
-        return this.expandedCommandLogIds[commandLogId];
+    isExpanded(commandLog: {id: string, completedAt?: Date}): boolean {
+        if (this.EXPANDED === this.expandToggles[commandLog.id]) {
+            return true;
+        }
+        if (this.COLLAPSED === this.expandToggles[commandLog.id]) {
+            return false;
+        }
+
+        return !commandLog.completedAt;
     }
 
     private getInstance() {
@@ -78,18 +93,6 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                 const resultData: GetInstanceDetailLogsQueryInterface = result.data;
                 this.instance = _.cloneDeep(resultData.instance);
                 this.updateLastCommandLogEntryId(resultData);
-                for (const commandLog of this.instance.commandLogs) {
-                    if (commandLog.completedAt) {
-                        this.collapse(commandLog.id);
-                    } else {
-                        this.expand(commandLog.id);
-                    }
-                }
-
-                const polling = Observable.interval(this.POLLING_INTERVAL);
-                this.pollingSubscription = polling.subscribe(
-                    () => { this.updateInstance(); },
-                );
             });
     }
 
@@ -111,19 +114,16 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                     const instanceCommandLog = _.find(this.instance.commandLogs, {id: commandLog.id});
                     if (!instanceCommandLog) {
                         this.instance.commandLogs.push(_.cloneDeep(commandLog));
-                        if (commandLog.completedAt) {
-                            this.collapse(commandLog.id);
-                        } else {
-                            this.expand(commandLog.id);
-                        }
                     } else {
-                        if (!instanceCommandLog.completedAt && commandLog.completedAt) {
-                            this.collapse(commandLog.id);
-                        }
                         instanceCommandLog.completedAt = commandLog.completedAt;
                         instanceCommandLog.failedAt = commandLog.failedAt;
-                        if (0 !== commandLog.entries.length) {
-                            instanceCommandLog.entries = instanceCommandLog.entries.concat(commandLog.entries);
+                        if (0 === instanceCommandLog.entries.length) {
+                            instanceCommandLog.entries = commandLog.entries;
+                        } else {
+                            const lastEntry = _.last(instanceCommandLog.entries);
+                            instanceCommandLog.entries = instanceCommandLog.entries.concat(
+                                _.filter(commandLog.entries, (entry) => entry.id > lastEntry.id)
+                            );
                         }
                     }
                 }
@@ -133,14 +133,18 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
     private updateLastCommandLogEntryId(
         resultData: GetInstanceDetailLogsQueryInterface | UpdateInstanceDetailLogsQueryInterface,
     ): void {
-        const newEntryIds = _.map(
+        const entryIds = _.map(
             _.flatten(
-                _.map(resultData.instance.commandLogs, 'entries'),
+                resultData.instance.commandLogs.map((commandLog) => {
+                    return commandLog.entries.length > 0
+                        ? commandLog.entries.slice(-1)
+                        : [];
+                })
             ),
             'id'
         );
-        if (0 !== newEntryIds.length) {
-            this.lastCommandLogEntryId = _.maxBy(newEntryIds, id => parseInt(id, 16));
+        if (0 !== entryIds.length) {
+            this.lastCommandLogEntryId = _.maxBy(entryIds, id => parseInt(id, 16));
         }
     }
 }

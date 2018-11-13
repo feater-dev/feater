@@ -1,9 +1,10 @@
 import {Injectable} from '@nestjs/common';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
-import {ResolverLogFilterArgumentsInterface} from './filter-argument/resolver-log-filter-arguments.interface';
+import {ResolverCommandLogEntryFilterArgumentsInterface} from './filter-argument/resolver-command-log-entry-filter-arguments.interface';
 import {LogRepository} from '../../persistence/repository/log.repository';
 import {LogTypeInterface} from '../type/log-type.interface';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class CommandLogEntriesResolverFactory {
@@ -17,7 +18,7 @@ export class CommandLogEntriesResolverFactory {
             const resolverListOptions = args as ResolverPaginationArgumentsInterface;
             const criteria = this.applyFilterArgumentToCriteria(
                 queryExtractor ? queryExtractor(object) : {},
-                args as ResolverLogFilterArgumentsInterface,
+                args as ResolverCommandLogEntryFilterArgumentsInterface,
             );
             const logs = await this.logRepository.find(
                 criteria,
@@ -28,6 +29,7 @@ export class CommandLogEntriesResolverFactory {
             const data: LogTypeInterface[] = [];
             for (const log of logs) {
                 data.push({
+                    id: log._id.toString(),
                     message: log.message,
                 } as LogTypeInterface);
             }
@@ -36,7 +38,11 @@ export class CommandLogEntriesResolverFactory {
         };
     }
 
-    protected applyFilterArgumentToCriteria(criteria: any, args: ResolverLogFilterArgumentsInterface): any {
+    protected applyFilterArgumentToCriteria(criteria: any, args: ResolverCommandLogEntryFilterArgumentsInterface): any {
+        if (args.afterId) {
+            criteria._id = {$gt: new mongoose.Types.ObjectId(args.afterId)};
+        }
+
         return criteria;
     }
 }

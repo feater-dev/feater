@@ -52,4 +52,8 @@ export class SummaryItemsSet {
         return map;
     }
 
+    merge(...sets: SummaryItemsSet[]): SummaryItemsSet {
+        return SummaryItemsSet.merge(...[this, ...sets]);
+    }
+
 }

@@ -8,6 +8,11 @@ import {InstanceContext} from '../../instantiation/instance-context/instance-con
 @Injectable()
 export class InstanceRepository {
 
+    protected instancesSaveBuffer: {
+        instance: InstanceInterface,
+        resolve: (instance: InstanceInterface) => void,
+    }[] = [];
+
     constructor(
         @InjectModel('Instance') private readonly instanceModel: Model<InstanceInterface>,
     ) {}
@@ -45,22 +50,32 @@ export class InstanceRepository {
         return instance;
     }
 
-    async updateFromInstanceContext(instance: InstanceInterface, instanceContext: InstanceContext): Promise<void> {
-        // TODO Add sources. We would like to store to which commit hash reference was resolved.
-
-        instance.services = instanceContext.services;
-        instance.envVariables = instanceContext.envVariables;
-        instance.summaryItems = instanceContext.summaryItems;
-        instance.proxiedPorts = instanceContext.proxiedPorts;
-
-        instance.updatedAt = new Date();
-
-        await instance.save();
-    }
-
     async remove(id: string): Promise<boolean> {
         const removal = await this.instanceModel.findByIdAndRemove(id);
 
         return true;
+    }
+
+    save(instance: InstanceInterface): Promise<InstanceInterface> {
+        instance.updatedAt = new Date();
+
+        return new Promise<InstanceInterface>(resolve => {
+            this.instancesSaveBuffer.push({
+                instance,
+                resolve,
+            });
+            this.saveNextFromBuffer();
+        });
+    }
+
+    protected async saveNextFromBuffer(): Promise<void> {
+        if (0 === this.instancesSaveBuffer.length) {
+            return;
+        }
+        const {instance, resolve} = await this.instancesSaveBuffer[0];
+        await instance.save();
+        resolve(instance);
+        this.instancesSaveBuffer = this.instancesSaveBuffer.slice(1);
+        this.saveNextFromBuffer();
     }
 }

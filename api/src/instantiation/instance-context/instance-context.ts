@@ -11,6 +11,7 @@ import {InstanceContextEnvVariableInterface} from './instance-context-env-variab
 import {InstanceContextSummaryItemInterface} from './instance-context-summary-item.interface';
 import {InstanceContextFeaterVariableInterface} from './instance-context-feater-variable.interface';
 import {FeaterVariablesSet} from '../sets/feater-variables-set';
+import {SummaryItemsSet} from '../sets/summary-items-set';
 
 export class InstanceContext {
 
@@ -22,14 +23,19 @@ export class InstanceContext {
     proxiedPorts: InstanceContextProxiedPortInterface[];
     afterBuildTasks: InstanceContextAfterBuildTaskInterface[];
     composeFiles: InstanceContextComposeFileInterface[];
-    envVariables: InstanceContextEnvVariableInterface[];
-    featerVariables: InstanceContextFeaterVariableInterface[];
-    summaryItems: InstanceContextSummaryItemInterface[];
+    envVariables: EnvVariablesSet;
+    featerVariables: FeaterVariablesSet;
+    nonInterpolatedSummaryItems: SummaryItemsSet;
+    summaryItems: SummaryItemsSet;
 
     constructor(
         readonly id: string,
         readonly hash: string,
     ) {
+        this.envVariables = new EnvVariablesSet();
+        this.featerVariables = new FeaterVariablesSet();
+        this.nonInterpolatedSummaryItems = new SummaryItemsSet();
+        this.summaryItems = new SummaryItemsSet();
     }
 
     findSource(sourceId: string): InstanceContextSourceInterface {
@@ -51,17 +57,11 @@ export class InstanceContext {
     }
 
     mergeEnvVariablesSet(envVariablesSet: EnvVariablesSet) {
-        this.envVariables = EnvVariablesSet
-            .fromList(this.envVariables || [])
-            .merge(envVariablesSet)
-            .toList();
+        this.envVariables = this.envVariables.merge(envVariablesSet);
     }
 
     mergeFeaterVariablesSet(featerVariablesSet: FeaterVariablesSet) {
-        this.featerVariables = FeaterVariablesSet
-            .fromList(this.featerVariables || [])
-            .merge(featerVariablesSet)
-            .toList();
+        this.featerVariables = this.featerVariables.merge(featerVariablesSet);
     }
 
 }

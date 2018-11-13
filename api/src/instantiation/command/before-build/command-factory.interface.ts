@@ -13,6 +13,7 @@ export interface BeforeBuildTaskCommandFactoryInterface {
         source: InstanceContextSourceInterface,
         taskId: string,
         instance: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType;
 
 }

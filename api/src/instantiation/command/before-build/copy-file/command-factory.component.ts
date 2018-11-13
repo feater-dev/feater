@@ -7,7 +7,9 @@ import {InstanceContextSourceInterface} from '../../../instance-context/instance
 import {InstanceContext} from '../../../instance-context/instance-context';
 import {InstanceContextCopyFileInterface} from '../../../instance-context/before-build/instance-context-copy-file.interface';
 import {CommandType} from '../../../executor/command.type';
+import {Injectable} from '@nestjs/common';
 
+@Injectable()
 export class CopyFileCommandFactoryComponent implements BeforeBuildTaskCommandFactoryInterface {
 
     protected readonly TYPE = 'copy';
@@ -22,6 +24,7 @@ export class CopyFileCommandFactoryComponent implements BeforeBuildTaskCommandFa
         source: InstanceContextSourceInterface,
         taskId: string,
         instance: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         const typedBeforeBuildTask = beforeBuildTask as InstanceContextCopyFileInterface;
 

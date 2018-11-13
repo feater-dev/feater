@@ -6,7 +6,9 @@ import {InstanceContextExecuteServiceCmdInterface} from '../../../instance-conte
 import {ContextAwareCommand} from '../../../executor/context-aware-command.interface';
 import {EnvVariablesSet} from '../../../sets/env-variables-set';
 import {CommandType} from '../../../executor/command.type';
+import {Injectable} from '@nestjs/common';
 
+@Injectable()
 export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
 
     protected readonly TYPE = 'executeServiceCommand';
@@ -20,6 +22,7 @@ export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskC
         afterBuildTask: InstanceContextAfterBuildTaskInterface,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         const typedAfterBuildTask = afterBuildTask as InstanceContextExecuteServiceCmdInterface;
 
@@ -31,7 +34,7 @@ export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskC
                 const service = instanceContext.findService(typedAfterBuildTask.serviceId);
 
                 return new ExecuteServiceCmdCommand(
-                    EnvVariablesSet.fromList(instanceContext.envVariables),
+                    instanceContext.envVariables,
                     EnvVariablesSet.fromList(typedAfterBuildTask.customEnvVariables),
                     typedAfterBuildTask.inheritedEnvVariables,
                     service.containerId,

@@ -6,6 +6,7 @@ import {AfterBuildTaskTypeInterface} from '../graphql/type/nested/definition-con
 import {FeaterVariablesSet} from './sets/feater-variables-set';
 import {InstanceContext} from './instance-context/instance-context';
 import {EnvVariablesSet} from './sets/env-variables-set';
+import {SummaryItemsSet} from './sets/summary-items-set';
 
 @Injectable()
 export class InstanceContextFactory {
@@ -72,7 +73,7 @@ export class InstanceContextFactory {
             instanceContext.afterBuildTasks.push(afterBuildTask as AfterBuildTaskTypeInterface);
         }
 
-        instanceContext.summaryItems = definitionConfig.summaryItems;
+        instanceContext.nonInterpolatedSummaryItems = SummaryItemsSet.fromList(definitionConfig.summaryItems);
 
         instanceContext.composeFiles = [];
         for (const composeFileConfig of definitionConfig.composeFiles) {

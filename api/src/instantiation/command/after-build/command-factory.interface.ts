@@ -11,6 +11,7 @@ export interface AfterBuildTaskCommandFactoryInterface {
         afterBuildTask: InstanceContextAfterBuildTaskInterface,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType;
 
 }

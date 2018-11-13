@@ -47,16 +47,61 @@
             </div>
 
             <div class="form-group">
-                <label class="col-md-3 control-label">Created</label>
+                <label class="col-md-3 control-label">Build status</label>
                 <div class="col-md-9">
-                    <p class="form-control-static">{{ instance?.createdAt | absoluteDate }}</p>
+                    <div class="instance-status-indicator form-control-static">
+                        <span *ngIf="instance?.completedAt" class="label label-success">
+                            Completed in
+                            {{ {start: instance?.createdAt, end: instance?.completedAt} | elapsedTime }}
+                        </span>
+                        <span *ngIf="instance?.failedAt" class="label label-danger">
+                            Faled after
+                            {{ {start: instance?.createdAt, end: instance?.failedAt} | elapsedTime }}
+                        </span>
+                        <span *ngIf="!instance?.completedAt && !instance?.failedAt" class="label label-default">
+                            In progress
+                        </span>
+                    </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-md-3 control-label">Updated</label>
+                <label class="col-md-3 control-label">Created at</label>
                 <div class="col-md-9">
-                    <p class="form-control-static">{{ instance?.updatedAt | absoluteDate }}</p>
+                    <p class="form-control-static">
+                        {{ instance?.createdAt | absoluteDate }}<br>
+                        ({{ instance?.createdAt | relativeDate }})
+                    </p>
+                </div>
+            </div>
+
+            <div *ngIf="instance?.updatedAt" class="form-group">
+                <label class="col-md-3 control-label">Updated at</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">
+                        {{ instance?.updatedAt | absoluteDate }}<br>
+                        ({{ instance?.updatedAt | relativeDate }})
+                    </p>
+                </div>
+            </div>
+
+            <div *ngIf="instance?.completedAt" class="form-group">
+                <label class="col-md-3 control-label">Completed at</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">
+                        {{ instance?.completedAt | absoluteDate }}<br>
+                        ({{ instance?.completedAt | relativeDate }})
+                    </p>
+                </div>
+            </div>
+
+            <div *ngIf="instance?.failedAt" class="form-group">
+                <label class="col-md-3 control-label">Failed at</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">
+                        {{ instance?.failedAt | absoluteDate }}<br>
+                        ({{ instance?.failedAt | relativeDate }})
+                    </p>
                 </div>
             </div>
 
@@ -67,6 +112,10 @@
                         <div class="form-control-static" innerHTML="{{ summaryItem.value | linkify }}"></div>
                     </div>
                 </div>
+            </div>
+
+            <div>
+                <span (click)="removeInstance()" class="btn btn-danger">Remove</span>
             </div>
         </div>
     </div>

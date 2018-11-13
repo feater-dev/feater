@@ -9,7 +9,9 @@ import {InstanceContext} from '../../../instance-context/instance-context';
 import {InstanceContextInterpolateFileInterface} from '../../../instance-context/before-build/instance-context-interpolate-file.interface';
 import {FeaterVariablesSet} from '../../../sets/feater-variables-set';
 import {CommandType} from '../../../executor/command.type';
+import {Injectable} from '@nestjs/common';
 
+@Injectable()
 export class InterpolateFileCommandFactoryComponent implements BeforeBuildTaskCommandFactoryInterface {
 
     protected readonly TYPE = 'interpolate';
@@ -24,6 +26,7 @@ export class InterpolateFileCommandFactoryComponent implements BeforeBuildTaskCo
         source: InstanceContextSourceInterface,
         taskId: string,
         instance: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         const typedBeforeBuildTask = beforeBuildTask as InstanceContextInterpolateFileInterface;
 
@@ -32,10 +35,10 @@ export class InterpolateFileCommandFactoryComponent implements BeforeBuildTaskCo
             instance.id,
             `Interpolate file for source \`${source.id}\``,
             () => new InterpolateFileCommand(
-                FeaterVariablesSet.fromList(instance.featerVariables),
+                instance.featerVariables,
                 path.join(source.paths.dir.absolute.guest, typedBeforeBuildTask.relativePath),
             ),
-            (result: InterpolateFileCommandResultInterface) => {
+            async (result: InterpolateFileCommandResultInterface): Promise<void> => {
                 (beforeBuildTask as InstanceContextInterpolateFileInterface).interpolatedText = result.interpolatedText;
             },
         );

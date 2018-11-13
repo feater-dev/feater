@@ -9,6 +9,7 @@ export interface EnvironmentInterface {
         readonly url: string;
     };
     readonly guestPaths: {
+        readonly root: string;
         readonly build: string;
         readonly proxyDomain: string;
         readonly asset: string;

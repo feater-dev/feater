@@ -21,7 +21,9 @@ import * as _ from 'lodash';
 })
 export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
 
-    readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    readonly POLLING_INTERVAL = 3000; // 5 seconds.
+
+    i = 0;
 
     instance: GetInstanceDetailLogsQueryInstanceFieldInterface;
 
@@ -38,6 +40,11 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
+
+        const polling = Observable.interval(this.POLLING_INTERVAL);
+        this.pollingSubscription = polling.subscribe(
+            () => { this.updateInstance(); },
+        );
     }
 
     ngOnDestroy() {
@@ -45,7 +52,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
     }
 
     joinRecentCommandLogEntryMessages(commandLogEntries) {
-        return _.map(commandLogEntries, 'message').join('\n');
+        return commandLogEntries.map(entry => `${entry.id} --- ${entry.message}`).join('\n');
     }
 
     trackById(index: number, obj: any): any {
@@ -61,7 +68,8 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
     }
 
     isExpanded(commandLogId: string): boolean {
-        return this.expandedCommandLogIds[commandLogId];
+        return true;
+//        return this.expandedCommandLogIds[commandLogId];
     }
 
     private getInstance() {
@@ -78,18 +86,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                 const resultData: GetInstanceDetailLogsQueryInterface = result.data;
                 this.instance = _.cloneDeep(resultData.instance);
                 this.updateLastCommandLogEntryId(resultData);
-                for (const commandLog of this.instance.commandLogs) {
-                    if (commandLog.completedAt) {
-                        this.collapse(commandLog.id);
-                    } else {
-                        this.expand(commandLog.id);
-                    }
-                }
-
-                const polling = Observable.interval(this.POLLING_INTERVAL);
-                this.pollingSubscription = polling.subscribe(
-                    () => { this.updateInstance(); },
-                );
+                console.log('get done');
             });
     }
 
@@ -111,36 +108,40 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                     const instanceCommandLog = _.find(this.instance.commandLogs, {id: commandLog.id});
                     if (!instanceCommandLog) {
                         this.instance.commandLogs.push(_.cloneDeep(commandLog));
-                        if (commandLog.completedAt) {
-                            this.collapse(commandLog.id);
-                        } else {
-                            this.expand(commandLog.id);
-                        }
                     } else {
-                        if (!instanceCommandLog.completedAt && commandLog.completedAt) {
-                            this.collapse(commandLog.id);
-                        }
                         instanceCommandLog.completedAt = commandLog.completedAt;
                         instanceCommandLog.failedAt = commandLog.failedAt;
-                        if (0 !== commandLog.entries.length) {
-                            instanceCommandLog.entries = instanceCommandLog.entries.concat(commandLog.entries);
-                        }
+                        // if (0 !== commandLog.entries.length) {
+                            instanceCommandLog.entries = instanceCommandLog.entries.concat(
+                                [{id: 'dummy', message: `${this.i}`}],
+                                commandLog.entries,
+                            );
+                        // }
                     }
                 }
+                this.i += 1;
+                console.log('update done');
             });
     }
 
     private updateLastCommandLogEntryId(
         resultData: GetInstanceDetailLogsQueryInterface | UpdateInstanceDetailLogsQueryInterface,
     ): void {
-        const newEntryIds = _.map(
+        console.log(this.i);
+        console.log('lastCommandLogEntryId was', this.lastCommandLogEntryId);
+        const entryIds = _.map(
             _.flatten(
-                _.map(resultData.instance.commandLogs, 'entries'),
+                resultData.instance.commandLogs.map((commandLog) => {
+                    return commandLog.entries.length > 0
+                        ? commandLog.entries.slice(-1)
+                        : [];
+                })
             ),
             'id'
         );
-        if (0 !== newEntryIds.length) {
-            this.lastCommandLogEntryId = _.maxBy(newEntryIds, id => parseInt(id, 16));
+        if (0 !== entryIds.length) {
+            this.lastCommandLogEntryId = _.maxBy(entryIds, id => parseInt(id, 16));
         }
+        console.log('lastCommandLogEntryId is', this.lastCommandLogEntryId);
     }
 }

@@ -6,7 +6,9 @@ import {InstanceContextExecuteHostCmdInterface} from '../../../instance-context/
 import {ContextAwareCommand} from '../../../executor/context-aware-command.interface';
 import {EnvVariablesSet} from '../../../sets/env-variables-set';
 import {CommandType} from '../../../executor/command.type';
+import {Injectable} from '@nestjs/common';
 
+@Injectable()
 export class ExecuteHostCmdCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
 
     protected readonly TYPE = 'executeHostCommand';
@@ -20,6 +22,7 @@ export class ExecuteHostCmdCommandFactoryComponent implements AfterBuildTaskComm
         afterBuildTask: InstanceContextAfterBuildTaskInterface,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         const typedAfterBuildTask = afterBuildTask as InstanceContextExecuteHostCmdInterface;
 
@@ -28,7 +31,7 @@ export class ExecuteHostCmdCommandFactoryComponent implements AfterBuildTaskComm
             instanceContext.id,
             `Execute host command`,
             () => new ExecuteHostCmdCommand(
-                EnvVariablesSet.fromList(instanceContext.envVariables),
+                instanceContext.envVariables,
                 EnvVariablesSet.fromList(typedAfterBuildTask.customEnvVariables),
                 typedAfterBuildTask.inheritedEnvVariables,
                 typedAfterBuildTask.command,

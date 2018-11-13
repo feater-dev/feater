@@ -27,7 +27,7 @@ export class ContextAwareCommandExecutorComponent {
         try {
             const result = await this.commandExecutorComponent.execute(wrappedCommand);
             if (command.processResult) {
-                command.processResult(result);
+                await command.processResult(result);
             }
             await commandLogger.markAsCompleted();
             commandLogger.info('Command completed.');

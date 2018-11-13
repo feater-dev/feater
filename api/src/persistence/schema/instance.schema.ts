@@ -4,8 +4,8 @@ const InstanceServiceSchema = new Schema(
     {
         id: String,
         containerNamePrefix: String,
-        containerId: String, // TODO Should maybe be determined on runtime.
-        ipAddress: String, // TODO Should maybe be determined on runtime.
+        containerId: String,
+        ipAddress: String,
     }, {
         _id: false,
     },
@@ -52,5 +52,6 @@ export const InstanceSchema = new Schema({
     summaryItems: [InstanceSummaryItemSchema],
     createdAt: Date,
     updatedAt: Date,
-    builtAt: Date,
+    completedAt: Date,
+    failedAt: Date,
 });

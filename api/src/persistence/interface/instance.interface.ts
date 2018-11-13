@@ -3,9 +3,14 @@ import {Document} from 'mongoose';
 export interface InstanceInterface extends Document {
     readonly _id: string;
     readonly definitionId: string;
-    readonly hash: string;
     readonly name: string;
-    services: any;
+    hash: string;
+    services: {
+        readonly id: string;
+        readonly containerNamePrefix: string;
+        readonly containerId?: string;
+        readonly ipAddress?: string;
+    }[];
     summaryItems: {
         readonly name: string;
         readonly value: string;
@@ -16,12 +21,14 @@ export interface InstanceInterface extends Document {
     }[];
     proxiedPorts: {
         readonly id: string;
-        readonly serviceId: string;
         readonly name: string;
+        readonly serviceId: string;
         readonly port: number;
         readonly domain?: string;
         readonly nginxConfig?: string;
     }[];
     createdAt: Date;
     updatedAt: Date;
+    completedAt: Date;
+    failedAt: Date;
 }

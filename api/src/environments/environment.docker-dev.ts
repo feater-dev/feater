@@ -11,6 +11,7 @@ export const environment: EnvironmentInterface = {
         url: 'redis://redis:6379/1',
     },
     guestPaths: {
+        root: '/app/',
         build: '/data/build/',
         proxyDomain: '/data/proxyDomain/',
         asset: '/data/asset/',

@@ -24,6 +24,14 @@
             <div *ngFor="let commandLog of instance?.commandLogs; trackBy: trackByIndex">
                 <div class="panel panel-default command-log">
                     <div class="panel-heading">
+                        <div class="command-log-expand-toggle">
+                            <span *ngIf="isExpanded(commandLog.id)" (click)="collapse(commandLog.id)">
+                                <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                            </span>
+                            <span *ngIf="!isExpanded(commandLog.id)" (click)="expand(commandLog.id)">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            </span>
+                        </div>
                         <div class="command-log-description" [innerHTML]="commandLog.description | MarkdownToHtml"></div>
                         <div class="command-log-indicator">
                             <span *ngIf="commandLog.completedAt" class="label label-success">
@@ -31,7 +39,7 @@
                                 {{ {start: commandLog.createdAt, end: commandLog.completedAt} | elapsedTime }}
                             </span>
                                 <span *ngIf="commandLog.failedAt" class="label label-danger">
-                                Faled after
+                                Failed after
                                 {{ {start: commandLog.createdAt, end: commandLog.failedAt} | elapsedTime }}
                             </span>
                                 <span *ngIf="!commandLog.completedAt && !commandLog.failedAt" class="label label-default">
@@ -39,7 +47,7 @@
                             </span>
                         </div>
                     </div>
-                    <div *ngIf="!commandLog.completedAt" class="panel-body">
+                    <div *ngIf="isExpanded(commandLog.id)" class="panel-body">
                         <pre class="command-log-entries" [innerHTML]="joinRecentCommandLogEntryMessages(commandLog.entries)"></pre>
                     </div>
                 </div>

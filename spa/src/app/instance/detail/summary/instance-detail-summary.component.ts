@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {
     getInstanceDetailSummaryQueryGql,
@@ -7,6 +7,7 @@ import {
     GetInstanceDetailSummaryQueryInterface,
 } from './get-instance-detail-summary.query';
 import {Observable, Subscription} from 'rxjs';
+import gql from 'graphql-tag';
 
 @Component({
     selector: 'app-instance-detail-summary',
@@ -21,8 +22,15 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
 
     pollingSubscription: Subscription;
 
+    protected readonly removeInstanceMutation = gql`
+        mutation ($id: String!) {
+            removeInstance(id: $id)
+        }
+    `;
+
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private apollo: Apollo,
     ) {}
 
@@ -36,6 +44,19 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.pollingSubscription.unsubscribe();
+    }
+
+    removeInstance() {
+        this.apollo.mutate({
+            mutation: this.removeInstanceMutation,
+            variables: {
+                id: this.instance.id,
+            },
+        }).subscribe(
+            () => {
+                this.router.navigateByUrl(`/definition/${this.instance.definition.id}`);
+            }
+        );
     }
 
     private getInstance() {

@@ -3,7 +3,7 @@ import {LogRepository} from '../../persistence/repository/log.repository';
 import {LogTypeInterface} from '../type/log-type.interface';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
-import {ResolverLogFilterArgumentsInterface} from './filter-argument/resolver-log-filter-arguments.interface';
+import {ResolverCommandLogEntryFilterArgumentsInterface} from './filter-argument/resolver-command-log-entry-filter-arguments.interface';
 
 @Injectable()
 export class LogsResolverFactory {
@@ -17,7 +17,7 @@ export class LogsResolverFactory {
             const resolverListOptions = args as ResolverPaginationArgumentsInterface;
             const criteria = this.applyFilterArgumentToCriteria(
                 queryExtractor ? queryExtractor(object) : {},
-                args as ResolverLogFilterArgumentsInterface,
+                args as ResolverCommandLogEntryFilterArgumentsInterface,
             );
             const logs = await this.logRepository.findByInstanceId(criteria.instanceId);
             const data: LogTypeInterface[] = [];
@@ -32,7 +32,7 @@ export class LogsResolverFactory {
         };
     }
 
-    protected applyFilterArgumentToCriteria(criteria: any, args: ResolverLogFilterArgumentsInterface): any {
+    protected applyFilterArgumentToCriteria(criteria: any, args: ResolverCommandLogEntryFilterArgumentsInterface): any {
         return criteria;
     }
 }

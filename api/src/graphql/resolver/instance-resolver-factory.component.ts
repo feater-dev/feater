@@ -1,3 +1,7 @@
+import {execSync} from 'child_process';
+import * as nanoidGenerate from 'nanoid/generate';
+import * as escapeStringRegexp from 'escape-string-regexp';
+import * as path from 'path';
 import {Injectable} from '@nestjs/common';
 import {InstanceTypeInterface} from '../type/instance-type.interface';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
@@ -9,10 +13,7 @@ import {DefinitionRepository} from '../../persistence/repository/definition.repo
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverInstanceFilterArgumentsInterface} from './filter-argument/resolver-instance-filter-arguments.interface';
-import * as nanoidGenerate from 'nanoid/generate';
-import * as escapeStringRegexp from 'escape-string-regexp';
 import {StopServiceInputTypeInterface} from '../input-type/stop-service-input-type.interface';
-import {execSync} from 'child_process';
 import {environment} from '../../environments/environment';
 import {PauseServiceInputTypeInterface} from '../input-type/pause-service-input-type.interface';
 import {StartServiceInputTypeInterface} from '../input-type/start-service-input-type.interface';
@@ -89,7 +90,7 @@ export class InstanceResolverFactory {
 
             process.nextTick(() => {
                 this.instantiator.runInstance(
-                    instance._id.toString(),
+                    instance,
                     hash,
                     definition,
                 );
@@ -165,7 +166,29 @@ export class InstanceResolverFactory {
 
     public getRemoveItemResolver(): (obj: any, removeInstanceInput: RemoveInstanceInputTypeInterface) => Promise<boolean> {
         return async (obj: any, removeInstanceInput: RemoveInstanceInputTypeInterface): Promise<boolean> => {
-            // TODO Should also remove files, proxies, volumes, networks...
+            const instance = await this.instanceRepository.findById(removeInstanceInput.id);
+
+            console.log({
+                INSTANCE_HASH: instance.hash,
+                COMPOSE_PROJECT_NAME_PREFIX: `${environment.instantiation.containerNamePrefix}${instance.hash}`,
+                FEATER_GUEST_PATH_BUILD: environment.guestPaths.build,
+                FEATER_GUEST_PATH_PROXY_DOMAIN: environment.guestPaths.proxyDomain,
+                FEATER_NGINX_CONTAINER_NAME: 'feater_nginx',
+            });
+
+            execSync(
+                'bash -c remove-instance.sh',
+                {
+                    cwd: path.join(environment.guestPaths.root, 'bin'),
+                    env: {
+                        INSTANCE_HASH: instance.hash,
+                        COMPOSE_PROJECT_NAME_PREFIX: `${environment.instantiation.containerNamePrefix}${instance.hash}`,
+                        FEATER_GUEST_PATH_BUILD: environment.guestPaths.build,
+                        FEATER_GUEST_PATH_PROXY_DOMAIN: environment.guestPaths.proxyDomain,
+                        FEATER_NGINX_CONTAINER_NAME: 'feater_nginx',
+                    },
+                },
+            );
 
             return await this.instanceRepository.remove(removeInstanceInput.id);
         };

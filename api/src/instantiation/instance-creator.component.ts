@@ -1,13 +1,11 @@
 import * as path from 'path';
 import {Injectable} from '@nestjs/common';
 import {BaseLogger} from '../logger/base-logger';
-import {FeaterVariablesSet} from './sets/feater-variables-set';
 import {CommandsList} from './executor/commands-list';
 import {ContextAwareCommand} from './executor/context-aware-command.interface';
 import {CreateDirectoryCommand} from './command/create-directory/command';
 import {CreateVolumeFromAssetCommand} from './command/create-volume-from-asset/command';
 import {CreateVolumeFromAssetCommandResultInterface} from './command/create-volume-from-asset/command-result.interface';
-import {EnvVariablesSet} from './sets/env-variables-set';
 import {CloneSourceCommand} from './command/clone-source/command';
 import {ParseDockerComposeCommand} from './command/parse-docker-compose/command';
 import {ParseDockerComposeCommandResultInterface} from './command/parse-docker-compose/command-result.interface';
@@ -43,6 +41,9 @@ import {InstanceRepository} from '../persistence/repository/instance.repository'
 import {CommandType} from './executor/command.type';
 import {CommandsMap} from './executor/commands-map';
 import {CommandsMapItem} from './executor/commands-map-item';
+import {InstanceInterface} from '../persistence/interface/instance.interface';
+import {DefinitionInterface} from '../persistence/interface/definition.interface';
+import * as _ from 'lodash';
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -73,38 +74,121 @@ export class InstanceCreatorComponent {
         ];
     }
 
-    async runInstance(id: string, hash: string, definition: any): Promise<any> {
-        const {config: definitionConfig} = definition.toObject();
+    async runInstance(instance: InstanceInterface, hash: string, definition: DefinitionInterface): Promise<any> {
+        const {config: definitionConfig} = definition;
+        const id = instance.id;
         const taskId = 'instance_creation';
         const instanceContext = this.instanceContextFactory.create(id, hash, definitionConfig);
 
         const createInstanceCommand = new CommandsList([], false);
-        this.addCreateDirectory(createInstanceCommand, taskId, instanceContext);
-        this.addCreateVolumeFromAssetsAndCloneSource(createInstanceCommand, taskId, instanceContext);
-        this.addParseDockerCompose(createInstanceCommand, taskId, instanceContext);
-        this.addPrepareProxyDomains(createInstanceCommand, taskId, instanceContext);
-        this.addPrepareEnvVarsForSources(createInstanceCommand, taskId, instanceContext);
-        this.addPrepareSummaryItems(createInstanceCommand, taskId, instanceContext);
-        this.addBeforeBuildTasks(createInstanceCommand, taskId, instanceContext);
-        this.addRunDockerCompose(createInstanceCommand, taskId, instanceContext);
-        this.addGetContainerIds(createInstanceCommand, taskId, instanceContext);
-        this.addConnectContainersToNetwork(createInstanceCommand, taskId, instanceContext);
-        this.addConfigureProxyDomains(createInstanceCommand, taskId, instanceContext);
-        this.addAfterBuildTasks(createInstanceCommand, taskId, instanceContext);
-        this.addEnableProxyDomains(createInstanceCommand, taskId, instanceContext);
+
+        const updateInstance = async (): Promise<void> => {
+            instance.hash = instanceContext.hash;
+            instance.envVariables = instanceContext.envVariables.toList();
+            // instance.featerVariables = instanceContext.featerVariables.toList();
+            instance.summaryItems = instanceContext.summaryItems.toList();
+            instance.services = _.cloneDeep(instanceContext.services);
+            instance.proxiedPorts = _.cloneDeep(instanceContext.proxiedPorts);
+            // TODO Handle volumes.
+
+            await this.instanceRepository.save(instance);
+        };
+
+        await updateInstance();
+
+        this.addCreateDirectory(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addCreateVolumeFromAssetsAndCloneSource(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addParseDockerCompose(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addPrepareProxyDomains(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addPrepareEnvVarsForSources(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addPrepareSummaryItems(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addBeforeBuildTasks(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addRunDockerCompose(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addGetContainerIds(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addConnectContainersToNetwork(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addConfigureProxyDomains(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addAfterBuildTasks(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
+        this.addEnableProxyDomains(
+            createInstanceCommand,
+            taskId,
+            instanceContext,
+            updateInstance,
+        );
 
         return this.commandExecutorComponent
             .execute(createInstanceCommand)
             .then(
                 async (): Promise<InstanceContext> => {
                     this.logger.info('Build instantiated and started.');
-                    const persistentInstance = await this.instanceRepository.findById(instanceContext.id);
-                    await this.instanceRepository.updateFromInstanceContext(persistentInstance, instanceContext);
+                    instance.completedAt = new Date();
+                    await this.instanceRepository.save(instance);
 
                     return instanceContext;
                 },
-                error => {
+                async (error: Error): Promise<void> => {
                     this.logger.error('Failed to instantiate and start build.');
+                    instance.failedAt = new Date();
+                    await this.instanceRepository.save(instance);
 
                     throw error;
                 },
@@ -115,6 +199,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(new ContextAwareCommand(
             taskId,
@@ -130,6 +215,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         const createVolumeFromAssetCommands = instanceContext.volumes.map(
             volume => new ContextAwareCommand(
@@ -146,9 +232,10 @@ export class InstanceCreatorComponent {
                         volume.paths.extractDir.absolute.host,
                     );
                 },
-                (result: CreateVolumeFromAssetCommandResultInterface) => {
+                async (result: CreateVolumeFromAssetCommandResultInterface): Promise<void> => {
                     instanceContext.mergeEnvVariablesSet(result.envVariables);
                     instanceContext.mergeFeaterVariablesSet(result.featerVariables);
+                    await updateInstanceFromInstanceContext();
                 },
             ),
         );
@@ -183,6 +270,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new ContextAwareCommand(
@@ -202,7 +290,7 @@ export class InstanceCreatorComponent {
                         instanceContext.composeProjectName,
                     );
                 },
-                (result: ParseDockerComposeCommandResultInterface) => {
+                async (result: ParseDockerComposeCommandResultInterface): Promise<void> => {
                     for (const service of result.services) {
                         instanceContext.services.push({
                             id: service.id,
@@ -222,6 +310,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new CommandsList(
@@ -234,10 +323,11 @@ export class InstanceCreatorComponent {
                             instanceContext.hash,
                             proxiedPort.id,
                         ),
-                        (result: PrepareProxyDomainCommandResultInterface) => {
+                        async (result: PrepareProxyDomainCommandResultInterface): Promise<void> => {
                             proxiedPort.domain = result.proxyDomain;
                             instanceContext.mergeEnvVariablesSet(result.envVariables);
                             instanceContext.mergeFeaterVariablesSet(result.featerVariables);
+                            await updateInstanceFromInstanceContext();
                         },
                     ),
                 ),
@@ -253,6 +343,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new CommandsList(
@@ -266,9 +357,10 @@ export class InstanceCreatorComponent {
                             source.paths.dir.absolute.guest,
                             source.paths.dir.absolute.host,
                         ),
-                        (result: PrepareSourceEnvVarsCommandResultInterface) => {
+                        async (result: PrepareSourceEnvVarsCommandResultInterface): Promise<void> => {
                             instanceContext.mergeEnvVariablesSet(result.envVariables);
                             instanceContext.mergeFeaterVariablesSet(result.featerVariables);
+                            await updateInstanceFromInstanceContext();
                         },
                     ),
                 ),
@@ -281,6 +373,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new ContextAwareCommand(
@@ -288,11 +381,12 @@ export class InstanceCreatorComponent {
                 instanceContext.id,
                 `Prepare summary items`,
                 () => new PrepareSummaryItemsCommand(
-                    FeaterVariablesSet.fromList(instanceContext.featerVariables),
-                    SummaryItemsSet.fromList(instanceContext.summaryItems),
+                    instanceContext.featerVariables,
+                    instanceContext.nonInterpolatedSummaryItems,
                 ),
-                (result: PrepareSummaryItemsCommandResultInterface) => {
-                    instanceContext.summaryItems = result.summaryItems.toList();
+                async (result: PrepareSummaryItemsCommandResultInterface): Promise<void> => {
+                    instanceContext.summaryItems = result.summaryItems;
+                    await updateInstanceFromInstanceContext();
                 },
             ),
         );
@@ -302,6 +396,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new CommandsList(
@@ -313,6 +408,7 @@ export class InstanceCreatorComponent {
                                 source,
                                 taskId,
                                 instanceContext,
+                                updateInstanceFromInstanceContext,
                             ),
                         ),
                         false,
@@ -327,6 +423,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new ContextAwareCommand(
@@ -346,7 +443,7 @@ export class InstanceCreatorComponent {
                             ),
                         ),
                         instanceContext.composeProjectName,
-                        EnvVariablesSet.fromList(instanceContext.envVariables),
+                        instanceContext.envVariables,
                     );
                 },
             ),
@@ -361,6 +458,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new ContextAwareCommand(
@@ -376,13 +474,14 @@ export class InstanceCreatorComponent {
                         }),
                     ),
                 ),
-                (result: GetContainerIdsCommandResultInterface) => {
+                async (result: GetContainerIdsCommandResultInterface): Promise<void> => {
                     for (const {serviceId, containerId} of result.serviceContainerIds) {
                         const service = instanceContext.findService(serviceId);
                         service.containerId = containerId;
                     }
                     instanceContext.mergeEnvVariablesSet(result.envVariables);
                     instanceContext.mergeFeaterVariablesSet(result.featerVariables);
+                    await updateInstanceFromInstanceContext();
                 },
             ),
         );
@@ -396,6 +495,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new CommandsList(
@@ -412,9 +512,8 @@ export class InstanceCreatorComponent {
                                 service.containerId,
                             );
                         },
-                        (result: ConnectToNetworkCommandResultInterface) => {
+                        async (result: ConnectToNetworkCommandResultInterface): Promise<void> => {
                             const service = instanceContext.findService(proxiedPort.serviceId);
-
                             service.ipAddress = result.ipAddress;
                         },
                     ),
@@ -428,6 +527,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new CommandsList(
@@ -446,7 +546,7 @@ export class InstanceCreatorComponent {
                                 proxiedPort.domain,
                             );
                         },
-                        (result: ConfigureProxyDomainCommandResultInterface) => {
+                        async (result: ConfigureProxyDomainCommandResultInterface): Promise<void> => {
                             proxiedPort.nginxConfig = result.nginxConfig;
                         },
                     ),
@@ -460,6 +560,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         const commandMapItems: CommandsMapItem[] = instanceContext.afterBuildTasks.map(
             (afterBuildTask): CommandsMapItem => {
@@ -467,6 +568,7 @@ export class InstanceCreatorComponent {
                     afterBuildTask,
                     taskId,
                     instanceContext,
+                    updateInstanceFromInstanceContext,
                 );
 
                 return new CommandsMapItem(
@@ -486,6 +588,7 @@ export class InstanceCreatorComponent {
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
         createInstanceCommand.addCommand(
             new ContextAwareCommand(
@@ -507,6 +610,7 @@ export class InstanceCreatorComponent {
         source: InstanceContextSourceInterface,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         for (const factory of this.beforeBuildTaskCommandFactoryComponents) {
             if (factory.supportsType(beforeBuildTask.type)) {
@@ -516,6 +620,7 @@ export class InstanceCreatorComponent {
                     source,
                     taskId,
                     instanceContext,
+                    updateInstanceFromInstanceContext,
                 );
             }
         }
@@ -527,6 +632,7 @@ export class InstanceCreatorComponent {
         afterBuildTask: InstanceContextAfterBuildTaskInterface,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         for (const factory of this.afterBuildTaskCommandFactoryComponents) {
             if (factory.supportsType(afterBuildTask.type)) {
@@ -535,6 +641,7 @@ export class InstanceCreatorComponent {
                     afterBuildTask,
                     taskId,
                     instanceContext,
+                    updateInstanceFromInstanceContext,
                 );
             }
         }

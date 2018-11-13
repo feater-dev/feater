@@ -17,7 +17,7 @@ export class CommandsMapExecutorComponent {
         this.commandExecutorComponent = commandExecutorComponent;
     }
 
-    execute(commandsMap: CommandsMap) {
+    execute(commandsMap: CommandsMap): Promise<void> {
         // TODO Validate map consistency beforehand.
 
         return new Promise(resolve => {

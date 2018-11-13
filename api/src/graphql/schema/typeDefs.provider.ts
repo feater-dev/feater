@@ -381,15 +381,19 @@ export const typeDefsProvider = {
         }
 
         type InstanceCommandLogEntry {
+            id: String!
             message: String!
         }
 
         type InstanceCommandLog {
+            id: String!
             description: String!
             createdAt: String!
             completedAt: String
             failedAt: String
-            entries: [InstanceCommandLogEntry!]!
+            entries(
+                afterId: String
+            ): [InstanceCommandLogEntry!]!
         }
 
         type Instance {
@@ -402,6 +406,8 @@ export const typeDefsProvider = {
             summaryItems: [InstanceSummaryItem!]!
             createdAt: String
             updatedAt: String
+            completedAt: String
+            failedAt: String
             commandLogs: [InstanceCommandLog!]!
         }
 

@@ -1,17 +1,16 @@
 import gql from 'graphql-tag';
 
-export const getInstanceDetailLogsQueryGql = gql`
-    query ($id: String!) {
+export const updateInstanceDetailLogsQueryGql = gql`
+    query ($id: String!, $lastCommandLogEntryId: String) {
         instance(id: $id) {
             id
-            name
             commandLogs {
                 id
                 description
                 createdAt
                 completedAt
                 failedAt
-                entries {
+                entries(afterId: $lastCommandLogEntryId) {
                     id
                     message
                 }
@@ -20,9 +19,8 @@ export const getInstanceDetailLogsQueryGql = gql`
     }
 `;
 
-export interface GetInstanceDetailLogsQueryInstanceFieldInterface {
+export interface UpdateInstanceDetailLogsQueryInstanceFieldInterface {
     readonly id: string;
-    readonly name: string;
     readonly commandLogs: {
         readonly id: string;
         readonly description: string;
@@ -36,6 +34,6 @@ export interface GetInstanceDetailLogsQueryInstanceFieldInterface {
     }[];
 }
 
-export interface GetInstanceDetailLogsQueryInterface {
-    instance: GetInstanceDetailLogsQueryInstanceFieldInterface;
+export interface UpdateInstanceDetailLogsQueryInterface {
+    instance: UpdateInstanceDetailLogsQueryInstanceFieldInterface;
 }

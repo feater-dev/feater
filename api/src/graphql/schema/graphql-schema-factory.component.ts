@@ -131,6 +131,12 @@ export class GraphqlSchemaFactory {
                 updatedAt: this.dateResolverFactory.getDateResolver(
                     (instance: InstanceTypeInterface) => instance.updatedAt,
                 ),
+                completedAt: this.dateResolverFactory.getDateResolver(
+                    (instance: InstanceTypeInterface) => instance.completedAt,
+                ),
+                failedAt: this.dateResolverFactory.getDateResolver(
+                    (instance: InstanceTypeInterface) => instance.failedAt,
+                ),
                 commandLogs: this.commandLogsResolverFactory.getListResolver(
                     (instance: InstanceTypeInterface) => ({instanceId: instance.id.toString()}),
                 ),

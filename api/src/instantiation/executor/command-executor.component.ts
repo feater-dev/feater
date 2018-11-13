@@ -23,27 +23,21 @@ export class CommandExecutorComponent {
         this.commandsMapExecutorComponent.setCommandExecutorComponent(this);
     }
 
-    async execute(command: CommandType): Promise<any> {
+    execute(command: CommandType): Promise<any> {
         if (command instanceof SimpleCommand) {
-            return await this.compositeSimpleCommandExecutorComponent.execute(command);
+            return this.compositeSimpleCommandExecutorComponent.execute(command);
         }
 
         if (command instanceof ContextAwareCommand) {
-            await this.contextAwareCommandExecutorComponent.execute(command);
-
-            return;
+            return this.contextAwareCommandExecutorComponent.execute(command);
         }
 
         if (command instanceof CommandsList) {
-            await this.commandsListExecutorComponent.execute(command);
-
-            return;
+            return this.commandsListExecutorComponent.execute(command);
         }
 
         if (command instanceof CommandsMap) {
-            await this.commandsMapExecutorComponent.execute(command);
-
-            return;
+            return this.commandsMapExecutorComponent.execute(command);
         }
 
         throw new Error('Unknown class of command.');

@@ -19,6 +19,8 @@ export const getInstanceDetailSummaryQueryGql = gql`
             }
             createdAt
             updatedAt
+            completedAt
+            failedAt
         }
     }
 `;
@@ -42,6 +44,8 @@ export interface GetInstanceDetailSummaryQueryInstanceFieldinterface {
     ];
     readonly createdAt: string;
     readonly updatedAt: string;
+    readonly completedAt: string;
+    readonly failedAt: string;
 }
 
 export interface GetInstanceDetailSummaryQueryInterface {

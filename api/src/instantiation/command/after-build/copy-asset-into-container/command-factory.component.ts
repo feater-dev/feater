@@ -5,7 +5,9 @@ import {InstanceContext} from '../../../instance-context/instance-context';
 import {InstanceContextCopyAssetIntoContainerInterface} from '../../../instance-context/after-build/instance-context-copy-asset-into-container.interface';
 import {ContextAwareCommand} from '../../../executor/context-aware-command.interface';
 import {CommandType} from '../../../executor/command.type';
+import {Injectable} from '@nestjs/common';
 
+@Injectable()
 export class CopyAssetIntoContainerCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
 
     protected readonly TYPE = 'copyAssetIntoContainer';
@@ -19,6 +21,7 @@ export class CopyAssetIntoContainerCommandFactoryComponent implements AfterBuild
         afterBuildTask: InstanceContextAfterBuildTaskInterface,
         taskId: string,
         instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         const typedAfterBuildTask = afterBuildTask as InstanceContextCopyAssetIntoContainerInterface;
 

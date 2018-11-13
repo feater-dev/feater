@@ -25,10 +25,10 @@
                 <div class="panel panel-default command-log">
                     <div class="panel-heading">
                         <div class="command-log-expand-toggle">
-                            <span *ngIf="isExpanded(commandLog.id)" (click)="collapse(commandLog.id)">
+                            <span *ngIf="isExpanded(commandLog)" (click)="collapse(commandLog)">
                                 <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
                             </span>
-                            <span *ngIf="!isExpanded(commandLog.id)" (click)="expand(commandLog.id)">
+                            <span *ngIf="!isExpanded(commandLog)" (click)="expand(commandLog)">
                                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                             </span>
                         </div>
@@ -47,7 +47,7 @@
                             </span>
                         </div>
                     </div>
-                    <div *ngIf="isExpanded(commandLog.id)" class="panel-body">
+                    <div *ngIf="isExpanded(commandLog)" class="panel-body">
                         <pre class="command-log-entries" [innerHTML]="joinRecentCommandLogEntryMessages(commandLog.entries)"></pre>
                     </div>
                 </div>

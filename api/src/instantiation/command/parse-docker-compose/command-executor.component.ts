@@ -30,7 +30,14 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
             const compose = jsYaml.safeLoad(
                 fs.readFileSync(absoluteGuestComposeFilePath).toString(),
             );
-            const serviceIds = Object.keys(compose.services);
+
+            const serviceIds = Object.keys(compose.services || {});
+
+            if (0 === serviceIds.length) {
+                logger.info(`No service IDs found.`);
+
+                continue;
+            }
 
             logger.info(`Service IDs found: ${serviceIds.join(', ')}`);
 

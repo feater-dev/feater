@@ -1,12 +1,9 @@
+import * as _ from 'lodash';
+import {Injectable} from '@nestjs/common';
 import {CommandsMap} from './commands-map';
 import {SimpleCommand} from './simple-command';
 import {CommandsMapItem} from './commands-map-item';
-import {Injectable} from '@nestjs/common';
 import {CommandExecutorComponent} from './command-executor.component';
-
-interface IdsMapType {
-    [key: string]: boolean;
-}
 
 @Injectable()
 export class CommandsMapExecutorComponent {
@@ -20,71 +17,76 @@ export class CommandsMapExecutorComponent {
     execute(commandsMap: CommandsMap): Promise<void> {
         // TODO Validate map consistency beforehand.
 
+        const completedCommandIds = [];
+        const executingCommandSymbols = [];
+        const pendingCommandSymbols = commandsMap.items.map((commandMapItem: CommandsMapItem) => commandMapItem.symbol);
+
         return new Promise(resolve => {
-            this.executeNextBatch(commandsMap.items, resolve);
+            this.executeNextBatch(
+                commandsMap.items,
+                resolve,
+                completedCommandIds,
+                executingCommandSymbols,
+                pendingCommandSymbols,
+            );
         });
     }
 
     protected executeNextBatch(
         commandsMapItems: CommandsMapItem[],
         resolve: () => void,
-        completedCommandIds: IdsMapType = {},
-        executingCommandIds: IdsMapType = {},
+        completedCommandIds: string[],
+        executingCommandSymbols: symbol[],
+        pendingCommandSymbols: symbol[],
     ) {
-        const pendingCommandsMapItems = this.getPendingCommandsMapItems(commandsMapItems, completedCommandIds, executingCommandIds);
-        let anythingExecuted = false;
 
-        if (0 === pendingCommandsMapItems.length) {
+        if (0 === pendingCommandSymbols.length && 0 === executingCommandSymbols.length) {
             resolve();
 
             return;
         }
 
-        for (const pendingCommandsMapItem of pendingCommandsMapItems) {
-            if (this.areAllCommandsCompleted(pendingCommandsMapItem.dependsOn, completedCommandIds)) {
-                anythingExecuted = true;
-                if (pendingCommandsMapItem.id) {
-                    executingCommandIds[pendingCommandsMapItem.id] = true;
-                }
-                this.commandExecutorComponent
-                    .execute(pendingCommandsMapItem.nestedCommand as SimpleCommand)
-                    .then(() => {
-                        if (pendingCommandsMapItem.id) {
-                            delete executingCommandIds[pendingCommandsMapItem.id];
-                            completedCommandIds[pendingCommandsMapItem.id] = true;
-                        }
-                        process.nextTick(() => {
-                            this.executeNextBatch(commandsMapItems, resolve, completedCommandIds, executingCommandIds);
-                        });
-                    });
+        let anythingExecuted = false;
+
+        for (const commandMapItem of commandsMapItems) {
+            if (
+                -1 === pendingCommandSymbols.indexOf(commandMapItem.symbol)
+                || -1 !== executingCommandSymbols.indexOf(commandMapItem.symbol)
+                || _.difference(commandMapItem.dependsOn, completedCommandIds).length !== 0
+            ) {
+                continue;
             }
+
+            anythingExecuted = true;
+            delete pendingCommandSymbols[commandMapItem.symbol];
+            executingCommandSymbols[commandMapItem.symbol] = true;
+
+            this.commandExecutorComponent
+                .execute(commandMapItem.nestedCommand as SimpleCommand)
+                .then(() => {
+                    delete executingCommandSymbols[commandMapItem.symbol];
+                    if (commandMapItem.id) {
+                        completedCommandIds[commandMapItem.id] = true;
+                    }
+                    process.nextTick(() => {
+                        this.executeNextBatch(
+                            commandsMapItems,
+                            resolve,
+                            completedCommandIds,
+                            executingCommandSymbols,
+                            pendingCommandSymbols,
+                        );
+                    });
+                });
         }
 
-        if (!anythingExecuted && Object.keys(executingCommandIds).length === 0) {
+        if (
+            !anythingExecuted
+            && 0 === pendingCommandSymbols.length
+            && 0 === executingCommandSymbols.length
+        ) {
             throw new Error('Inconsistent command dependencies.');
         }
     }
 
-    protected getPendingCommandsMapItems(
-        commandsMapItems: CommandsMapItem[],
-        completedCommandIds: IdsMapType,
-        executingCommandIds: IdsMapType,
-    ): CommandsMapItem[] {
-        return commandsMapItems.filter((commandMapItem: CommandsMapItem) => {
-            return !completedCommandIds[commandMapItem.id] && !executingCommandIds[commandMapItem.id];
-        });
-    }
-
-    protected areAllCommandsCompleted(
-        commandIds: string[],
-        completedCommandIds: IdsMapType,
-    ): boolean {
-        for (const commandId of commandIds) {
-            if (!completedCommandIds[commandId]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 }

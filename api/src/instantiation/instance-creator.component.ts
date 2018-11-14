@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as _ from 'lodash';
 import {Injectable} from '@nestjs/common';
 import {BaseLogger} from '../logger/base-logger';
 import {CommandsList} from './executor/commands-list';
@@ -36,14 +37,12 @@ import {InstanceContextBeforeBuildTaskInterface} from './instance-context/before
 import {InstanceContext} from './instance-context/instance-context';
 import {InstanceContextFactory} from './instance-context-factory.component';
 import {EnableProxyDomainsCommand} from './command/enable-proxy-domains/command';
-import {SummaryItemsSet} from './sets/summary-items-set';
 import {InstanceRepository} from '../persistence/repository/instance.repository';
 import {CommandType} from './executor/command.type';
 import {CommandsMap} from './executor/commands-map';
 import {CommandsMapItem} from './executor/commands-map-item';
 import {InstanceInterface} from '../persistence/interface/instance.interface';
 import {DefinitionInterface} from '../persistence/interface/definition.interface';
-import * as _ from 'lodash';
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -56,11 +55,11 @@ export class InstanceCreatorComponent {
         protected readonly instanceContextFactory: InstanceContextFactory,
         protected readonly logger: BaseLogger,
         protected readonly commandExecutorComponent: CommandExecutorComponent,
-        copyFileCommandFactoryComponent: CopyFileCommandFactoryComponent,
-        interpolateFileCommandFactoryComponent: InterpolateFileCommandFactoryComponent,
-        copyAssetIntoContainerCommandFactoryComponent: CopyAssetIntoContainerCommandFactoryComponent,
-        executeHostCmdCommandFactoryComponent: ExecuteHostCmdCommandFactoryComponent,
-        executeServiceCmdCommandFactoryComponent: ExecuteServiceCmdCommandFactoryComponent,
+        protected copyFileCommandFactoryComponent: CopyFileCommandFactoryComponent,
+        protected interpolateFileCommandFactoryComponent: InterpolateFileCommandFactoryComponent,
+        protected copyAssetIntoContainerCommandFactoryComponent: CopyAssetIntoContainerCommandFactoryComponent,
+        protected executeHostCmdCommandFactoryComponent: ExecuteHostCmdCommandFactoryComponent,
+        protected executeServiceCmdCommandFactoryComponent: ExecuteServiceCmdCommandFactoryComponent,
     ) {
         this.beforeBuildTaskCommandFactoryComponents = [
             copyFileCommandFactoryComponent,
@@ -89,10 +88,10 @@ export class InstanceCreatorComponent {
         const updateInstance = async (): Promise<void> => {
             instance.hash = instanceContext.hash;
             instance.envVariables = instanceContext.envVariables.toList();
-            // instance.featerVariables = instanceContext.featerVariables.toList();
             instance.summaryItems = instanceContext.summaryItems.toList();
             instance.services = _.cloneDeep(instanceContext.services);
             instance.proxiedPorts = _.cloneDeep(instanceContext.proxiedPorts);
+            // TODO Handle feature variables.
             // TODO Handle volumes.
 
             await this.instanceRepository.save(instance);
@@ -100,99 +99,32 @@ export class InstanceCreatorComponent {
 
         await updateInstance();
 
-        this.addCreateDirectory(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addCreateVolumeFromAssetsAndCloneSource(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addParseDockerCompose(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addPrepareProxyDomains(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addPrepareEnvVarsForSources(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addPrepareSummaryItems(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addBeforeBuildTasks(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addRunDockerCompose(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addGetContainerIds(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addConnectContainersToNetwork(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addConfigureProxyDomains(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addAfterBuildTasks(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
-        this.addEnableProxyDomains(
-            createInstanceCommand,
-            taskId,
-            instanceContext,
-            updateInstance,
-        );
+        this.addCreateDirectory(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addCreateVolumeFromAssetsAndCloneSource(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addParseDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addPrepareProxyDomains(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addPrepareEnvVarsForSources(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addPrepareSummaryItems(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addBeforeBuildTasks(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addRunDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addGetContainerIds(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addConnectContainersToNetwork(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addConfigureProxyDomains(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addAfterBuildTasks(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addEnableProxyDomains(createInstanceCommand, taskId, instanceContext, updateInstance);
 
         return this.commandExecutorComponent
             .execute(createInstanceCommand)
             .then(
-                async (): Promise<InstanceContext> => {
+                async (): Promise<void> => {
                     this.logger.info('Build instantiated and started.');
                     instance.completedAt = new Date();
-                    await this.instanceRepository.save(instance);
-
-                    return instanceContext;
+                    await updateInstance();
                 },
                 async (error: Error): Promise<void> => {
                     this.logger.error('Failed to instantiate and start build.');
                     instance.failedAt = new Date();
-                    await this.instanceRepository.save(instance);
+                    await updateInstance();
                 },
             );
     }

@@ -144,7 +144,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
             'id'
         );
         if (0 !== entryIds.length) {
-            this.lastCommandLogEntryId = _.maxBy(entryIds, id => parseInt(id, 16));
+            this.lastCommandLogEntryId = _.max(entryIds);
         }
     }
 }

@@ -19,7 +19,9 @@ export class CommandsMapExecutorComponent {
 
         const completedCommandIds = [];
         const executingCommandSymbols = [];
-        const pendingCommandSymbols = commandsMap.items.map((commandMapItem: CommandsMapItem) => commandMapItem.symbol);
+        const pendingCommandSymbols = commandsMap.items.map(
+            (commandMapItem: CommandsMapItem) => commandMapItem.symbol,
+        );
 
         return new Promise(resolve => {
             this.executeNextBatch(
@@ -58,15 +60,15 @@ export class CommandsMapExecutorComponent {
             }
 
             anythingExecuted = true;
-            delete pendingCommandSymbols[commandMapItem.symbol];
-            executingCommandSymbols[commandMapItem.symbol] = true;
+            _.pull(pendingCommandSymbols, commandMapItem.symbol);
+            executingCommandSymbols.push(commandMapItem.symbol);
 
             this.commandExecutorComponent
                 .execute(commandMapItem.nestedCommand as SimpleCommand)
                 .then(() => {
-                    delete executingCommandSymbols[commandMapItem.symbol];
+                    _.pull(executingCommandSymbols, commandMapItem.symbol);
                     if (commandMapItem.id) {
-                        completedCommandIds[commandMapItem.id] = true;
+                        completedCommandIds.push(commandMapItem.id);
                     }
                     process.nextTick(() => {
                         this.executeNextBatch(

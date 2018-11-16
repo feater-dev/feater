@@ -18,102 +18,129 @@
     </div>
 </div>
 
-<div class="form form-horizontal">
+<div class="form">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-3">
             <div class="form-group">
-                <label class="col-md-3 control-label">Name</label>
-                <div class="col-md-9">
-                    <p class="form-control-static">{{ instance?.name}}</p>
+                <label class="control-label">Name</label>
+                <p class="form-control-static">{{ instance?.name}}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Definition</label>
+                <p class="form-control-static">
+                    <a routerLink="/definition/{{ instance?.definition.id }}">{{ instance?.definition.name }}</a>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Project</label>
+                <p class="form-control-static">
+                    <a routerLink="/project/{{ instance?.definition.project.id }}">
+                        {{instance?.definition.project.name }}
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Build status</label>
+                <div class="instance-status-indicator form-control-static">
+                    <span *ngIf="instance?.completedAt" class="label label-success">
+                        Completed in
+                        {{ {start: instance?.createdAt, end: instance?.completedAt} | elapsedTime }}
+                    </span>
+                    <span *ngIf="instance?.failedAt" class="label label-danger">
+                        Failed after
+                        {{ {start: instance?.createdAt, end: instance?.failedAt} | elapsedTime }}
+                    </span>
+                    <span *ngIf="!instance?.completedAt && !instance?.failedAt" class="label label-default">
+                        In progress
+                    </span>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
             <div class="form-group">
-                <label class="col-md-3 control-label">Definition</label>
-                <div class="col-md-9">
-                    <p class="form-control-static">
-                        <a routerLink="/definition/{{ instance?.definition.id }}">{{ instance?.definition.name }}</a>
-                    </p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-3 control-label">Project</label>
-                <div class="col-md-9">
-                    <p class="form-control-static">
-                        <a routerLink="/project/{{ instance?.definition.project.id }}">
-                            {{instance?.definition.project.name }}
-                        </a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-3 control-label">Build status</label>
-                <div class="col-md-9">
-                    <div class="instance-status-indicator form-control-static">
-                        <span *ngIf="instance?.completedAt" class="label label-success">
-                            Completed in
-                            {{ {start: instance?.createdAt, end: instance?.completedAt} | elapsedTime }}
-                        </span>
-                        <span *ngIf="instance?.failedAt" class="label label-danger">
-                            Faled after
-                            {{ {start: instance?.createdAt, end: instance?.failedAt} | elapsedTime }}
-                        </span>
-                        <span *ngIf="!instance?.completedAt && !instance?.failedAt" class="label label-default">
-                            In progress
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-3 control-label">Created at</label>
-                <div class="col-md-9">
-                    <p class="form-control-static">
+                <label class="control-label">Created at</label>
+                <p class="form-control-static">
+                    <span *ngIf="instance?.createdAt">
                         {{ instance?.createdAt | absoluteDate }}<br>
                         ({{ instance?.createdAt | relativeDate }})
-                    </p>
-                </div>
+                    </span>
+                    <span *ngIf="!instance?.createdAt">
+                        &mdash;
+                    </span>
+                </p>
             </div>
-
-            <div *ngIf="instance?.updatedAt" class="form-group">
-                <label class="col-md-3 control-label">Updated at</label>
-                <div class="col-md-9">
-                    <p class="form-control-static">
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Updated at</label>
+                <p class="form-control-static">
+                    <span *ngIf="instance?.updatedAt">
                         {{ instance?.updatedAt | absoluteDate }}<br>
                         ({{ instance?.updatedAt | relativeDate }})
-                    </p>
-                </div>
+                    </span>
+                    <span *ngIf="!instance?.updatedAt">
+                        &mdash;
+                    </span>
+                </p>
             </div>
-
+        </div>
+        <div class="col-md-3">
+            <label class="control-label">Completed at</label>
             <div *ngIf="instance?.completedAt" class="form-group">
-                <label class="col-md-3 control-label">Completed at</label>
-                <div class="col-md-9">
-                    <p class="form-control-static">
+                <p class="form-control-static">
+                    <span *ngIf="instance?.completedAt">
                         {{ instance?.completedAt | absoluteDate }}<br>
                         ({{ instance?.completedAt | relativeDate }})
-                    </p>
-                </div>
+                    </span>
+                    <span *ngIf="!instance?.completedAt">
+                        &mdash;
+                    </span>
+                </p>
             </div>
-
+        </div>
+        <div class="col-md-3">
+            <label class="control-label">Failed at</label>
             <div *ngIf="instance?.failedAt" class="form-group">
-                <label class="col-md-3 control-label">Failed at</label>
-                <div class="col-md-9">
-                    <p class="form-control-static">
+                <p class="form-control-static">
+                    <span *ngIf="instance?.failedAt">
                         {{ instance?.failedAt | absoluteDate }}<br>
                         ({{ instance?.failedAt | relativeDate }})
-                    </p>
-                </div>
+                    </span>
+                    <span *ngIf="!instance?.failedAt">
+                        &mdash;
+                    </span>
+                </p>
             </div>
-
-            <div *ngIf="instance?.summaryItems?.length">
-                <div class="form-group" *ngFor="let summaryItem of instance?.summaryItems">
-                    <label class="col-md-3 control-label">{{ summaryItem.name }}</label>
-                    <div class="col-md-9">
-                        <div class="form-control-static" innerHTML="{{ summaryItem.value | linkify }}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group" >
+                <label class="control-label">Summary items</label>
+                <div class="form-control-static">
+                    <div *ngIf="instance?.summaryItems?.length">
+                        <dl *ngFor="let summaryItem of instance?.summaryItems">
+                            <dt>{{ summaryItem.name }}</dt>
+                            <dd innerHTML="{{ summaryItem.value | linkify }}"></dd>
+                        </dl>
+                    </div>
+                    <div *ngIf="!instance?.summaryItems?.length">
+                        &mdash;
                     </div>
                 </div>
             </div>
-
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div>
                 <span (click)="removeInstance()" class="btn btn-danger">Remove</span>
             </div>

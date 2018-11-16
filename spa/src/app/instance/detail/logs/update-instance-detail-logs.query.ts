@@ -30,6 +30,8 @@ export interface UpdateInstanceDetailLogsQueryInstanceFieldInterface {
         readonly entries: {
             readonly id: string;
             readonly message: string;
+            readonly timestamp: string;
+            formattedTimestamp: string;
         }[];
     }[];
 }

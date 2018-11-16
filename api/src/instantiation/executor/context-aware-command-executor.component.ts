@@ -33,7 +33,7 @@ export class ContextAwareCommandExecutorComponent {
             commandLogger.info('Command completed.');
         } catch (e) {
             await commandLogger.markAsFailed();
-            commandLogger.info('Command failed.');
+            commandLogger.error(`Command failed with error of class ${e.constructor.name} with message '${e.message}'.`);
 
             throw e;
         }

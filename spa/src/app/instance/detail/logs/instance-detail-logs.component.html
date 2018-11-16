@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div *ngIf="isExpanded(commandLog)" class="panel-body">
-                        <pre class="command-log-entries" [innerHTML]="joinRecentCommandLogEntryMessages(commandLog.entries)"></pre>
+                        <pre class="command-log-entries" [innerHTML]="joinMessages(commandLog.entries)"></pre>
                     </div>
                 </div>
             </div>

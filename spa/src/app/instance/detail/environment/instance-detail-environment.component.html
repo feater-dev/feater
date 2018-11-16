@@ -31,8 +31,12 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let envVariable of instance?.envVariables" class="form-control-static">
-                        <td class="fit-column">{{ envVariable.name }}</td>
-                        <td>{{ envVariable.value }}</td>
+                        <td class="fit-column">
+                            <span class="env-variable-name">{{ envVariable.name }}</span>
+                        </td>
+                        <td>
+                            <span class="env-variable-value">{{ envVariable.value }}</span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

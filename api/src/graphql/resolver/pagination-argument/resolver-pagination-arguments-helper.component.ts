@@ -3,8 +3,8 @@ import {Injectable} from '@nestjs/common';
 @Injectable()
 export class ResolverPaginationArgumentsHelper {
 
-    protected readonly defaultLimit = 20;
-    protected readonly maximalLimit = 100;
+    protected readonly defaultLimit = 9999;
+    protected readonly maximalLimit = 9999;
 
     public getLimit(limit?: number): number {
         return Math.min(limit || this.defaultLimit, this.maximalLimit);

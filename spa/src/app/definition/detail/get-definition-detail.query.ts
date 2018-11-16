@@ -24,6 +24,11 @@ export const getDefinitionDetailQueryGql = gql`
                 }
                 createdAt
                 updatedAt
+                completedAt
+                failedAt
+                services {
+                    containerState
+                }
             }
             deployKeys {
                 id
@@ -59,6 +64,9 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
         }
         readonly createdAt: string;
         readonly updatedAt: string;
+        readonly services: {
+            readonly containerState: string;
+        }[];
     }];
     readonly deployKeys: [{
         readonly id: string;

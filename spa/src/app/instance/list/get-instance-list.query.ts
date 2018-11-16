@@ -15,6 +15,9 @@ export const getInstanceListQueryGql = gql`
             id
             name
             createdAt
+            updatedAt
+            completedAt
+            failedAt
             definition {
                 id
                 name
@@ -23,6 +26,10 @@ export const getInstanceListQueryGql = gql`
                     name
                 }
             }
+            services {
+                containerState
+            }
+
         }
     }
 `;
@@ -31,6 +38,9 @@ export interface GetInstanceListQueryInstanceFieldItemInterface {
     readonly id: number;
     readonly name: string;
     readonly createdAt: string;
+    readonly updatedAt: string;
+    readonly completedAt: string;
+    readonly failedAt: string;
     readonly defintion: {
         readonly id: string;
         readonly name: string;
@@ -39,6 +49,9 @@ export interface GetInstanceListQueryInstanceFieldItemInterface {
             readonly name: string;
         };
     };
+    readonly services: {
+        readonly containerState: string;
+    }[];
 }
 
 export interface GetInstanceListQueryInterface {

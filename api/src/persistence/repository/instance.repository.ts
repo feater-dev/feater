@@ -45,6 +45,7 @@ export class InstanceRepository {
     async create(createInstanceInputType: CreateInstanceInputTypeInterface): Promise<InstanceInterface> {
         const instance = new this.instanceModel(createInstanceInputType);
         instance.createdAt = new Date();
+        instance.updatedAt = new Date();
         await instance.save();
 
         return instance;

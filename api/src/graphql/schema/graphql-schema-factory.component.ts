@@ -20,6 +20,7 @@ import {CommandLogInterface} from '../../persistence/interface/command-log.inter
 import {CommandLogsResolverFactory} from '../resolver/command-logs-resolver-factory.component';
 import {CommandLogTypeInterface} from '../type/command-log-type.interface';
 import {CommandLogEntriesResolverFactory} from '../resolver/command-log-entries-resolver-factory.component';
+import {LogInterface} from '../../persistence/interface/log.interface';
 
 @Injectable()
 export class GraphqlSchemaFactory {
@@ -160,6 +161,12 @@ export class GraphqlSchemaFactory {
                 ),
                 entries: this.commandLogEntriesResolverFactory.getListResolver(
                     (commandLog: CommandLogTypeInterface) => ({'meta.commandLogId': commandLog.id}),
+                ),
+            },
+
+            InstanceCommandLogEntry: {
+                timestamp: this.dateResolverFactory.getDateResolver(
+                    (commandLogEntry: LogInterface) => commandLogEntry.timestamp,
                 ),
             },
 

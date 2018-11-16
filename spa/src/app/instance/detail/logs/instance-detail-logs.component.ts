@@ -13,6 +13,7 @@ import {
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-instance-detail-logs',
@@ -22,6 +23,7 @@ import * as _ from 'lodash';
 export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
 
     readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    readonly TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
     readonly COLLAPSED = 1;
     readonly EXPANDED = 2;
@@ -35,8 +37,8 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
     expandToggles: {[commandLogId: string]: number} = {};
 
     constructor(
-        private route: ActivatedRoute,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected apollo: Apollo,
     ) {}
 
     ngOnInit() {
@@ -52,8 +54,22 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
         this.pollingSubscription.unsubscribe();
     }
 
-    joinRecentCommandLogEntryMessages(commandLogEntries) {
-        return _.map(commandLogEntries, 'message').join('\n');
+    joinMessages(commandLogEntries) {
+        const messages = _.map(commandLogEntries, 'message');
+        const formattedTimestamps = _.map(commandLogEntries, 'formattedTimestamp');
+
+        return _.zip(formattedTimestamps, messages)
+            .map(([formattedTimestamp, message]) => {
+                const messageLines = message.split(/\r?\n/g);
+                const joinedMessages = [];
+                joinedMessages.push(`${formattedTimestamp} | ${messageLines[0]}`);
+                for (const messageLine of messageLines.slice(1)) {
+                    joinedMessages.push(`${_.repeat(' ', formattedTimestamp.length)} | ${messageLine}`);
+                }
+
+                return joinedMessages.join('\n');
+            })
+            .join('\n');
     }
 
     trackById(index: number, obj: any): any {
@@ -79,7 +95,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
         return !commandLog.completedAt;
     }
 
-    private getInstance() {
+    protected getInstance() {
         this.apollo
             .watchQuery<GetInstanceDetailLogsQueryInterface>({
                 query: getInstanceDetailLogsQueryGql,
@@ -91,12 +107,19 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
             .valueChanges
             .subscribe(result => {
                 const resultData: GetInstanceDetailLogsQueryInterface = result.data;
-                this.instance = _.cloneDeep(resultData.instance);
                 this.updateLastCommandLogEntryId(resultData);
+                this.instance = {
+                    id: resultData.instance.id,
+                    name: resultData.instance.name,
+                    commandLogs: [],
+                };
+                for (const commandLogData of resultData.instance.commandLogs) {
+                    this.addCommandLog(commandLogData);
+                }
             });
     }
 
-    private updateInstance() {
+    protected updateInstance() {
         this.apollo
             .watchQuery<UpdateInstanceDetailLogsQueryInterface>({
                 query: updateInstanceDetailLogsQueryGql,
@@ -110,27 +133,18 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 const resultData: UpdateInstanceDetailLogsQueryInterface = result.data;
                 this.updateLastCommandLogEntryId(resultData);
-                for (const commandLog of resultData.instance.commandLogs) {
-                    const instanceCommandLog = _.find(this.instance.commandLogs, {id: commandLog.id});
-                    if (!instanceCommandLog) {
-                        this.instance.commandLogs.push(_.cloneDeep(commandLog));
+                for (const commandLogData of resultData.instance.commandLogs) {
+                    const commandLog = this.findCommandLog(commandLogData.id);
+                    if (!commandLog) {
+                        this.addCommandLog(commandLogData);
                     } else {
-                        instanceCommandLog.completedAt = commandLog.completedAt;
-                        instanceCommandLog.failedAt = commandLog.failedAt;
-                        if (0 === instanceCommandLog.entries.length) {
-                            instanceCommandLog.entries = commandLog.entries;
-                        } else {
-                            const lastEntry = _.last(instanceCommandLog.entries);
-                            instanceCommandLog.entries = instanceCommandLog.entries.concat(
-                                _.filter(commandLog.entries, (entry) => entry.id > lastEntry.id)
-                            );
-                        }
+                        this.updateCommandLog(commandLog, commandLogData);
                     }
                 }
             });
     }
 
-    private updateLastCommandLogEntryId(
+    protected updateLastCommandLogEntryId(
         resultData: GetInstanceDetailLogsQueryInterface | UpdateInstanceDetailLogsQueryInterface,
     ): void {
         const entryIds = _.map(
@@ -147,4 +161,50 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
             this.lastCommandLogEntryId = _.max(entryIds);
         }
     }
+
+    protected findCommandLog(commandLogId) {
+        return _.find(this.instance.commandLogs, {id: commandLogId});
+    }
+
+    protected addCommandLog(commandLogData) {
+        const commandLog = {
+            id: commandLogData.id,
+            description: commandLogData.description,
+            createdAt: commandLogData.createdAt,
+            completedAt: commandLogData.completedAt,
+            failedAt: commandLogData.failedAt,
+            entries: [],
+        };
+        this.instance.commandLogs.push(commandLog);
+        this.addCommandLogEntries(commandLog, commandLogData.entries);
+    }
+
+    protected updateCommandLog(commandLog, commandLogData) {
+        commandLog.createdAt = commandLogData.createdAt;
+        commandLog.completedAt = commandLogData.completedAt;
+        commandLog.failedAt = commandLogData.failedAt;
+        this.addCommandLogEntries(commandLog, commandLogData.entries);
+    }
+
+    protected addCommandLogEntries(commandLog, commandLogEntriesData) {
+        const commandLogEntries = _.cloneDeep(commandLogEntriesData);
+        for (const commandLogEntry of commandLogEntries) {
+            commandLogEntry.formattedTimestamp = this.formatTimestamp(commandLogEntry.timestamp);
+        }
+        if (0 === commandLog.entries.length) {
+            commandLog.entries = commandLogEntries;
+
+            return;
+        }
+
+        const lastCommandLogEntryId = _.last(commandLog.entries).id;
+        commandLog.entries = commandLog.entries.concat(
+            commandLogEntries.filter(commandLogEntry => commandLogEntry.id > lastCommandLogEntryId),
+        );
+    }
+
+    protected formatTimestamp(timestamp: string): string {
+        return moment(timestamp).format(this.TIMESTAMP_FORMAT);
+    }
+
 }

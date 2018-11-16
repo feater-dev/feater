@@ -383,6 +383,7 @@ export const typeDefsProvider = {
         type InstanceCommandLogEntry {
             id: String!
             message: String!
+            timestamp: String!
         }
 
         type InstanceCommandLog {

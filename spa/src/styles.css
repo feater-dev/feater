@@ -6,6 +6,7 @@
 .form-group pre.form-control-static {
     color: #2c3e50;
     background-color: #ffffff;
+    font-size: 90%;
 }
 
 .form-section {
@@ -41,12 +42,6 @@
     white-space: nowrap;
     vertical-align: baseline;
     padding: 2px 24px 2px 8px;
-}
-
-.logs .log-message {
-    white-space: pre-wrap;
-    vertical-align: baseline;
-    padding-left: 2px 8px 2px 0;
 }
 
 body {
@@ -169,8 +164,7 @@ h2 {
 
 .command-log-entries {
     font-family: monospace;
-    font-weight: 600;
-    font-size: 80%;
+    font-size: 90%;
     background: none;
     border: 0;
     color: inherit;
@@ -187,4 +181,18 @@ h2 {
     position: absolute;
     top: 10px;
     left: 10px;
+}
+
+.nav-tabs {
+    margin-bottom: 30px;
+}
+
+.env-variable-name,
+.env-variable-value {
+    font-family: monospace;
+    font-size: 90%;
+    background: none;
+    border: 0;
+    color: inherit;
+    padding: 0;
 }

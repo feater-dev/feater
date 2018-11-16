@@ -31,6 +31,7 @@ export class CommandLogEntriesResolverFactory {
                 data.push({
                     id: log._id.toString(),
                     message: log.message,
+                    timestamp: log.timestamp,
                 } as LogTypeInterface);
             }
 

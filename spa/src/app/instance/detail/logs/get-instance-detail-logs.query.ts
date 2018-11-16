@@ -13,6 +13,7 @@ export const getInstanceDetailLogsQueryGql = gql`
                 failedAt
                 entries {
                     id
+                    timestamp
                     message
                 }
             }
@@ -31,6 +32,8 @@ export interface GetInstanceDetailLogsQueryInstanceFieldInterface {
         failedAt: string;
         readonly entries: {
             readonly id: string;
+            readonly timestamp: string;
+            formattedTimestamp: string;
             readonly message: string;
         }[];
     }[];

@@ -8,7 +8,9 @@
                 <tr>
                     <th class="fit-column">Name</th>
                     <th class="fit-column">Definition</th>
-                    <th>Project</th>
+                    <th class="fit-column">Project</th>
+                    <th class="fit-column">Build status</th>
+                    <th>Containers running</th>
                     <th class="fit-column">Created</th>
                     <th class="fit-column">Updated</th>
                     <th class="fit-column">ID</th>
@@ -23,10 +25,18 @@
                             {{ instance.definition.name }}
                         </a>
                     </td>
-                    <td>
+                    <td class="fit-column">
                         <a routerLink="/project/{{ instance.definition.project.id }}">
                             {{ instance.definition.project.name }}
                         </a>
+                    </td>
+                    <td class="fit-column">
+                        <span *ngIf="instance.completedAt" class="label label-success">Completed</span>
+                        <span *ngIf="instance.failedAt" class="label label-danger">Failed</span>
+                        <span *ngIf="!instance.completedAt && !instance.failedAt" class="label label-default">In progress</span>
+                    </td>
+                    <td>
+                        {{ getRunningServicesCount(instance.services) }}/{{ instance.services.length }}
                     </td>
                     <td class="fit-column">
                         <small>{{ instance.createdAt | relativeDate }}</small>

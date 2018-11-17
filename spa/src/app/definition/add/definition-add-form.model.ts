@@ -38,7 +38,7 @@ export interface DefinitionAddFormProxiedPortFormElement {
     serviceId: string;
     id: string;
     name: string;
-    port: number;
+    port: string;
 }
 
 export interface DefinitionAddFormEnvVariableFormElement {

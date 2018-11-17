@@ -251,7 +251,12 @@ export class DefinitionAddComponent implements OnInit {
             config: {
                 sources: this.item.config.sources,
                 volumes: this.item.config.volumes,
-                proxiedPorts: this.item.config.proxiedPorts,
+                proxiedPorts: this.item.config.proxiedPorts.map(proxiedPort => ({
+                    id: proxiedPort.id,
+                    serviceId: proxiedPort.serviceId,
+                    port: parseInt(proxiedPort.port, 10),
+                    name: proxiedPort.name,
+                })),
                 envVariables: this.item.config.envVariables,
                 composeFiles: [
                     this.item.config.composeFile,
@@ -306,7 +311,12 @@ export class DefinitionAddComponent implements OnInit {
         }
 
         for (const proxiedPort of camelCaseYamlConfig.proxiedPorts) {
-            mappedYamlConfig.proxiedPorts.push(proxiedPort);
+            mappedYamlConfig.proxiedPorts.push({
+                id: proxiedPort.id,
+                serviceId: proxiedPort.serviceId,
+                port: `${proxiedPort.port}`,
+                name: proxiedPort.name,
+            });
         }
 
         for (const envVariable of camelCaseYamlConfig.envVariables) {

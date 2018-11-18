@@ -22,8 +22,8 @@ export class CommandLogEntriesResolverFactory {
             );
             const logs = await this.logRepository.find(
                 criteria,
-                0,
-                9999,
+                resolverListOptions.offset,
+                resolverListOptions.limit,
                 {_id: 1},
             );
             const data: LogTypeInterface[] = [];

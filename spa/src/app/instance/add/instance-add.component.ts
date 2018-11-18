@@ -53,14 +53,6 @@ export class InstanceAddComponent implements OnInit {
                 definitionId: this.definition.id,
                 name: this.item.name,
             },
-            refetchQueries: [
-                {
-                    query: getDefinitionDetailQueryGql,
-                    variables: {id: this.definition.id},
-                },
-                {query: getDefinitionListQueryGql},
-                {query: getInstanceListQueryGql},
-            ],
         }).subscribe(
             ({data}) => {
                 this.router.navigate(['/instance', data.createInstance.id]);

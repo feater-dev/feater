@@ -63,9 +63,6 @@ export class DeployKeyDetailComponent implements OnInit {
         this.apollo.mutate({
             mutation: this.removeDeployKeyMutation,
             variables: {cloneUrl: this.item.cloneUrl},
-            refetchQueries: [{
-                query: getDeployKeyListQueryGql,
-            }],
         }).subscribe(
             () => {
                 this.router.navigate(['/deploy-keys']);

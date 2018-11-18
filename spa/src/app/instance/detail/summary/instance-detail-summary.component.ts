@@ -66,7 +66,6 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
                 variables: {
                     id: this.route.snapshot.params['id'],
                 },
-                fetchPolicy: 'network-only',
             })
             .valueChanges
             .subscribe(result => {

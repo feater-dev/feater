@@ -102,7 +102,6 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                 variables: {
                     id: this.route.snapshot.params['id'],
                 },
-                fetchPolicy: 'network-only',
             })
             .valueChanges
             .subscribe(result => {
@@ -127,7 +126,6 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                     id: this.route.snapshot.params['id'],
                     lastCommandLogEntryId: this.lastCommandLogEntryId,
                 },
-                fetchPolicy: 'network-only',
             })
             .valueChanges
             .subscribe(result => {

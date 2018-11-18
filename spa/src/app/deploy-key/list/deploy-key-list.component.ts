@@ -41,7 +41,9 @@ export class DeployKeyListComponent implements OnInit {
     generateMissingItems() {
         this.apollo.mutate({
             mutation: this.generateMissingDeployKeysMutation,
-            refetchQueries: [{query: getDeployKeyListQueryGql}],
+            refetchQueries: [{
+                query: getDeployKeyListQueryGql,
+            }],
         }).subscribe(
             () => {},
             (error) => { console.log(error); }
@@ -51,7 +53,9 @@ export class DeployKeyListComponent implements OnInit {
     removeUnusedItems() {
         this.apollo.mutate({
             mutation: this.removeUnusedDeployKeysMutation,
-            refetchQueries: [{query: getDeployKeyListQueryGql}],
+            refetchQueries: [{
+                query: getDeployKeyListQueryGql,
+            }],
         }).subscribe(
             () => {},
             (error) => { console.log(error); }

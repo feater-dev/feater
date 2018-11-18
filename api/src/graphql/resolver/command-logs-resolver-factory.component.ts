@@ -21,9 +21,9 @@ export class CommandLogsResolverFactory {
             );
             const commandLogs = await this.commandLogRepository.find(
                 {instanceId: criteria.instanceId},
-                0,
-                9999,
-                {createdAt: 1},
+                resolverListOptions.offset,
+                resolverListOptions.limit,
+                {_id: 1},
             );
             const data: CommandLogTypeInterface[] = [];
             for (const commandLog of commandLogs) {

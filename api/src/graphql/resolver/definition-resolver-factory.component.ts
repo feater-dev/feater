@@ -13,6 +13,10 @@ import * as jsYaml from 'js-yaml';
 import * as snakeCaseKeys from 'snakecase-keys';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
 import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
+import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
+import {PredictedEnvVariableTypeInterface} from '../type/predicted-env-variable-type.interface';
+import {VariablesPredictor} from '../../instantiation/variable/variables-predictor';
+import {PredictedFeaterVariableTypeInterface} from '../type/predicted-feater-variable-type.interface';
 
 @Injectable()
 export class DefinitionResolverFactory {
@@ -21,6 +25,7 @@ export class DefinitionResolverFactory {
         private readonly definitionRepository: DefinitionRepository,
         private readonly deployKeyRepository: DeployKeyRepository,
         private readonly definitionConfigMapper: DefinitionConfigMapper,
+        private readonly variablePredictor: VariablesPredictor,
     ) { }
 
     protected readonly defaultSortKey = 'name_asc';
@@ -91,8 +96,8 @@ export class DefinitionResolverFactory {
         };
     }
 
-    public getDeployKeysResolver(): (obj: DefinitionInterface, args: any) => Promise<DeployKeyInterface[]> {
-        return async (obj: DefinitionInterface, args: any): Promise<DeployKeyInterface[]> => {
+    public getDeployKeysResolver(): (obj: DefinitionInterface, args: any) => Promise<DeployKeyTypeInterface[]> {
+        return async (obj: DefinitionInterface, args: any): Promise<DeployKeyTypeInterface[]> => {
             const deployKeys: DeployKeyInterface[] = [];
             for (const source of obj.config.sources) {
                 const sourceDeployKeys = await this.deployKeyRepository.findByCloneUrl((source as SourceTypeInterface).cloneUrl);
@@ -104,7 +109,52 @@ export class DefinitionResolverFactory {
                 }
             }
 
-            return deployKeys;
+            const mappedDeployKeys: DeployKeyTypeInterface[] = [];
+            for (const deployKey of deployKeys) {
+                mappedDeployKeys.push({
+                    id: deployKey.id,
+                    cloneUrl: deployKey.cloneUrl,
+                    publicKey: deployKey.publicKey,
+                    createdAt: deployKey.createdAt,
+                    updatedAt: deployKey.updatedAt,
+                });
+            }
+
+            return mappedDeployKeys;
+        };
+    }
+
+    public getPredictedEnvVariablesResolver(): (obj: DefinitionInterface, args: any) => Promise<PredictedEnvVariableTypeInterface[]> {
+        return async (obj: DefinitionInterface, args: any): Promise<PredictedEnvVariableTypeInterface[]> => {
+            const predictedEnvVariables = this.variablePredictor.predictEnvVariables(obj.config);
+            const mappedPredictedEnvVariables: PredictedEnvVariableTypeInterface[] = [];
+
+            for (const predictedEnvVariable of predictedEnvVariables) {
+                mappedPredictedEnvVariables.push({
+                    name: predictedEnvVariable.name,
+                    value: predictedEnvVariable.value,
+                    pattern: predictedEnvVariable.pattern,
+                });
+            }
+
+            return mappedPredictedEnvVariables;
+        };
+    }
+
+    public getPredictedFeaterVariablesResolver(): (obj: DefinitionInterface, args: any) => Promise<PredictedFeaterVariableTypeInterface[]> {
+        return async (obj: DefinitionInterface, args: any): Promise<PredictedFeaterVariableTypeInterface[]> => {
+            const predictedFeaterVariables = this.variablePredictor.predictFeaterVariables(obj.config);
+            const mappedPredictedFeaterVariables: PredictedFeaterVariableTypeInterface[] = [];
+
+            for (const predictedFeaterVariable of predictedFeaterVariables) {
+                mappedPredictedFeaterVariables.push({
+                    name: predictedFeaterVariable.name,
+                    value: predictedFeaterVariable.value,
+                    pattern: predictedFeaterVariable.pattern,
+                });
+            }
+
+            return mappedPredictedFeaterVariables;
         };
     }
 

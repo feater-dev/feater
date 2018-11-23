@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getInstanceListQueryGql,
     GetInstanceListQueryInstanceFieldItemInterface,
@@ -17,15 +18,17 @@ export class InstanceListComponent implements OnInit {
     instances: GetInstanceListQueryInstanceFieldItemInterface[];
 
     constructor(
-        private route: ActivatedRoute,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
         this.getInstances();
     }
 
-    private getInstances() {
+    protected getInstances() {
+        this.spinner.show();
         this.apollo
             .watchQuery<GetInstanceListQueryInterface>({
                 query: getInstanceListQueryGql,
@@ -39,6 +42,7 @@ export class InstanceListComponent implements OnInit {
             .subscribe(result => {
                 const resultData: GetInstanceListQueryInterface = result.data;
                 this.instances = resultData.instances;
+                this.spinner.hide();
             });
     }
 }

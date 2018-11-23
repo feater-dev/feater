@@ -48,7 +48,6 @@ import {InstanceAddComponent} from './instance/add/instance-add.component';
 import {InstanceListComponent} from './instance/list/instance-list.component';
 import {InstanceTableComponent} from './instance/table/instance-table.component';
 
-import {AuthHttpClient} from './api/auth-http-client.service';
 import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
 import {LinkifyPipe} from './pipes/linkify.pipe';
 import {YamlPipe} from './pipes/yaml.pipe';
@@ -64,6 +63,7 @@ import {InstanceDetailEnvironmentComponent} from './instance/detail/environment/
 import {InstanceDetailLogsComponent} from './instance/detail/logs/instance-detail-logs.component';
 import {InstanceDetailServicesComponent} from './instance/detail/services/instance-detail-services.component';
 import {InstanceDetailProxyDomainsComponent} from './instance/detail/proxy-domains/instance-detail-proxy-domains.component';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
@@ -142,10 +142,8 @@ const appRoutes: Routes = [
         HttpClientModule,
         HttpLinkModule,
         RouterModule.forRoot(appRoutes),
-        MarkdownToHtmlModule
-    ],
-    providers: [
-        {provide: 'authHttp', useClass: AuthHttpClient},
+        MarkdownToHtmlModule,
+        NgxSpinnerModule,
     ],
     bootstrap: [
         AppComponent,

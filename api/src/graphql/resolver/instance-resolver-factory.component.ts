@@ -207,6 +207,7 @@ export class InstanceResolverFactory {
     protected mapPersistentModelToTypeModel(instance: InstanceInterface): InstanceTypeInterface {
         const mapped = {
             id: instance._id,
+            hash: instance.hash,
             name: instance.name,
             definitionId: instance.definitionId,
             services: instance.services,

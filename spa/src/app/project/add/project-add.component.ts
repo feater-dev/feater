@@ -23,8 +23,8 @@ export class ProjectAddComponent {
     item: ProjectAddForm;
 
     constructor(
-        private router: Router,
-        private apollo: Apollo,
+        protected router: Router,
+        protected apollo: Apollo,
     ) {
         this.item = {
             name: ''

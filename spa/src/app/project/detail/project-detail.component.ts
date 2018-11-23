@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getProjectDetailQueryGql,
     GetProjectDetailQueryInterface,
@@ -18,15 +19,18 @@ export class ProjectDetailComponent implements OnInit {
     project: GetProjectDetailQueryProjectFieldInterface;
 
     constructor(
-        private route: ActivatedRoute,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
         this.getProject();
     }
 
-    private getProject() {
+    protected getProject() {
+        this.spinner.show();
+
         return this.apollo
             .watchQuery<GetProjectDetailQueryInterface>({
                 query: getProjectDetailQueryGql,
@@ -38,6 +42,7 @@ export class ProjectDetailComponent implements OnInit {
             .subscribe(result => {
                 const resultData: GetProjectDetailQueryInterface = result.data;
                 this.project = resultData.project;
+                this.spinner.hide();
             });
     }
 }

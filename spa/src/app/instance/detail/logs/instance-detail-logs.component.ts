@@ -1,6 +1,11 @@
+import * as _ from 'lodash';
+import * as moment from 'moment';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
+import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getInstanceDetailLogsQueryGql,
     GetInstanceDetailLogsQueryInstanceFieldInterface,
@@ -10,10 +15,6 @@ import {
     updateInstanceDetailLogsQueryGql,
     UpdateInstanceDetailLogsQueryInterface,
 } from './update-instance-detail-logs.query';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
-import * as _ from 'lodash';
-import * as moment from 'moment';
 
 @Component({
     selector: 'app-instance-detail-logs',
@@ -39,6 +40,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
     constructor(
         protected route: ActivatedRoute,
         protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
@@ -96,6 +98,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
     }
 
     protected getInstance() {
+        this.spinner.show();
         this.apollo
             .watchQuery<GetInstanceDetailLogsQueryInterface>({
                 query: getInstanceDetailLogsQueryGql,
@@ -115,6 +118,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                 for (const commandLogData of resultData.instance.commandLogs) {
                     this.addCommandLog(commandLogData);
                 }
+                this.spinner.hide();
             });
     }
 

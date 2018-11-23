@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getInstanceDetailServicesQueryGql,
     GetInstanceDetailServicesQueryInstanceFieldinterface,
@@ -55,15 +56,16 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
     `;
 
     constructor(
-        private route: ActivatedRoute,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
         this.getInstance();
         const polling = Observable.interval(this.POLLING_INTERVAL);
         this.pollingSubscription = polling.subscribe(
-            () => { this.getInstance(); },
+            () => { this.getInstance(false); },
         );
     }
 
@@ -81,7 +83,7 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
                         serviceId: service.id,
                     },
                 }).subscribe(
-                    () => { this.getInstance(); }
+                    () => { this.getInstance(false); }
                 );
                 break;
 
@@ -93,7 +95,7 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
                         serviceId: service.id,
                     },
                 }).subscribe(
-                    () => { this.getInstance(); }
+                    () => { this.getInstance(false); }
                 );
                 break;
         }
@@ -108,9 +110,7 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
                     serviceId: service.id,
                 },
             }).subscribe(
-                () => {
-                    this.getInstance();
-                }
+                () => { this.getInstance(false); }
             );
         }
     }
@@ -131,7 +131,10 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getInstance() {
+    protected getInstance(spinner: boolean = true) {
+        if (spinner) {
+            this.spinner.show();
+        }
         this.apollo
             .watchQuery<GetInstanceDetailServicesQueryInterface>({
                 query: getInstanceDetailServicesQueryGql,
@@ -143,6 +146,9 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 const resultData: GetInstanceDetailServicesQueryInterface = result.data;
                 this.instance = resultData.instance;
+                if (spinner) {
+                    this.spinner.hide();
+                }
             });
     }
 

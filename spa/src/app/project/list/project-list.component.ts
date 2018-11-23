@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getProjectListQueryGql,
     GetProjectListQueryInterface,
@@ -16,13 +17,17 @@ export class ProjectListComponent implements OnInit {
 
     projects: GetProjectListQueryProjectsFieldItemInterface[];
 
-    constructor(private apollo: Apollo) {}
+    constructor(
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
+    ) {}
 
     ngOnInit() {
         this.getProjects();
     }
 
-    private getProjects() {
+    protected getProjects() {
+        this.spinner.show();
         this.apollo
             .watchQuery<GetProjectListQueryInterface>({
                 query: getProjectListQueryGql,
@@ -31,6 +36,7 @@ export class ProjectListComponent implements OnInit {
             .subscribe(result => {
                 const resultData: GetProjectListQueryInterface = result.data;
                 this.projects = resultData.projects;
+                this.spinner.hide();
             });
     }
 }

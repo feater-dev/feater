@@ -188,7 +188,8 @@ h2 {
 }
 
 .env-variable-name,
-.env-variable-value {
+.env-variable-value,
+.env-variable-pattern {
     font-family: monospace;
     font-size: 90%;
     background: none;

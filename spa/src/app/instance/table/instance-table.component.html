@@ -13,6 +13,7 @@
                     <th>Containers running</th>
                     <th class="fit-column">Created</th>
                     <th class="fit-column">Updated</th>
+                    <th class="fit-column">Hash</th>
                     <th class="fit-column">ID</th>
                     <th class="fit-column"></th>
                 </tr>
@@ -43,6 +44,9 @@
                     </td>
                     <td class="fit-column">
                         <small>{{ instance.updatedAt | relativeDate }}</small>
+                    </td>
+                    <td class="fit-column">
+                        <small>{{ instance.hash }}</small>
                     </td>
                     <td class="fit-column">
                         <small>{{ instance.id }}</small>

@@ -11,6 +11,7 @@ import {
 import {map, switchMap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 
 @Component({
@@ -34,10 +35,11 @@ export class AssetAddComponent implements OnInit {
     project: GetProjectQueryProjectFieldInterface;
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private apollo: Apollo,
-        private httpClient: HttpClient,
+        protected route: ActivatedRoute,
+        protected router: Router,
+        protected apollo: Apollo,
+        protected httpClient: HttpClient,
+        protected spinner: NgxSpinnerService,
     ) {
         this.item = {
             id: '',
@@ -81,6 +83,7 @@ export class AssetAddComponent implements OnInit {
     }
 
     protected getProject(): void {
+        this.spinner.show();
         this.route.params.pipe(
             switchMap(
                 (params: Params) => {
@@ -102,6 +105,7 @@ export class AssetAddComponent implements OnInit {
             .subscribe(
                 (item: GetProjectQueryProjectFieldInterface) => {
                     this.project = item;
+                    this.spinner.hide();
                 }
             );
     }

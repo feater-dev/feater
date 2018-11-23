@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getAssetDetailQueryGql,
     GetAssetDetailQueryInterface,
@@ -18,16 +19,19 @@ export class AssetDetailComponent implements OnInit {
     asset: GetAssetDetailQueryAssetFieldInterface;
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected router: Router,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
         this.getAsset();
     }
 
-    private getAsset() {
+    protected getAsset() {
+        this.spinner.show();
+
         return this.apollo
             .watchQuery<GetAssetDetailQueryInterface>({
                 query: getAssetDetailQueryGql,
@@ -39,6 +43,7 @@ export class AssetDetailComponent implements OnInit {
             .subscribe(result => {
                 const resultData: GetAssetDetailQueryInterface = result.data;
                 this.asset = resultData.asset;
+                this.spinner.hide();
             });
     }
 }

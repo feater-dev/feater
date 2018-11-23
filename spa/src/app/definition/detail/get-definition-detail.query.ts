@@ -13,6 +13,7 @@ export const getDefinitionDetailQueryGql = gql`
             configAsYaml
             instances {
                 id
+                hash
                 name
                 definition {
                     id
@@ -37,6 +38,16 @@ export const getDefinitionDetailQueryGql = gql`
                 createdAt
                 updatedAt
             }
+            predictedEnvVariables {
+                name
+                value
+                pattern
+            }
+            predictedFeaterVariables {
+                name
+                value
+                pattern
+            }
             createdAt
             updatedAt
         }
@@ -45,13 +56,14 @@ export const getDefinitionDetailQueryGql = gql`
 
 export interface GetDefinitionDetailQueryDefinitionFieldInterface {
     readonly id: string;
+    readonly hash: string;
     readonly project: {
         readonly id: string;
         readonly name: string;
     };
     readonly name: string;
     readonly configAsYaml: string;
-    readonly instances: [{
+    readonly instances: {
         readonly id: string;
         readonly name: string;
         readonly definition: {
@@ -67,13 +79,23 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
         readonly services: {
             readonly containerState: string;
         }[];
-    }];
-    readonly deployKeys: [{
+    }[];
+    readonly deployKeys: {
         readonly id: string;
         readonly cloneUrl: string;
         readonly fingerprint: string;
         readonly updatedAt: string;
-    }];
+    }[];
+    readonly predictedEnvVariables: {
+        readonly name: string;
+        readonly value?: string;
+        readonly pattern?: string;
+    }[];
+    readonly predictedFeaterVariables: {
+        readonly name: string;
+        readonly value?: string;
+        readonly pattern?: string;
+    }[];
     readonly createdAt: Date;
     readonly updatedAt: Date;
 }

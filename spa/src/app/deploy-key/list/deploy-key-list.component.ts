@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getDeployKeyListQueryGql,
     GetDeployKeyListQueryInterface,
@@ -32,7 +33,10 @@ export class DeployKeyListComponent implements OnInit {
 
     deployKeys: GetDeployKeyListQueryDeployKeysFieldItemInterface[];
 
-    constructor(private apollo: Apollo) {}
+    constructor(
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
+    ) {}
 
     ngOnInit() {
         this.getDeployKeys();
@@ -62,7 +66,8 @@ export class DeployKeyListComponent implements OnInit {
         );
     }
 
-    private getDeployKeys() {
+    protected getDeployKeys() {
+        this.spinner.show();
         this.apollo
             .watchQuery<GetDeployKeyListQueryInterface>({
                 query: getDeployKeyListQueryGql,
@@ -71,6 +76,7 @@ export class DeployKeyListComponent implements OnInit {
             .subscribe(result => {
                 const resultData: GetDeployKeyListQueryInterface = result.data;
                 this.deployKeys = resultData.deployKeys;
+                this.spinner.hide();
             });
     }
 }

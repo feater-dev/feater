@@ -4,6 +4,10 @@ import {map, switchMap} from 'rxjs/operators';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {NgxSpinnerService} from 'ngx-spinner';
+import * as _ from 'lodash';
+import * as jsYaml from 'js-yaml';
+import * as camelCaseKeys from 'camelcase-keys';
 import {
     DefinitionAddForm,
     DefinitionAddFormSourceFormElement,
@@ -22,9 +26,6 @@ import {
     GetProjectQueryInterface,
     GetProjectQueryProjectFieldInterface,
 } from './get-project.query';
-import * as _ from 'lodash';
-import * as jsYaml from 'js-yaml';
-import * as camelCaseKeys from 'camelcase-keys';
 
 
 @Component({
@@ -41,9 +42,10 @@ export class DefinitionAddComponent implements OnInit {
     mode = 'form';
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected router: Router,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {
         this.item = {
             name: '',
@@ -364,6 +366,7 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     protected getProject(): void {
+        this.spinner.show();
         this.route.params.pipe(
             switchMap(
                 (params: Params) => {
@@ -385,6 +388,7 @@ export class DefinitionAddComponent implements OnInit {
             .subscribe(
                 (item: GetProjectQueryProjectFieldInterface) => {
                     this.project = item;
+                    this.spinner.hide();
                 }
             );
     }

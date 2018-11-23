@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getInstanceDetailEnvironmentQueryGql,
     GetInstanceDetailEnvironmentQueryInstanceFieldinterface,
@@ -22,15 +23,16 @@ export class InstanceDetailEnvironmentComponent implements OnInit, OnDestroy {
     pollingSubscription: Subscription;
 
     constructor(
-        private route: ActivatedRoute,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
         this.getInstance();
         const polling = Observable.interval(this.POLLING_INTERVAL);
         this.pollingSubscription = polling.subscribe(
-            () => { this.getInstance(); },
+            () => { this.getInstance(false); },
         );
     }
 
@@ -38,7 +40,10 @@ export class InstanceDetailEnvironmentComponent implements OnInit, OnDestroy {
         this.pollingSubscription.unsubscribe();
     }
 
-    private getInstance() {
+    protected getInstance(spinner: boolean = true) {
+        if (spinner) {
+            this.spinner.show();
+        }
         this.apollo
             .watchQuery<GetInstanceDetailEnvironmentQueryInterface>({
                 query: getInstanceDetailEnvironmentQueryGql,
@@ -50,6 +55,9 @@ export class InstanceDetailEnvironmentComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 const resultData: GetInstanceDetailEnvironmentQueryInterface = result.data;
                 this.instance = resultData.instance;
+                if (spinner) {
+                    this.spinner.hide();
+                }
             });
     }
 

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getDeployKeyDetailQueryGql,
     GetDeployKeyDetailQueryInterface,
@@ -36,9 +37,10 @@ export class DeployKeyDetailComponent implements OnInit {
     item: GetDeployKeyDetailQueryDeployKeyFieldInterface;
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected router: Router,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
@@ -74,6 +76,8 @@ export class DeployKeyDetailComponent implements OnInit {
     }
 
     protected getDeployKey() {
+        this.spinner.show();
+
         return this.apollo
             .watchQuery<GetDeployKeyDetailQueryInterface>({
                 query: getDeployKeyDetailQueryGql,
@@ -83,6 +87,7 @@ export class DeployKeyDetailComponent implements OnInit {
             .subscribe(result => {
                 const resultData: GetDeployKeyDetailQueryInterface = result.data;
                 this.item = resultData.deployKey;
+                this.spinner.hide();
             });
     }
 

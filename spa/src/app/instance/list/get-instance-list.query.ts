@@ -13,6 +13,7 @@ export const getInstanceListQueryGql = gql`
             definitionId: $definitionId
         ) {
             id
+            hash
             name
             createdAt
             updatedAt
@@ -35,7 +36,8 @@ export const getInstanceListQueryGql = gql`
 `;
 
 export interface GetInstanceListQueryInstanceFieldItemInterface {
-    readonly id: number;
+    readonly id: string;
+    readonly hash: string;
     readonly name: string;
     readonly createdAt: string;
     readonly updatedAt: string;

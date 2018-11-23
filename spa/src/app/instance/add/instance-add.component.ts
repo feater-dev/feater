@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {InstanceAddForm} from './instance-add-form.model';
 import {
     GetDefinitionQueryDefinitionFieldInterface,
@@ -33,9 +34,10 @@ export class InstanceAddComponent implements OnInit {
     definition: GetDefinitionQueryDefinitionFieldInterface;
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected router: Router,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {
         this.item = {
             name: ''
@@ -63,7 +65,8 @@ export class InstanceAddComponent implements OnInit {
         );
     }
 
-    private getDefinition() {
+    protected getDefinition() {
+        this.spinner.show();
         this.apollo
             .watchQuery<GetDefinitionQueryInterface>({
                 query: getDefinitionQueryGql,
@@ -75,6 +78,7 @@ export class InstanceAddComponent implements OnInit {
             .subscribe(result => {
                 const resultData: GetDefinitionQueryInterface = result.data;
                 this.definition = resultData.definition;
+                this.spinner.hide();
             });
     }
 

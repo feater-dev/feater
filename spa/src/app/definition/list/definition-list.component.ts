@@ -1,5 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     GetDefinitionListQueryDefinitionsFieldItemInterface,
     GetDefinitionListQueryInterface,
@@ -16,13 +17,17 @@ export class DefinitionListComponent implements OnInit {
 
     definitions: GetDefinitionListQueryDefinitionsFieldItemInterface[];
 
-    constructor(private apollo: Apollo) {}
+    constructor(
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
+    ) {}
 
     ngOnInit() {
         this.getDefinitions();
     }
 
-    private getDefinitions() {
+    protected getDefinitions() {
+        this.spinner.show();
         this.apollo
             .watchQuery<GetDefinitionListQueryInterface>({
                 query: getDefinitionListQueryGql
@@ -31,6 +36,7 @@ export class DefinitionListComponent implements OnInit {
             .subscribe(result => {
                 const resultData: GetDefinitionListQueryInterface= result.data;
                 this.definitions = resultData.definitions;
+                this.spinner.hide();
             });
     }
 }

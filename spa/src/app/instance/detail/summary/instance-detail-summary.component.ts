@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Apollo} from 'apollo-angular';
+import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getInstanceDetailSummaryQueryGql,
     GetInstanceDetailSummaryQueryInstanceFieldinterface,
@@ -29,16 +30,17 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
     `;
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private apollo: Apollo,
+        protected route: ActivatedRoute,
+        protected router: Router,
+        protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
         this.getInstance();
         const polling = Observable.interval(this.POLLING_INTERVAL);
         this.pollingSubscription = polling.subscribe(
-            () => { this.getInstance(); },
+            () => { this.getInstance(false); },
         );
     }
 
@@ -59,7 +61,10 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
         );
     }
 
-    private getInstance() {
+    protected getInstance(spinner: boolean = true) {
+        if (spinner) {
+            this.spinner.show();
+        }
         this.apollo
             .watchQuery<GetInstanceDetailSummaryQueryInterface>({
                 query: getInstanceDetailSummaryQueryGql,
@@ -71,6 +76,9 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 const resultData: GetInstanceDetailSummaryQueryInterface = result.data;
                 this.instance = resultData.instance;
+                if (spinner) {
+                    this.spinner.hide();
+                }
             });
     }
 

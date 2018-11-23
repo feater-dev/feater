@@ -4392,6 +4392,12 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
+ngx-spinner@^6.1.2:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/ngx-spinner/-/ngx-spinner-6.1.2.tgz#9778dbffbd17b27a7a90c4f0d9d8a7817e6ffb76"
+  dependencies:
+    tslib "^1.9.0"
+
 no-case@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"

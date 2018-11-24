@@ -88,19 +88,24 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
     }
 
     protected async checkoutReference(command: CloneSourceCommand, repo: nodegit.Repository): Promise<void> {
-        switch (command.referenceType) {
-            case 'branch':
-                const reference = await repo.getBranch(`refs/remotes/origin/${command.referenceName}`);
-                await repo.checkoutRef(reference);
-                command.commandLogger.info(`Checked out branch: ${command.referenceName}`);
+        if ('branch' === command.referenceType) {
+            const reference = await repo.getBranch(`refs/remotes/origin/${command.referenceName}`);
+            await repo.checkoutRef(reference);
+            command.commandLogger.info(`Checked out branch: ${command.referenceName}`);
 
-                return;
+            return;
+        }
 
-            case 'tag': // TODO Allow to checkout tag.
-            case 'commit': // TODO Allow to checkout commit.
-            default:
-                throw new Error();
+        if ('tag' === command.referenceType) {
+            const reference = await repo.getReference(`refs/tags/${command.referenceName}`);
+            await repo.checkoutRef(reference);
+            command.commandLogger.info(`Checked out tag: ${command.referenceName}`);
+        }
+
+        if ('commit' === command.referenceType) {
+            const commit = await repo.getCommit(command.referenceName);
+            await repo.setHeadDetached(commit.id());
+            command.commandLogger.info(`Checked out commit: ${command.referenceName}`);
         }
     }
-
 }

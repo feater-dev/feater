@@ -31,7 +31,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
         logger.info(`Clone URL: ${typedCommand.cloneUrl}`);
         if ('ssh' === gitUrlParse(typedCommand.cloneUrl).protocol) {
-            logger.info(`Using deploy key} to clone over SSH.`);
+            logger.info(`Using deploy key to clone over SSH.`);
             deployKey = await this.deployKeyRepository.findOneByCloneUrl(typedCommand.cloneUrl);
             logger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
         } else {

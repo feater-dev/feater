@@ -1,6 +1,11 @@
 <div class="row">
     <div class="col-md-12">
-        <h2>Add definition for project <em>{{ project?.name}}</em></h2>
+        <h2 *ngIf="!sourceDefinition">
+            Add definition for project <em>{{ project?.name}}</em>
+        </h2>
+        <h2 *ngIf="sourceDefinition">
+            Duplicate definition <em>{{ sourceDefinition?.name }}</em> for project <em>{{ project?.name}}</em>
+        </h2>
     </div>
 </div>
 
@@ -290,7 +295,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="control-label">Yaml config</label>
-                        <textarea class="form-control" rows="10" #yamlConfig name="addDefinition_yamlConfig" [ngModel]="item.config | yaml" style="font-family: monospace;"></textarea>
+                        <textarea class="form-control" rows="10" #yamlConfig name="addDefinition_yamlConfig" style="font-family: monospace;"></textarea>
                     </div>
                 </div>
             </div>

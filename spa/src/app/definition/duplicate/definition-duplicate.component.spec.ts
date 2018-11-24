@@ -3,21 +3,21 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 
-import {DefinitionAddComponent} from './definition-add.component';
+import {DefinitionDuplicateComponent} from './definition-duplicate.component';
 
 describe('DefinitionDuplicateComponent', () => {
-    let component: DefinitionAddComponent;
-    let fixture: ComponentFixture<DefinitionAddComponent>;
+    let component: DefinitionDuplicateComponent;
+    let fixture: ComponentFixture<DefinitionDuplicateComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DefinitionAddComponent ]
+            declarations: [ DefinitionDuplicateComponent ]
         })
         .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DefinitionAddComponent);
+        fixture = TestBed.createComponent(DefinitionDuplicateComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

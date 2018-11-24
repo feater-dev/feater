@@ -56,7 +56,6 @@ export const getDefinitionDetailQueryGql = gql`
 
 export interface GetDefinitionDetailQueryDefinitionFieldInterface {
     readonly id: string;
-    readonly hash: string;
     readonly project: {
         readonly id: string;
         readonly name: string;

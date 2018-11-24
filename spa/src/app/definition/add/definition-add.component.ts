@@ -87,7 +87,7 @@ export class DefinitionAddComponent implements OnInit {
             id: '',
             cloneUrl: '',
             reference: {
-                type: '',
+                type: 'branch',
                 name: ''
             },
             beforeBuildTasks: []

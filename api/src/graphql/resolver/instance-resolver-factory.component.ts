@@ -163,15 +163,6 @@ export class InstanceResolverFactory {
     public getRemoveItemResolver(): (obj: any, removeInstanceInput: RemoveInstanceInputTypeInterface) => Promise<boolean> {
         return async (obj: any, removeInstanceInput: RemoveInstanceInputTypeInterface): Promise<boolean> => {
             const instance = await this.instanceRepository.findById(removeInstanceInput.id);
-
-            console.log({
-                INSTANCE_HASH: instance.hash,
-                COMPOSE_PROJECT_NAME_PREFIX: `${environment.instantiation.containerNamePrefix}${instance.hash}`,
-                FEATER_GUEST_PATH_BUILD: environment.guestPaths.build,
-                FEATER_GUEST_PATH_PROXY_DOMAIN: environment.guestPaths.proxyDomain,
-                FEATER_NGINX_CONTAINER_NAME: 'feater_nginx',
-            });
-
             execSync(
                 'bash -c remove-instance.sh',
                 {

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
 import gql from 'graphql-tag';
@@ -40,6 +40,8 @@ export class DefinitionAddComponent implements OnInit {
     project: GetProjectQueryProjectFieldInterface;
 
     mode = 'form';
+
+    @ViewChild('yamlConfig') yamlConfigElement: ElementRef;
 
     constructor(
         protected route: ActivatedRoute,
@@ -221,6 +223,7 @@ export class DefinitionAddComponent implements OnInit {
 
     importYamlConfig(yamlConfig): void {
         this.item.config = this.mapYamlConfig(yamlConfig);
+        this.yamlConfigElement.nativeElement.value = '';
         this.switchMode('form');
     }
 
@@ -231,7 +234,6 @@ export class DefinitionAddComponent implements OnInit {
         }
         availableEnvVariableNames.push('FEATER__INSTANCE_ID');
         for (const proxiedPort of this.item.config.proxiedPorts) {
-            availableEnvVariableNames.push(`FEATER__PORT__${proxiedPort.id.toUpperCase()}`);
             availableEnvVariableNames.push(`FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
         }
 

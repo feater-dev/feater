@@ -45,11 +45,6 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
-
-        const polling = Observable.interval(this.POLLING_INTERVAL);
-        this.pollingSubscription = polling.subscribe(
-            () => { this.updateInstance(); },
-        );
     }
 
     ngOnDestroy() {
@@ -118,6 +113,17 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                 for (const commandLogData of resultData.instance.commandLogs) {
                     this.addCommandLog(commandLogData);
                 }
+
+                if (!this.pollingSubscription) {
+                    this.pollingSubscription = Observable
+                        .interval(this.POLLING_INTERVAL)
+                        .subscribe(
+                            () => {
+                                this.updateInstance();
+                            },
+                        );
+                }
+
                 this.spinner.hide();
             });
     }

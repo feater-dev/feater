@@ -236,8 +236,8 @@ export const typeDefsProvider = {
             config: DefinitionConfig!
             configAsYaml: String!
             deployKeys: [DeployKey!]!
-            predictedEnvVariables: [PredictedEnvVariable]!
-            predictedFeaterVariables: [PredictedFeaterVariable]!
+            envVariables: [InstanceEnvVariable]!
+            featerVariables: [InstanceFeaterVariable]!
             createdAt: String!
             updatedAt: String!
         }
@@ -249,18 +249,6 @@ export const typeDefsProvider = {
             fingerprint: String!
             createdAt: String!
             updatedAt: String!
-        }
-
-        type PredictedEnvVariable {
-            name: String!
-            value: String
-            pattern: String
-        }
-
-        type PredictedFeaterVariable {
-            name: String!
-            value: String
-            pattern: String
         }
 
         type DefinitionConfig {
@@ -377,6 +365,11 @@ export const typeDefsProvider = {
         }
 
         type InstanceEnvVariable {
+            name: String!
+            value: String!
+        }
+
+        type InstanceFeaterVariable {
             name: String!
             value: String!
         }

@@ -36,7 +36,9 @@ import {EnableProxyDomainsCommandExecutorComponent} from './command/enable-proxy
 import {CommandsMapExecutorComponent} from './executor/commands-map-executor.component';
 import {CommandsListExecutorComponent} from './executor/commands-list-executor.component';
 import {CommandExecutorComponent} from './executor/command-executor.component';
-import {VariablesPredictor} from './variable/variables-predictor';
+import {VariablesProvider} from './variable/variables-provider.service';
+import {FeaterVariablesHelper} from './variable/feater-variables-helper';
+import {EnvVariablesHelper} from './variable/env-variables-helper';
 
 @Module({
     imports: [
@@ -80,13 +82,15 @@ import {VariablesPredictor} from './variable/variables-predictor';
         CommandsListExecutorComponent,
         ContextAwareCommandExecutorComponent,
         CompositeSimpleCommandExecutorComponent,
-        VariablesPredictor,
+        VariablesProvider,
+        FeaterVariablesHelper,
+        EnvVariablesHelper,
     ],
     exports: [
         InstanceCreatorComponent,
         ContainerStatusCheckerComponent,
         AssetHelper,
-        VariablesPredictor,
+        VariablesProvider,
     ],
 })
 export class InstantiationModule {}

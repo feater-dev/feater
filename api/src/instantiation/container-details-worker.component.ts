@@ -20,7 +20,7 @@ export class ContainerDetailsWorkerComponent {
 
     constructor() {
         this.containerNameRegExp = new RegExp(
-            `^/${environment.instantiation.containerNamePrefix}([a-z0-9]{8})_(.+?)_\\d+\$`,
+            `^/${environment.instantiation.composeProjectNamePattern}([a-z0-9]{8})_(.+?)_\\d+\$`,
         );
         this.redisClient = redis.createClient({url: environment.redis.url});
     }
@@ -58,7 +58,7 @@ export class ContainerDetailsWorkerComponent {
         return querystring.stringify({
             all: true,
             filters: JSON.stringify({
-                name: [environment.instantiation.containerNamePrefix],
+                name: [environment.instantiation.composeProjectNamePattern],
             }),
         });
     }
@@ -72,7 +72,7 @@ export class ContainerDetailsWorkerComponent {
         const serviceName = matches[2];
 
         return {
-            namePrefix: `${environment.instantiation.containerNamePrefix}${instanceHash}_${serviceName}`,
+            namePrefix: `${environment.instantiation.composeProjectNamePattern}${instanceHash}_${serviceName}`,
             id: containerInfo.Id,
             state: containerInfo.State,
             status: containerInfo.Status,

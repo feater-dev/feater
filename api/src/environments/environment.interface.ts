@@ -22,7 +22,7 @@ export interface EnvironmentInterface {
         readonly composeBinaryPath: string;
         readonly composeHttpTimeout: number;
         readonly dockerBinaryPath: string;
-        readonly containerNamePrefix: string; // TODO Rename to composeProjectNamePrefix.
+        readonly composeProjectNamePattern: string; // TODO Rename to composeProjectNamePrefix.
         readonly proxyDomainPattern: string;
         readonly proxyDomainsNetworkName: string;
     };

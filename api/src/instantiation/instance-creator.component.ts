@@ -43,6 +43,7 @@ import {CommandsMap} from './executor/commands-map';
 import {CommandsMapItem} from './executor/commands-map-item';
 import {InstanceInterface} from '../persistence/interface/instance.interface';
 import {DefinitionInterface} from '../persistence/interface/definition.interface';
+import {VariablesProvider} from './variable/variables-provider.service';
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -60,6 +61,7 @@ export class InstanceCreatorComponent {
         protected copyAssetIntoContainerCommandFactoryComponent: CopyAssetIntoContainerCommandFactoryComponent,
         protected executeHostCmdCommandFactoryComponent: ExecuteHostCmdCommandFactoryComponent,
         protected executeServiceCmdCommandFactoryComponent: ExecuteServiceCmdCommandFactoryComponent,
+        protected variablesProvider: VariablesProvider,
     ) {
         this.beforeBuildTaskCommandFactoryComponents = [
             copyFileCommandFactoryComponent,
@@ -87,7 +89,8 @@ export class InstanceCreatorComponent {
 
         const updateInstance = async (): Promise<void> => {
             instance.hash = instanceContext.hash;
-            instance.envVariables = instanceContext.envVariables.toList();
+            instance.envVariables = this.variablesProvider.provideEnvVariablesForInstance(instanceContext).toList(),
+            instance.featerVariables = this.variablesProvider.provideFeaterVariablesForInstance(instanceContext).toList(),
             instance.summaryItems = instanceContext.summaryItems.toList();
             instance.services = _.cloneDeep(instanceContext.services);
             instance.proxiedPorts = _.cloneDeep(instanceContext.proxiedPorts);
@@ -162,8 +165,6 @@ export class InstanceCreatorComponent {
                         volume.assetId,
                         instanceContext.composeProjectName,
                         instanceContext.paths.dir.absolute.guest,
-                        volume.paths.extractDir.absolute.guest,
-                        volume.paths.extractDir.absolute.host,
                     );
                 },
                 async (result: CreateVolumeFromAssetCommandResultInterface): Promise<void> => {

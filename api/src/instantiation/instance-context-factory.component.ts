@@ -22,7 +22,8 @@ export class InstanceContextFactory {
     ): InstanceContext {
         const instanceContext = new InstanceContext(id, hash);
 
-        instanceContext.composeProjectName = `${environment.instantiation.containerNamePrefix}${instanceContext.hash}`;
+        instanceContext.composeProjectName = environment.instantiation.composeProjectNamePattern
+            .replace('{{{instance_hash}}}', instanceContext.hash);
         instanceContext.paths = {
             dir: this.pathHelper.getInstancePaths(hash),
         };

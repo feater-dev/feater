@@ -19,6 +19,10 @@ export interface InstanceInterface extends Document {
         name: string;
         value: string;
     }[];
+    featerVariables: {
+        name: string;
+        value: string;
+    }[];
     proxiedPorts: {
         id: string;
         name: string;

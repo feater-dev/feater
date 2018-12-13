@@ -38,15 +38,13 @@ export const getDefinitionDetailQueryGql = gql`
                 createdAt
                 updatedAt
             }
-            predictedEnvVariables {
+            envVariables {
                 name
                 value
-                pattern
             }
-            predictedFeaterVariables {
+            featerVariables {
                 name
                 value
-                pattern
             }
             createdAt
             updatedAt
@@ -85,12 +83,12 @@ export interface GetDefinitionDetailQueryDefinitionFieldInterface {
         readonly fingerprint: string;
         readonly updatedAt: string;
     }[];
-    readonly predictedEnvVariables: {
+    readonly envVariables: {
         readonly name: string;
         readonly value?: string;
         readonly pattern?: string;
     }[];
-    readonly predictedFeaterVariables: {
+    readonly featerVariables: {
         readonly name: string;
         readonly value?: string;
         readonly pattern?: string;

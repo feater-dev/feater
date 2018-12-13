@@ -19,8 +19,8 @@ export class PrepareProxyDomainCommandExecutorComponent implements SimpleCommand
         const logger = typedCommand.commandLogger;
 
         const proxyDomain = environment.instantiation.proxyDomainPattern
-            .replace('{instance_hash}', typedCommand.instanceHash)
-            .replace('{port_id}', typedCommand.portId);
+            .replace('{{{instance_hash}}}', typedCommand.instanceHash)
+            .replace('{{{port_id}}}', typedCommand.portId);
 
         const envVariables = new EnvVariablesSet();
         envVariables.add(`FEATER__PROXY_DOMAIN__${typedCommand.portId.toUpperCase()}`, proxyDomain);

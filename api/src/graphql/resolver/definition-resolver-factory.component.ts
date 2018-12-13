@@ -15,8 +15,9 @@ import {SourceTypeInterface} from '../type/nested/definition-config/source-type.
 import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
 import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
 import {PredictedEnvVariableTypeInterface} from '../type/predicted-env-variable-type.interface';
-import {VariablesPredictor} from '../../instantiation/variable/variables-predictor';
-import {PredictedFeaterVariableTypeInterface} from '../type/predicted-feater-variable-type.interface';
+import {VariablesProvider} from '../../instantiation/variable/variables-provider.service';
+import {FeaterVariableTypeInterface} from '../type/feater-variable-type.interface';
+import {EnvVariableTypeInterface} from '../type/nested/definition-config/env-variable-type.interface';
 
 @Injectable()
 export class DefinitionResolverFactory {
@@ -25,7 +26,7 @@ export class DefinitionResolverFactory {
         private readonly definitionRepository: DefinitionRepository,
         private readonly deployKeyRepository: DeployKeyRepository,
         private readonly definitionConfigMapper: DefinitionConfigMapper,
-        private readonly variablePredictor: VariablesPredictor,
+        private readonly variablePredictor: VariablesProvider,
     ) { }
 
     protected readonly defaultSortKey = 'name_asc';
@@ -124,37 +125,19 @@ export class DefinitionResolverFactory {
         };
     }
 
-    public getPredictedEnvVariablesResolver(): (obj: DefinitionInterface, args: any) => Promise<PredictedEnvVariableTypeInterface[]> {
-        return async (obj: DefinitionInterface, args: any): Promise<PredictedEnvVariableTypeInterface[]> => {
-            const predictedEnvVariables = this.variablePredictor.predictEnvVariables(obj.config);
-            const mappedPredictedEnvVariables: PredictedEnvVariableTypeInterface[] = [];
+    public getFeaterVariablesResolver(): (obj: DefinitionInterface, args: any) => Promise<FeaterVariableTypeInterface[]> {
+        return async (obj: DefinitionInterface, args: any): Promise<FeaterVariableTypeInterface[]> => {
+            const featerVariables = this.variablePredictor.provideFeaterVariablesForDefintion(obj.config);
 
-            for (const predictedEnvVariable of predictedEnvVariables) {
-                mappedPredictedEnvVariables.push({
-                    name: predictedEnvVariable.name,
-                    value: predictedEnvVariable.value,
-                    pattern: predictedEnvVariable.pattern,
-                });
-            }
-
-            return mappedPredictedEnvVariables;
+            return featerVariables.toList();
         };
     }
 
-    public getPredictedFeaterVariablesResolver(): (obj: DefinitionInterface, args: any) => Promise<PredictedFeaterVariableTypeInterface[]> {
-        return async (obj: DefinitionInterface, args: any): Promise<PredictedFeaterVariableTypeInterface[]> => {
-            const predictedFeaterVariables = this.variablePredictor.predictFeaterVariables(obj.config);
-            const mappedPredictedFeaterVariables: PredictedFeaterVariableTypeInterface[] = [];
+    public getEnvVariablesResolver(): (obj: DefinitionInterface, args: any) => Promise<EnvVariableTypeInterface[]> {
+        return async (obj: DefinitionInterface, args: any): Promise<EnvVariableTypeInterface[]> => {
+            const envVariables = this.variablePredictor.provideEnvVariablesForDefintion(obj.config);
 
-            for (const predictedFeaterVariable of predictedFeaterVariables) {
-                mappedPredictedFeaterVariables.push({
-                    name: predictedFeaterVariable.name,
-                    value: predictedFeaterVariable.value,
-                    pattern: predictedFeaterVariable.pattern,
-                });
-            }
-
-            return mappedPredictedFeaterVariables;
+            return envVariables.toList();
         };
     }
 

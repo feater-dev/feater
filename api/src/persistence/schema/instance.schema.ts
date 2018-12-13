@@ -20,6 +20,15 @@ const InstanceEnvVariableSchema = new Schema(
     },
 );
 
+const InstanceFeaterVariableSchema = new Schema(
+    {
+        name: String,
+        value: String,
+    }, {
+        _id: false,
+    },
+);
+
 const InstanceProxiedPortSchema = new Schema(
     {
         serviceId: String,
@@ -48,6 +57,7 @@ export const InstanceSchema = new Schema({
     name: String,
     services: [InstanceServiceSchema],
     envVariables: [InstanceEnvVariableSchema],
+    featerVariables: [InstanceFeaterVariableSchema],
     proxiedPorts: [InstanceProxiedPortSchema],
     summaryItems: [InstanceSummaryItemSchema],
     createdAt: Date,

@@ -82,27 +82,21 @@
     <div role="tabpanel" class="tab-pane" id="predicted-env-variables">
         <div class="row">
             <div class="col-md-12">
-                <div *ngIf="definition?.predictedEnvVariables?.length">
+                <div *ngIf="definition?.envVariables?.length">
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th scope="col" class="fit-column">Name</th>
-                            <th scope="col" class="fit-column">Type</th>
                             <th scope="col">Value</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let predictedEnvVariable of definition?.predictedEnvVariables" class="form-control-static">
+                        <tr *ngFor="let envVariable of definition?.envVariables" class="form-control-static">
                             <td class="fit-column">
-                                <span class="env-variable-name">{{ predictedEnvVariable.name }}</span>
+                                <span class="env-variable-name">{{ envVariable.name }}</span>
                             </td>
                             <td>
-                                <span *ngIf="predictedEnvVariable.value">Value</span>
-                                <span *ngIf="predictedEnvVariable.pattern">Pattern</span>
-                            </td>
-                            <td>
-                                <span *ngIf="predictedEnvVariable.value" class="env-variable-value">{{ predictedEnvVariable.value }}</span>
-                                <span *ngIf="predictedEnvVariable.pattern" class="env-variable-pattern">{{ predictedEnvVariable.pattern }}</span>
+                                <span class="env-variable-value">{{ envVariable.value }}</span>
                             </td>
                         </tr>
                         </tbody>
@@ -115,27 +109,21 @@
     <div role="tabpanel" class="tab-pane" id="predicted-feater-variables">
         <div class="row">
             <div class="col-md-12">
-                <div *ngIf="definition?.predictedFeaterVariables?.length">
+                <div *ngIf="definition?.featerVariables?.length">
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th scope="col" class="fit-column">Name</th>
-                            <th scope="col" class="fit-column">Type</th>
                             <th scope="col">Value</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let predictedFeaterVariable of definition?.predictedFeaterVariables" class="form-control-static">
+                        <tr *ngFor="let featerVariable of definition?.featerVariables" class="form-control-static">
                             <td class="fit-column">
-                                <span class="env-variable-name">{{ predictedFeaterVariable.name }}</span>
+                                <span class="env-variable-name">{{ featerVariable.name }}</span>
                             </td>
                             <td>
-                                <span *ngIf="predictedFeaterVariable.value">Value</span>
-                                <span *ngIf="predictedFeaterVariable.pattern">Pattern</span>
-                            </td>
-                            <td>
-                                <span *ngIf="predictedFeaterVariable.value" class="env-variable-value">{{ predictedFeaterVariable.value }}</span>
-                                <span *ngIf="predictedFeaterVariable.pattern" class="env-variable-pattern">{{ predictedFeaterVariable.pattern }}</span>
+                                <span class="env-variable-value">{{ featerVariable.value }}</span>
                             </td>
                         </tr>
                         </tbody>

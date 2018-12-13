@@ -114,8 +114,8 @@ export class GraphqlSchemaFactory {
                 ),
                 configAsYaml: this.definitionResolverFactory.getConfigAsYamlResolver(),
                 deployKeys: this.definitionResolverFactory.getDeployKeysResolver(),
-                predictedEnvVariables: this.definitionResolverFactory.getPredictedEnvVariablesResolver(),
-                predictedFeaterVariables: this.definitionResolverFactory.getPredictedFeaterVariablesResolver(),
+                envVariables: this.definitionResolverFactory.getEnvVariablesResolver(),
+                featerVariables: this.definitionResolverFactory.getFeaterVariablesResolver(),
                 createdAt: this.dateResolverFactory.getDateResolver(
                     (instance: DefinitionTypeInterface) => instance.createdAt,
                 ),

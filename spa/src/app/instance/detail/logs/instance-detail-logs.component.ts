@@ -3,8 +3,7 @@ import * as moment from 'moment';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription, interval} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getInstanceDetailLogsQueryGql,
@@ -115,8 +114,7 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
                 }
 
                 if (!this.pollingSubscription) {
-                    this.pollingSubscription = Observable
-                        .interval(this.POLLING_INTERVAL)
+                    this.pollingSubscription = interval(this.POLLING_INTERVAL)
                         .subscribe(
                             () => {
                                 this.updateInstance();

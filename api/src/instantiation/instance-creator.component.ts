@@ -162,8 +162,6 @@ export class InstanceCreatorComponent {
                         volume.assetId,
                         instanceContext.composeProjectName,
                         instanceContext.paths.dir.absolute.guest,
-                        volume.paths.extractDir.absolute.guest,
-                        volume.paths.extractDir.absolute.host,
                     );
                 },
                 async (result: CreateVolumeFromAssetCommandResultInterface): Promise<void> => {
@@ -183,7 +181,9 @@ export class InstanceCreatorComponent {
                     source.cloneUrl,
                     source.reference.type,
                     source.reference.name,
+                    `featerinstance_${instanceContext.hash}__source__${source.id.toLowerCase()}`,
                     source.paths.dir.absolute.guest,
+                    source.paths.dir.absolute.host,
                 ),
             ),
         );
@@ -288,6 +288,7 @@ export class InstanceCreatorComponent {
                         `Prepare environment variables for source \`${source.id}\``,
                         () => new PrepareSourceEnvVarsCommand(
                             source.id,
+                            `featerinstance_${instanceContext.hash}__source__${source.id.toLowerCase()}`,
                             source.paths.dir.absolute.guest,
                             source.paths.dir.absolute.host,
                         ),

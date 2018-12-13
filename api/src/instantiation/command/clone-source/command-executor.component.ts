@@ -9,6 +9,9 @@ import * as nodegit from 'nodegit';
 import * as gitUrlParse from 'git-url-parse';
 import * as sshFingerprint from 'ssh-fingerprint';
 import {CommandLogger} from '../../logger/command-logger';
+import {spawn} from 'child_process';
+import {environment} from '../../../environments/environment';
+import {SpawnHelper} from '../../helper/spawn-helper.component';
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
@@ -17,6 +20,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
     constructor(
         private readonly deployKeyRepository: DeployKeyRepository,
+        private readonly spawnHelper: SpawnHelper,
     ) {}
 
     supports(command: SimpleCommand): boolean {
@@ -40,12 +44,24 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         }
         const repository = await nodegit.Clone.clone(
             typedCommand.cloneUrl,
-            typedCommand.absoluteGuestInstanceDirPath,
+            typedCommand.absoluteGuestSourceDirPath,
             this.createCloneOptions(typedCommand.commandLogger, deployKey),
         );
         logger.info(`Cloning completed.`);
 
-        await this.checkoutReference(typedCommand, repository);
+        await this.checkoutReference(
+            typedCommand.referenceType,
+            typedCommand.referenceName,
+            repository,
+            logger,
+        );
+
+        await this.copySourceToVolume(
+            typedCommand.absoluteHostSourceDirPath,
+            typedCommand.volumeName,
+            typedCommand.absoluteGuestSourceDirPath,
+            logger,
+        );
 
         return {};
     }
@@ -87,25 +103,70 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         };
     }
 
-    protected async checkoutReference(command: CloneSourceCommand, repo: nodegit.Repository): Promise<void> {
-        if ('branch' === command.referenceType) {
-            const reference = await repo.getBranch(`refs/remotes/origin/${command.referenceName}`);
+    protected async checkoutReference(
+        referenceType: string,
+        referenceName: string,
+        repo: nodegit.Repository,
+        logger: CommandLogger,
+    ): Promise<void> {
+        if ('branch' === referenceType) {
+            const reference = await repo.getBranch(`refs/remotes/origin/${referenceName}`);
             await repo.checkoutRef(reference);
-            command.commandLogger.info(`Checked out branch: ${command.referenceName}`);
+            logger.info(`Checked out branch: ${referenceName}`);
 
             return;
         }
 
-        if ('tag' === command.referenceType) {
-            const reference = await repo.getReference(`refs/tags/${command.referenceName}`);
+        if ('tag' === referenceType) {
+            const reference = await repo.getReference(`refs/tags/${referenceName}`);
             await repo.checkoutRef(reference);
-            command.commandLogger.info(`Checked out tag: ${command.referenceName}`);
+            logger.info(`Checked out tag: ${referenceName}`);
         }
 
-        if ('commit' === command.referenceType) {
-            const commit = await repo.getCommit(command.referenceName);
+        if ('commit' === referenceType) {
+            const commit = await repo.getCommit(referenceName);
             await repo.setHeadDetached(commit.id());
-            command.commandLogger.info(`Checked out commit: ${command.referenceName}`);
+            logger.info(`Checked out commit: ${referenceName}`);
         }
+    }
+
+    protected copySourceToVolume(
+        absoluteHostInstanceDirPath: string,
+        volumeName: string,
+        workingDirectory: string,
+        logger: CommandLogger,
+    ): Promise<void> {
+        // TODO Run this after before build tasks are executed.
+
+        return new Promise((resolve, reject) => {
+            const spawned = spawn(
+                environment.instantiation.dockerBinaryPath,
+                [
+                    'run', '--rm',
+                    '-v', `${absoluteHostInstanceDirPath}:/source`,
+                    '-v', `${volumeName}:/target`,
+                    'alpine', 'ash', '-c', 'cp -rT /source /target',
+                ],
+                {cwd: workingDirectory},
+            );
+
+            this.spawnHelper.handleSpawned(
+                spawned,
+                logger,
+                resolve,
+                reject,
+                () => {
+                    logger.info(`Completed copying source to volume.`, {});
+                },
+                (exitCode: number) => {
+                    logger.error(`Failed to copy source to volume.`, {});
+                    logger.error(`Exit code: ${exitCode}`, {});
+                },
+                (error: Error) => {
+                    logger.error(`Failed to copy source to volume.`, {});
+                    logger.error(`Error message: ${error.message}`, {});
+                },
+            );
+        });
     }
 }

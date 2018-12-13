@@ -4,6 +4,7 @@ export class PrepareSourceEnvVarsCommand extends SimpleCommand {
 
     constructor(
         readonly sourceId: string,
+        readonly sourceVolumeName: string,
         readonly sourceAbsoluteGuestPath: string,
         readonly sourceAbsoluteHostPath: string,
     ) {

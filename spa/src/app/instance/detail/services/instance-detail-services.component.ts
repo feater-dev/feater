@@ -8,7 +8,7 @@ import {
     GetInstanceDetailServicesQueryInterface,
 } from './get-instance-detail-services.query';
 import gql from 'graphql-tag';
-import {Observable, Subscription} from 'rxjs';
+import {interval, Observable, Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-instance-detail-services',
@@ -63,7 +63,7 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
-        const polling = Observable.interval(this.POLLING_INTERVAL);
+        const polling = interval(this.POLLING_INTERVAL);
         this.pollingSubscription = polling.subscribe(
             () => { this.getInstance(false); },
         );

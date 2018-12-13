@@ -29,6 +29,7 @@ export class PrepareSourceEnvVarsCommandExecutorComponent implements SimpleComma
             `guest_source_path__${typedCommand.sourceId.toLowerCase()}`,
             typedCommand.sourceAbsoluteGuestPath,
         );
+
         envVariables.add(
             `FEATER__HOST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
             typedCommand.sourceAbsoluteHostPath,
@@ -36,6 +37,15 @@ export class PrepareSourceEnvVarsCommandExecutorComponent implements SimpleComma
         featerVariables.add(
             `host_source_path__${typedCommand.sourceId.toLowerCase()}`,
             typedCommand.sourceAbsoluteHostPath,
+        );
+
+        envVariables.add(
+            `FEATER__SOURCE_VOLUME__${typedCommand.sourceId.toUpperCase()}`,
+            typedCommand.sourceVolumeName,
+        );
+        featerVariables.add(
+            `source_volume__${typedCommand.sourceId.toLowerCase()}`,
+            typedCommand.sourceVolumeName,
         );
 
         logger.info(`Added environmental variables:${

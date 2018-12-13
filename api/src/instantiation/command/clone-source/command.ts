@@ -8,7 +8,9 @@ export class CloneSourceCommand extends SimpleCommand {
         readonly cloneUrl: string,
         readonly referenceType: string,
         readonly referenceName: string,
-        readonly absoluteGuestInstanceDirPath: string,
+        readonly volumeName: string,
+        readonly absoluteGuestSourceDirPath: string,
+        readonly absoluteHostSourceDirPath: string,
     ) {
         super();
     }

@@ -7,7 +7,7 @@ import {
     GetInstanceDetailProxyDomainsQueryInstanceFieldinterface,
     GetInstanceDetailProxyDomainsQueryInterface,
 } from './get-instance-detail-proxy-domains.query';
-import {Observable, Subscription} from 'rxjs';
+import {interval, Observable, Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-instance-detail-proxy-domains',
@@ -30,7 +30,7 @@ export class InstanceDetailProxyDomainsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
-        const polling = Observable.interval(this.POLLING_INTERVAL);
+        const polling = interval(this.POLLING_INTERVAL);
         this.pollingSubscription = polling.subscribe(
             () => { this.getInstance(false); },
         );

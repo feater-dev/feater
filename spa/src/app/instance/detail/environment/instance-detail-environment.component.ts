@@ -7,7 +7,7 @@ import {
     GetInstanceDetailEnvironmentQueryInstanceFieldinterface,
     GetInstanceDetailEnvironmentQueryInterface,
 } from './get-instance-detail-environment.query';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subscription, interval} from 'rxjs';
 
 @Component({
     selector: 'app-instance-detail-environment',
@@ -30,7 +30,7 @@ export class InstanceDetailEnvironmentComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
-        const polling = Observable.interval(this.POLLING_INTERVAL);
+        const polling = interval(this.POLLING_INTERVAL);
         this.pollingSubscription = polling.subscribe(
             () => { this.getInstance(false); },
         );

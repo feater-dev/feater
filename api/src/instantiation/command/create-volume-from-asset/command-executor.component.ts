@@ -34,7 +34,7 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
 
         const asset = await this.assetHelper.findUploadedById(typedCommand.assetId);
 
-        const volumeName = `${typedCommand.containerNamePrefix}_${typedCommand.volumeId}`;
+        const volumeName = `${typedCommand.containerNamePrefix}__asset_volume__${typedCommand.volumeId.toLowerCase()}`;
         logger.info(`Volume name: ${volumeName}`);
 
         logger.info(`Creating volume.`);

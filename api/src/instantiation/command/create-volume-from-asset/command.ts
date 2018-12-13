@@ -7,8 +7,6 @@ export class CreateVolumeFromAssetCommand extends SimpleCommand {
         readonly assetId: string,
         readonly containerNamePrefix: string,
         readonly absoluteGuestInstanceDirPath: string,
-        readonly absoluteGuestAssetExtractDirPath: string,
-        readonly absoluteHostAssetExtractDirPath: string,
     ) {
         super();
     }

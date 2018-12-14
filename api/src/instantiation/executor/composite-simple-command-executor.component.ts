@@ -18,6 +18,7 @@ import {ExecuteServiceCmdCommandExecutorComponent} from '../command/after-build/
 import {CopyAssetIntoContainerCommandExecutorComponent} from '../command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateVolumeFromAssetCommandExecutorComponent} from '../command/create-volume-from-asset/command-executor.component';
 import {EnableProxyDomainsCommandExecutorComponent} from '../command/enable-proxy-domains/command-executor.component';
+import {MoveSourceToVolumeCommandExecutorComponent} from '../command/move-source-to-volume/command-executor.component';
 
 @Injectable()
 export class CompositeSimpleCommandExecutorComponent {
@@ -29,6 +30,7 @@ export class CompositeSimpleCommandExecutorComponent {
         copyFileCommandExecutorComponent: CopyFileCommandExecutorComponent,
         createDirectoryCommandExecutorComponent: CreateDirectoryCommandExecutorComponent,
         cloneSourceCommandExecutorComponent: CloneSourceCommandExecutorComponent,
+        moveSourceToVolumeCommandExecutorComponent: MoveSourceToVolumeCommandExecutorComponent,
         getContainerIdsCommandExecutorComponent: GetContainerIdsCommandExecutorComponent,
         interpolateBeforeBuildTaskCommandExecutorComponent: InterpolateFileCommandExecutorComponent,
         parseDockerComposeCommandExecutorComponent: ParseDockerComposeCommandExecutorComponent,
@@ -48,6 +50,7 @@ export class CompositeSimpleCommandExecutorComponent {
             copyFileCommandExecutorComponent,
             createDirectoryCommandExecutorComponent,
             cloneSourceCommandExecutorComponent,
+            moveSourceToVolumeCommandExecutorComponent,
             getContainerIdsCommandExecutorComponent,
             interpolateBeforeBuildTaskCommandExecutorComponent,
             parseDockerComposeCommandExecutorComponent,

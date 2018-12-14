@@ -11,6 +11,7 @@ import {ConnectToNetworkCommandExecutorComponent} from './command/connect-contai
 import {CopyFileCommandExecutorComponent} from './command/before-build/copy-file/command-executor.component';
 import {CreateDirectoryCommandExecutorComponent} from './command/create-directory/command-executor.component';
 import {CloneSourceCommandExecutorComponent} from './command/clone-source/command-executor.component';
+import {MoveSourceToVolumeCommandExecutorComponent} from './command/move-source-to-volume/command-executor.component';
 import {GetContainerIdsCommandExecutorComponent} from './command/get-container-id/command-executor.component';
 import {InterpolateFileCommandExecutorComponent} from './command/before-build/interpolate-file/command-executor.component';
 import {ParseDockerComposeCommandExecutorComponent} from './command/parse-docker-compose/command-executor.component';
@@ -49,6 +50,7 @@ import {VariablesPredictor} from './variable/variables-predictor';
         CopyFileCommandExecutorComponent,
         CreateDirectoryCommandExecutorComponent,
         CloneSourceCommandExecutorComponent,
+        MoveSourceToVolumeCommandExecutorComponent,
         GetContainerIdsCommandExecutorComponent,
         InterpolateFileCommandExecutorComponent,
         ParseDockerComposeCommandExecutorComponent,

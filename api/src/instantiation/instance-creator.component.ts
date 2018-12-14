@@ -43,6 +43,7 @@ import {CommandsMap} from './executor/commands-map';
 import {CommandsMapItem} from './executor/commands-map-item';
 import {InstanceInterface} from '../persistence/interface/instance.interface';
 import {DefinitionInterface} from '../persistence/interface/definition.interface';
+import {MoveSourceToVolumeCommand} from './command/move-source-to-volume/command';
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -100,12 +101,13 @@ export class InstanceCreatorComponent {
         await updateInstance();
 
         this.addCreateDirectory(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addCreateVolumeFromAssetsAndCloneSource(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addCreateVolumesFromAssetsAndCloneSources(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addParseDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addPrepareProxyDomains(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addPrepareEnvVarsForSources(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addPrepareSummaryItems(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addBeforeBuildTasks(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addMoveSourcesToVolumes(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addPrepareSummaryItems(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addRunDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addGetContainerIds(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addConnectContainersToNetwork(createInstanceCommand, taskId, instanceContext, updateInstance);
@@ -145,7 +147,7 @@ export class InstanceCreatorComponent {
         ));
     }
 
-    protected addCreateVolumeFromAssetsAndCloneSource(
+    protected addCreateVolumesFromAssetsAndCloneSources(
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
@@ -181,9 +183,7 @@ export class InstanceCreatorComponent {
                     source.cloneUrl,
                     source.reference.type,
                     source.reference.name,
-                    `featerinstance_${instanceContext.hash}__source__${source.id.toLowerCase()}`,
                     source.paths.dir.absolute.guest,
-                    source.paths.dir.absolute.host,
                 ),
             ),
         );
@@ -193,6 +193,33 @@ export class InstanceCreatorComponent {
                 createVolumeFromAssetCommands.concat(cloneSourceCommands),
                 true,
             ),
+        );
+    }
+
+    protected addMoveSourcesToVolumes(
+        createInstanceCommand: CommandsList,
+        taskId: string,
+        instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
+    ): void {
+        const composeFilesSourceIds = _.map(instanceContext.composeFiles, 'sourceId');
+
+        const commands = instanceContext.sources.map(
+            source => new ContextAwareCommand(
+                taskId,
+                instanceContext.id,
+                `Move source \`${source.id}\` to volume`,
+                () => new MoveSourceToVolumeCommand(
+                    source.paths.dir.absolute.guest,
+                    source.paths.dir.absolute.host,
+                    source.volume.name,
+                    !_.includes(composeFilesSourceIds, source.id),
+                ),
+            ),
+        );
+
+        createInstanceCommand.addCommand(
+            new CommandsList(commands, true),
         );
     }
 
@@ -288,9 +315,9 @@ export class InstanceCreatorComponent {
                         `Prepare environment variables for source \`${source.id}\``,
                         () => new PrepareSourceEnvVarsCommand(
                             source.id,
-                            `featerinstance_${instanceContext.hash}__source__${source.id.toLowerCase()}`,
                             source.paths.dir.absolute.guest,
                             source.paths.dir.absolute.host,
+                            source.volume.name,
                         ),
                         async (result: PrepareSourceEnvVarsCommandResultInterface): Promise<void> => {
                             instanceContext.mergeEnvVariablesSet(result.envVariables);

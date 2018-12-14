@@ -17,7 +17,7 @@ import gql from 'graphql-tag';
 })
 export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
 
-    readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    readonly POLLING_INTERVAL = 2000; // 2 seconds.
 
     instance: GetInstanceDetailSummaryQueryInstanceFieldinterface;
 

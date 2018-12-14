@@ -16,7 +16,7 @@ import {interval, Observable, Subscription} from 'rxjs';
 })
 export class InstanceDetailProxyDomainsComponent implements OnInit, OnDestroy {
 
-    readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    readonly POLLING_INTERVAL = 2000; // 2 seconds.
 
     instance: GetInstanceDetailProxyDomainsQueryInstanceFieldinterface;
 

@@ -22,7 +22,7 @@ import {
 })
 export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
 
-    readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    readonly POLLING_INTERVAL = 2000; // 2 seconds.
     readonly TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
     readonly COLLAPSED = 1;

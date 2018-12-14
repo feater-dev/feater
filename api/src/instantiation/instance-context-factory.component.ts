@@ -50,6 +50,9 @@ export class InstanceContextFactory {
                 paths: {
                     dir: this.pathHelper.getSourcePaths(hash, sourceConfig.id),
                 },
+                volume: {
+                    name: `${environment.instantiation.containerNamePrefix}${instanceContext.hash}__source__${sourceConfig.id}`,
+                },
                 beforeBuildTasks: sourceConfig.beforeBuildTasks.map(
                     (beforeBuildTaskConfig) => beforeBuildTaskConfig as InstanceContextBeforeBuildTaskInterface,
                 ),

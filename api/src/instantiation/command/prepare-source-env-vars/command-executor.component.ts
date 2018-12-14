@@ -14,30 +14,11 @@ export class PrepareSourceEnvVarsCommandExecutorComponent implements SimpleComma
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        // TODO Maybe replace this with volumes?
-
         const typedCommand = command as PrepareSourceEnvVarsCommand;
         const logger = typedCommand.commandLogger;
 
         const envVariables = new EnvVariablesSet();
         const featerVariables = new FeaterVariablesSet();
-        envVariables.add(
-            `FEATER__GUEST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
-            typedCommand.sourceAbsoluteGuestPath,
-        );
-        featerVariables.add(
-            `guest_source_path__${typedCommand.sourceId.toLowerCase()}`,
-            typedCommand.sourceAbsoluteGuestPath,
-        );
-
-        envVariables.add(
-            `FEATER__HOST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
-            typedCommand.sourceAbsoluteHostPath,
-        );
-        featerVariables.add(
-            `host_source_path__${typedCommand.sourceId.toLowerCase()}`,
-            typedCommand.sourceAbsoluteHostPath,
-        );
 
         envVariables.add(
             `FEATER__SOURCE_VOLUME__${typedCommand.sourceId.toUpperCase()}`,

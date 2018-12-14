@@ -9,8 +9,6 @@ import * as nodegit from 'nodegit';
 import * as gitUrlParse from 'git-url-parse';
 import * as sshFingerprint from 'ssh-fingerprint';
 import {CommandLogger} from '../../logger/command-logger';
-import {spawn} from 'child_process';
-import {environment} from '../../../environments/environment';
 import {SpawnHelper} from '../../helper/spawn-helper.component';
 
 @Injectable()
@@ -53,13 +51,6 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
             typedCommand.referenceType,
             typedCommand.referenceName,
             repository,
-            logger,
-        );
-
-        await this.copySourceToVolume(
-            typedCommand.absoluteHostSourceDirPath,
-            typedCommand.volumeName,
-            typedCommand.absoluteGuestSourceDirPath,
             logger,
         );
 
@@ -130,43 +121,4 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         }
     }
 
-    protected copySourceToVolume(
-        absoluteHostInstanceDirPath: string,
-        volumeName: string,
-        workingDirectory: string,
-        logger: CommandLogger,
-    ): Promise<void> {
-        // TODO Run this after before build tasks are executed.
-
-        return new Promise((resolve, reject) => {
-            const spawned = spawn(
-                environment.instantiation.dockerBinaryPath,
-                [
-                    'run', '--rm',
-                    '-v', `${absoluteHostInstanceDirPath}:/source`,
-                    '-v', `${volumeName}:/target`,
-                    'alpine', 'ash', '-c', 'cp -rT /source /target',
-                ],
-                {cwd: workingDirectory},
-            );
-
-            this.spawnHelper.handleSpawned(
-                spawned,
-                logger,
-                resolve,
-                reject,
-                () => {
-                    logger.info(`Completed copying source to volume.`, {});
-                },
-                (exitCode: number) => {
-                    logger.error(`Failed to copy source to volume.`, {});
-                    logger.error(`Exit code: ${exitCode}`, {});
-                },
-                (error: Error) => {
-                    logger.error(`Failed to copy source to volume.`, {});
-                    logger.error(`Error message: ${error.message}`, {});
-                },
-            );
-        });
-    }
 }

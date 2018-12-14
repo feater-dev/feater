@@ -1,8 +1,13 @@
 {
-  "name": "app",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "feater-api",
+  "version": "0.0.0",
   "license": "MIT",
+  "author": {
+    "name": "Mariusz Bąk",
+    "email": "mariusz.alef.bak@gmail.com",
+    "url": "http://malef.pl"
+  },
+  "main": "index.js",
   "scripts": {
     "start:dev": "NODE_ENV=development node index.js",
     "start:dev:watch": "NODE_ENV=development nodemon",
@@ -38,6 +43,7 @@
     "nodegit": "^0.23.0",
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
+    "rimraf": "^2.6.2",
     "rxjs": "^6.3.3",
     "snakecase-keys": "^2.0.0",
     "split": "^1.0.1",

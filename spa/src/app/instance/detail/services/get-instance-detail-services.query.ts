@@ -16,7 +16,7 @@ export const getInstanceDetailServicesQueryGql = gql`
     }
 `;
 
-export interface GetInstanceDetailServicesQueryInstanceFieldinterface {
+export interface GetInstanceDetailServicesQueryInstanceFieldInterface {
     readonly id: string;
     readonly name: string;
     readonly services: [
@@ -31,5 +31,5 @@ export interface GetInstanceDetailServicesQueryInstanceFieldinterface {
 }
 
 export interface GetInstanceDetailServicesQueryInterface {
-    instance: GetInstanceDetailServicesQueryInstanceFieldinterface;
+    instance: GetInstanceDetailServicesQueryInstanceFieldInterface;
 }

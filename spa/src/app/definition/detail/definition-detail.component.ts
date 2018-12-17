@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import 'rxjs/add/observable/interval';
 import {Apollo} from 'apollo-angular';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {

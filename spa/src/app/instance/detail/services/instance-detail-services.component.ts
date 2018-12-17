@@ -4,11 +4,11 @@ import {Apollo} from 'apollo-angular';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
     getInstanceDetailServicesQueryGql,
-    GetInstanceDetailServicesQueryInstanceFieldinterface,
+    GetInstanceDetailServicesQueryInstanceFieldInterface,
     GetInstanceDetailServicesQueryInterface,
 } from './get-instance-detail-services.query';
 import gql from 'graphql-tag';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription, interval} from 'rxjs';
 
 @Component({
     selector: 'app-instance-detail-services',
@@ -19,7 +19,7 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
 
     readonly POLLING_INTERVAL = 5000; // 5 seconds.
 
-    instance: GetInstanceDetailServicesQueryInstanceFieldinterface;
+    instance: GetInstanceDetailServicesQueryInstanceFieldInterface;
 
     pollingSubscription: Subscription;
 
@@ -63,7 +63,7 @@ export class InstanceDetailServicesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
-        const polling = Observable.interval(this.POLLING_INTERVAL);
+        const polling = interval(this.POLLING_INTERVAL);
         this.pollingSubscription = polling.subscribe(
             () => { this.getInstance(false); },
         );

@@ -25,7 +25,7 @@ export const getInstanceDetailSummaryQueryGql = gql`
     }
 `;
 
-export interface GetInstanceDetailSummaryQueryInstanceFieldinterface {
+export interface GetInstanceDetailSummaryQueryInstanceFieldInterface {
     readonly id: string;
     readonly name: string;
     readonly definition: {
@@ -49,5 +49,5 @@ export interface GetInstanceDetailSummaryQueryInstanceFieldinterface {
 }
 
 export interface GetInstanceDetailSummaryQueryInterface {
-    instance: GetInstanceDetailSummaryQueryInstanceFieldinterface;
+    instance: GetInstanceDetailSummaryQueryInstanceFieldInterface;
 }

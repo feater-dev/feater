@@ -23,7 +23,7 @@ export const getInstanceDetailProxyDomainsQueryGql = gql`
     }
 `;
 
-export interface GetInstanceDetailProxyDomainsQueryInstanceFieldinterface {
+export interface GetInstanceDetailProxyDomainsQueryInstanceFieldInterface {
     readonly id: string;
     readonly name: string;
     readonly services: [
@@ -47,5 +47,5 @@ export interface GetInstanceDetailProxyDomainsQueryInstanceFieldinterface {
 }
 
 export interface GetInstanceDetailProxyDomainsQueryInterface {
-    instance: GetInstanceDetailProxyDomainsQueryInstanceFieldinterface;
+    instance: GetInstanceDetailProxyDomainsQueryInstanceFieldInterface;
 }

@@ -1,5 +1,11 @@
 export interface InstanceContextComposeFileInterface {
-    readonly sourceId: string;
-    readonly envDirRelativePath: string;
-    readonly composeFileRelativePaths: string[];
+    sourceId: string;
+    envDirRelativePath: string;
+    composeFileRelativePaths: string[];
+    arguments: string[];
+    workingDirectory: string;
+    envVariables: {
+        name: string;
+        value: string;
+    }[];
 }

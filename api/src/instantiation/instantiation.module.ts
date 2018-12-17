@@ -20,6 +20,7 @@ import {PrepareProxyDomainCommandExecutorComponent} from './command/prepare-port
 import {ConfigureProxyDomainCommandExecutorComponent} from './command/configure-proxy-domain/command-executor.component';
 import {PrepareSummaryItemsCommandExecutorComponent} from './command/prepare-summary-items/command-executor.component';
 import {RunDockerComposeCommandExecutorComponent} from './command/run-docker-compose/command-executor.component';
+import {PrepareRunDockerComposeCommandExecutorComponent} from './command/prepare-run-docker-compose/command-executor.component';
 import {ExecuteHostCmdCommandExecutorComponent} from './command/after-build/execute-host-cmd/command-executor.component';
 import {ExecuteServiceCmdCommandExecutorComponent} from './command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from './command/after-build/copy-asset-into-container/command-executor.component';
@@ -59,6 +60,7 @@ import {VariablesPredictor} from './variable/variables-predictor';
         ConfigureProxyDomainCommandExecutorComponent,
         PrepareSummaryItemsCommandExecutorComponent,
         RunDockerComposeCommandExecutorComponent,
+        PrepareRunDockerComposeCommandExecutorComponent,
         ExecuteHostCmdCommandExecutorComponent,
         ExecuteServiceCmdCommandExecutorComponent,
         CopyAssetIntoContainerCommandExecutorComponent,

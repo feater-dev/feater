@@ -13,6 +13,7 @@ import {PrepareProxyDomainCommandExecutorComponent} from '../command/prepare-por
 import {ConfigureProxyDomainCommandExecutorComponent} from '../command/configure-proxy-domain/command-executor.component';
 import {PrepareSummaryItemsCommandExecutorComponent} from '../command/prepare-summary-items/command-executor.component';
 import {RunDockerComposeCommandExecutorComponent} from '../command/run-docker-compose/command-executor.component';
+import {PrepareRunDockerComposeCommandExecutorComponent} from '../command/prepare-run-docker-compose/command-executor.component';
 import {ExecuteHostCmdCommandExecutorComponent} from '../command/after-build/execute-host-cmd/command-executor.component';
 import {ExecuteServiceCmdCommandExecutorComponent} from '../command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from '../command/after-build/copy-asset-into-container/command-executor.component';
@@ -39,6 +40,7 @@ export class CompositeSimpleCommandExecutorComponent {
         prepareProxyDomainConfigCommandExecutorComponent: ConfigureProxyDomainCommandExecutorComponent,
         prepareSummaryItemsCommandExecutorComponent: PrepareSummaryItemsCommandExecutorComponent,
         runDockerComposeCommandExecutorComponent: RunDockerComposeCommandExecutorComponent,
+        prepareRunDockerComposeCommandExecutorComponent: PrepareRunDockerComposeCommandExecutorComponent,
         executeHostCmdCommandExecutorComponent: ExecuteHostCmdCommandExecutorComponent,
         executeServiceCmdCommandExecutorComponent: ExecuteServiceCmdCommandExecutorComponent,
         copyAssetIntoContainerCommandExecutorComponent: CopyAssetIntoContainerCommandExecutorComponent,
@@ -59,6 +61,7 @@ export class CompositeSimpleCommandExecutorComponent {
             prepareProxyDomainConfigCommandExecutorComponent,
             prepareSummaryItemsCommandExecutorComponent,
             runDockerComposeCommandExecutorComponent,
+            prepareRunDockerComposeCommandExecutorComponent,
             executeHostCmdCommandExecutorComponent,
             executeServiceCmdCommandExecutorComponent,
             copyAssetIntoContainerCommandExecutorComponent,

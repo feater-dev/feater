@@ -22,7 +22,14 @@ export class InstanceContext {
     services: InstanceContextServiceInterface[];
     proxiedPorts: InstanceContextProxiedPortInterface[];
     afterBuildTasks: InstanceContextAfterBuildTaskInterface[];
-    composeFiles: InstanceContextComposeFileInterface[];
+    composeFiles: {
+        sourceId: string;
+        envDirRelativePath: string;
+        composeFileRelativePaths: string[];
+        args?: string[];
+        absoluteGuestEnvDirPath?: string;
+        envVariables?: EnvVariablesSet;
+    }[];
     envVariables: EnvVariablesSet;
     featerVariables: FeaterVariablesSet;
     nonInterpolatedSummaryItems: SummaryItemsSet;

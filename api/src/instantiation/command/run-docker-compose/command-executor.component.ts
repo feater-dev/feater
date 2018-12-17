@@ -1,9 +1,5 @@
-import * as _ from 'lodash';
-import * as path from 'path';
-import * as split from 'split';
 import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
-import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {environment} from '../../../environments/environment';
 import {SimpleCommand} from '../../executor/simple-command';
@@ -26,40 +22,21 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
         const logger = typedCommand.commandLogger;
 
         return new Promise((resolve, reject) => {
-            let dockerComposeArgs = [];
-
-            for (const absoluteGuestComposeFilePath of typedCommand.absoluteGuestComposeFilePaths) {
-                dockerComposeArgs.push(
-                    ['--file', path.relative(typedCommand.absoluteGuestEnvDirPath, absoluteGuestComposeFilePath)],
-                );
-            }
-            dockerComposeArgs.push(['up', '-d', '--no-color']);
-
-            const runEnvVariables = new EnvVariablesSet();
-            runEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${environment.instantiation.composeHttpTimeout}`);
-
-            dockerComposeArgs = _.flatten(dockerComposeArgs);
-
-            const envVariables = EnvVariablesSet.merge(
-                typedCommand.envVariables,
-                runEnvVariables,
-            );
-
             logger.info(`Binary: ${environment.instantiation.composeBinaryPath}`);
-            logger.info(`Arguments: ${JSON.stringify(dockerComposeArgs)}`);
-            logger.info(`Guest working directory: ${typedCommand.absoluteGuestEnvDirPath}`);
+            logger.info(`Guest env directory: ${typedCommand.absoluteGuestEnvDirPath}`);
             logger.info(`Environmental variables:${
-                envVariables.isEmpty()
+                typedCommand.envVariables.isEmpty()
                     ? ' none'
-                    : '\n' + JSON.stringify(envVariables.toString(), null, 2)
+                    : '\n' + JSON.stringify(typedCommand.envVariables.toMap(), null, 2)
             }`);
+            logger.info(`Arguments:\n${JSON.stringify(typedCommand.args, null, 2)}`);
 
             const spawnedDockerCompose = spawn(
                 environment.instantiation.composeBinaryPath,
-                dockerComposeArgs,
+                typedCommand.args,
                 {
                     cwd: typedCommand.absoluteGuestEnvDirPath,
-                    env: envVariables.toMap(),
+                    env: typedCommand.envVariables.toMap(),
                 },
             );
 

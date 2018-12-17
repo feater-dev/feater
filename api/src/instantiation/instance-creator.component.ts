@@ -44,6 +44,8 @@ import {CommandsMapItem} from './executor/commands-map-item';
 import {InstanceInterface} from '../persistence/interface/instance.interface';
 import {DefinitionInterface} from '../persistence/interface/definition.interface';
 import {MoveSourceToVolumeCommand} from './command/move-source-to-volume/command';
+import {PrepareRunDockerComposeCommand} from './command/prepare-run-docker-compose/command';
+import {PrepareRunDockerComposeCommandResultInterface} from './command/prepare-run-docker-compose/command-result.interface';
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -92,6 +94,14 @@ export class InstanceCreatorComponent {
             instance.summaryItems = instanceContext.summaryItems.toList();
             instance.services = _.cloneDeep(instanceContext.services);
             instance.proxiedPorts = _.cloneDeep(instanceContext.proxiedPorts);
+            instance.composeFiles = instanceContext.composeFiles.map((composeFile) => ({
+                sourceId: composeFile.sourceId,
+                envDirRelativePath: composeFile.envDirRelativePath,
+                composeFileRelativePaths: composeFile.composeFileRelativePaths,
+                absoluteGuestEnvDirPath: composeFile.absoluteGuestEnvDirPath,
+                envVariables: composeFile.envVariables && composeFile.envVariables.toList(),
+                args: composeFile.args,
+            }));
             // TODO Handle feature variables.
             // TODO Handle volumes.
 
@@ -108,6 +118,7 @@ export class InstanceCreatorComponent {
         this.addBeforeBuildTasks(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addMoveSourcesToVolumes(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addPrepareSummaryItems(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addPrepareRunDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addRunDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addGetContainerIds(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addConnectContainersToNetwork(createInstanceCommand, taskId, instanceContext, updateInstance);
@@ -381,6 +392,44 @@ export class InstanceCreatorComponent {
         );
     }
 
+    protected addPrepareRunDockerCompose(
+        createInstanceCommand: CommandsList,
+        taskId: string,
+        instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
+    ): void {
+        createInstanceCommand.addCommand(
+            new ContextAwareCommand(
+                taskId,
+                instanceContext.id,
+                `Prepare \`docker-compose run\` command`,
+                () => {
+                    const composeFile = instanceContext.composeFiles[0]; // TODO Handle multiple compose files.
+                    const source = instanceContext.findSource(composeFile.sourceId);
+
+                    return new PrepareRunDockerComposeCommand(
+                        path.join(source.paths.dir.absolute.guest, composeFile.envDirRelativePath),
+                        composeFile.composeFileRelativePaths.map(
+                            composeFileRelativePath => path.join(
+                                source.paths.dir.absolute.guest,
+                                composeFileRelativePath,
+                            ),
+                        ),
+                        instanceContext.composeProjectName,
+                        instanceContext.envVariables,
+                    );
+                },
+                async (result: PrepareRunDockerComposeCommandResultInterface): Promise<void> => {
+                    const composeFile = instanceContext.composeFiles[0]; // TODO Handle multiple compose files.
+                    composeFile.absoluteGuestEnvDirPath = result.absoluteGuestEnvDirPath;
+                    composeFile.args = result.args;
+                    composeFile.envVariables = result.envVariables;
+                    await updateInstanceFromInstanceContext();
+                },
+            ),
+        );
+    }
+
     protected addRunDockerCompose(
         createInstanceCommand: CommandsList,
         taskId: string,
@@ -391,21 +440,15 @@ export class InstanceCreatorComponent {
             new ContextAwareCommand(
                 taskId,
                 instanceContext.id,
-                `Run docker-compose`,
+                `Execute \`docker-compose run\` command`,
                 () => {
                     const composeFile = instanceContext.composeFiles[0]; // TODO Handle multiple compose files.
                     const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new RunDockerComposeCommand(
-                        path.join(source.paths.dir.absolute.guest, composeFile.envDirRelativePath),
-                        composeFile.composeFileRelativePaths.map(
-                            composeFileRelativePath => path.join(
-                                source.paths.dir.absolute.guest,
-                                composeFileRelativePath,
-                            ),
-                        ),
-                        instanceContext.composeProjectName,
-                        instanceContext.envVariables,
+                        composeFile.absoluteGuestEnvDirPath,
+                        composeFile.envVariables,
+                        composeFile.args,
                     );
                 },
             ),

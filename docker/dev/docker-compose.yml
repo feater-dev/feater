@@ -14,7 +14,6 @@ services:
     - '${FEATER_API_PORT}:3000'
     depends_on:
     - mongo
-    - redis
     networks:
     - internal
     container_name: feater_api
@@ -38,12 +37,6 @@ services:
     networks:
     - internal
     container_name: feater_mongo
-
-  redis:
-    image: redis:4
-    networks:
-    - internal
-    container_name: feater_redis
 
   nginx:
     build: nginx

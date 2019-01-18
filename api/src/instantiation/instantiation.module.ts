@@ -3,8 +3,8 @@ import {LoggerModule} from '../logger/logger.module';
 import {PersistenceModule} from '../persistence/persistence.module';
 import {InstanceCreatorComponent} from './instance-creator.component';
 import {InterpolationHelper} from './helper/interpolation-helper.component';
-import {ContainerStatusCheckerComponent} from './container-status-checker.component';
-import {ContainerDetailsWorkerComponent} from './container-details-worker.component';
+import {ContainerStateCheckerComponent} from './container-state-checker-component.service';
+import {ContainerInfoCheckerComponent} from './container-info-checker-component.service';
 import {SpawnHelper} from './helper/spawn-helper.component';
 import {AssetHelper} from './helper/asset-helper.component';
 import {ConnectToNetworkCommandExecutorComponent} from './command/connect-containers-to-network/command-executor.component';
@@ -37,6 +37,7 @@ import {CommandsMapExecutorComponent} from './executor/commands-map-executor.com
 import {CommandsListExecutorComponent} from './executor/commands-list-executor.component';
 import {CommandExecutorComponent} from './executor/command-executor.component';
 import {VariablesPredictor} from './variable/variables-predictor';
+import {IpAddressCheckerComponent} from './ip-address-checker.component';
 
 @Module({
     imports: [
@@ -62,8 +63,9 @@ import {VariablesPredictor} from './variable/variables-predictor';
         CopyAssetIntoContainerCommandExecutorComponent,
         CreateVolumeFromAssetCommandExecutorComponent,
         EnableProxyDomainsCommandExecutorComponent,
-        ContainerDetailsWorkerComponent,
-        ContainerStatusCheckerComponent,
+        ContainerInfoCheckerComponent,
+        ContainerStateCheckerComponent,
+        IpAddressCheckerComponent,
         AssetHelper,
         InterpolationHelper,
         SpawnHelper,
@@ -84,7 +86,8 @@ import {VariablesPredictor} from './variable/variables-predictor';
     ],
     exports: [
         InstanceCreatorComponent,
-        ContainerStatusCheckerComponent,
+        ContainerStateCheckerComponent,
+        IpAddressCheckerComponent,
         AssetHelper,
         VariablesPredictor,
     ],

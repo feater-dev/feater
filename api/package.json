@@ -36,7 +36,6 @@
     "morgan": "^1.9.0",
     "nanoid": "^1.0.2",
     "nodegit": "^0.23.0",
-    "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.3.3",
     "snakecase-keys": "^2.0.0",

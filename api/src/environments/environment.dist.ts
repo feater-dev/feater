@@ -7,9 +7,6 @@ export const environment: EnvironmentInterface = {
     mongo: {
         dsn: 'mongodb://user:password@host:27017/feater',
     },
-    redis: {
-        url: 'redis://user:password@host:6379/1',
-    },
     guestPaths: {
         root: '/app/',
         build: '/data/build/',

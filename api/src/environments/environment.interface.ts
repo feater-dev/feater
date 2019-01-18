@@ -5,9 +5,6 @@ export interface EnvironmentInterface {
     readonly mongo: {
         readonly dsn: string;
     };
-    readonly redis: {
-        readonly url: string;
-    };
     readonly guestPaths: {
         readonly root: string;
         readonly build: string;

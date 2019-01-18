@@ -1,32 +1,33 @@
 import {Injectable} from '@nestjs/common';
 import * as got from 'got';
 import * as querystring from 'querystring';
-import * as redis from 'redis';
 import {environment} from '../environments/environment';
+import * as _ from 'lodash';
+import {setInterval} from 'timers';
 
 export interface CachedContainerInfo {
     readonly namePrefix: string;
     readonly id: string;
     readonly state: string;
     readonly status: string;
+    readonly ipAddress: string;
 }
 
 @Injectable()
-export class ContainerDetailsWorkerComponent {
+export class ContainerInfoCheckerComponent {
 
-    private containerNameRegExp;
+    private containerNameRegExp = new RegExp(
+        `^/${environment.instantiation.containerNamePrefix}([a-z0-9]{8})_(.+?)_\\d+\$`,
+    );
 
-    private redisClient;
+    private containerInfos: CachedContainerInfo[] = [];
 
     constructor() {
-        this.containerNameRegExp = new RegExp(
-            `^/${environment.instantiation.containerNamePrefix}([a-z0-9]{8})_(.+?)_\\d+\$`,
-        );
-        this.redisClient = redis.createClient({url: environment.redis.url});
+        setInterval(() => { this.updateCache(); }, 2000);
     }
 
-    updateCache(): Promise<any> {
-        return got(
+    updateCache(): void {
+        got(
             'unix:/var/run/docker.sock:/containers/json',
             {
                 json: true,
@@ -34,24 +35,15 @@ export class ContainerDetailsWorkerComponent {
             },
         ).then(response => {
             const parsedContainerInfos = [];
+            this.containerInfos.splice(0);
             for (const containerInfo of response.body) {
-                parsedContainerInfos.push(this.parseContainerInfo(containerInfo));
+                this.containerInfos.push(this.parseContainerInfo(containerInfo));
             }
-
-            return new Promise((resolve, reject) => {
-                this.redisClient.set(
-                    'containerInfos',
-                    JSON.stringify(parsedContainerInfos),
-                    (err) => {
-                        if (err) {
-                            reject(err);
-                        }
-
-                        resolve();
-                    },
-                );
-            });
         });
+    }
+
+    getContainerInfo(containerNamePrefix: string): CachedContainerInfo|null {
+        return _.find(this.containerInfos, {namePrefix: containerNamePrefix});
     }
 
     protected prepareQueryString(): string {
@@ -68,14 +60,17 @@ export class ContainerDetailsWorkerComponent {
         if (null === matches) {
             return null;
         }
+
         const instanceHash = matches[1];
         const serviceName = matches[2];
+        const networkName = `${environment.instantiation.containerNamePrefix}${instanceHash}_default`;
 
         return {
             namePrefix: `${environment.instantiation.containerNamePrefix}${instanceHash}_${serviceName}`,
             id: containerInfo.Id,
             state: containerInfo.State,
             status: containerInfo.Status,
+            ipAddress: containerInfo.NetworkSettings.Networks[networkName].IPAddress,
         };
     }
 }

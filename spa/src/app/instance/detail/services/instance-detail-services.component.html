@@ -26,7 +26,8 @@
                     <thead>
                         <tr>
                             <th scope="col" class="fit-column">ID</th>
-                            <th scope="col">Container ID</th>
+                            <th scope="col" class="fit-column">Container ID</th>
+                            <th scope="col">IP address</th>
                             <th scope="col" class="fit-column">Container state</th>
                             <th scope="col" class="fit-column">Actions</th>
                         </tr>
@@ -35,6 +36,7 @@
                         <tr *ngFor="let service of instance?.services" class="form-control-static">
                             <td class="fit-column">{{ service.id }}</td>
                             <td>{{ service.containerId | slice:0:12 }}</td>
+                            <td>{{ service.ipAddress }}</td>
                             <td class="fit-column">{{ service.containerState }}</td>
                             <td class="service-actions fit-column">
                                 <span [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"

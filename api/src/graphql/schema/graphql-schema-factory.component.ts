@@ -149,6 +149,9 @@ export class GraphqlSchemaFactory {
                 containerState: this.dockerDaemonResolverFactory.getContainerStateResolver(
                     (instanceService: any) => instanceService.containerNamePrefix,
                 ),
+                ipAddress: this.dockerDaemonResolverFactory.getIpAddressResolver(
+                    (instanceService: any) => instanceService.containerNamePrefix,
+                ),
             },
 
             InstanceCommandLog: {

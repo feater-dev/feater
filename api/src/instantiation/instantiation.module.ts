@@ -37,6 +37,7 @@ import {CommandsMapExecutorComponent} from './executor/commands-map-executor.com
 import {CommandsListExecutorComponent} from './executor/commands-list-executor.component';
 import {CommandExecutorComponent} from './executor/command-executor.component';
 import {VariablesPredictor} from './variable/variables-predictor';
+import {IpAddressCheckerComponent} from './ip-address-checker.component';
 
 @Module({
     imports: [
@@ -64,6 +65,7 @@ import {VariablesPredictor} from './variable/variables-predictor';
         EnableProxyDomainsCommandExecutorComponent,
         ContainerDetailsWorkerComponent,
         ContainerStatusCheckerComponent,
+        IpAddressCheckerComponent,
         AssetHelper,
         InterpolationHelper,
         SpawnHelper,
@@ -85,6 +87,7 @@ import {VariablesPredictor} from './variable/variables-predictor';
     exports: [
         InstanceCreatorComponent,
         ContainerStatusCheckerComponent,
+        IpAddressCheckerComponent,
         AssetHelper,
         VariablesPredictor,
     ],

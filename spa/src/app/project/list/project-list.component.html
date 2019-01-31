@@ -5,7 +5,9 @@
             <h2 id="tables">Projects</h2>
         </div>
         <div *ngIf="projects">
-            <app-project-table [projects]="projects"></app-project-table>
+            <div class="table-wrapper">
+                <app-project-table [projects]="projects"></app-project-table>
+            </div>
         </div>
     </div>
 </div>

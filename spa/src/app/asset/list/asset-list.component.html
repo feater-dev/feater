@@ -4,7 +4,9 @@
             <h2 id="tables">Assets</h2>
         </div>
         <div *ngIf="assets">
-            <app-asset-table [assets]="assets"></app-asset-table>
+            <div class="table-wrapper">
+                <app-asset-table [assets]="assets"></app-asset-table>
+            </div>
         </div>
     </div>
 </div>

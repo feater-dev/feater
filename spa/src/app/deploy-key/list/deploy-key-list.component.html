@@ -6,7 +6,9 @@
             <h2 id="tables">Deploy keys</h2>
         </div>
         <div *ngIf="deployKeys">
-            <app-deploy-key-table [deployKeys]="deployKeys"></app-deploy-key-table>
+            <div class="table-wrapper">
+                <app-deploy-key-table [deployKeys]="deployKeys"></app-deploy-key-table>
+            </div>
         </div>
     </div>
 </div>

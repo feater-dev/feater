@@ -7,6 +7,7 @@ export const getDeployKeyListQueryGql = gql`
             id
             cloneUrl
             fingerprint
+            createdAt
             updatedAt
         }
     }
@@ -16,6 +17,7 @@ export interface GetDeployKeyListQueryDeployKeysFieldItemInterface {
     id: string;
     cloneUrl: string;
     fingerprint: string;
+    createdAt: string;
     updatedAt: string;
 }
 

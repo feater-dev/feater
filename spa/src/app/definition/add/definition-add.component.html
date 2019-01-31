@@ -1,11 +1,13 @@
 <div class="row">
     <div class="col-md-12">
-        <h2 *ngIf="!sourceDefinition">
-            Add definition for project <em>{{ project?.name}}</em>
-        </h2>
-        <h2 *ngIf="sourceDefinition">
-            Duplicate definition <em>{{ sourceDefinition?.name }}</em> for project <em>{{ project?.name}}</em>
-        </h2>
+        <div class="page-header">
+            <h2 *ngIf="!sourceDefinition">
+                <small>Add definition for project</small><br>{{ project?.name}}
+            </h2>
+            <h2 *ngIf="sourceDefinition">
+                <small>Duplicate definition</small><br>{{ sourceDefinition?.name }}
+            </h2>
+        </div>
     </div>
 </div>
 

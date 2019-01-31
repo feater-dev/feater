@@ -60,7 +60,7 @@ body {
 
 .sidebar .logo {
     font-family: Khand,Lato,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 48px;
+    font-size: 62px;
     font-weight: 600;
     text-align: center;
 }
@@ -157,8 +157,16 @@ body {
 }
 
 .page-header {
-    margin: 0;
+    margin: 0 0 8px 0;
     padding: 0;
+}
+
+.page-header h2 {
+    margin-top: 0;
+}
+
+.page-header h2.single-line {
+    margin-top: 36px;
 }
 
 .tab-pane {

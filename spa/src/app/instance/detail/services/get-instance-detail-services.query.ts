@@ -17,15 +17,15 @@ export const getInstanceDetailServicesQueryGql = gql`
 `;
 
 export interface GetInstanceDetailServicesQueryInstanceFieldInterface {
-    readonly id: string;
-    readonly name: string;
-    readonly services: [
+    id: string;
+    name: string;
+    services: [
         {
-            readonly id: string;
-            readonly containerId: string;
-            readonly containerNamePrefix: string;
-            readonly ipAddress: string;
-            readonly containerState: string;
+            id: string;
+            containerId: string;
+            containerNamePrefix: string;
+            ipAddress: string;
+            containerState: string;
         }
     ];
 }

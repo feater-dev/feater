@@ -7,21 +7,22 @@
             <thead>
                 <tr>
                     <th class="fit-column">Name</th>
-                    <th class="fit-column">Project</th>
+                    <th class="fit-column" *ngIf="withProjects">Project</th>
                     <th>Number of instances</th>
                     <th class="fit-column">Created</th>
                     <th class="fit-column">Updated</th>
-                    <th class="fit-column">ID</th>
-                    <th class="fit-column"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let definition of definitions">
-                    <td class="fit-column">{{ definition.name }}</td>
                     <td class="fit-column">
-                        {{ definition.project.name }}
+                        <a routerLink="/definition/{{ definition.id }}">
+                            {{ definition.name }}
+                        </a>
+                    </td>
+                    <td class="fit-column" *ngIf="withProjects">
                         <a routerLink="/project/{{ definition.project.id }}">
-                            <span class="glyphicon glyphicon-question-sign go-to-related"></span>
+                            {{ definition.project.name }}
                         </a>
                     </td>
                     <td>{{ definition.instances.length || '&mdash;' }}</td>
@@ -30,14 +31,6 @@
                     </td>
                     <td class="fit-column">
                         <small>{{ definition.updatedAt | relativeDate }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <small>{{ definition.id }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <a routerLink="/definition/{{ definition.id }}">
-                            <span class="glyphicon glyphicon-chevron-right feater-list-details"></span>
-                        </a>
                     </td>
                 </tr>
             </tbody>

@@ -36,26 +36,26 @@ export const getInstanceListQueryGql = gql`
 `;
 
 export interface GetInstanceListQueryInstanceFieldItemInterface {
-    readonly id: string;
-    readonly hash: string;
-    readonly name: string;
-    readonly createdAt: string;
-    readonly updatedAt: string;
-    readonly completedAt: string;
-    readonly failedAt: string;
-    readonly defintion: {
-        readonly id: string;
-        readonly name: string;
-        readonly project: {
-            readonly id: string;
-            readonly name: string;
+    id: string;
+    hash: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    completedAt: string;
+    failedAt: string;
+    defintion: {
+        id: string;
+        name: string;
+        project: {
+            id: string;
+            name: string;
         };
     };
-    readonly services: {
-        readonly containerState: string;
+    services: {
+        containerState: string;
     }[];
 }
 
 export interface GetInstanceListQueryInterface {
-    readonly instances: GetInstanceListQueryInstanceFieldItemInterface[];
+    instances: GetInstanceListQueryInstanceFieldItemInterface[];
 }

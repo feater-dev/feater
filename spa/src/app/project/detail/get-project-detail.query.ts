@@ -16,6 +16,8 @@ export const getProjectDetailQueryGql = gql`
                 instances {
                     id
                 }
+                createdAt
+                updatedAt
             }
             assets {
                 id
@@ -24,6 +26,8 @@ export const getProjectDetailQueryGql = gql`
                     id
                     name
                 }
+                createdAt
+                updatedAt
             }
             createdAt
             updatedAt
@@ -32,35 +36,39 @@ export const getProjectDetailQueryGql = gql`
 `;
 
 export interface GetProjectDetailQueryProjectFieldInterface {
-    readonly id: string;
-    readonly name: string;
-    readonly definitions: [
+    id: string;
+    name: string;
+    definitions: [
         {
-            readonly id: string;
-            readonly name: string;
-            readonly project: {
-                readonly id: string;
-                readonly name: string;
+            id: string;
+            name: string;
+            project: {
+                id: string;
+                name: string;
             }
-            readonly instances: [
+            instances: [
                 {
-                    readonly id: string;
+                    id: string;
                 }
             ]
+            createdAt: string;
+            updatedAt: string;
         }
     ];
-    readonly assets: [
+    assets: [
         {
-            readonly id: string;
-            readonly description: string;
-            readonly project: {
-                readonly id: string;
-                readonly name: string;
+            id: string;
+            description: string;
+            project: {
+                id: string;
+                name: string;
             }
+            createdAt: string;
+            updatedAt: string;
         }
     ];
-    readonly createdAt: string;
-    readonly updatedAt: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface GetProjectDetailQueryInterface {

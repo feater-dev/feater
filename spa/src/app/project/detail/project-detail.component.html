@@ -38,7 +38,7 @@
         <h3>Definitions</h3>
         <div *ngIf="project">
             <div class="table-wrapper">
-                <app-definition-table [definitions]="project?.definitions"></app-definition-table>
+                <app-definition-table [definitions]="project?.definitions" [withProjects]="false"></app-definition-table>
             </div>
         </div>
     </div>

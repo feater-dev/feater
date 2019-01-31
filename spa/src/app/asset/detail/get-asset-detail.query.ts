@@ -15,11 +15,11 @@ export const getAssetDetailQueryGql = gql`
 `;
 
 export interface GetAssetDetailQueryAssetFieldInterface {
-    readonly id: string;
-    readonly description: string;
-    readonly project: {
-        readonly id: string;
-        readonly name: string;
+    id: string;
+    description: string;
+    project: {
+        id: string;
+        name: string;
     };
 }
 

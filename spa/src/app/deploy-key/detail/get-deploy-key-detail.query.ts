@@ -15,12 +15,12 @@ export const getDeployKeyDetailQueryGql = gql`
 `;
 
 export interface GetDeployKeyDetailQueryDeployKeyFieldInterface {
-    readonly id: string;
-    readonly cloneUrl: string;
-    readonly publicKey: string;
-    readonly fingerprint: string;
-    readonly createdAt: string;
-    readonly updatedAt: string;
+    id: string;
+    cloneUrl: string;
+    publicKey: string;
+    fingerprint: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface GetDeployKeyDetailQueryInterface {

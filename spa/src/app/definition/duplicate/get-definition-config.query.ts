@@ -16,15 +16,15 @@ export const getDefinitionConfigQueryGql = gql`
 `;
 
 export interface GetDefinitionConfigQueryDefinitionFieldInterface {
-    readonly id: string;
-    readonly project: {
-        readonly id: string;
-        readonly name: string;
+    id: string;
+    project: {
+        id: string;
+        name: string;
     };
-    readonly name: string;
-    readonly configAsYaml: string;
+    name: string;
+    configAsYaml: string;
 }
 
 export interface GetDefinitionConfigQueryInterface {
-    readonly definition: GetDefinitionConfigQueryDefinitionFieldInterface;
+    definition: GetDefinitionConfigQueryDefinitionFieldInterface;
 }

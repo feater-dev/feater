@@ -7,26 +7,28 @@
             <thead>
                 <tr>
                     <th class="fit-column">Name</th>
-                    <th class="fit-column">Definition</th>
-                    <th class="fit-column">Project</th>
+                    <th class="fit-column" *ngIf="withDefinitions">Definition</th>
+                    <th class="fit-column" *ngIf="withProjects">Project</th>
                     <th class="fit-column">Build status</th>
                     <th>Running containers</th>
                     <th class="fit-column">Created</th>
                     <th class="fit-column">Updated</th>
                     <th class="fit-column">Hash</th>
-                    <th class="fit-column">ID</th>
-                    <th class="fit-column"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let instance of instances">
-                    <td class="fit-column">{{ instance.name }}</td>
                     <td class="fit-column">
+                        <a routerLink="/instance/{{ instance.id }}">
+                            {{ instance.name }}
+                        </a>
+                    </td>
+                    <td class="fit-column" *ngIf="withDefinitions">
                         <a routerLink="/definition/{{ instance.definition.id }}">
                             {{ instance.definition.name }}
                         </a>
                     </td>
-                    <td class="fit-column">
+                    <td class="fit-column" *ngIf="withProjects">
                         <a routerLink="/project/{{ instance.definition.project.id }}">
                             {{ instance.definition.project.name }}
                         </a>
@@ -46,15 +48,7 @@
                         <small>{{ instance.updatedAt | relativeDate }}</small>
                     </td>
                     <td class="fit-column">
-                        <small>{{ instance.hash }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <small>{{ instance.id }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <a routerLink="/instance/{{ instance.id }}">
-                            <span class="glyphicon glyphicon-chevron-right feater-table-details"></span>
-                        </a>
+                        <small>{{ instance.hash || '&mdash;' }}</small>
                     </td>
                 </tr>
             </tbody>

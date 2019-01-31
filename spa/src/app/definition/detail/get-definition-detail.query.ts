@@ -55,50 +55,53 @@ export const getDefinitionDetailQueryGql = gql`
 `;
 
 export interface GetDefinitionDetailQueryDefinitionFieldInterface {
-    readonly id: string;
-    readonly project: {
-        readonly id: string;
-        readonly name: string;
+    id: string;
+    project: {
+        id: string;
+        name: string;
     };
-    readonly name: string;
-    readonly configAsYaml: string;
-    readonly instances: {
-        readonly id: string;
-        readonly name: string;
-        readonly definition: {
-            readonly id: string;
-            readonly name: string;
-            readonly project: {
-                readonly id: string;
-                readonly name: string;
+    name: string;
+    configAsYaml: string;
+    instances: {
+        id: string;
+        hash: string;
+        name: string;
+        definition: {
+            id: string;
+            name: string;
+            project: {
+                id: string;
+                name: string;
             }
         }
-        readonly createdAt: string;
-        readonly updatedAt: string;
-        readonly services: {
-            readonly containerState: string;
+        createdAt: string;
+        updatedAt: string;
+        completedAt: string;
+        faliedAt: string;
+        services: {
+            containerState: string;
         }[];
     }[];
-    readonly deployKeys: {
-        readonly id: string;
-        readonly cloneUrl: string;
-        readonly fingerprint: string;
-        readonly updatedAt: string;
+    deployKeys: {
+        id: string;
+        cloneUrl: string;
+        fingerprint: string;
+        updatedAt: string;
     }[];
-    readonly predictedEnvVariables: {
-        readonly name: string;
-        readonly value?: string;
-        readonly pattern?: string;
+    predictedEnvVariables: {
+        name: string;
+        value?: string;
+        pattern?: string;
     }[];
-    readonly predictedFeaterVariables: {
-        readonly name: string;
-        readonly value?: string;
-        readonly pattern?: string;
+    predictedFeaterVariables: {
+        name: string;
+        value?: string;
+        pattern?: string;
     }[];
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface GetDefinitionDetailQueryInterface {
-    readonly definition: GetDefinitionDetailQueryDefinitionFieldInterface;
+    definition: GetDefinitionDetailQueryDefinitionFieldInterface;
 }

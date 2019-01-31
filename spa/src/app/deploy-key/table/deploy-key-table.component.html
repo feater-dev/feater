@@ -10,27 +10,21 @@
                     <th>Fingerprint</th>
                     <th class="fit-column">Created</th>
                     <th class="fit-column">Updated</th>
-                    <th class="fit-column">ID</th>
-                    <th class="fit-column"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let deployKey of deployKeys">
-                    <td class="fit-column">{{ deployKey.cloneUrl }}</td>
+                    <td class="fit-column">
+                        <a routerLink="/deploy-key/{{ deployKey.id }}">
+                            {{ deployKey.cloneUrl }}
+                        </a>
+                    </td>
                     <td>{{ deployKey.fingerprint }}</td>
                     <td class="fit-column">
                         <small>{{ deployKey.createdAt | relativeDate }}</small>
                     </td>
                     <td class="fit-column">
                         <small>{{ deployKey.updatedAt | relativeDate }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <small>{{ deployKey.id }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <a routerLink="/deploy-key/{{ deployKey.id }}">
-                            <span class="glyphicon glyphicon-chevron-right feater-table-details"></span>
-                        </a>
                     </td>
                 </tr>
             </tbody>

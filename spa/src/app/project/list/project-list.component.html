@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="page-header">
             <a routerLink="/project/add" class="btn btn-success pull-right">Add</a>
-            <h2 id="tables">Projects</h2>
+            <h2 class="single-line">Projects</h2>
         </div>
         <div *ngIf="projects">
             <app-project-table [projects]="projects"></app-project-table>

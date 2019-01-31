@@ -10,6 +10,8 @@ export const getAssetDetailQueryGql = gql`
                 name
             }
             description
+            createdAt
+            updatedAt
         }
     }
 `;
@@ -21,6 +23,8 @@ export interface GetAssetDetailQueryAssetFieldInterface {
         id: string;
         name: string;
     };
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface GetAssetDetailQueryInterface {

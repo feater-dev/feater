@@ -26,26 +26,26 @@ export const getInstanceDetailSummaryQueryGql = gql`
 `;
 
 export interface GetInstanceDetailSummaryQueryInstanceFieldInterface {
-    readonly id: string;
-    readonly name: string;
-    readonly definition: {
-        readonly id: string;
-        readonly name: string;
-        readonly project: {
-            readonly id: string;
-            readonly name: string;
+    id: string;
+    name: string;
+    definition: {
+        id: string;
+        name: string;
+        project: {
+            id: string;
+            name: string;
         };
     };
-    readonly summaryItems: [
+    summaryItems: [
         {
-            readonly name: string;
-            readonly value: string;
+            name: string;
+            value: string;
         }
     ];
-    readonly createdAt: string;
-    readonly updatedAt: string;
-    readonly completedAt: string;
-    readonly failedAt: string;
+    createdAt: string;
+    updatedAt: string;
+    completedAt: string;
+    failedAt: string;
 }
 
 export interface GetInstanceDetailSummaryQueryInterface {

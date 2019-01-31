@@ -11,4 +11,6 @@ export class DefinitionTableComponent {
 
     @Input() definitions: GetDefinitionListQueryDefinitionsFieldItemInterface[];
 
+    @Input() withProjects = true;
+
 }

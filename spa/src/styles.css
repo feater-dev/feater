@@ -1,3 +1,111 @@
+/* Bootstrap flatly overrides */
+
+pre {
+    font-family: monospace;
+}
+
+/* Layout */
+
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+#page-wrapper {
+    box-sizing: border-box;
+    padding-left: 160px;
+    width: 100%;
+}
+
+#sidebar-wrapper {
+    display: flex;
+    flex-flow: column;
+    width: 160px;
+    position: fixed;
+    height: 100%;
+    margin-left: -160px;
+}
+
+#content-wrapper {
+    box-sizing: border-box;
+    height: 100%;
+}
+
+/* Sidebar */
+
+#sidebar-wrapper {
+    background-color: #2c3e50;
+}
+
+.sidebar {
+    color: #ffffff;
+    padding-top: 14px;
+}
+
+.sidebar a {
+    color: #ffffff;
+}
+
+.sidebar a:hover {
+    color: #18bc9c;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sidebar a:active,
+.sidebar a:focus {
+    text-decoration: none;
+}
+
+.sidebar .logo {
+    font-family: Khand,Lato,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 48px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.sidebar .main-menu {
+    list-style: none;
+    margin: 20px 0 0 0;
+    padding: 0;
+}
+
+.sidebar .main-menu a {
+    display: block;
+    background-color: transparent;
+    padding: 5px 12px 5px 12px;
+    margin: 0;
+}
+
+.sidebar .main-menu a:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Content */
+
+.content {
+    padding: 10px;
+}
+
+.content .table-wrapper {
+    border: 2px solid #ecf0f1;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table a:not(.btn) {
+    text-decoration: none;
+}
+
+
+
+
+
 .fit-column {
     white-space: nowrap;
     width: 1%;
@@ -48,63 +156,9 @@ body {
     padding-bottom: 60px;
 }
 
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 160px;
-    background: #2c3e50;
-    color: #ffffff;
-    padding: 20px 0 0 0;
-}
-
-.sidebar a {
-    color: #ffffff;
-}
-
-.sidebar a:hover {
-    color: #18bc9c;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.sidebar .logo {
-    font-size: 32px;
-    font-weight: bold;
-    text-align: center;
-    color: #ffffff;
-}
-
-.sidebar .main-menu {
-    list-style: none;
-    padding: 0 10px;
-}
-
-.sidebar .main-menu {
-    margin: 20px 0 0 0;
-}
-
-.sidebar .main-menu li {
-    margin: 0;
-}
-
-.sidebar .main-menu a {
-    display: block;
-    background-color: transparent;
-    padding: 8px;
-}
-
-.sidebar .main-menu a:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-}
-
-.content {
-    padding-left: 170px;
-}
-
 .page-header {
-    margin-top: 21px;
+    margin: 0;
+    padding: 0;
 }
 
 .tab-pane {
@@ -126,8 +180,8 @@ h2 {
 
 .go-to-related {
     cursor: pointer;
-    color: #18bc9c;
-    margin-left: 0.2em;
+    margin-left: 0.1em;
+    margin-right: 0.3em;
 }
 
 .form-well {

@@ -27,7 +27,6 @@ import {DeployKeyListComponent} from './deploy-key/list/deploy-key-list.componen
 import {DeployKeyDetailComponent} from './deploy-key/detail/deploy-key-detail.component';
 import {DeployKeyTableComponent} from './deploy-key/table/deploy-key-table.component';
 
-
 import {DefinitionAddComponent} from './definition/add/definition-add.component';
 import {DefinitionAddSourceFormElementComponent} from './definition/add/form-element/definition-add.source-form-element.component';
 import {DefinitionAddBeforeBuildTaskCopyFormElementComponent} from './definition/add/form-element/definition-add.before-build-task-copy-form-element.component';
@@ -63,8 +62,9 @@ import {InstanceDetailEnvironmentComponent} from './instance/detail/environment/
 import {InstanceDetailLogsComponent} from './instance/detail/logs/instance-detail-logs.component';
 import {InstanceDetailServicesComponent} from './instance/detail/services/instance-detail-services.component';
 import {InstanceDetailProxyDomainsComponent} from './instance/detail/proxy-domains/instance-detail-proxy-domains.component';
-import {NgxSpinnerModule} from 'ngx-spinner';
 import {DefinitionDuplicateComponent} from './definition/duplicate/definition-duplicate.component';
+
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },

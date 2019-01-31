@@ -11,10 +11,10 @@ export const getProjectQueryGql = gql`
 `;
 
 export interface GetProjectQueryProjectFieldInterface {
-    readonly id: string;
-    readonly name: string;
+    id: string;
+    name: string;
 }
 
 export interface GetProjectQueryInterface {
-    readonly project: GetProjectQueryProjectFieldInterface;
+    project: GetProjectQueryProjectFieldInterface;
 }

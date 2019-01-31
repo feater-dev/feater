@@ -20,17 +20,17 @@ export const updateInstanceDetailLogsQueryGql = gql`
 `;
 
 export interface UpdateInstanceDetailLogsQueryInstanceFieldInterface {
-    readonly id: string;
-    readonly commandLogs: {
-        readonly id: string;
-        readonly description: string;
-        readonly createdAt: string;
+    id: string;
+    commandLogs: {
+        id: string;
+        description: string;
+        createdAt: string;
         completedAt: string;
         failedAt: string;
-        readonly entries: {
-            readonly id: string;
-            readonly message: string;
-            readonly timestamp: string;
+        entries: {
+            id: string;
+            message: string;
+            timestamp: string;
             formattedTimestamp: string;
         }[];
     }[];

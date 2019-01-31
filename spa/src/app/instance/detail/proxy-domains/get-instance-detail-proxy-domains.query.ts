@@ -24,24 +24,24 @@ export const getInstanceDetailProxyDomainsQueryGql = gql`
 `;
 
 export interface GetInstanceDetailProxyDomainsQueryInstanceFieldInterface {
-    readonly id: string;
-    readonly name: string;
-    readonly services: [
+    id: string;
+    name: string;
+    services: [
         {
-            readonly id: string;
-            readonly containerId: string;
-            readonly containerNamePrefix: string;
-            readonly ipAddress: string;
-            readonly containerState: string;
+            id: string;
+            containerId: string;
+            containerNamePrefix: string;
+            ipAddress: string;
+            containerState: string;
         }
     ];
-    readonly proxiedPorts: [
+    proxiedPorts: [
         {
-            readonly id: string;
-            readonly serviceId: string;
-            readonly name: string;
-            readonly port: number;
-            readonly domain: string;
+            id: string;
+            serviceId: string;
+            name: string;
+            port: number;
+            domain: string;
         }
     ];
 }

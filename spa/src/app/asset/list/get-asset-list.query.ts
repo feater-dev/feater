@@ -12,11 +12,11 @@ export const getAssetListQueryGql = gql`
 `;
 
 export interface GetAssetListQueryAssetsFieldItemInterface {
-    readonly id: number;
-    readonly createdAt: string;
-    readonly updatedAt: string;
+    id: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface GetAssetListQueryInterface {
-    readonly assets: GetAssetListQueryAssetsFieldItemInterface[];
+    assets: GetAssetListQueryAssetsFieldItemInterface[];
 }

@@ -14,12 +14,12 @@ export const getInstanceDetailEnvironmentQueryGql = gql`
 `;
 
 export interface GetInstanceDetailEnvironmentQueryInstanceFieldInterface {
-    readonly id: string;
-    readonly name: string;
-    readonly envVariables: [
+    id: string;
+    name: string;
+    envVariables: [
         {
-            readonly name: string;
-            readonly value: string;
+            name: string;
+            value: string;
         }
     ];
 }

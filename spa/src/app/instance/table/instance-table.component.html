@@ -3,55 +3,57 @@
         <p>No instances to list.</p>
     </div>
     <div *ngIf="instances.length">
-        <table class="table table-striped table-hover ">
-            <thead>
-                <tr>
-                    <th class="fit-column">Name</th>
-                    <th class="fit-column" *ngIf="withDefinitions">Definition</th>
-                    <th class="fit-column" *ngIf="withProjects">Project</th>
-                    <th class="fit-column">Build status</th>
-                    <th class="fit-column">Hash</th>
-                    <th>Running containers</th>
-                    <th class="fit-column">Created</th>
-                    <th class="fit-column">Updated</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let instance of instances">
-                    <td class="fit-column">
-                        <a routerLink="/instance/{{ instance.id }}">
-                            {{ instance.name }}
-                        </a>
-                    </td>
-                    <td class="fit-column" *ngIf="withDefinitions">
-                        <a routerLink="/definition/{{ instance.definition.id }}">
-                            {{ instance.definition.name }}
-                        </a>
-                    </td>
-                    <td class="fit-column" *ngIf="withProjects">
-                        <a routerLink="/project/{{ instance.definition.project.id }}">
-                            {{ instance.definition.project.name }}
-                        </a>
-                    </td>
-                    <td class="fit-column">
-                        <span *ngIf="instance.completedAt" class="label label-success">Completed</span>
-                        <span *ngIf="instance.failedAt" class="label label-danger">Failed</span>
-                        <span *ngIf="!instance.completedAt && !instance.failedAt" class="label label-default">In progress</span>
-                    </td>
-                    <td class="fit-column">
-                        <small>{{ instance.hash || '&mdash;' }}</small>
-                    </td>
-                    <td>
-                        {{ getRunningServicesCount(instance.services) }}/{{ instance.services.length }}
-                    </td>
-                    <td class="fit-column">
-                        <small>{{ instance.createdAt | relativeDate }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <small>{{ instance.updatedAt | relativeDate }}</small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table class="table table-striped table-hover ">
+                <thead>
+                    <tr>
+                        <th class="fit-column">Name</th>
+                        <th class="fit-column" *ngIf="withDefinitions">Definition</th>
+                        <th class="fit-column" *ngIf="withProjects">Project</th>
+                        <th class="fit-column">Build status</th>
+                        <th class="fit-column">Hash</th>
+                        <th>Running containers</th>
+                        <th class="fit-column">Created</th>
+                        <th class="fit-column">Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let instance of instances">
+                        <td class="fit-column">
+                            <a routerLink="/instance/{{ instance.id }}">
+                                {{ instance.name }}
+                            </a>
+                        </td>
+                        <td class="fit-column" *ngIf="withDefinitions">
+                            <a routerLink="/definition/{{ instance.definition.id }}">
+                                {{ instance.definition.name }}
+                            </a>
+                        </td>
+                        <td class="fit-column" *ngIf="withProjects">
+                            <a routerLink="/project/{{ instance.definition.project.id }}">
+                                {{ instance.definition.project.name }}
+                            </a>
+                        </td>
+                        <td class="fit-column">
+                            <span *ngIf="instance.completedAt" class="label label-success">Completed</span>
+                            <span *ngIf="instance.failedAt" class="label label-danger">Failed</span>
+                            <span *ngIf="!instance.completedAt && !instance.failedAt" class="label label-default">In progress</span>
+                        </td>
+                        <td class="fit-column">
+                            <small>{{ instance.hash || '&mdash;' }}</small>
+                        </td>
+                        <td>
+                            {{ getRunningServicesCount(instance.services) }}/{{ instance.services.length }}
+                        </td>
+                        <td class="fit-column">
+                            <small>{{ instance.createdAt | relativeDate }}</small>
+                        </td>
+                        <td class="fit-column">
+                            <small>{{ instance.updatedAt | relativeDate }}</small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

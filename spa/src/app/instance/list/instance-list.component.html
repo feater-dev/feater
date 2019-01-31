@@ -4,11 +4,7 @@
             <h2 id="tables">Instances</h2>
         </div>
         <div *ngIf="instances">
-            <div class="table-wrapper">
-                <div class="table-wrapper">
-                    <app-instance-table [instances]="instances"></app-instance-table>
-                </div>
-            </div>
+            <app-instance-table [instances]="instances"></app-instance-table>
         </div>
     </div>
 </div>

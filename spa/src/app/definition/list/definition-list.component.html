@@ -4,11 +4,7 @@
             <h2 id="tables">Definitions</h2>
         </div>
         <div *ngIf="definitions">
-            <div class="table-wrapper">
-                <div class="table-wrapper">
-                    <app-definition-table [definitions]="definitions"></app-definition-table>
-                </div>
-            </div>
+            <app-definition-table [definitions]="definitions"></app-definition-table>
         </div>
     </div>
 </div>

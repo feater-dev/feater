@@ -37,9 +37,7 @@
     <div class="col-lg-12">
         <h3>Definitions</h3>
         <div *ngIf="project">
-            <div class="table-wrapper">
-                <app-definition-table [definitions]="project?.definitions" [withProjects]="false"></app-definition-table>
-            </div>
+            <app-definition-table [definitions]="project?.definitions" [withProjects]="false"></app-definition-table>
         </div>
     </div>
 </div>
@@ -54,9 +52,7 @@
     <div class="col-lg-12">
         <h3>Assets</h3>
         <div *ngIf="project">
-            <div class="table-wrapper">
-                <app-asset-table [assets]="project?.assets"></app-asset-table>
-            </div>
+            <app-asset-table [assets]="project?.assets"></app-asset-table>
         </div>
     </div>
 </div>

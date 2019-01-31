@@ -73,9 +73,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div *ngIf="definition">
-                    <div class="table-wrapper">
-                        <app-deploy-key-table [deployKeys]="definition.deployKeys"></app-deploy-key-table>
-                    </div>
+                    <app-deploy-key-table [deployKeys]="definition.deployKeys"></app-deploy-key-table>
                 </div>
             </div>
         </div>
@@ -155,9 +153,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div *ngIf="definition">
-                    <div class="table-wrapper">
-                        <app-instance-table [instances]="definition.instances"></app-instance-table>
-                    </div>
+                    <app-instance-table [instances]="definition.instances"></app-instance-table>
                 </div>
             </div>
         </div>

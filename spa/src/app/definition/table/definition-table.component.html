@@ -3,37 +3,39 @@
         <p>No definitions to list.</p>
     </div>
     <div *ngIf="definitions.length">
-        <table class="table table-striped table-hover ">
-            <thead>
-                <tr>
-                    <th class="fit-column">Name</th>
-                    <th class="fit-column" *ngIf="withProjects">Project</th>
-                    <th>Number of instances</th>
-                    <th class="fit-column">Created</th>
-                    <th class="fit-column">Updated</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let definition of definitions">
-                    <td class="fit-column">
-                        <a routerLink="/definition/{{ definition.id }}">
-                            {{ definition.name }}
-                        </a>
-                    </td>
-                    <td class="fit-column" *ngIf="withProjects">
-                        <a routerLink="/project/{{ definition.project.id }}">
-                            {{ definition.project.name }}
-                        </a>
-                    </td>
-                    <td>{{ definition.instances.length || '&mdash;' }}</td>
-                    <td class="fit-column">
-                        <small>{{ definition.createdAt | relativeDate }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <small>{{ definition.updatedAt | relativeDate }}</small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table class="table table-striped table-hover ">
+                <thead>
+                    <tr>
+                        <th class="fit-column">Name</th>
+                        <th class="fit-column" *ngIf="withProjects">Project</th>
+                        <th>Number of instances</th>
+                        <th class="fit-column">Created</th>
+                        <th class="fit-column">Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let definition of definitions">
+                        <td class="fit-column">
+                            <a routerLink="/definition/{{ definition.id }}">
+                                {{ definition.name }}
+                            </a>
+                        </td>
+                        <td class="fit-column" *ngIf="withProjects">
+                            <a routerLink="/project/{{ definition.project.id }}">
+                                {{ definition.project.name }}
+                            </a>
+                        </td>
+                        <td>{{ definition.instances.length || '&mdash;' }}</td>
+                        <td class="fit-column">
+                            <small>{{ definition.createdAt | relativeDate }}</small>
+                        </td>
+                        <td class="fit-column">
+                            <small>{{ definition.updatedAt | relativeDate }}</small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

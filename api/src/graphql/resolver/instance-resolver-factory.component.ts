@@ -28,7 +28,7 @@ export class InstanceResolverFactory {
         private readonly instantiator: InstanceCreatorComponent,
     ) { }
 
-    protected readonly defaultSortKey = 'name_asc';
+    protected readonly defaultSortKey = 'created_at_desc';
 
     readonly sortMap = {
         name_asc: {

@@ -28,7 +28,7 @@ export class DefinitionResolverFactory {
         private readonly variablePredictor: VariablesPredictor,
     ) { }
 
-    protected readonly defaultSortKey = 'name_asc';
+    protected readonly defaultSortKey = 'created_at_desc';
 
     protected readonly sortMap = {
         name_asc: {

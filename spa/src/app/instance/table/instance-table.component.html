@@ -10,10 +10,10 @@
                     <th class="fit-column" *ngIf="withDefinitions">Definition</th>
                     <th class="fit-column" *ngIf="withProjects">Project</th>
                     <th class="fit-column">Build status</th>
+                    <th class="fit-column">Hash</th>
                     <th>Running containers</th>
                     <th class="fit-column">Created</th>
                     <th class="fit-column">Updated</th>
-                    <th class="fit-column">Hash</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,6 +38,9 @@
                         <span *ngIf="instance.failedAt" class="label label-danger">Failed</span>
                         <span *ngIf="!instance.completedAt && !instance.failedAt" class="label label-default">In progress</span>
                     </td>
+                    <td class="fit-column">
+                        <small>{{ instance.hash || '&mdash;' }}</small>
+                    </td>
                     <td>
                         {{ getRunningServicesCount(instance.services) }}/{{ instance.services.length }}
                     </td>
@@ -46,9 +49,6 @@
                     </td>
                     <td class="fit-column">
                         <small>{{ instance.updatedAt | relativeDate }}</small>
-                    </td>
-                    <td class="fit-column">
-                        <small>{{ instance.hash || '&mdash;' }}</small>
                     </td>
                 </tr>
             </tbody>

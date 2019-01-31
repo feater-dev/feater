@@ -40,7 +40,7 @@ body {
 
 .sidebar {
     color: #ffffff;
-    padding-top: 20px;
+    padding-top: 14px;
 }
 
 .sidebar a {
@@ -53,9 +53,15 @@ body {
     cursor: pointer;
 }
 
+.sidebar a:active,
+.sidebar a:focus {
+    text-decoration: none;
+}
+
 .sidebar .logo {
-    font-size: 32px;
-    font-weight: bold;
+    font-family: Khand,Lato,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 48px;
+    font-weight: 600;
     text-align: center;
 }
 
@@ -151,7 +157,8 @@ body {
 }
 
 .page-header {
-    margin-top: 21px;
+    margin: 0;
+    padding: 0;
 }
 
 .tab-pane {

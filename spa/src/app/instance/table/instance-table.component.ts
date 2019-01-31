@@ -10,8 +10,8 @@ export class InstanceTableComponent {
 
     @Input() instances: GetInstanceListQueryInstanceFieldItemInterface[];
 
-    @Input() withProjects = false;
-    @Input() withDefinitions = false;
+    @Input() withProjects = true;
+    @Input() withDefinitions = true;
 
     getRunningServicesCount(services: {containerState: string}[]): number {
         return services.filter(service => 'running' === service.containerState).length;

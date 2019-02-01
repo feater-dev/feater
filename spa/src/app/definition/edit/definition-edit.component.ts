@@ -80,41 +80,9 @@ export class DefinitionEditComponent extends DefinitionAddComponent implements O
     }
 
     protected mapItem(): any {
-        for (const afterBuildTask of this.item.config.afterBuildTasks) {
-            if ('executeHostCommand' === afterBuildTask.type || 'executeServiceCommand' === afterBuildTask.type) {
-                this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteHostCommandTaskFormElement);
-            }
-        }
-
-        const mappedItem = {
-            id: this.item.id,
-            name: this.item.name,
-            config: {
-                sources: this.item.config.sources,
-                volumes: this.item.config.volumes,
-                proxiedPorts: this.item.config.proxiedPorts.map(proxiedPort => ({
-                    id: proxiedPort.id,
-                    serviceId: proxiedPort.serviceId,
-                    port: parseInt(proxiedPort.port, 10),
-                    name: proxiedPort.name,
-                })),
-                envVariables: this.item.config.envVariables,
-                composeFiles: [
-                    this.item.config.composeFile,
-                ],
-                afterBuildTasks: _.cloneDeep(this.item.config.afterBuildTasks),
-                summaryItems: this.item.config.summaryItems,
-            },
-        };
-
-        for (const afterBuildTask of mappedItem.config.afterBuildTasks) {
-            if ('' === afterBuildTask.id) {
-                delete afterBuildTask.id;
-            }
-            if (0 === afterBuildTask.dependsOn.length) {
-                delete afterBuildTask.dependsOn;
-            }
-        }
+        const mappedItem = super.mapItem();
+        delete mappedItem.projectId;
+        mappedItem.id = this.item.id;
 
         return mappedItem;
     }

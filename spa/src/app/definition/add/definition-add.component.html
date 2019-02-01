@@ -1,11 +1,14 @@
 <div class="row">
     <div class="col-md-12">
         <div class="page-header">
-            <h2 *ngIf="!sourceDefinition">
+            <h2 *ngIf="action === 'add'">
                 <small>Add definition for project</small><br>{{ project?.name}}
             </h2>
-            <h2 *ngIf="sourceDefinition">
+            <h2 *ngIf="action === 'duplicate'">
                 <small>Duplicate definition</small><br>{{ sourceDefinition?.name }}
+            </h2>
+            <h2 *ngIf="action === 'edit'">
+                <small>Edit definition</small><br>{{ sourceDefinition?.name }}
             </h2>
         </div>
     </div>
@@ -270,7 +273,7 @@
             <div *ngIf="item.config.summaryItems.length">
                 <div *ngFor="let summaryItem of item.config.summaryItems">
                     <app-definition-add-summary-item-form-element [item]="summaryItem"
-                                                            (deleteItem)="deleteSummaryItem($event)"
+                                                                  (deleteItem)="deleteSummaryItem($event)"
                     ></app-definition-add-summary-item-form-element>
                 </div>
             </div>
@@ -316,7 +319,7 @@
     <div class="form-section">
         <div class="row">
             <div class="col-md-12">
-                <button type="submit" class="btn btn-success" (click)="addItem()">Submit</button>
+                <button type="submit" class="btn btn-success" (click)="submit()">Submit</button>
             </div>
         </div>
     </div>

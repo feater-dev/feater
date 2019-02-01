@@ -3,6 +3,10 @@ export interface DefinitionAddForm {
     config: DefinitionAddFormConfigFormElement;
 }
 
+export interface DefinitionEditForm extends DefinitionAddForm {
+    id: string;
+}
+
 export interface DefinitionAddFormConfigFormElement {
     sources: DefinitionAddFormSourceFormElement[];
     volumes: DefinitionAddFormVolumeFormElement[];

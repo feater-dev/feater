@@ -17,6 +17,7 @@ import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
 import {PredictedEnvVariableTypeInterface} from '../type/predicted-env-variable-type.interface';
 import {VariablesPredictor} from '../../instantiation/variable/variables-predictor';
 import {PredictedFeaterVariableTypeInterface} from '../type/predicted-feater-variable-type.interface';
+import {UpdateDefinitionInputTypeInterface} from '../input-type/update-definition-input-type.interface';
 
 @Injectable()
 export class DefinitionResolverFactory {
@@ -83,8 +84,17 @@ export class DefinitionResolverFactory {
 
     public getCreateItemResolver(): (obj: any, createDefinitionInput: CreateDefinitionInputTypeInterface) => Promise<DefinitionTypeInterface> {
         return async (obj: any, createDefinitionInput: CreateDefinitionInputTypeInterface): Promise<DefinitionTypeInterface> => {
-            // TODO Add validation.
+            // TODO Add input validation.
             const definition = await this.definitionRepository.create(createDefinitionInput);
+
+            return this.mapPersistentModelToTypeModel(definition);
+        };
+    }
+
+    public getUpdateItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, updateDefinitionInput: UpdateDefinitionInputTypeInterface) => Promise<DefinitionTypeInterface> {
+        return async (obj: any, updateDefinitionInput: UpdateDefinitionInputTypeInterface): Promise<DefinitionTypeInterface> => {
+            // TODO Add input validation.
+            const definition = await this.definitionRepository.update(idExtractor(obj, updateDefinitionInput), updateDefinitionInput);
 
             return this.mapPersistentModelToTypeModel(definition);
         };

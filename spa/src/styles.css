@@ -259,3 +259,7 @@ h2 {
     color: inherit;
     padding: 0;
 }
+
+.buttons .btn {
+    margin-right: 4px;
+}

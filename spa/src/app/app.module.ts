@@ -63,6 +63,7 @@ import {InstanceDetailLogsComponent} from './instance/detail/logs/instance-detai
 import {InstanceDetailServicesComponent} from './instance/detail/services/instance-detail-services.component';
 import {InstanceDetailProxyDomainsComponent} from './instance/detail/proxy-domains/instance-detail-proxy-domains.component';
 import {DefinitionDuplicateComponent} from './definition/duplicate/definition-duplicate.component';
+import {DefinitionEditComponent} from './definition/edit/definition-edit.component';
 
 import {NgxSpinnerModule} from 'ngx-spinner';
 
@@ -75,6 +76,7 @@ const appRoutes: Routes = [
     { path: 'project/:id/asset/add', component: AssetAddComponent},
     { path: 'definitions', component: DefinitionListComponent },
     { path: 'definition/:id', component: DefinitionDetailComponent},
+    { path: 'definition/:id/edit', component: DefinitionEditComponent},
     { path: 'definition/:id/duplicate', component: DefinitionDuplicateComponent},
     { path: 'definition/:id/instance/add', component: InstanceAddComponent},
     { path: 'instances', component: InstanceListComponent },
@@ -98,6 +100,7 @@ const appRoutes: Routes = [
         ProjectListComponent,
         DefinitionAddComponent,
         DefinitionDuplicateComponent,
+        DefinitionEditComponent,
         DefinitionAddSourceFormElementComponent,
         DefinitionAddVolumeFormElementComponent,
         DefinitionAddBeforeBuildTaskCopyFormElementComponent,

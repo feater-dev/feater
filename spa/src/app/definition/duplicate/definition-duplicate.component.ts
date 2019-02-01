@@ -1,26 +1,6 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Router, ActivatedRoute, Params} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Params} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
-import gql from 'graphql-tag';
-import {Apollo} from 'apollo-angular';
-import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {NgxSpinnerService} from 'ngx-spinner';
-import * as _ from 'lodash';
-import * as jsYaml from 'js-yaml';
-import * as camelCaseKeys from 'camelcase-keys';
-import {
-    DefinitionAddForm,
-    DefinitionAddFormSourceFormElement,
-    DefinitionAddFormVolumeFormElement,
-    DefinitionAddFormProxiedPortFormElement,
-    DefinitionAddFormEnvVariableFormElement,
-    DefinitionAddFormSummaryItemFormElement,
-    DefinitionAddFormConfigFormElement,
-    ExecuteHostCommandTaskFormElement,
-    ExecuteServiceCommandTaskFormElement,
-    AfterBuildTaskFormElement,
-    CopyAssetIntoContainerTaskFormElement,
-} from './../add/definition-add-form.model';
 import {
     getDefinitionConfigQueryGql,
     GetDefinitionConfigQueryInterface,
@@ -35,6 +15,8 @@ import {DefinitionAddComponent} from '../add/definition-add.component';
     styles: []
 })
 export class DefinitionDuplicateComponent extends DefinitionAddComponent implements OnInit {
+
+    action = 'duplicate';
 
     sourceDefinition: {
         name: string;

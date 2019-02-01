@@ -159,6 +159,12 @@ export const typeDefsProvider = {
                 config: DefinitionConfigInput!
             ): Definition!
 
+            updateDefinition(
+                id: String!
+                name: String!
+                config: DefinitionConfigInput!
+            ): Definition!
+
             createAsset(
                 projectId: String!
                 id: String!

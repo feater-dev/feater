@@ -6,6 +6,7 @@ import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/creat
 import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/source-type.interface';
 import {DeployKeyRepository} from './deploy-key.repository';
 import * as gitUrlParse from 'git-url-parse';
+import {UpdateDefinitionInputTypeInterface} from '../../graphql/input-type/update-definition-input-type.interface';
 
 @Injectable()
 export class DefinitionRepository {
@@ -57,5 +58,34 @@ export class DefinitionRepository {
         }
 
         return createdDefinition;
+    }
+
+    async update(id: string, updateDefinitionInputType: UpdateDefinitionInputTypeInterface): Promise<DefinitionInterface> {
+        const definition = await this.findById(id);
+        if (null === definition) {
+            throw new Error(`Definition document with id ${id} not found.`);
+        }
+        definition.name = updateDefinitionInputType.name;
+        definition.config = updateDefinitionInputType.config;
+        definition.updatedAt = new Date();
+        await definition.save();
+
+        for (const source of definition.config.sources) {
+            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
+            if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+                const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(cloneUrl);
+                if (!deployKeyExists) {
+                    await this.deployKeyRepository.create(cloneUrl);
+                }
+            }
+        }
+
+        return definition;
+    }
+
+    async remove(id: string): Promise<boolean> {
+        const removal = await this.definitionModel.findByIdAndRemove(id);
+
+        return true;
     }
 }

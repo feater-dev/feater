@@ -151,52 +151,62 @@ export const typeDefsProvider = {
         type Mutation {
             createProject(
                 name: String!
-            ): Project!
+            ): Project
 
             createDefinition(
                 projectId: String!
                 name: String!
                 config: DefinitionConfigInput!
-            ): Definition!
+            ): Definition
+
+            updateDefinition(
+                id: String!
+                name: String!
+                config: DefinitionConfigInput!
+            ): Definition
+
+            removeDefinition(
+                id: String!
+            ): Boolean
 
             createAsset(
                 projectId: String!
                 id: String!
                 description: String
-            ): Asset!
+            ): Asset
 
             createInstance(
                 definitionId: String!
                 name: String!
-            ): Instance!
+            ): Instance
 
             removeInstance(
                 id: String!
-            ): Boolean!
+            ): Boolean
 
             stopService(
                 instanceId: String!
                 serviceId: String!
-            ): Instance!
+            ): Instance
 
             pauseService(
                 instanceId: String!
                 serviceId: String!
-            ): Instance!
+            ): Instance
 
             startService(
                 instanceId: String!
                 serviceId: String!
-            ): Instance!
+            ): Instance
 
             unpauseService(
                 instanceId: String!
                 serviceId: String!
-            ): Instance!
+            ): Instance
 
             regenerateDeployKey(
                 cloneUrl: String!
-            ): DeployKey!
+            ): DeployKey
 
             generateMissingDeployKeys: GenerateMissingDeployKeysResult
 

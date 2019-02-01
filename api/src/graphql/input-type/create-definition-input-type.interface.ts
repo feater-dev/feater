@@ -1,5 +1,5 @@
 export interface CreateDefinitionInputTypeInterface {
     readonly projectId: string;
-    readonly id: string;
-    readonly description: string;
+    readonly name: string;
+    readonly config: any; // TODO
 }

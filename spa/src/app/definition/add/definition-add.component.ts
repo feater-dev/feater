@@ -39,6 +39,8 @@ export class DefinitionAddComponent implements OnInit {
 
     project: GetProjectQueryProjectFieldInterface;
 
+    action = 'add';
+
     mode = 'form';
 
     @ViewChild('yamlConfig') yamlConfigElement: ElementRef;
@@ -71,7 +73,7 @@ export class DefinitionAddComponent implements OnInit {
         this.getProject();
     }
 
-    addItem(): void {
+    submit(): void {
         this.apollo.mutate({
             mutation: gql`${this.getCreateDefinitionMutation()}`,
         }).subscribe(
@@ -241,8 +243,6 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     protected mapItem(): any {
-        const afterBuildTasks = [];
-
         for (const afterBuildTask of this.item.config.afterBuildTasks) {
             if ('executeHostCommand' === afterBuildTask.type || 'executeServiceCommand' === afterBuildTask.type) {
                 this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteHostCommandTaskFormElement);

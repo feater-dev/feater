@@ -7,6 +7,7 @@ import {
     GetDefinitionDetailQueryInterface,
     getDefinitionDetailQueryGql,
 } from './get-definition-detail.query';
+import gql from 'graphql-tag';
 
 
 @Component({
@@ -18,6 +19,12 @@ export class DefinitionDetailComponent implements OnInit {
 
     definition: GetDefinitionDetailQueryDefinitionFieldInterface;
 
+    protected readonly removeDefinitionMutation = gql`
+        mutation ($id: String!) {
+            removeDefinition(id: $id)
+        }
+    `;
+
     constructor(
         protected route: ActivatedRoute,
         protected router: Router,
@@ -27,6 +34,23 @@ export class DefinitionDetailComponent implements OnInit {
 
     ngOnInit() {
         this.getDefinitions();
+    }
+
+    removeDefinition() {
+        if (this.definition.instances.length) {
+            return;
+        }
+
+        this.apollo.mutate({
+            mutation: this.removeDefinitionMutation,
+            variables: {
+                id: this.definition.id,
+            },
+        }).subscribe(
+            () => {
+                this.router.navigateByUrl(`/project/${this.definition.project.id}`);
+            }
+        );
     }
 
     protected getDefinitions() {

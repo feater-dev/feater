@@ -5,18 +5,24 @@ import {
     getDefinitionConfigQueryGql,
     GetDefinitionConfigQueryInterface,
     GetDefinitionConfigQueryDefinitionFieldInterface,
-} from './get-definition-config.query';
+} from './../duplicate/get-definition-config.query';
 import {DefinitionAddComponent} from '../add/definition-add.component';
+import gql from 'graphql-tag';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {DefinitionEditForm, ExecuteHostCommandTaskFormElement} from '../add/definition-add-form.model';
+import * as _ from 'lodash';
 
 
 @Component({
-    selector: 'app-definition-duplicate',
+    selector: 'app-definition-edit',
     templateUrl: './../add/definition-add.component.html',
     styles: []
 })
-export class DefinitionDuplicateComponent extends DefinitionAddComponent implements OnInit {
+export class DefinitionEditComponent extends DefinitionAddComponent implements OnInit {
 
-    action = 'duplicate';
+    item: DefinitionEditForm;
+
+    action = 'edit';
 
     sourceDefinition: {
         name: string;
@@ -52,11 +58,45 @@ export class DefinitionDuplicateComponent extends DefinitionAddComponent impleme
                     this.sourceDefinition = {
                         name: item.name,
                     };
-                    this.item.name = `${item.name} - copy`;
+                    this.item.id = item.id;
+                    this.item.name = item.name;
                     this.importYamlConfig(item.configAsYaml);
                     this.spinner.hide();
                 }
             );
     }
 
+    submit(): void {
+        this.apollo.mutate({
+            mutation: gql`${this.getUpdateDefinitionMutation()}`,
+        }).subscribe(
+            ({data}) => {
+                this.router.navigate(['/definition', data.updateDefinition.id]);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
+    }
+
+    protected mapItem(): any {
+        const mappedItem = super.mapItem();
+        delete mappedItem.projectId;
+        mappedItem.id = this.item.id;
+
+        return mappedItem;
+    }
+
+    protected getUpdateDefinitionMutation(): string {
+        const mutation = {
+            mutation: {
+                updateDefinition: {
+                    __args: this.mapItem(),
+                    id: true,
+                }
+            }
+        };
+
+        return jsonToGraphQLQuery(mutation);
+    }
 }

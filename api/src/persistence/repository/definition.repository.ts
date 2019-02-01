@@ -82,4 +82,10 @@ export class DefinitionRepository {
 
         return definition;
     }
+
+    async remove(id: string): Promise<boolean> {
+        const removal = await this.definitionModel.findByIdAndRemove(id);
+
+        return true;
+    }
 }

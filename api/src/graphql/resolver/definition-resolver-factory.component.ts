@@ -18,12 +18,15 @@ import {PredictedEnvVariableTypeInterface} from '../type/predicted-env-variable-
 import {VariablesPredictor} from '../../instantiation/variable/variables-predictor';
 import {PredictedFeaterVariableTypeInterface} from '../type/predicted-feater-variable-type.interface';
 import {UpdateDefinitionInputTypeInterface} from '../input-type/update-definition-input-type.interface';
+import {RemoveDefinitionInputTypeInterface} from '../input-type/remove-definition-input-type.interface';
+import {InstanceRepository} from '../../persistence/repository/instance.repository';
 
 @Injectable()
 export class DefinitionResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
         private readonly definitionRepository: DefinitionRepository,
+        private readonly instanceRepository: InstanceRepository,
         private readonly deployKeyRepository: DeployKeyRepository,
         private readonly definitionConfigMapper: DefinitionConfigMapper,
         private readonly variablePredictor: VariablesPredictor,
@@ -91,12 +94,24 @@ export class DefinitionResolverFactory {
         };
     }
 
-    public getUpdateItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, updateDefinitionInput: UpdateDefinitionInputTypeInterface) => Promise<DefinitionTypeInterface> {
+    public getUpdateItemResolver(): (obj: any, updateDefinitionInput: UpdateDefinitionInputTypeInterface) => Promise<DefinitionTypeInterface> {
         return async (obj: any, updateDefinitionInput: UpdateDefinitionInputTypeInterface): Promise<DefinitionTypeInterface> => {
             // TODO Add input validation.
-            const definition = await this.definitionRepository.update(idExtractor(obj, updateDefinitionInput), updateDefinitionInput);
+            const definition = await this.definitionRepository.update(updateDefinitionInput.id, updateDefinitionInput);
 
             return this.mapPersistentModelToTypeModel(definition);
+        };
+    }
+
+    public getRemoveItemResolver(): (obj: any, removeDefinitionInput: RemoveDefinitionInputTypeInterface) => Promise<boolean> {
+        return async (obj: any, removeDefinitionInput: RemoveDefinitionInputTypeInterface): Promise<boolean> => {
+            const definition = await this.definitionRepository.findByIdOrFail(removeDefinitionInput.id);
+            const instances = await this.instanceRepository.find({definitionId: definition.id}, 0, 1);
+            if (!!instances.length) {
+                throw new Error('Definition has some instances.');
+            }
+
+            return await this.definitionRepository.remove(removeDefinitionInput.id);
         };
     }
 

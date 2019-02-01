@@ -74,9 +74,8 @@ export class GraphqlSchemaFactory {
             Mutation: {
                 createProject: this.projectsResolverFactory.getCreateItemResolver(),
                 createDefinition: this.definitionResolverFactory.getCreateItemResolver(),
-                updateDefinition: this.definitionResolverFactory.getUpdateItemResolver(
-                    (obj: any, args: any): string => args.id,
-                ),
+                updateDefinition: this.definitionResolverFactory.getUpdateItemResolver(),
+                removeDefinition: this.definitionResolverFactory.getRemoveItemResolver(),
                 createInstance: this.instanceResolverFactory.getCreateItemResolver(),
                 removeInstance: this.instanceResolverFactory.getRemoveItemResolver(),
                 stopService: this.instanceResolverFactory.getStopItemServiceResolver(),

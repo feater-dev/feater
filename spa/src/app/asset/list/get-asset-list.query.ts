@@ -7,14 +7,22 @@ export const getAssetListQueryGql = gql`
             id
             createdAt
             updatedAt
+            project {
+                id
+                name
+            }
         }
     }
 `;
 
 export interface GetAssetListQueryAssetsFieldItemInterface {
-    id: number;
+    id: string;
     createdAt: string;
     updatedAt: string;
+    project: {
+        id: string;
+        name: string;
+    }
 }
 
 export interface GetAssetListQueryInterface {

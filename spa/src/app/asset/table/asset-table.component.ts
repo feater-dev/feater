@@ -11,4 +11,6 @@ export class AssetTableComponent {
 
     @Input() assets: GetAssetListQueryAssetsFieldItemInterface[];
 
+    @Input() withProjects = true;
+
 }

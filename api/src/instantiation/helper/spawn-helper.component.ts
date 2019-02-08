@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import * as split from 'split';
 import {LoggerInterface} from '../../logger/logger-interface';
+import {ExecuteCommandError} from './execute-command-error';
 
 @Injectable()
 export class SpawnHelper {
@@ -26,19 +27,16 @@ export class SpawnHelper {
             reject(error);
         });
 
-        const handleExit = exitCode => {
+        spawned.on('exit', exitCode => {
             if (0 !== exitCode) {
                 failedExitHandler(exitCode);
-                reject(exitCode);
+                reject(new ExecuteCommandError(exitCode));
 
                 return;
             }
 
             successfulExitHandler();
             resolve();
-        };
-
-        spawned.on('exit', handleExit);
-        spawned.on('close', handleExit);
+        });
     }
 }

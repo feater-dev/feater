@@ -91,6 +91,10 @@ export class InstanceDetailLogsComponent implements OnInit, OnDestroy {
         return !commandLog.completedAt;
     }
 
+    trackByIndex(index: number, obj: any): any {
+        return index;
+    }
+
     protected getInstance() {
         this.spinner.show();
         this.apollo

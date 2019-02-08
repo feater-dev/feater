@@ -34,12 +34,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let service of instance?.services" class="form-control-static">
-                                <td class="fit-column">{{ service.id }}</td>
+                            <tr *ngFor="let service of instance?.services; trackBy: trackByIndex" class="form-control-static">
+                                <td>{{ service.id }}</td>
                                 <td>{{ service.containerId | slice:0:12 }}</td>
                                 <td>{{ service.ipAddress }}</td>
-                                <td class="fit-column">{{ service.containerState }}</td>
-                                <td class="service-actions fit-column">
+                                <td>{{ service.containerState }}</td>
+                                <td class="service-actions">
                                     <span [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"
                                           (click)="startOrUnpauseService(service)"
                                           class="glyphicon glyphicon-play"

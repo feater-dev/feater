@@ -48,7 +48,11 @@ export class InstanceDetailProxyDomainsComponent implements OnInit, OnDestroy {
         }
     }
 
-    protected getInstance(spinner: boolean = true) {
+    trackByIndex(index: number, obj: any): any {
+        return index;
+    }
+
+    protected getInstance(spinner = true) {
         if (spinner) {
             this.spinner.show();
         }
@@ -68,5 +72,4 @@ export class InstanceDetailProxyDomainsComponent implements OnInit, OnDestroy {
                 }
             });
     }
-
 }

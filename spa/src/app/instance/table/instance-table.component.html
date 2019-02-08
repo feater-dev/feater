@@ -19,36 +19,36 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let instance of instances">
-                        <td class="fit-column">
+                        <td>
                             <a routerLink="/instance/{{ instance.id }}">
                                 {{ instance.name }}
                             </a>
                         </td>
-                        <td class="fit-column" *ngIf="withDefinitions">
+                        <td *ngIf="withDefinitions">
                             <a routerLink="/definition/{{ instance.definition.id }}">
                                 {{ instance.definition.name }}
                             </a>
                         </td>
-                        <td class="fit-column" *ngIf="withProjects">
+                        <td *ngIf="withProjects">
                             <a routerLink="/project/{{ instance.definition.project.id }}">
                                 {{ instance.definition.project.name }}
                             </a>
                         </td>
-                        <td class="fit-column">
+                        <td>
                             <span *ngIf="instance.completedAt" class="label label-success">Completed</span>
                             <span *ngIf="instance.failedAt" class="label label-danger">Failed</span>
                             <span *ngIf="!instance.completedAt && !instance.failedAt" class="label label-default">In progress</span>
                         </td>
-                        <td class="fit-column">
+                        <td>
                             <small>{{ instance.hash || '&mdash;' }}</small>
                         </td>
                         <td>
                             {{ getRunningServicesCount(instance.services) }}/{{ instance.services.length }}
                         </td>
-                        <td class="fit-column">
+                        <td>
                             <small>{{ instance.createdAt | relativeDate }}</small>
                         </td>
-                        <td class="fit-column">
+                        <td>
                             <small>{{ instance.updatedAt | relativeDate }}</small>
                         </td>
                     </tr>

@@ -17,11 +17,11 @@ import gql from 'graphql-tag';
 })
 export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
 
-    readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    protected readonly POLLING_INTERVAL = 5000; // 5 seconds.
 
-    instance: GetInstanceDetailSummaryQueryInstanceFieldInterface;
+    protected instance: GetInstanceDetailSummaryQueryInstanceFieldInterface;
 
-    pollingSubscription: Subscription;
+    protected pollingSubscription: Subscription;
 
     protected readonly removeInstanceMutation = gql`
         mutation ($id: String!) {
@@ -49,6 +49,7 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
     }
 
     removeInstance() {
+        this.spinner.show();
         this.apollo.mutate({
             mutation: this.removeInstanceMutation,
             variables: {
@@ -57,11 +58,16 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
         }).subscribe(
             () => {
                 this.router.navigateByUrl(`/definition/${this.instance.definition.id}`);
+                this.spinner.hide();
             }
         );
     }
 
-    protected getInstance(spinner: boolean = true) {
+    trackByIndex(index: number, obj: any): any {
+        return index;
+    }
+
+    protected getInstance(spinner = true) {
         if (spinner) {
             this.spinner.show();
         }
@@ -81,5 +87,4 @@ export class InstanceDetailSummaryComponent implements OnInit, OnDestroy {
                 }
             });
     }
-
 }

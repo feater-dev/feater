@@ -16,21 +16,21 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let definition of definitions">
-                        <td class="fit-column">
+                        <td>
                             <a routerLink="/definition/{{ definition.id }}">
                                 {{ definition.name }}
                             </a>
                         </td>
-                        <td class="fit-column" *ngIf="withProjects">
+                        <td *ngIf="withProjects">
                             <a routerLink="/project/{{ definition.project.id }}">
                                 {{ definition.project.name }}
                             </a>
                         </td>
                         <td>{{ definition.instances.length || '&mdash;' }}</td>
-                        <td class="fit-column">
+                        <td>
                             <small>{{ definition.createdAt | relativeDate }}</small>
                         </td>
-                        <td class="fit-column">
+                        <td>
                             <small>{{ definition.updatedAt | relativeDate }}</small>
                         </td>
                     </tr>

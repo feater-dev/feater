@@ -15,16 +15,16 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let deployKey of deployKeys">
-                        <td class="fit-column">
+                        <td>
                             <a routerLink="/deploy-key/{{ deployKey.id }}">
                                 {{ deployKey.cloneUrl }}
                             </a>
                         </td>
                         <td>{{ deployKey.fingerprint }}</td>
-                        <td class="fit-column">
+                        <td>
                             <small>{{ deployKey.createdAt | relativeDate }}</small>
                         </td>
-                        <td class="fit-column">
+                        <td>
                             <small>{{ deployKey.updatedAt | relativeDate }}</small>
                         </td>
                     </tr>

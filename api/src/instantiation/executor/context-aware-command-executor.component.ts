@@ -5,6 +5,7 @@ import {CommandLogger} from '../logger/command-logger';
 import {BaseLogger} from '../../logger/base-logger';
 import {CommandExecutorComponent} from './command-executor.component';
 import {CommandType} from './command.type';
+import {ExecuteCommandError} from '../helper/execute-command-error';
 
 @Injectable()
 export class ContextAwareCommandExecutorComponent {
@@ -31,11 +32,29 @@ export class ContextAwareCommandExecutorComponent {
             }
             await commandLogger.markAsCompleted();
             commandLogger.info('Command completed.');
-        } catch (e) {
+        } catch (error) {
             await commandLogger.markAsFailed();
-            commandLogger.error(`Command failed with error of class ${e.constructor.name} with message '${e.message}'.`);
 
-            throw e;
+            let messages: string[];
+            if (error instanceof ExecuteCommandError) {
+                messages = [
+                    `Command execution failed.`,
+                ];
+            } else if (error instanceof Error) {
+                messages = [
+                    `Command execution failed.`,
+                    `Error class: ${error.constructor.name}`,
+                    `Error message '${error.message}'.`,
+                ];
+            } else {
+                messages = [`Command execution failed.`];
+            }
+
+            for (const message of messages) {
+                commandLogger.error(message);
+            }
+
+            throw error;
         }
     }
 

@@ -4,6 +4,7 @@ import {CommandsMap} from './commands-map';
 import {SimpleCommand} from './simple-command';
 import {CommandsMapItem} from './commands-map-item';
 import {CommandExecutorComponent} from './command-executor.component';
+import {CommandType} from './command.type';
 
 @Injectable()
 export class CommandsMapExecutorComponent {
@@ -23,20 +24,26 @@ export class CommandsMapExecutorComponent {
             (commandMapItem: CommandsMapItem) => commandMapItem.symbol,
         );
 
-        return new Promise(resolve => {
-            this.executeNextBatch(
-                commandsMap.items,
-                resolve,
-                completedCommandIds,
-                executingCommandSymbols,
-                pendingCommandSymbols,
-            );
+        return new Promise((resolve, reject) => {
+            try {
+                this.executeNextBatch(
+                    commandsMap.items,
+                    resolve,
+                    reject,
+                    completedCommandIds,
+                    executingCommandSymbols,
+                    pendingCommandSymbols,
+                );
+            } catch (error) {
+                reject(error);
+            }
         });
     }
 
     protected executeNextBatch(
         commandsMapItems: CommandsMapItem[],
-        resolve: () => void,
+        resolve: (value?: void | PromiseLike<void>) => void,
+        reject: (reason?: any) => void,
         completedCommandIds: string[],
         executingCommandSymbols: symbol[],
         pendingCommandSymbols: symbol[],
@@ -64,22 +71,28 @@ export class CommandsMapExecutorComponent {
             executingCommandSymbols.push(commandMapItem.symbol);
 
             this.commandExecutorComponent
-                .execute(commandMapItem.nestedCommand as SimpleCommand)
-                .then(() => {
-                    _.pull(executingCommandSymbols, commandMapItem.symbol);
-                    if (commandMapItem.id) {
-                        completedCommandIds.push(commandMapItem.id);
-                    }
-                    process.nextTick(() => {
-                        this.executeNextBatch(
-                            commandsMapItems,
-                            resolve,
-                            completedCommandIds,
-                            executingCommandSymbols,
-                            pendingCommandSymbols,
-                        );
-                    });
-                });
+                .execute(commandMapItem.nestedCommand as CommandType)
+                .then(
+                    () => {
+                        _.pull(executingCommandSymbols, commandMapItem.symbol);
+                        if (commandMapItem.id) {
+                            completedCommandIds.push(commandMapItem.id);
+                        }
+                        process.nextTick(() => {
+                            this.executeNextBatch(
+                                commandsMapItems,
+                                resolve,
+                                reject,
+                                completedCommandIds,
+                                executingCommandSymbols,
+                                pendingCommandSymbols,
+                            );
+                        });
+                    },
+                    (error) => {
+                        reject(error);
+                    },
+                );
         }
 
         if (

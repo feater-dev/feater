@@ -3,6 +3,11 @@
         <p>No assets to list.</p>
     </div>
     <div *ngIf="assets.length">
+        <div class="form">
+            <div class="table-quick-search form-group-sm">
+                <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+            </div>
+        </div>
         <div class="table-wrapper">
             <table class="table table-striped table-hover ">
                 <thead>
@@ -14,8 +19,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let asset of assets">
-                        <td>
+                    <tr *ngFor="let asset of assets | filterBy: getFilterCondition()">
+                        <td [ngClass]="{'fit-column': withProjects}">
                             <a routerLink="/asset/{{ asset.id }}">
                                 {{ asset.id }}
                             </a>
@@ -25,11 +30,23 @@
                                 {{ asset.project.name }}
                             </a>
                         </td>
-                        <td>
-                            <small>{{ asset.createdAt | relativeDate }}</small>
+                        <td class="fit-column">
+                            <span tooltip="{{ asset.createdAt | absoluteDate }}"
+                                  placement="left"
+                                  theme="light"
+                                  show-delay="200"
+                            >
+                                <small>{{ asset.createdAt | relativeDate }}</small>
+                            </span>
                         </td>
-                        <td>
-                            <small>{{ asset.updatedAt | relativeDate }}</small>
+                        <td class="fit-column">
+                            <span tooltip="{{ asset.updatedAt | absoluteDate }}"
+                                  placement="left"
+                                  theme="light"
+                                  show-delay="200"
+                            >
+                                <small>{{ asset.updatedAt | relativeDate }}</small>
+                            </span>
                         </td>
                     </tr>
                 </tbody>

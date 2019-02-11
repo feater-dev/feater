@@ -13,4 +13,15 @@ export class DefinitionTableComponent {
 
     @Input() withProjects = true;
 
+    search: string;
+
+    getFilterCondition() {
+        return {
+            $or: [
+                {name: this.search},
+                {project: {name: this.search}},
+            ],
+        };
+    }
+
 }

@@ -30,8 +30,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let envVariable of instance?.envVariables" class="form-control-static">
-                        <td class="fit-column">
+                    <tr *ngFor="let envVariable of instance?.envVariables; trackBy: trackByIndex" class="form-control-static">
+                        <td>
                             <span class="env-variable-name">{{ envVariable.name }}</span>
                         </td>
                         <td>

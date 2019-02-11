@@ -127,7 +127,7 @@
                 <label class="control-label">Summary items</label>
                 <div class="form-control-static">
                     <div *ngIf="instance?.summaryItems?.length">
-                        <dl *ngFor="let summaryItem of instance?.summaryItems">
+                        <dl *ngFor="let summaryItem of instance?.summaryItems; trackBy: trackByIndex">
                             <dt>{{ summaryItem.name }}</dt>
                             <dd innerHTML="{{ summaryItem.value | linkify }}"></dd>
                         </dl>

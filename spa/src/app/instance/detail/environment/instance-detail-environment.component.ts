@@ -40,7 +40,11 @@ export class InstanceDetailEnvironmentComponent implements OnInit, OnDestroy {
         this.pollingSubscription.unsubscribe();
     }
 
-    protected getInstance(spinner: boolean = true) {
+    trackByIndex(index: number, obj: any): any {
+        return index;
+    }
+
+    protected getInstance(spinner = true) {
         if (spinner) {
             this.spinner.show();
         }

@@ -4029,6 +4029,18 @@ neo-async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
 
+ng2-tooltip-directive@^2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/ng2-tooltip-directive/-/ng2-tooltip-directive-2.1.8.tgz#3701879a4afc7121b8a347f4fa1bb3a4304e3153"
+  dependencies:
+    tslib "^1.9.0"
+
+ngx-filter-pipe@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ngx-filter-pipe/-/ngx-filter-pipe-2.1.2.tgz#d3368f22bf45c74d5fcdae3701501db15fb90399"
+  dependencies:
+    tslib "^1.7.1"
+
 ngx-spinner@^6.1.2:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/ngx-spinner/-/ngx-spinner-6.1.2.tgz#9778dbffbd17b27a7a90c4f0d9d8a7817e6ffb76"

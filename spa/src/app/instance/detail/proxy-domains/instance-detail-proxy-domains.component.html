@@ -25,23 +25,23 @@
                 <thead>
                     <tr>
                         <th scope="col" class="fit-column">ID</th>
-                        <th scope="col" class="fit-column">Name</th>
                         <th scope="col" class="fit-column">Service ID</th>
                         <th scope="col" class="fit-column">IP address</th>
                         <th scope="col" class="fit-column">Port</th>
-                        <th scope="col">Proxy domains</th>
+                        <th scope="col" class="fit-column">Proxy domains</th>
+                        <th scope="col">Name</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let proxiedPort of instance?.proxiedPorts" class="form-control-static">
-                        <td class="fit-column">{{ proxiedPort.id }}</td>
-                        <td class="fit-column">{{ proxiedPort.name }}</td>
-                        <td class="fit-column">{{ proxiedPort.serviceId }}</td>
-                        <td class="fit-column">{{ getServiceById(proxiedPort.serviceId).ipAddress || '&mdash;' }}</td>
-                        <td class="fit-column">{{ proxiedPort.port }}</td>
+                    <tr *ngFor="let proxiedPort of instance?.proxiedPorts; trackBy: trackByIndex" class="form-control-static">
+                        <td>{{ proxiedPort.id }}</td>
+                        <td>{{ proxiedPort.serviceId }}</td>
+                        <td>{{ getServiceById(proxiedPort.serviceId).ipAddress || '&mdash;' }}</td>
+                        <td>{{ proxiedPort.port }}</td>
                         <td>
                             <span style="white-space: nowrap;">{{ proxiedPort.domain }}</span>
                         </td>
+                        <td>{{ proxiedPort.name }}</td>
                     </tr>
                 </tbody>
             </table>

@@ -66,6 +66,8 @@ import {DefinitionDuplicateComponent} from './definition/duplicate/definition-du
 import {DefinitionEditComponent} from './definition/edit/definition-edit.component';
 
 import {NgxSpinnerModule} from 'ngx-spinner';
+import {TooltipModule} from 'ng2-tooltip-directive';
+import {FilterPipeModule} from 'ngx-filter-pipe';
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
@@ -150,6 +152,8 @@ const appRoutes: Routes = [
         RouterModule.forRoot(appRoutes),
         MarkdownToHtmlModule,
         NgxSpinnerModule,
+        TooltipModule,
+        FilterPipeModule,
     ],
     bootstrap: [
         AppComponent,

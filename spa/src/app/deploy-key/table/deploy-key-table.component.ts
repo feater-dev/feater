@@ -10,4 +10,15 @@ export class DeployKeyTableComponent {
 
     @Input() deployKeys: GetDeployKeyListQueryDeployKeysFieldItemInterface[];
 
+    search: string;
+
+    getFilterCondition() {
+        return {
+            $or: [
+                {cloneUrl: this.search},
+                {fingerprint: this.search},
+            ],
+        };
+    }
+
 }

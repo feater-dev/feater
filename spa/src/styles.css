@@ -263,3 +263,11 @@ h2 {
 .buttons .btn {
     margin-right: 4px;
 }
+
+.btn .spinner {
+    margin-right: 0.25em;
+}
+
+.table-quick-search {
+    margin-bottom: 8px;
+}

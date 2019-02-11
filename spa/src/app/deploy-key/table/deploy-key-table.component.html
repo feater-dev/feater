@@ -3,6 +3,11 @@
         <p>No deploy keys to list.</p>
     </div>
     <div *ngIf="deployKeys.length">
+        <div class="form">
+            <div class="table-quick-search form-group-sm">
+                <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+            </div>
+        </div>
         <div class="table-wrapper">
             <table class="table table-striped table-hover ">
                 <thead>
@@ -14,18 +19,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let deployKey of deployKeys">
-                        <td>
+                    <tr *ngFor="let deployKey of deployKeys | filterBy: getFilterCondition()">
+                        <td class="fit-column">
                             <a routerLink="/deploy-key/{{ deployKey.id }}">
                                 {{ deployKey.cloneUrl }}
                             </a>
                         </td>
                         <td>{{ deployKey.fingerprint }}</td>
-                        <td>
-                            <small>{{ deployKey.createdAt | relativeDate }}</small>
+                        <td class="fit-column">
+                            <span tooltip="{{ deployKey.createdAt | absoluteDate }}"
+                                  placement="left"
+                                  theme="light"
+                                  show-delay="200"
+                            >
+                                <small>{{ deployKey.createdAt | relativeDate }}</small>
+                            </span>
                         </td>
-                        <td>
-                            <small>{{ deployKey.updatedAt | relativeDate }}</small>
+                        <td class="fit-column">
+                            <span tooltip="{{ deployKey.updatedAt | absoluteDate }}"
+                                  placement="left"
+                                  theme="light"
+                                  show-delay="200"
+                            >
+                                <small>{{ deployKey.updatedAt | relativeDate }}</small>
+                            </span>
                         </td>
                     </tr>
                 </tbody>

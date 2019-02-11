@@ -13,8 +13,21 @@ export class InstanceTableComponent {
     @Input() withProjects = true;
     @Input() withDefinitions = true;
 
+    search: string;
+
     getRunningServicesCount(services: {containerState: string}[]): number {
         return services.filter(service => 'running' === service.containerState).length;
+    }
+
+    getFilterCondition() {
+        return {
+            $or: [
+                {name: this.search},
+                {hash: this.search},
+                {definition: {name: this.search}},
+                {definition: {project: {name: this.search}}},
+            ],
+        };
     }
 
 }

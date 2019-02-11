@@ -11,4 +11,10 @@ export class ProjectTableComponent {
 
     @Input() projects: GetProjectListQueryProjectsFieldItemInterface[];
 
+    search: string;
+
+    getFilterCondition() {
+        return {name: this.search};
+    }
+
 }

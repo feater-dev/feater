@@ -13,4 +13,15 @@ export class AssetTableComponent {
 
     @Input() withProjects = true;
 
+    search: string;
+
+    getFilterCondition() {
+        return {
+            $or: [
+                {id: this.search},
+                {project: {name: this.search}},
+            ],
+        };
+    }
+
 }

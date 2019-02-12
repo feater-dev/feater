@@ -8,6 +8,8 @@ import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-
 import {ResolverAssetFilterArgumentsInterface} from './filter-argument/resolver-asset-filter-arguments.interface';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import {ResolverDefinitionFilterArgumentsInterface} from './filter-argument/resolver-definition-filter-arguments.interface';
+import {RemoveDefinitionInputTypeInterface} from '../input-type/remove-definition-input-type.interface';
+import {RemoveAssetInputTypeInterface} from '../input-type/remove-asset-input-type.interface';
 
 @Injectable()
 export class AssetResolverFactory {
@@ -63,11 +65,11 @@ export class AssetResolverFactory {
         };
     }
 
-    public getItemResolver(idExtractor: (obj: any, args: any) => string): (obj: any, args: any) => Promise<AssetTypeInterface> {
+    public getItemResolver(criteriaExtractor: (obj: any, args: any) => any): (obj: any, args: any) => Promise<AssetTypeInterface> {
         return async (obj: any, args: any): Promise<AssetTypeInterface> => {
-            const assets = await this.assetRepository.find({id: idExtractor(obj, args)}, 0, 1);
+            const assets = await this.assetRepository.find(criteriaExtractor(obj, args), 0, 1);
             if (assets.length !== 1) {
-                throw new Error();
+                throw new Error('Asset not found.');
             }
 
             return this.mapPersistentModelToTypeModel(assets[0]);
@@ -80,6 +82,12 @@ export class AssetResolverFactory {
             const asset = await this.assetRepository.create(createAssetInput);
 
             return this.mapPersistentModelToTypeModel(asset);
+        };
+    }
+
+    public getRemoveItemResolver(): (obj: any, removeAssetInput: RemoveAssetInputTypeInterface) => Promise<boolean> {
+        return async (obj: any, removeAssetInput: RemoveAssetInputTypeInterface): Promise<boolean> => {
+            return await this.assetRepository.removeByProjectIdAndIdentifier(removeAssetInput.projectId, removeAssetInput.id);
         };
     }
 

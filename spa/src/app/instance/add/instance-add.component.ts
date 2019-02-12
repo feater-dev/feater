@@ -9,10 +9,6 @@ import {
     GetDefinitionQueryInterface,
     getDefinitionQueryGql,
 } from './get-definition.query';
-import {getDefinitionDetailQueryGql} from '../../definition/detail/get-definition-detail.query';
-import {getInstanceListQueryGql} from '../list/get-instance-list.query';
-import {getDefinitionListQueryGql} from '../../definition/list/get-definition-list.query';
-
 
 @Component({
     selector: 'app-instance-add',

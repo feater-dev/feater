@@ -9,6 +9,8 @@ import {
 } from './get-deploy-key-detail.query';
 import gql from 'graphql-tag';
 import {getDeployKeyListQueryGql} from '../list/get-deploy-key-list.query';
+import {ConfirmComponent} from '../../modal/confirm.component';
+import {DialogService} from 'ng2-bootstrap-modal';
 
 
 @Component({
@@ -41,6 +43,7 @@ export class DeployKeyDetailComponent implements OnInit {
         protected router: Router,
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
+        protected dialogService: DialogService,
     ) {}
 
     ngOnInit() {
@@ -62,17 +65,34 @@ export class DeployKeyDetailComponent implements OnInit {
     }
 
     removeItem() {
-        this.apollo.mutate({
-            mutation: this.removeDeployKeyMutation,
-            variables: {cloneUrl: this.item.cloneUrl},
-        }).subscribe(
-            () => {
-                this.router.navigate(['/deploy-keys']);
-            },
-            (error) => {
-                console.log(error);
-            },
-        );
+        this.dialogService
+            .addDialog(
+                ConfirmComponent,
+                {
+                    title: 'Confirm',
+                    message: 'Are you sure you wish to remove this deploy key? This operation cannot be reversed.',
+                    ok: 'Confirm removal',
+                    cancel: 'Cancel',
+                }
+            )
+            .subscribe(
+                (isConfirmed) => {
+                    if (!isConfirmed) {
+                        return;
+                    }
+                    this.apollo.mutate({
+                        mutation: this.removeDeployKeyMutation,
+                        variables: {cloneUrl: this.item.cloneUrl},
+                    }).subscribe(
+                        () => {
+                            this.router.navigate(['/deploy-keys']);
+                        },
+                        (error) => {
+                            console.log(error);
+                        },
+                    );
+                }
+            );
     }
 
     protected getDeployKey() {

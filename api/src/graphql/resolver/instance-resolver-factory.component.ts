@@ -164,7 +164,7 @@ export class InstanceResolverFactory {
         return async (obj: any, removeInstanceInput: RemoveInstanceInputTypeInterface): Promise<boolean> => {
             const instance = await this.instanceRepository.findById(removeInstanceInput.id);
             execSync(
-                'bash -c remove-instance.sh',
+                'bash -c removeByProjectIdAndIdentifier-instance.sh',
                 {
                     cwd: path.join(environment.guestPaths.root, 'bin'),
                     env: {

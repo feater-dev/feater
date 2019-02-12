@@ -54,6 +54,7 @@ export const typeDefsProvider = {
             ): [Asset!]!
 
             asset(
+                projectId: String!
                 id: String!
             ): Asset!
 
@@ -174,6 +175,11 @@ export const typeDefsProvider = {
                 id: String!
                 description: String
             ): Asset
+
+            removeAsset(
+                projectId: String!
+                id: String!
+            ): Boolean
 
             createInstance(
                 definitionId: String!

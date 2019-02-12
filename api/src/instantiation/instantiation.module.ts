@@ -6,7 +6,6 @@ import {InterpolationHelper} from './helper/interpolation-helper.component';
 import {ContainerStateCheckerComponent} from './container-state-checker-component.service';
 import {ContainerInfoCheckerComponent} from './container-info-checker-component.service';
 import {SpawnHelper} from './helper/spawn-helper.component';
-import {AssetHelper} from './helper/asset-helper.component';
 import {ConnectToNetworkCommandExecutorComponent} from './command/connect-containers-to-network/command-executor.component';
 import {CopyFileCommandExecutorComponent} from './command/before-build/copy-file/command-executor.component';
 import {CreateDirectoryCommandExecutorComponent} from './command/create-directory/command-executor.component';
@@ -66,7 +65,6 @@ import {IpAddressCheckerComponent} from './ip-address-checker.component';
         ContainerInfoCheckerComponent,
         ContainerStateCheckerComponent,
         IpAddressCheckerComponent,
-        AssetHelper,
         InterpolationHelper,
         SpawnHelper,
         PathHelper,
@@ -88,7 +86,6 @@ import {IpAddressCheckerComponent} from './ip-address-checker.component';
         InstanceCreatorComponent,
         ContainerStateCheckerComponent,
         IpAddressCheckerComponent,
-        AssetHelper,
         VariablesPredictor,
     ],
 })

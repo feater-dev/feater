@@ -15,6 +15,7 @@ import {DeployKeyRepository} from './repository/deploy-key.repository';
 import {LogSchema} from './schema/log.schema';
 import {CommandLogSchema} from './schema/command-log.schema';
 import {CommandLogRepository} from './repository/command-log.repository';
+import {AssetHelper} from './helper/asset-helper.component';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import {CommandLogRepository} from './repository/command-log.repository';
       DeployKeyRepository,
       CommandLogRepository,
       LogRepository,
+      AssetHelper,
   ],
   exports: [
       ProjectRepository,
@@ -66,6 +68,7 @@ import {CommandLogRepository} from './repository/command-log.repository';
       DeployKeyRepository,
       CommandLogRepository,
       LogRepository,
+      AssetHelper,
   ],
 })
 export class PersistenceModule {}

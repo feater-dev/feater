@@ -1,21 +1,19 @@
 import {spawn} from 'child_process';
-import * as path from 'path';
-import * as rimraf from 'rimraf';
 import {Injectable} from '@nestjs/common';
 import {environment} from '../../../../environments/environment';
 import {SimpleCommandExecutorComponentInterface} from '../../../executor/simple-command-executor-component.interface';
-import {AssetHelper, AssetUploadPathsInterface} from '../../../helper/asset-helper.component';
+import {AssetHelper, AssetUploadPathsInterface} from '../../../../persistence/helper/asset-helper.component';
 import {SpawnHelper} from '../../../helper/spawn-helper.component';
 import {SimpleCommand} from '../../../executor/simple-command';
 import {CopyAssetIntoContainerCommand} from './command';
-import {BaseLogger} from '../../../../logger/base-logger';
-import * as mkdirRecursive from 'mkdir-recursive';
 import {CommandLogger} from '../../../logger/command-logger';
+import {AssetRepository} from '../../../../persistence/repository/asset.repository';
 
 @Injectable()
 export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
 
     constructor(
+        private readonly assetRepository: AssetRepository,
         private readonly assetHelper: AssetHelper,
         private readonly spawnHelper: SpawnHelper,
     ) {}
@@ -28,7 +26,7 @@ export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCom
         const typedCommand = command as CopyAssetIntoContainerCommand;
         const logger = typedCommand.commandLogger;
 
-        const asset = await this.assetHelper.findUploadedById(typedCommand.assetId);
+        const asset = await this.assetRepository.findUploadedById(typedCommand.assetId);
         const uploadPaths = this.assetHelper.getUploadPaths(asset);
 
         await this.spawnDockerCopy(

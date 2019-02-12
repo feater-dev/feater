@@ -7,6 +7,9 @@ import {
     GetDeployKeyListQueryDeployKeysFieldItemInterface,
 } from './get-deploy-key-list.query';
 import gql from 'graphql-tag';
+import {DialogService} from 'ng2-bootstrap-modal';
+import {ConfirmComponent} from '../../modal/confirm.component';
+
 
 @Component({
     selector: 'app-deploy-key-list',
@@ -36,6 +39,7 @@ export class DeployKeyListComponent implements OnInit {
     constructor(
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
+        protected dialogService: DialogService,
     ) {}
 
     ngOnInit() {
@@ -55,15 +59,35 @@ export class DeployKeyListComponent implements OnInit {
     }
 
     removeUnusedItems() {
-        this.apollo.mutate({
-            mutation: this.removeUnusedDeployKeysMutation,
-            refetchQueries: [{
-                query: getDeployKeyListQueryGql,
-            }],
-        }).subscribe(
-            () => {},
-            (error) => { console.log(error); }
-        );
+        this.dialogService
+            .addDialog(
+                ConfirmComponent,
+                {
+                    title: 'Confirm',
+                    message: 'Are you sure you wish to remove unused deploy keys? This operation cannot be reversed.',
+                    ok: 'Confirm removal',
+                    cancel: 'Cancel',
+                }
+            )
+            .subscribe(
+                (isConfirmed) => {
+                    if (!isConfirmed) {
+                        return;
+                    }
+                    this.apollo.mutate({
+                        mutation: this.removeUnusedDeployKeysMutation,
+                        refetchQueries: [{
+                            query: getDeployKeyListQueryGql,
+                        }],
+                    }).subscribe(
+                        () => {
+                        },
+                        (error) => {
+                            console.log(error);
+                        }
+                    );
+                }
+            );
     }
 
     protected getDeployKeys() {

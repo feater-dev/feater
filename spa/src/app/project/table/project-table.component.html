@@ -1,30 +1,38 @@
 <div>
-    <div *ngIf="!projects.length">
-        <p>No projects to list.</p>
+    <div *ngIf="!projects.length" class="row">
+        <div class="col-md-12">
+            <p>No projects to list.</p>
+        </div>
     </div>
     <div *ngIf="projects.length">
-        <div class="form">
-            <div class="table-quick-search form-group-sm">
-                <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+        <div class="row">
+            <div class="col-md-4 col-md-push-8 col-sm-6 col-sm-push-6">
+                <div class="form">
+                    <div class="table-quick-search form-group-sm">
+                        <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="table-wrapper">
-            <table class="table table-striped table-hover ">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th class="fit-column">Created</th>
-                        <th class="fit-column">Updated</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let project of projects | filterBy: getFilterCondition()">
-                        <td>
-                            <a routerLink="/project/{{ project.id }}">
-                                {{ project.name }}
-                            </a>
-                        </td>
-                        <td class="fit-column">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-wrapper">
+                    <table class="table table-striped table-hover ">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="fit-column">Created</th>
+                            <th class="fit-column">Updated</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let project of projects | filterBy: getFilterCondition()">
+                            <td>
+                                <a routerLink="/project/{{ project.id }}">
+                                    {{ project.name }}
+                                </a>
+                            </td>
+                            <td class="fit-column">
                             <span tooltip="{{ project.createdAt | absoluteDate }}"
                                   placement="left"
                                   theme="light"
@@ -32,8 +40,8 @@
                             >
                                 <small>{{ project.createdAt | relativeDate }}</small>
                             </span>
-                        </td>
-                        <td class="fit-column">
+                            </td>
+                            <td class="fit-column">
                             <span tooltip="{{ project.updatedAt | absoluteDate }}"
                                   placement="left"
                                   theme="light"
@@ -41,10 +49,12 @@
                             >
                                 <small>{{ project.updatedAt | relativeDate }}</small>
                             </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

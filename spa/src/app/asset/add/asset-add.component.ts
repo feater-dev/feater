@@ -26,6 +26,9 @@ export class AssetAddComponent implements OnInit {
             createAsset(projectId: $projectId, id: $id, description: $description) {
                 id
                 description
+                project {
+                    id
+                }
             }
         }
     `;
@@ -62,12 +65,19 @@ export class AssetAddComponent implements OnInit {
             },
         }).subscribe(
             ({data}) => {
+                console.log(data);
                 const uploadData = new FormData();
                 uploadData.set('asset', this.item.file);
                 this.httpClient
                     .post([environment.assetUploadUrl, data.createAsset.id].join('/'), uploadData)
                     .subscribe(
-                        () => this.router.navigate(['/asset', data.createAsset.id])
+                        () => {
+                            this.router.navigate([
+                                '/asset',
+                                data.createAsset.project.id,
+                                data.createAsset.id,
+                            ]);
+                        }
                     );
             },
             (error) => {

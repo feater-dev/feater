@@ -63,7 +63,10 @@ export class GraphqlSchemaFactory {
                 ),
                 assets: this.assetResolverFactory.getListResolver(),
                 asset: this.assetResolverFactory.getItemResolver(
-                    (obj: any, args: any): string => args.id,
+                    (obj: any, args: any): any => ({
+                        projectId: args.projectId,
+                        id: args.id,
+                    }),
                 ),
                 deployKeys: this.deployKeyResolverFactory.getListResolver(),
                 deployKey: this.deployKeyResolverFactory.getItemResolver(
@@ -83,6 +86,7 @@ export class GraphqlSchemaFactory {
                 startService: this.instanceResolverFactory.getStartItemServiceResolver(),
                 unpauseService: this.instanceResolverFactory.getUnpauseItemServiceResolver(),
                 createAsset: this.assetResolverFactory.getCreateItemResolver(),
+                removeAsset: this.assetResolverFactory.getRemoveItemResolver(),
                 regenerateDeployKey: this.deployKeyResolverFactory.getRegenerateItemResolver(),
                 generateMissingDeployKeys: this.deployKeyResolverFactory.getGenerateMissingItemsResolver(),
                 removeUnusedDeployKeys: this.deployKeyResolverFactory.getRemoveUnusedItemsResolver(),

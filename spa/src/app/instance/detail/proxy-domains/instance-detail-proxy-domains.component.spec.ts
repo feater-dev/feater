@@ -3,21 +3,21 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 
-import {InstanceDetailProxyDomainsComponent} from './instance-detail-proxy-domains.component';
+import {InstanceProxyDomainsComponent} from './instance-proxy-domains.component';
 
-describe('InstanceDetailProxyDomainsComponent', () => {
-    let component: InstanceDetailProxyDomainsComponent;
-    let fixture: ComponentFixture<InstanceDetailProxyDomainsComponent>;
+describe('InstanceProxyDomainsComponent', () => {
+    let component: InstanceProxyDomainsComponent;
+    let fixture: ComponentFixture<InstanceProxyDomainsComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ InstanceDetailProxyDomainsComponent ]
+            declarations: [ InstanceProxyDomainsComponent ]
         })
         .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(InstanceDetailProxyDomainsComponent);
+        fixture = TestBed.createComponent(InstanceProxyDomainsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -4,7 +4,7 @@ import {environment} from '../../../environments/environment';
 import {AssetRepository} from '../../../persistence/repository/asset.repository';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SpawnHelper} from '../../helper/spawn-helper.component';
-import {AssetHelper} from '../../helper/asset-helper.component';
+import {AssetHelper} from '../../../persistence/helper/asset-helper.component';
 import {SimpleCommand} from '../../executor/simple-command';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {CreateVolumeFromAssetCommandResultInterface} from './command-result.interface';
@@ -32,7 +32,7 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
         logger.info(`Asset ID: ${typedCommand.assetId}`);
         logger.info(`Volume ID: ${typedCommand.volumeId}`);
 
-        const asset = await this.assetHelper.findUploadedById(typedCommand.assetId);
+        const asset = await this.assetRepository.findUploadedById(typedCommand.assetId);
 
         const volumeName = `${typedCommand.containerNamePrefix}_${typedCommand.volumeId}`;
         logger.info(`Volume name: ${volumeName}`);

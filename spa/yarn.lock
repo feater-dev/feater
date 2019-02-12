@@ -4029,6 +4029,10 @@ neo-async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
 
+ng2-bootstrap-modal@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ng2-bootstrap-modal/-/ng2-bootstrap-modal-1.0.1.tgz#f3166fca63fd3b3aeacb29b8d5e3b872ab6ab1e4"
+
 ng2-tooltip-directive@^2.1.8:
   version "2.1.8"
   resolved "https://registry.yarnpkg.com/ng2-tooltip-directive/-/ng2-tooltip-directive-2.1.8.tgz#3701879a4afc7121b8a347f4fa1bb3a4304e3153"

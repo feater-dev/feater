@@ -5,7 +5,7 @@ import * as Busboy from 'busboy';
 
 import {Controller, Post, Request, Response, Next, Param} from '@nestjs/common';
 import {AssetRepository} from '../../persistence/repository/asset.repository';
-import {AssetHelper} from '../../instantiation/helper/asset-helper.component';
+import {AssetHelper} from '../../persistence/helper/asset-helper.component';
 
 @Controller()
 export class AssetController {

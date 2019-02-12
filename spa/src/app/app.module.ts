@@ -27,6 +27,12 @@ import {DeployKeyListComponent} from './deploy-key/list/deploy-key-list.componen
 import {DeployKeyDetailComponent} from './deploy-key/detail/deploy-key-detail.component';
 import {DeployKeyTableComponent} from './deploy-key/table/deploy-key-table.component';
 
+import {DefinitionSummaryComponent} from './definition/detail/summary/definition-summary.component';
+import {DefinitionConfigurationComponent} from './definition/detail/configuration/definition-configuration.component';
+import {DefinitionDeployKeysComponent} from './definition/detail/deploy-keys/definition-deploy-keys.component';
+import {DefinitionEnvironmentComponent} from './definition/detail/environment/definition-environment.component';
+import {DefinitionSubstitutionsComponent} from './definition/detail/substitutions/definition-substitutions.component';
+import {DefinitionInstancesComponent} from './definition/detail/instances/definition-instances.component';
 import {DefinitionAddComponent} from './definition/add/definition-add.component';
 import {DefinitionAddSourceFormElementComponent} from './definition/add/form-element/definition-add.source-form-element.component';
 import {DefinitionAddBeforeBuildTaskCopyFormElementComponent} from './definition/add/form-element/definition-add.before-build-task-copy-form-element.component';
@@ -35,7 +41,6 @@ import {DefinitionAddProxiedPortFormElementComponent} from './definition/add/for
 import {DefinitionAddEnvVariableFormElementComponent} from './definition/add/form-element/definition-add.environmental-variable-form-element.component';
 import {DefinitionAddSummaryItemFormElementComponent} from './definition/add/form-element/definition-add.summary-item-form-element.component';
 import {DefinitionAddComposeFileFormElementComponent} from './definition/add/form-element/definition-add.compose-file-form-element.component';
-import {DefinitionDetailComponent} from './definition/detail/definition-detail.component';
 import {DefinitionAddVolumeFormElementComponent} from './definition/add/form-element/definition-add.volume-form-element.component';
 import {DefinitionListComponent} from './definition/list/definition-list.component';
 import {DefinitionTableComponent} from './definition/table/definition-table.component';
@@ -57,17 +62,19 @@ import {CustomEnvVarsFormElementComponent} from './definition/add/form-element/a
 import {ElapsedTimePipe} from './pipes/elapsed-time.pipe';
 
 import {MarkdownToHtmlModule} from 'markdown-to-html-pipe';
-import {InstanceDetailSummaryComponent} from './instance/detail/summary/instance-detail-summary.component';
-import {InstanceDetailEnvironmentComponent} from './instance/detail/environment/instance-detail-environment.component';
-import {InstanceDetailLogsComponent} from './instance/detail/logs/instance-detail-logs.component';
-import {InstanceDetailServicesComponent} from './instance/detail/services/instance-detail-services.component';
-import {InstanceDetailProxyDomainsComponent} from './instance/detail/proxy-domains/instance-detail-proxy-domains.component';
+import {InstanceSummaryComponent} from './instance/detail/summary/instance-summary.component';
+import {InstanceEnvironmentComponent} from './instance/detail/environment/instance-environment.component';
+import {InstanceLogsComponent} from './instance/detail/logs/instance-logs.component';
+import {InstanceServicesComponent} from './instance/detail/services/instance-services.component';
+import {InstanceProxyDomainsComponent} from './instance/detail/proxy-domains/instance-proxy-domains.component';
 import {DefinitionDuplicateComponent} from './definition/duplicate/definition-duplicate.component';
 import {DefinitionEditComponent} from './definition/edit/definition-edit.component';
 
 import {NgxSpinnerModule} from 'ngx-spinner';
 import {TooltipModule} from 'ng2-tooltip-directive';
 import {FilterPipeModule} from 'ngx-filter-pipe';
+import {BootstrapModalModule} from 'ng2-bootstrap-modal';
+import {ConfirmComponent} from './modal/confirm.component';
 
 const appRoutes: Routes = [
     { path: '', component: AboutComponent },
@@ -77,18 +84,23 @@ const appRoutes: Routes = [
     { path: 'project/:id/definition/add', component: DefinitionAddComponent},
     { path: 'project/:id/asset/add', component: AssetAddComponent},
     { path: 'definitions', component: DefinitionListComponent },
-    { path: 'definition/:id', component: DefinitionDetailComponent},
+    { path: 'definition/:id', component: DefinitionSummaryComponent},
+    { path: 'definition/:id/configuration', component: DefinitionConfigurationComponent},
+    { path: 'definition/:id/deploy-keys', component: DefinitionDeployKeysComponent},
+    { path: 'definition/:id/substitutions', component: DefinitionSubstitutionsComponent},
+    { path: 'definition/:id/environment', component: DefinitionEnvironmentComponent},
+    { path: 'definition/:id/instances', component: DefinitionInstancesComponent},
     { path: 'definition/:id/edit', component: DefinitionEditComponent},
     { path: 'definition/:id/duplicate', component: DefinitionDuplicateComponent},
     { path: 'definition/:id/instance/add', component: InstanceAddComponent},
     { path: 'instances', component: InstanceListComponent },
-    { path: 'instance/:id', component: InstanceDetailSummaryComponent},
-    { path: 'instance/:id/environment', component: InstanceDetailEnvironmentComponent},
-    { path: 'instance/:id/services', component: InstanceDetailServicesComponent},
-    { path: 'instance/:id/proxy-domains', component: InstanceDetailProxyDomainsComponent},
-    { path: 'instance/:id/logs', component: InstanceDetailLogsComponent},
+    { path: 'instance/:id', component: InstanceSummaryComponent},
+    { path: 'instance/:id/environment', component: InstanceEnvironmentComponent},
+    { path: 'instance/:id/services', component: InstanceServicesComponent},
+    { path: 'instance/:id/proxy-domains', component: InstanceProxyDomainsComponent},
+    { path: 'instance/:id/logs', component: InstanceLogsComponent},
     { path: 'assets', component: AssetListComponent },
-    { path: 'asset/:id', component: AssetDetailComponent },
+    { path: 'asset/:projectId/:id', component: AssetDetailComponent },
     { path: 'deploy-keys', component: DeployKeyListComponent },
     { path: 'deploy-key/:id', component: DeployKeyDetailComponent },
     { path: '**', redirectTo: '', pathMatch: 'full' }
@@ -116,14 +128,19 @@ const appRoutes: Routes = [
         DefinitionAddSummaryItemFormElementComponent,
         InheritedEnvVarsFormElementComponent,
         CustomEnvVarsFormElementComponent,
-        DefinitionDetailComponent,
+        DefinitionSummaryComponent,
+        DefinitionConfigurationComponent,
+        DefinitionDeployKeysComponent,
+        DefinitionSubstitutionsComponent,
+        DefinitionEnvironmentComponent,
+        DefinitionInstancesComponent,
         DefinitionListComponent,
         InstanceAddComponent,
-        InstanceDetailSummaryComponent,
-        InstanceDetailEnvironmentComponent,
-        InstanceDetailServicesComponent,
-        InstanceDetailProxyDomainsComponent,
-        InstanceDetailLogsComponent,
+        InstanceSummaryComponent,
+        InstanceEnvironmentComponent,
+        InstanceServicesComponent,
+        InstanceProxyDomainsComponent,
+        InstanceLogsComponent,
         InstanceListComponent,
         AssetAddComponent,
         AssetDetailComponent,
@@ -142,6 +159,7 @@ const appRoutes: Routes = [
         AbsoluteDatePipe,
         RelativeDatePipe,
         ElapsedTimePipe,
+        ConfirmComponent,
     ],
     imports: [
         BrowserModule,
@@ -154,6 +172,10 @@ const appRoutes: Routes = [
         NgxSpinnerModule,
         TooltipModule,
         FilterPipeModule,
+        BootstrapModalModule.forRoot({container:document.body}),
+    ],
+    entryComponents: [
+        ConfirmComponent,
     ],
     bootstrap: [
         AppComponent,

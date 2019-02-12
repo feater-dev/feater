@@ -1,52 +1,62 @@
 <div>
-    <div *ngIf="!deployKeys.length">
-        <p>No deploy keys to list.</p>
+    <div *ngIf="!deployKeys.length" class="row">
+        <div class="col-md-12">
+            <p>No deploy keys to list.</p>
+        </div>
     </div>
     <div *ngIf="deployKeys.length">
-        <div class="form">
-            <div class="table-quick-search form-group-sm">
-                <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+        <div class="row">
+            <div class="col-md-4 col-md-push-8 col-sm-6 col-sm-push-6">
+                <div class="form">
+                    <div class="table-quick-search form-group-sm">
+                        <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="table-wrapper">
-            <table class="table table-striped table-hover ">
-                <thead>
-                    <tr>
-                        <th class="fit-column">Clone URL</th>
-                        <th>Fingerprint</th>
-                        <th class="fit-column">Created</th>
-                        <th class="fit-column">Updated</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let deployKey of deployKeys | filterBy: getFilterCondition()">
-                        <td class="fit-column">
-                            <a routerLink="/deploy-key/{{ deployKey.id }}">
-                                {{ deployKey.cloneUrl }}
-                            </a>
-                        </td>
-                        <td>{{ deployKey.fingerprint }}</td>
-                        <td class="fit-column">
-                            <span tooltip="{{ deployKey.createdAt | absoluteDate }}"
-                                  placement="left"
-                                  theme="light"
-                                  show-delay="200"
-                            >
-                                <small>{{ deployKey.createdAt | relativeDate }}</small>
-                            </span>
-                        </td>
-                        <td class="fit-column">
-                            <span tooltip="{{ deployKey.updatedAt | absoluteDate }}"
-                                  placement="left"
-                                  theme="light"
-                                  show-delay="200"
-                            >
-                                <small>{{ deployKey.updatedAt | relativeDate }}</small>
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-wrapper">
+                    <table class="table table-striped table-hover ">
+                        <thead>
+                            <tr>
+                                <th class="fit-column">Clone URL</th>
+                                <th>Fingerprint</th>
+                                <th class="fit-column">Created</th>
+                                <th class="fit-column">Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let deployKey of deployKeys | filterBy: getFilterCondition()">
+                                <td class="fit-column">
+                                    <a routerLink="/deploy-key/{{ deployKey.id }}">
+                                        {{ deployKey.cloneUrl }}
+                                    </a>
+                                </td>
+                                <td>{{ deployKey.fingerprint }}</td>
+                                <td class="fit-column">
+                                    <span tooltip="{{ deployKey.createdAt | absoluteDate }}"
+                                          placement="left"
+                                          theme="light"
+                                          show-delay="200"
+                                    >
+                                        <small>{{ deployKey.createdAt | relativeDate }}</small>
+                                    </span>
+                                </td>
+                                <td class="fit-column">
+                                    <span tooltip="{{ deployKey.updatedAt | absoluteDate }}"
+                                          placement="left"
+                                          theme="light"
+                                          show-delay="200"
+                                    >
+                                        <small>{{ deployKey.updatedAt | relativeDate }}</small>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

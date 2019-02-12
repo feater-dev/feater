@@ -118,7 +118,7 @@ export class DefinitionConfigMapper {
                 } as InterpolateBeforeBuildTaskTypeInterface;
 
             default:
-                throw new Error();
+                throw new Error('Unknown before build task type.');
         }
     }
 
@@ -168,7 +168,7 @@ export class DefinitionConfigMapper {
                 break;
 
             default:
-                throw new Error();
+                throw new Error('Unknown after build task type.');
         }
 
         return mapped;

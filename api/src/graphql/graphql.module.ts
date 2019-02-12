@@ -10,7 +10,6 @@ import {InstanceResolverFactory} from './resolver/instance-resolver-factory.comp
 import {InstantiationModule} from '../instantiation/instantiation.module';
 import {ResolverPaginationArgumentsHelper} from './resolver/pagination-argument/resolver-pagination-arguments-helper.component';
 import {DateResolverFactory} from './resolver/date-resolver-factory.component';
-import {LogsResolverFactory} from './resolver/logs-resolver-factory.component';
 import {DockerDaemonResolverFactory} from './resolver/docker-daemon-resolver-factory.component';
 import {AssetResolverFactory} from './resolver/asset-resolver-factory.component';
 import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.component';

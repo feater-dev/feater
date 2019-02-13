@@ -142,4 +142,4 @@ volumes:
       name: ${FEATER__ASSET_VOLUME__TEST_DB}
 ```
 
-Note that values of environment variables related to MySQL credentials should remain the same, because they are also included in the asset we've created.
+Note that values of config variables related to MySQL credentials should remain the same, because they are also included in the asset we've created.

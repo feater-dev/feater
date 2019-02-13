@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+
+  api:
+    image: feater-api:latest
+    volumes:
+    - "${FEATER_API_HOST_PATH_BUILD}:${FEATER_API_GUEST_PATH_BUILD}"
+    - "${FEATER_API_HOST_PATH_PROXY_DOMAIN}:${FEATER_API_HOST_PATH_BUILD}"
+    - "${FEATER_API_HOST_PATH_ASSET}:${FEATER_API_GUEST_PATH_ASSET}"
+    - "${FEATER_API_HOST_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
+    environment:
+      FEATER_API_GUEST_PATH_ROOT: "${FEATER_API_GUEST_PATH_ROOT}"
+      FEATER_API_GUEST_PATH_BUILD: "${FEATER_API_GUEST_PATH_BUILD}"
+      FEATER_API_GUEST_PATH_PROXY_DOMAIN: "${FEATER_API_GUEST_PATH_PROXY_DOMAIN}"
+      FEATER_API_GUEST_PATH_ASSET: "${FEATER_API_GUEST_PATH_ASSET}"
+      FEATER_API_HOST_PATH_BUILD: "${FEATER_API_HOST_PATH_BUILD}"
+      FEATER_API_HOST_PATH_ASSET: "${FEATER_API_HOST_PATH_ASSET}"
+      FEATER_API_MONGO_DSN: "${FEATER_API_MONGO_DSN}"
+      FEATER_API_DOCKER_BINARY_PATH: "${FEATER_API_DOCKER_BINARY_PATH}"
+      FEATER_API_DOCKER_COMPOSE_BINARY_PATH: "${FEATER_API_DOCKER_COMPOSE_BINARY_PATH}"
+      FEATER_API_DOCKER_COMPOSE_HTTP_TIMEOUT: "${FEATER_API_DOCKER_COMPOSE_HTTP_TIMEOUT}"
+      FEATER_API_CONTAINER_NAME_PREFIX: "${FEATER_API_CONTAINER_NAME_PREFIX}"
+      FEATER_API_PROXY_DOMAIN_PATTERN: "${FEATER_API_PROXY_DOMAIN_PATTERN}"
+      FEATER_API_PROXY_DOMAIN_NETWORK_NAME: "${FEATER_API_PROXY_DOMAIN_NETWORK_NAME}"
+      FEATER_API_LOG_LEVEL_CONSOLE: "${FEATER_API_LOG_LEVEL_CONSOLE}"
+      FEATER_API_LOG_LEVEL_MONGO: "${FEATER_API_LOG_LEVEL_MONGO}"
+    depends_on:
+    - mongo
+    networks:
+    - internal
+    container_name: ${COMPOSE_PROJECT_NAME}_api
+
+#  spa:
+#    build: spa
+#    volumes:
+#    - "../../spa:/app"
+#    ports:
+#    - '${FEATER_SPA_PORT}:4200'
+#    networks:
+#    - internal
+#    container_name: feater_spa_prod
+
+  mongo:
+    image: mongo:3.6
+    volumes:
+    - "${FEATER_MONGO_HOST_PATH_DATA}:/data/db"
+    networks:
+    - internal
+    container_name: ${COMPOSE_PROJECT_NAME}_mongo
+
+#  nginx:
+#    build: nginx
+#    volumes:
+#    - "${FEATER_PROXY_DOMAIN_DATA_PATH}:/etc/nginx/conf.d/proxyDomain"
+#    ports:
+#    - '${FEATER_NGINX_PORT}:80'
+#    networks:
+#    - internal
+#    - proxy
+#    container_name: feater_nginx_prod
+
+networks:
+  internal:
+#  proxy:

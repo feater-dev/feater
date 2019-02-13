@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {AssetInterface} from '../interface/asset.interface';
 import * as path from 'path';
-import {environment} from '../../environments/environment';
+import {config} from '../../config/config';
 import {AssetRepository} from '../repository/asset.repository';
 
 export interface AssetUploadPathsInterface {
@@ -23,8 +23,8 @@ export class AssetHelper {
         return {
             relativeToAssetPath,
             absolute: {
-                guest: path.join(environment.guestPaths.asset, relativeToAssetPath),
-                host: path.join(environment.hostPaths.asset, relativeToAssetPath),
+                guest: path.join(config.guestPaths.asset, relativeToAssetPath),
+                host: path.join(config.hostPaths.asset, relativeToAssetPath),
             },
         };
     }

@@ -1,6 +1,7 @@
 /buildInstances/
 /cache/
 /docker/dev/.env
+/docker/prod/.env
 /.idea/
 /api/.idea/
 /spa/.idea/

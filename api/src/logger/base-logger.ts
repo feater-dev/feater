@@ -2,7 +2,7 @@ import * as winston from 'winston';
 import 'winston-mongodb';
 import {Injectable} from '@nestjs/common';
 import {LoggerInterface} from './logger-interface';
-import {environment} from '../environments/environment';
+import {config} from '../config/config';
 
 @Injectable()
 export class BaseLogger implements LoggerInterface {
@@ -14,12 +14,12 @@ export class BaseLogger implements LoggerInterface {
             exitOnError: false,
             transports: [
                 new winston.transports.Console({
-                    level: environment.logger.console.logLevel,
+                    level: config.logger.console.logLevel,
                 }),
                 // @ts-ignore Was giving "Property 'MongoDB' does not exist on type 'Transports'."
                 new winston.transports.MongoDB({
-                    level: environment.logger.mongoDb.logLevel,
-                    db: environment.mongo.dsn,
+                    level: config.logger.mongoDb.logLevel,
+                    db: config.mongo.dsn,
                     collection: 'logs',
                     tryReconnect: true,
                     decolorize: true,

@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
-import {environment} from '../../../environments/environment';
+import {config} from '../../../config/config';
 import {SimpleCommand} from '../../executor/simple-command';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {FeaterVariablesSet} from '../../sets/feater-variables-set';
@@ -18,7 +18,7 @@ export class PrepareProxyDomainCommandExecutorComponent implements SimpleCommand
         const typedCommand = command as PrepareProxyDomainCommand;
         const logger = typedCommand.commandLogger;
 
-        const proxyDomain = environment.instantiation.proxyDomainPattern
+        const proxyDomain = config.instantiation.proxyDomainPattern
             .replace('{instance_hash}', typedCommand.instanceHash)
             .replace('{port_id}', typedCommand.portId);
 

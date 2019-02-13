@@ -5,7 +5,7 @@ import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-com
 import {SimpleCommand} from '../../executor/simple-command';
 import {GetContainerIdsCommandResultInterface, GetContainerIdsCommandResultServiceContainerIdInterface} from './command-result.interface';
 import {GetContainerIdsCommand} from './command';
-import {environment} from '../../../environments/environment';
+import {config} from '../../../config/config';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {FeaterVariablesSet} from '../../sets/feater-variables-set';
 
@@ -27,9 +27,9 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
         const containerInspects = JSON.parse(
             execSync(
                 [
-                    environment.instantiation.dockerBinaryPath,
+                    config.instantiation.dockerBinaryPath,
                     'inspect',
-                    `$(${environment.instantiation.dockerBinaryPath} ps -q --no-trunc --filter name=${typedCommand.composeProjectName})`,
+                    `$(${config.instantiation.dockerBinaryPath} ps -q --no-trunc --filter name=${typedCommand.composeProjectName})`,
                 ].join(' '),
                 {maxBuffer: BUFFER_SIZE},
             ).toString(),

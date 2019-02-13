@@ -14,7 +14,7 @@ import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverInstanceFilterArgumentsInterface} from './filter-argument/resolver-instance-filter-arguments.interface';
 import {StopServiceInputTypeInterface} from '../input-type/stop-service-input-type.interface';
-import {environment} from '../../environments/environment';
+import {config} from '../../config/config';
 import {PauseServiceInputTypeInterface} from '../input-type/pause-service-input-type.interface';
 import {StartServiceInputTypeInterface} from '../input-type/start-service-input-type.interface';
 import {UnpauseServiceInputTypeInterface} from '../input-type/unpause-service-input-type.interface';
@@ -102,7 +102,7 @@ export class InstanceResolverFactory {
             const instance = await this.instanceRepository.findById(stopServiceInput.instanceId);
             for (const service of instance.services) {
                 if (stopServiceInput.serviceId === service.id) {
-                    execSync(`${environment.instantiation.dockerBinaryPath} stop ${service.containerId}`);
+                    execSync(`${config.instantiation.dockerBinaryPath} stop ${service.containerId}`);
 
                     break;
                 }
@@ -118,7 +118,7 @@ export class InstanceResolverFactory {
             const instance = await this.instanceRepository.findById(pauseServiceInput.instanceId);
             for (const service of instance.services) {
                 if (pauseServiceInput.serviceId === service.id) {
-                    execSync(`${environment.instantiation.dockerBinaryPath} pause ${service.containerId}`);
+                    execSync(`${config.instantiation.dockerBinaryPath} pause ${service.containerId}`);
 
                     break;
                 }
@@ -134,7 +134,7 @@ export class InstanceResolverFactory {
             const instance = await this.instanceRepository.findById(startServiceInput.instanceId);
             for (const service of instance.services) {
                 if (startServiceInput.serviceId === service.id) {
-                    execSync(`${environment.instantiation.dockerBinaryPath} start ${service.containerId}`);
+                    execSync(`${config.instantiation.dockerBinaryPath} start ${service.containerId}`);
 
                     break;
                 }
@@ -150,7 +150,7 @@ export class InstanceResolverFactory {
             const instance = await this.instanceRepository.findById(unpauseServiceInput.instanceId);
             for (const service of instance.services) {
                 if (unpauseServiceInput.serviceId === service.id) {
-                    execSync(`${environment.instantiation.dockerBinaryPath} unpause ${service.containerId}`);
+                    execSync(`${config.instantiation.dockerBinaryPath} unpause ${service.containerId}`);
 
                     break;
                 }
@@ -166,12 +166,12 @@ export class InstanceResolverFactory {
             execSync(
                 'bash -c removeByProjectIdAndIdentifier-instance.sh',
                 {
-                    cwd: path.join(environment.guestPaths.root, 'bin'),
+                    cwd: path.join(config.guestPaths.root, 'bin'),
                     env: {
                         INSTANCE_HASH: instance.hash,
-                        COMPOSE_PROJECT_NAME_PREFIX: `${environment.instantiation.containerNamePrefix}${instance.hash}`,
-                        FEATER_GUEST_PATH_BUILD: environment.guestPaths.build,
-                        FEATER_GUEST_PATH_PROXY_DOMAIN: environment.guestPaths.proxyDomain,
+                        COMPOSE_PROJECT_NAME_PREFIX: `${config.instantiation.containerNamePrefix}${instance.hash}`,
+                        FEATER_GUEST_PATH_BUILD: config.guestPaths.build,
+                        FEATER_GUEST_PATH_PROXY_DOMAIN: config.guestPaths.proxyDomain,
                         FEATER_NGINX_CONTAINER_NAME: 'feater_nginx',
                     },
                 },

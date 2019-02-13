@@ -1,4 +1,3 @@
-# TODO Maybe Node.js image should be used for build.
 FROM ubuntu:16.04
 
 WORKDIR /app
@@ -93,5 +92,7 @@ COPY --from=0 /app/yarn.lock ./yarn.lock
 RUN yarn install --prod
 
 COPY --from=0 /app/dist .
+
+EXPOSE 3000
 
 CMD ["pm2-runtime", "main.js"]

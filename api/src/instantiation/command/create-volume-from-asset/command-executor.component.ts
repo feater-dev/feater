@@ -1,6 +1,6 @@
 import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
-import {environment} from '../../../environments/environment';
+import {config} from '../../../config/config';
 import {AssetRepository} from '../../../persistence/repository/asset.repository';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SpawnHelper} from '../../helper/spawn-helper.component';
@@ -79,7 +79,7 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             const spawned = spawn(
-                environment.instantiation.dockerBinaryPath,
+                config.instantiation.dockerBinaryPath,
                 ['volume', 'create', '--name', volumeName],
                 {cwd: workingDirectory},
             );
@@ -112,7 +112,7 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             const spawned = spawn(
-                environment.instantiation.dockerBinaryPath,
+                config.instantiation.dockerBinaryPath,
                 [
                     'run', '--rm',
                     '-v', `${absoluteUploadedAssetHostPath}:/source.tar.gz`,

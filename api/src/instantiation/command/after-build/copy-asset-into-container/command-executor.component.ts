@@ -1,6 +1,6 @@
 import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
-import {environment} from '../../../../environments/environment';
+import {config} from '../../../../config/config';
 import {SimpleCommandExecutorComponentInterface} from '../../../executor/simple-command-executor-component.interface';
 import {AssetHelper, AssetUploadPathsInterface} from '../../../../persistence/helper/asset-helper.component';
 import {SpawnHelper} from '../../../helper/spawn-helper.component';
@@ -49,7 +49,7 @@ export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCom
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             const spawned = spawn(
-                environment.instantiation.dockerBinaryPath,
+                config.instantiation.dockerBinaryPath,
                 ['cp', uploadPaths.absolute.guest, `${containerId}:${destinationPath}`],
                 {cwd: workingDirectory},
             );

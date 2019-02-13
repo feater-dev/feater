@@ -1,4 +1,4 @@
-/src/environments/environment.ts
+/.env
 /dist/
 /node_modules/
 /*.log

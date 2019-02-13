@@ -6,7 +6,7 @@ import {InstanceSchema} from './schema/instance.schema';
 import {ProjectRepository} from './repository/project.repository';
 import {DefinitionRepository} from './repository/definition.repository';
 import {InstanceRepository} from './repository/instance.repository';
-import {environment} from '../environments/environment';
+import {config} from '../config/config';
 import {LogRepository} from './repository/log.repository';
 import {AssetSchema} from './schema/asset.schema';
 import {AssetRepository} from './repository/asset.repository';
@@ -19,7 +19,7 @@ import {AssetHelper} from './helper/asset-helper.component';
 
 @Module({
   imports: [
-      MongooseModule.forRoot(environment.mongo.dsn),
+      MongooseModule.forRoot(config.mongo.dsn),
       MongooseModule.forFeature([{
           name: 'Project',
           schema: ProjectSchema },

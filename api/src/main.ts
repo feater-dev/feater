@@ -1,5 +1,6 @@
 import * as cors from 'cors';
 import * as morgan from 'morgan';
+import * as process from 'process';
 import {NestFactory} from '@nestjs/core';
 import {ApplicationModule} from './app.module';
 import {INestApplication} from '@nestjs/common';

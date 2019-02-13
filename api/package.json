@@ -1,8 +1,13 @@
 {
-  "name": "app",
+  "name": "feater-api",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
+  "author": {
+    "name": "Mariusz Bąk",
+    "email": "mariusz.alef.bak@gmail.com",
+    "url": "http://github.com/malef"
+  },
+  "main": "index.js",
   "scripts": {
     "start:dev": "NODE_ENV=development node index.js",
     "start:dev:watch": "NODE_ENV=development nodemon",
@@ -19,6 +24,7 @@
     "apollo-server-express": "^1.3.6",
     "busboy": "^0.2.14",
     "cors": "^2.8.4",
+    "dotenv": "^6.2.0",
     "easy-keygen": "^1.1.1",
     "escape-string-regexp": "^1.0.5",
     "fs-extra": "^5.0.0",

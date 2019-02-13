@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import * as got from 'got';
 import * as querystring from 'querystring';
-import {environment} from '../environments/environment';
+import {config} from '../config/config';
 import * as _ from 'lodash';
 import {setInterval} from 'timers';
 
@@ -17,7 +17,7 @@ export interface CachedContainerInfo {
 export class ContainerInfoCheckerComponent {
 
     private containerNameRegExp = new RegExp(
-        `^/${environment.instantiation.containerNamePrefix}([a-z0-9]{8})_(.+?)_\\d+\$`,
+        `^/${config.instantiation.containerNamePrefix}([a-z0-9]{8})_(.+?)_\\d+\$`,
     );
 
     private containerInfos: CachedContainerInfo[] = [];
@@ -50,7 +50,7 @@ export class ContainerInfoCheckerComponent {
         return querystring.stringify({
             all: true,
             filters: JSON.stringify({
-                name: [environment.instantiation.containerNamePrefix],
+                name: [config.instantiation.containerNamePrefix],
             }),
         });
     }
@@ -63,10 +63,10 @@ export class ContainerInfoCheckerComponent {
 
         const instanceHash = matches[1];
         const serviceName = matches[2];
-        const networkName = `${environment.instantiation.containerNamePrefix}${instanceHash}_default`;
+        const networkName = `${config.instantiation.containerNamePrefix}${instanceHash}_default`;
 
         return {
-            namePrefix: `${environment.instantiation.containerNamePrefix}${instanceHash}_${serviceName}`,
+            namePrefix: `${config.instantiation.containerNamePrefix}${instanceHash}_${serviceName}`,
             id: containerInfo.Id,
             state: containerInfo.State,
             status: containerInfo.Status,

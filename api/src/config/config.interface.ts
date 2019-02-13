@@ -1,7 +1,4 @@
-export interface EnvironmentInterface {
-    readonly app: {
-        readonly versionNumber: string;
-    };
+export interface ConfigInterface {
     readonly mongo: {
         readonly dsn: string;
     };
@@ -16,12 +13,12 @@ export interface EnvironmentInterface {
         readonly asset: string;
     };
     readonly instantiation: {
-        readonly composeBinaryPath: string;
-        readonly composeHttpTimeout: number;
         readonly dockerBinaryPath: string;
-        readonly containerNamePrefix: string; // TODO Rename to composeProjectNamePrefix.
+        readonly dockerComposeBinaryPath: string;
+        readonly dockerComposeHttpTimeout: number;
+        readonly containerNamePrefix: string;
         readonly proxyDomainPattern: string;
-        readonly proxyDomainsNetworkName: string;
+        readonly proxyDomainNetworkName: string;
     };
     readonly logger: {
         readonly console: {

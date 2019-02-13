@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {PredictedEnvVariableInterface} from './predicted-env-variable.interface';
 import {PredictedFeaterVariableInterface} from './predicted-feater-variable.interface';
-import {environment} from '../../environments/environment';
+import {config} from '../../config/config';
 import * as path from 'path';
 import * as _ from 'lodash';
 
@@ -22,7 +22,7 @@ export class VariablesPredictor {
             },
             {
                 name: 'COMPOSE_PROJECT_NAME',
-                pattern: `${environment.instantiation.containerNamePrefix}{instance_hash}`,
+                pattern: `${config.instantiation.containerNamePrefix}{instance_hash}`,
             },
         ]);
 
@@ -32,7 +32,7 @@ export class VariablesPredictor {
                 (proxiedPortId: string): PredictedEnvVariableInterface => {
                     return {
                         name: `FEATER__PROXY_DOMAIN__${proxiedPortId.toUpperCase()}`,
-                        pattern: environment.instantiation.proxyDomainPattern.replace('{port_id}', proxiedPortId.toLowerCase()),
+                        pattern: config.instantiation.proxyDomainPattern.replace('{port_id}', proxiedPortId.toLowerCase()),
                     };
                 },
             ),
@@ -45,11 +45,11 @@ export class VariablesPredictor {
                     return [
                         {
                             name: `FEATER__HOST_SOURCE_PATH__${sourceId.toUpperCase()}`,
-                            pattern: path.join(environment.hostPaths.build, '{instance_hash}', sourceId.toLowerCase()),
+                            pattern: path.join(config.hostPaths.build, '{instance_hash}', sourceId.toLowerCase()),
                         },
                         {
                             name: `FEATER__GUEST_SOURCE_PATH__${sourceId.toUpperCase()}`,
-                            pattern: path.join(environment.guestPaths.build, '{instance_hash}', sourceId.toLowerCase()),
+                            pattern: path.join(config.guestPaths.build, '{instance_hash}', sourceId.toLowerCase()),
                         },
                     ];
                 },
@@ -62,7 +62,7 @@ export class VariablesPredictor {
                 (volumeId: string): PredictedEnvVariableInterface => {
                     return {
                         name: `FEATER__ASSET_VOLUME__${volumeId.toUpperCase()}`,
-                        pattern: `${environment.instantiation.containerNamePrefix}{instance_hash}_${volumeId.toLowerCase()}`,
+                        pattern: `${config.instantiation.containerNamePrefix}{instance_hash}_${volumeId.toLowerCase()}`,
                     };
                 },
             ),
@@ -89,7 +89,7 @@ export class VariablesPredictor {
             },
             {
                 name: 'compose_project_name',
-                pattern: `${environment.instantiation.containerNamePrefix}{instance_hash}`,
+                pattern: `${config.instantiation.containerNamePrefix}{instance_hash}`,
             },
         ]);
 
@@ -99,7 +99,7 @@ export class VariablesPredictor {
                 (proxiedPortId: string): PredictedFeaterVariableInterface => {
                     return {
                         name: `proxy_domain__${proxiedPortId.toLowerCase()}`,
-                        pattern: environment.instantiation.proxyDomainPattern.replace('{port_id}', proxiedPortId.toLowerCase()),
+                        pattern: config.instantiation.proxyDomainPattern.replace('{port_id}', proxiedPortId.toLowerCase()),
                     };
                 },
             ),
@@ -112,11 +112,11 @@ export class VariablesPredictor {
                     return [
                         {
                             name: `host_source_path__${sourceId.toLowerCase()}`,
-                            pattern: path.join(environment.hostPaths.build, '{instance_hash}', sourceId.toLowerCase()),
+                            pattern: path.join(config.hostPaths.build, '{instance_hash}', sourceId.toLowerCase()),
                         },
                         {
                             name: `guest_source_path__${sourceId.toLowerCase()}`,
-                            pattern: path.join(environment.guestPaths.build, '{instance_hash}', sourceId.toLowerCase()),
+                            pattern: path.join(config.guestPaths.build, '{instance_hash}', sourceId.toLowerCase()),
                         },
                     ];
                 },
@@ -129,7 +129,7 @@ export class VariablesPredictor {
                 (volumeId: string): PredictedFeaterVariableInterface => {
                     return {
                         name: `asset_volume__${volumeId.toLowerCase()}`,
-                        pattern: `${environment.instantiation.containerNamePrefix}{instance_hash}_${volumeId.toLowerCase()}`,
+                        pattern: `${config.instantiation.containerNamePrefix}{instance_hash}_${volumeId.toLowerCase()}`,
                     };
                 },
             ),

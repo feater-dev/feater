@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {PathHelper} from './helper/path-helper.component';
-import {environment} from '../environments/environment';
+import {config} from '../config/config';
 import {InstanceContextBeforeBuildTaskInterface} from './instance-context/before-build/instance-context-before-build-task.interface';
 import {AfterBuildTaskTypeInterface} from '../graphql/type/nested/definition-config/after-build-task-type.interface';
 import {FeaterVariablesSet} from './sets/feater-variables-set';
@@ -22,7 +22,7 @@ export class InstanceContextFactory {
     ): InstanceContext {
         const instanceContext = new InstanceContext(id, hash);
 
-        instanceContext.composeProjectName = `${environment.instantiation.containerNamePrefix}${instanceContext.hash}`;
+        instanceContext.composeProjectName = `${config.instantiation.containerNamePrefix}${instanceContext.hash}`;
         instanceContext.paths = {
             dir: this.pathHelper.getInstancePaths(hash),
         };

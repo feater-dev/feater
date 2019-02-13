@@ -1,4 +1,4 @@
-import {environment} from '../../../environments/environment';
+import {config} from '../../../config/config';
 import * as path from 'path';
 import * as fs from 'fs';
 import {execSync} from 'child_process';
@@ -21,7 +21,7 @@ export class EnableProxyDomainsCommandExecutorComponent implements SimpleCommand
         const logger = typedCommand.commandLogger;
 
         const nginxConfigAbsoluteGuestPath = path.join(
-            environment.guestPaths.proxyDomain,
+            config.guestPaths.proxyDomain,
             `instance-${typedCommand.instanceHash}.conf`,
         );
         logger.info(`Absolute guest Nginx configuration path: ${nginxConfigAbsoluteGuestPath}`);

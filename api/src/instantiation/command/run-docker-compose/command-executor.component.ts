@@ -5,7 +5,7 @@ import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
-import {environment} from '../../../environments/environment';
+import {config} from '../../../config/config';
 import {SimpleCommand} from '../../executor/simple-command';
 import {RunDockerComposeCommand} from './command';
 import {SpawnHelper} from '../../helper/spawn-helper.component';
@@ -36,7 +36,7 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
             dockerComposeArgs.push(['up', '-d', '--no-color']);
 
             const runEnvVariables = new EnvVariablesSet();
-            runEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${environment.instantiation.composeHttpTimeout}`);
+            runEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${config.instantiation.dockerComposeHttpTimeout}`);
 
             dockerComposeArgs = _.flatten(dockerComposeArgs);
 
@@ -45,7 +45,7 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
                 runEnvVariables,
             );
 
-            logger.info(`Binary: ${environment.instantiation.composeBinaryPath}`);
+            logger.info(`Binary: ${config.instantiation.dockerComposeBinaryPath}`);
             logger.info(`Arguments: ${JSON.stringify(dockerComposeArgs)}`);
             logger.info(`Guest working directory: ${typedCommand.absoluteGuestEnvDirPath}`);
             logger.info(`Environmental variables:${
@@ -55,7 +55,7 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
             }`);
 
             const spawnedDockerCompose = spawn(
-                environment.instantiation.composeBinaryPath,
+                config.instantiation.dockerComposeBinaryPath,
                 dockerComposeArgs,
                 {
                     cwd: typedCommand.absoluteGuestEnvDirPath,

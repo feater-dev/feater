@@ -1,5 +1,5 @@
 import * as path from 'path';
-import {environment} from '../../environments/environment';
+import {config} from '../../config/config';
 import {Injectable} from '@nestjs/common';
 import {AbsolutePathsInterface} from './absolute-paths.interface';
 
@@ -11,8 +11,8 @@ export class PathHelper {
 
         return {
             absolute: {
-                guest: path.join(environment.guestPaths.build, relative),
-                host: path.join(environment.hostPaths.build, relative),
+                guest: path.join(config.guestPaths.build, relative),
+                host: path.join(config.hostPaths.build, relative),
             },
         };
     }
@@ -34,8 +34,8 @@ export class PathHelper {
 
         return {
             absolute: {
-                guest: path.join(environment.guestPaths.asset, relative),
-                host: path.join(environment.hostPaths.asset, relative),
+                guest: path.join(config.guestPaths.asset, relative),
+                host: path.join(config.hostPaths.asset, relative),
             },
         };
     }

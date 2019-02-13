@@ -1,3 +1,4 @@
+# TODO Update to Ubuntu 18 or use Alpine or Node.
 FROM ubuntu:16.04
 
 WORKDIR /app
@@ -32,7 +33,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
 COPY ./package.json ./package.json
 COPY ./yarn.lock ./yarn.lock
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
@@ -40,6 +41,7 @@ RUN yarn run tsc --skipLibCheck
 
 # ------------------------------------------------------------------------------
 
+# TODO Update to Ubuntu 18 or use Alpine.
 FROM ubuntu:16.04
 
 WORKDIR /app
@@ -89,7 +91,7 @@ RUN yarn global add pm2
 COPY --from=0 /app/package.json ./package.json
 COPY --from=0 /app/yarn.lock ./yarn.lock
 
-RUN yarn install --prod
+RUN yarn install --prod --frozen-lockfile
 
 COPY --from=0 /app/dist .
 

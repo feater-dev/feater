@@ -167,7 +167,7 @@ const appRoutes: Routes = [
         ApolloModule,
         HttpClientModule,
         HttpLinkModule,
-        RouterModule.forRoot(appRoutes),
+        RouterModule.forRoot(appRoutes, {useHash: true}),
         MarkdownToHtmlModule,
         NgxSpinnerModule,
         TooltipModule,

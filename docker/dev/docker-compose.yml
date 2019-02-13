@@ -11,7 +11,7 @@ services:
     - "${FEATER_ASSET_DATA_PATH}:/data/asset"
     - "${FEATER_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
     ports:
-    - '${FEATER_API_PORT}:3000'
+    - '${FEATER_PORT}:3000'
     depends_on:
     - mongo
     networks:

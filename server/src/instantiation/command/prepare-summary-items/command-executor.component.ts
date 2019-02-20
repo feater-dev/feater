@@ -19,10 +19,10 @@ export class PrepareSummaryItemsCommandExecutorComponent implements SimpleComman
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as PrepareSummaryItemsCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
         const interpolatedSummaryItems = new SummaryItemsSet();
-        logger.info(`Available Feater variables:${
+        commandLogger.info(`Available Feater variables:${
             typedCommand.featerVariables.isEmpty()
                 ? ' none'
                 : '\n' + JSON.stringify(typedCommand.featerVariables.toMap(), null, 2)

@@ -16,20 +16,20 @@ export class PrepareProxyDomainCommandExecutorComponent implements SimpleCommand
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as PrepareProxyDomainCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
         const proxyDomain = config.instantiation.proxyDomainPattern
             .replace('{instance_hash}', typedCommand.instanceHash)
             .replace('{port_id}', typedCommand.portId);
-        logger.info(`Proxy domain: ${proxyDomain}`);
+        commandLogger.info(`Proxy domain: ${proxyDomain}`);
 
         const envVariables = new EnvVariablesSet();
         envVariables.add(`FEATER__PROXY_DOMAIN__${typedCommand.portId.toUpperCase()}`, proxyDomain);
-        logger.infoWithEnvVariables(envVariables);
+        commandLogger.infoWithEnvVariables(envVariables);
 
         const featerVariables = new FeaterVariablesSet();
         featerVariables.add(`proxy_domain__${typedCommand.portId}`, proxyDomain);
-        logger.infoWithFeaterVariables(featerVariables);
+        commandLogger.infoWithFeaterVariables(featerVariables);
 
         return {
             proxyDomain,

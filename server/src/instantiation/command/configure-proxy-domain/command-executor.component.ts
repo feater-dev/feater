@@ -12,12 +12,12 @@ export class ConfigureProxyDomainCommandExecutorComponent implements SimpleComma
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as ConfigureProxyDomainCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
-        logger.info(`Port: ${typedCommand.port}`);
-        logger.info(`Service ID: ${typedCommand.serviceId}`);
-        logger.info(`IP address: ${typedCommand.ipAddress}`);
-        logger.info(`Proxy domain: ${typedCommand.proxyDomain}`);
+        commandLogger.info(`Port: ${typedCommand.port}`);
+        commandLogger.info(`Service ID: ${typedCommand.serviceId}`);
+        commandLogger.info(`IP address: ${typedCommand.ipAddress}`);
+        commandLogger.info(`Proxy domain: ${typedCommand.proxyDomain}`);
 
         const nginxConfig =
 `
@@ -39,7 +39,7 @@ server {
 }
 `;
 
-        logger.info(`Nginx configuration:\n${nginxConfig}`);
+        commandLogger.info(`Nginx configuration:\n${nginxConfig}`);
 
         return {nginxConfig};
     }

@@ -17,55 +17,43 @@ export class ExecuteHostCmdCommandExecutorComponent implements SimpleCommandExec
         return (command instanceof ExecuteHostCmdCommand);
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as ExecuteHostCmdCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
-        return new Promise<any>((resolve, reject) => {
-            logger.info(`Collecting environmental variables.`);
-            const envVariables = new EnvVariablesSet();
-            for (const {name, value} of typedCommand.customEnvVariables.toList()) {
-                envVariables.add(name, value);
-            }
-            logger.info(`Custom environmental variables collected.`);
+        commandLogger.info(`Collecting environmental variables.`);
+        const envVariables = new EnvVariablesSet();
+        for (const {name, value} of typedCommand.customEnvVariables.toList()) {
+            envVariables.add(name, value);
+        }
+        commandLogger.info(`Custom environmental variables collected.`);
 
-            const collectedEnvVariablesMap = typedCommand.collectedEnvVariables.toMap();
-            for (const {name, alias} of typedCommand.inheritedEnvVariables) {
-                envVariables.add(alias, collectedEnvVariablesMap[name]);
-            }
-            logger.info(`Inherited environmental variables collected.`);
+        const collectedEnvVariablesMap = typedCommand.collectedEnvVariables.toMap();
+        for (const {name, alias} of typedCommand.inheritedEnvVariables) {
+            envVariables.add(alias, collectedEnvVariablesMap[name]);
+        }
+        commandLogger.info(`Inherited environmental variables collected.`);
 
-            logger.info(`Executing host command.`);
-            logger.info(`Command: ${typedCommand.command[0]}`);
-            logger.info(`Arguments: ${JSON.stringify(typedCommand.command.slice(1))}`);
-            logger.info(`Guest working directory: ${typedCommand.absoluteGuestInstancePath}`);
-            logger.infoWithEnvVariables(envVariables, 'Environmental variables');
+        commandLogger.info(`Executing host command.`);
+        commandLogger.info(`Command: ${typedCommand.command[0]}`);
+        commandLogger.info(`Arguments: ${JSON.stringify(typedCommand.command.slice(1))}`);
+        commandLogger.info(`Guest working directory: ${typedCommand.absoluteGuestInstancePath}`);
+        commandLogger.infoWithEnvVariables(envVariables, 'Environmental variables');
 
-            const spawnedHostCommand = spawn(
+        await this.spawnHelper.promisifySpawnedWithHeader(
+            spawn(
                 typedCommand.command[0],
                 typedCommand.command.slice(1),
                 {
                     cwd: typedCommand.absoluteGuestInstancePath,
                     env: envVariables.toMap(),
                 },
-            );
+            ),
+            commandLogger,
+            'execute host command',
+        );
 
-            this.spawnHelper.handleSpawned(
-                spawnedHostCommand,
-                logger,
-                resolve,
-                reject,
-                () => {},
-                (exitCode: number) => {
-                    logger.error(`Failed to execute host command.`, {});
-                    logger.error(`Exit code: ${exitCode}`, {});
-                },
-                (error: Error) => {
-                    logger.error(`Failed to execute host command.`, {});
-                    logger.error(`Error message: ${error.message}`, {});
-                },
-            );
-        });
+        return {};
     }
 
 }

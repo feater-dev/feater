@@ -18,19 +18,19 @@ export class EnableProxyDomainsCommandExecutorComponent implements SimpleCommand
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as EnableProxyDomainsCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
         const nginxConfigAbsoluteGuestPath = path.join(
             config.guestPaths.proxy,
             `instance-${typedCommand.instanceHash}.conf`,
         );
-        logger.info(`Absolute guest Nginx configuration path: ${nginxConfigAbsoluteGuestPath}`);
+        commandLogger.info(`Absolute guest Nginx configuration path: ${nginxConfigAbsoluteGuestPath}`);
         fs.writeFileSync(
             nginxConfigAbsoluteGuestPath,
             typedCommand.nginxConfigs.join('\n\n'),
         );
 
-        logger.info(`Reloading Nginx.`);
+        commandLogger.info(`Reloading Nginx.`);
         execSync(
             `service nginx reload`,
             { maxBuffer: BUFFER_SIZE },

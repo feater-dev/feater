@@ -19,9 +19,9 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
 
     async execute(command: SimpleCommand): Promise<ParseDockerComposeCommandResultInterface> {
         const typedCommand = command as ParseDockerComposeCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
-        logger.info(`Combined compose file absolute guest paths:\n${typedCommand.absoluteGuestComposeFilePaths.join('\n')}`);
+        commandLogger.info(`Combined compose file absolute guest paths:\n${typedCommand.absoluteGuestComposeFilePaths.join('\n')}`);
 
         const composeConfigArguments = [];
         for (const absoluteGuestComposeFilePath of typedCommand.absoluteGuestComposeFilePaths) {
@@ -32,7 +32,7 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
         const dockerComposeConfigSpawnResult = spawnSync('docker-compose', _.flattenDeep(composeConfigArguments));
         // TODO Add some error handling.
         const combinedComposeConfiguration = dockerComposeConfigSpawnResult.stdout.toString();
-        logger.info(`Combined compose configuration (env variable values not available yet):\n${combinedComposeConfiguration}`);
+        commandLogger.info(`Combined compose configuration (env variable values not available yet):\n${combinedComposeConfiguration}`);
 
         const compose = jsYaml.safeLoad(combinedComposeConfiguration);
 
@@ -41,7 +41,7 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
         if (0 === serviceIds.length) {
             throw new Error('No service IDs found.');
         }
-        logger.info(`Service IDs found: ${serviceIds.join(', ')}`);
+        commandLogger.info(`Service IDs found: ${serviceIds.join(', ')}`);
 
         const services: ParseDockerComposeCommandResultServiceInterface[] = [];
         for (const serviceId of serviceIds) {
@@ -50,7 +50,7 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
                 id: serviceId,
                 containerNamePrefix,
             });
-            logger.info(`Container name prefix for service ${serviceId}: ${containerNamePrefix}`);
+            commandLogger.info(`Container name prefix for service ${serviceId}: ${containerNamePrefix}`);
         }
 
         return {services} as ParseDockerComposeCommandResultInterface;

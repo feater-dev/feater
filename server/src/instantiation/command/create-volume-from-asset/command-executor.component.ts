@@ -28,38 +28,38 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as CreateVolumeFromAssetCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
-        logger.info(`Asset ID: ${typedCommand.assetId}`);
-        logger.info(`Volume ID: ${typedCommand.volumeId}`);
+        commandLogger.info(`Asset ID: ${typedCommand.assetId}`);
+        commandLogger.info(`Volume ID: ${typedCommand.volumeId}`);
 
         const asset = await this.assetRepository.findUploadedById(typedCommand.assetId);
 
         const dockerVolumeName = `${typedCommand.containerNamePrefix}_asset_volume_${typedCommand.volumeId}`;
-        logger.info(`Volume name: ${dockerVolumeName}`);
+        commandLogger.info(`Volume name: ${dockerVolumeName}`);
 
-        logger.info(`Creating volume.`);
-        await this.spawnVolumeCreate(
+        commandLogger.info(`Creating volume.`);
+        await this.createVolume(
             dockerVolumeName,
             typedCommand.absoluteGuestInstanceDirPath,
-            logger,
+            commandLogger,
         );
 
-        logger.info(`Extracting asset to volume.`);
+        commandLogger.info(`Extracting asset to volume.`);
         await this.extractAssetToVolume(
             this.assetHelper.getUploadPaths(asset).absolute,
             dockerVolumeName,
             typedCommand.absoluteGuestInstanceDirPath,
-            logger,
+            commandLogger,
         );
 
         const envVariables = new EnvVariablesSet();
         envVariables.add(`FEATER__ASSET_VOLUME__${typedCommand.volumeId.toUpperCase()}`, dockerVolumeName);
-        logger.infoWithEnvVariables(envVariables);
+        commandLogger.infoWithEnvVariables(envVariables);
 
         const featerVariables = new FeaterVariablesSet();
         featerVariables.add(`asset_volume__${typedCommand.volumeId.toLowerCase()}`, dockerVolumeName);
-        logger.infoWithFeaterVariables(featerVariables);
+        commandLogger.infoWithFeaterVariables(featerVariables);
 
         return {
             dockerVolumeName,
@@ -68,75 +68,45 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
         } as CreateVolumeFromAssetCommandResultInterface;
     }
 
-    protected spawnVolumeCreate(
+    protected createVolume(
         volumeName: string,
         workingDirectory: string,
-        logger: CommandLogger,
+        commandLogger: CommandLogger,
     ): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const spawned = spawn(
+        return this.spawnHelper.promisifySpawnedWithHeader(
+            spawn(
                 config.instantiation.dockerBinaryPath,
                 ['volume', 'create', '--name', volumeName],
                 {cwd: workingDirectory},
-            );
-
-            this.spawnHelper.handleSpawned(
-                spawned,
-                logger,
-                resolve,
-                reject,
-                () => {
-                    logger.info(`Completed creating asset volume.`, {});
-                },
-                (exitCode: number) => {
-                    logger.error(`Failed to create asset volume.`, {});
-                    logger.error(`Exit code: ${exitCode}`, {});
-                },
-                (error: Error) => {
-                    logger.error(`Failed to create asset volume.`);
-                    logger.error(`Error message: ${error.message}`, {});
-                },
-            );
-        });
+            ),
+            commandLogger,
+            'create asset volume',
+        );
     }
 
     protected extractAssetToVolume(
         absoluteUploadedAssetGuestPath: string,
         volumeName: string,
         workingDirectory: string,
-        logger,
+        commandLogger,
     ): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const spawnedExtractAndCreateVolume = spawn(
-                config.instantiation.dockerBinaryPath,
-                [
-                    'run', '--rm', '-i',
-                    '-v', `${volumeName}:/target`,
-                    'alpine', 'ash', '-c', 'cat > /source.tar.gz && tar -zxvf /source.tar.gz -C /target/',
-                ],
-                {cwd: workingDirectory},
-            );
+        const spawnedExtractAndCreateVolume = spawn(
+            config.instantiation.dockerBinaryPath,
+            [
+                'run', '--rm', '-i',
+                '-v', `${volumeName}:/target`,
+                'alpine', 'ash', '-c', 'cat > /source.tar.gz && tar -zxvf /source.tar.gz -C /target/',
+            ],
+            {cwd: workingDirectory},
+        );
 
-            createReadStream(absoluteUploadedAssetGuestPath).pipe(spawnedExtractAndCreateVolume.stdin);
+        createReadStream(absoluteUploadedAssetGuestPath).pipe(spawnedExtractAndCreateVolume.stdin);
 
-            this.spawnHelper.handleSpawned(
-                spawnedExtractAndCreateVolume,
-                logger,
-                resolve,
-                reject,
-                () => {
-                    logger.info(`Completed extracting asset to volume.`, {});
-                },
-                (exitCode: number) => {
-                    logger.error(`Failed to copy files from asset to volume.`, {});
-                    logger.error(`Exit code: ${exitCode}`, {});
-                },
-                (error: Error) => {
-                    logger.error(`Failed to copy files from asset to volume.`, {});
-                    logger.error(`Error message: ${error.message}`, {});
-                },
-            );
-        });
+        return this.spawnHelper.promisifySpawnedWithHeader(
+            spawnedExtractAndCreateVolume,
+            commandLogger,
+            'extract asset archive to volume',
+        );
     }
 
 }

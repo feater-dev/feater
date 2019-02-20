@@ -27,35 +27,35 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = (command as CloneSourceCommand);
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
         let deployKey;
 
-        logger.info(`Clone URL: ${typedCommand.cloneUrl}`);
+        commandLogger.info(`Clone URL: ${typedCommand.cloneUrl}`);
         if ('ssh' === gitUrlParse(typedCommand.cloneUrl).protocol) {
-            logger.info(`Using deploy key to clone over SSH.`);
+            commandLogger.info(`Using deploy key to clone over SSH.`);
             deployKey = await this.deployKeyRepository.findOneByCloneUrl(typedCommand.cloneUrl);
-            logger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
+            commandLogger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
         } else {
             deployKey = null;
-            logger.info(`Not using deploy key.`);
+            commandLogger.info(`Not using deploy key.`);
         }
         const repository = await nodegit.Clone.clone(
             typedCommand.cloneUrl,
             typedCommand.sourceAbsoluteGuestPath,
             this.createCloneOptions(typedCommand.commandLogger, deployKey),
         );
-        logger.info(`Cloning completed.`);
+        commandLogger.info(`Cloning completed.`);
 
         await this.checkoutReference(
             typedCommand.referenceType,
             typedCommand.referenceName,
             repository,
-            logger
+            commandLogger
         );
 
         const dockerVolumeName = `${typedCommand.dockerComposeProjectName}_source_volume_${typedCommand.sourceId.toLowerCase()}`;
-        logger.info(`Volume name: ${dockerVolumeName}`);
+        commandLogger.info(`Volume name: ${dockerVolumeName}`);
 
         const envVariables = new EnvVariablesSet();
         const featerVariables = new FeaterVariablesSet();
@@ -78,8 +78,8 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
             dockerVolumeName,
         );
 
-        logger.infoWithEnvVariables(envVariables);
-        logger.infoWithFeaterVariables(featerVariables);
+        commandLogger.infoWithEnvVariables(envVariables);
+        commandLogger.infoWithFeaterVariables(featerVariables);
 
         return {
             dockerVolumeName,
@@ -88,7 +88,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         } as CloneSourceCommandResultInterface;
     }
 
-    protected createCloneOptions(logger: CommandLogger, deployKey?: DeployKeyInterface): any {
+    protected createCloneOptions(commandLogger: CommandLogger, deployKey?: DeployKeyInterface): any {
         let lastProgress: string;
 
         const callbacks: any = {};
@@ -103,7 +103,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
                 if (progress !== lastProgress) {
                     lastProgress = progress;
-                    logger.info(`Cloning progress ${progress}%.`);
+                    commandLogger.info(`Cloning progress ${progress}%.`);
                 }
             },
         };
@@ -128,12 +128,12 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         referenceType: string,
         referenceName: string,
         repo: nodegit.Repository,
-        logger: CommandLogger
+        commandLogger: CommandLogger
     ): Promise<void> {
         if ('branch' === referenceType) {
             const reference = await repo.getBranch(`refs/remotes/origin/${referenceName}`);
             await repo.checkoutRef(reference);
-            logger.info(`Checked out branch: ${referenceName}`);
+            commandLogger.info(`Checked out branch: ${referenceName}`);
 
             return;
         }
@@ -141,13 +141,13 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         if ('tag' === referenceType) {
             const reference = await repo.getReference(`refs/tags/${referenceName}`);
             await repo.checkoutRef(reference);
-            logger.info(`Checked out tag: ${referenceName}`);
+            commandLogger.info(`Checked out tag: ${referenceName}`);
         }
 
         if ('commit' === referenceType) {
             const commit = await repo.getCommit(referenceName);
             await repo.setHeadDetached(commit.id());
-            logger.info(`Checked out commit: ${referenceName}`);
+            commandLogger.info(`Checked out commit: ${referenceName}`);
         }
 
         throw new Error(`Unknown reference type '${referenceType}'.`);

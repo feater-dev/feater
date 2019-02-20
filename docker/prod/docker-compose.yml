@@ -8,7 +8,6 @@ services:
       - "${FEATER_HOST_PATH_ASSET}:/data/asset"
       - "${FEATER_HOST_PATH_BUILD}:/data/build"
       - "${FEATER_HOST_PATH_PROXY}:/data/proxy"
-      - "temporary:/data/temporary"
       - "${FEATER_HOST_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
     ports:
       - '${FEATER_PORT}:9010'
@@ -29,7 +28,6 @@ services:
       FEATER_PROXY_NETWORK_NAME: "${COMPOSE_PROJECT_NAME}_proxy"
       FEATER_LOG_LEVEL_CONSOLE: "${FEATER_LOG_LEVEL_CONSOLE}"
       FEATER_LOG_LEVEL_MONGO: "${FEATER_LOG_LEVEL_MONGO}"
-      FEATER_VOLUME_TEMPORARY: "${FEATER_VOLUME_TEMPORARY}"
     depends_on:
       - mongo
     networks:
@@ -48,8 +46,3 @@ services:
 networks:
   internal:
   proxy:
-
-volumes:
-  temporary:
-    external:
-      name: ${FEATER_VOLUME_TEMPORARY}

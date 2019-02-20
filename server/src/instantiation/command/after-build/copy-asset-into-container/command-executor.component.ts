@@ -24,51 +24,37 @@ export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCom
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as CopyAssetIntoContainerCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
         const asset = await this.assetRepository.findUploadedById(typedCommand.assetId);
         const uploadPaths = this.assetHelper.getUploadPaths(asset);
 
-        await this.spawnDockerCopy(
+        await this.copyAssetToContainer(
             uploadPaths,
             typedCommand.containerId,
             typedCommand.destinationPath,
             typedCommand.absoluteGuestInstanceDirPath,
-            logger,
+            commandLogger,
         );
 
         return {};
     }
 
-    protected spawnDockerCopy(
+    protected copyAssetToContainer(
         uploadPaths: AssetUploadPathsInterface,
         containerId: string,
         destinationPath: string,
         workingDirectory: string,
-        logger: CommandLogger,
+        commandLogger: CommandLogger,
     ): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const spawned = spawn(
+        return this.spawnHelper.promisifySpawnedWithHeader(
+            spawn(
                 config.instantiation.dockerBinaryPath,
                 ['cp', uploadPaths.absolute, `${containerId}:${destinationPath}`],
                 {cwd: workingDirectory},
-            );
-
-            this.spawnHelper.handleSpawned(
-                spawned,
-                logger,
-                resolve,
-                reject,
-                () => {},
-                (exitCode: number) => {
-                    logger.error(`Failed to copy asset to container.`, {});
-                    logger.error(`Exit code ${exitCode}`, {});
-                },
-                (error: Error) => {
-                    logger.error(`Failed to copy asset to container.`, {});
-                    logger.error(`Error ${error.message}`, {});
-                },
-            );
-        });
+            ),
+            commandLogger,
+            'copy asset to container',
+        );
     }
 }

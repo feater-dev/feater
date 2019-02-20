@@ -18,14 +18,14 @@ export class InterpolateFileCommandExecutorComponent implements SimpleCommandExe
 
     async execute(command: SimpleCommand): Promise<any> {
         const typedCommand = command as InterpolateFileCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
         const interpolatedText = this.interpolationHelper.interpolateFile(
             typedCommand.absoluteGuestPath,
             typedCommand.featerVariables,
         );
 
-        logger.info(`Interpolated text:\n${interpolatedText}`);
+        commandLogger.info(`Interpolated text:\n${interpolatedText}`);
 
         return {interpolatedText} as InterpolateFileCommandResultInterface;
     }

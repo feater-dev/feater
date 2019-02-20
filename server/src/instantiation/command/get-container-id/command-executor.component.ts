@@ -20,9 +20,9 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
 
     async execute(command: SimpleCommand) {
         const typedCommand = command as GetContainerIdsCommand;
-        const logger = typedCommand.commandLogger;
+        const commandLogger = typedCommand.commandLogger;
 
-        logger.info('Determining container ids.');
+        commandLogger.info('Determining container ids.');
 
         const containerInspects = JSON.parse(
             execSync(
@@ -49,9 +49,9 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
                 }
             }
         }
-        logger.infoWithEnvVariables(envVariables);
-        logger.infoWithFeaterVariables(featerVariables);
-        logger.info(`Service ID to container ID map:\n${
+        commandLogger.infoWithEnvVariables(envVariables);
+        commandLogger.infoWithFeaterVariables(featerVariables);
+        commandLogger.info(`Service ID to container ID map:\n${
             JSON.stringify(serviceContainerIds, null, 2)
         }`);
 

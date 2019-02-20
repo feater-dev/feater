@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>
+                <small>Definition</small><br>
+                {{ definition?.name }}
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills">
+            <li class="active"><a routerLink="/definition/{{ definition?.id }}">Summary</a></li>
+            <li><a routerLink="/definition/{{ definition?.id }}/configuration">Configuration</a></li>
+            <li><a routerLink="/definition/{{ definition?.id }}/deploy-keys">Deploy keys</a></li>
+            <li><a routerLink="/definition/{{ definition?.id }}/environment">Predicted environment</a></li>
+            <li><a routerLink="/definition/{{ definition?.id }}/substitutions">Predicted substitutions</a></li>
+            <li><a routerLink="/definition/{{ definition?.id }}/instances">Instances</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="inputDefinition_name" class="control-label">Name</label>
+            <p class="form-control-static" id="inputDefinition_name">{{ definition?.name}}</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="inputDefinition_projectName" class="control-label">Project</label>
+            <p class="form-control-static" id="inputDefinition_projectName">
+                <a routerLink="/project/{{ definition?.project.id }}">{{ definition?.project.name }}</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="inputDefinition_createdAt" class="control-label">Created</label>
+            <p class="form-control-static" id="inputDefinition_createdAt">
+                {{ definition?.createdAt | absoluteDate }}<br>
+                ({{ definition?.createdAt | relativeDate }})
+            </p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="inputDefinition_updatedAt" class="control-label">Updated</label>
+            <p class="form-control-static" id="inputDefinition_updatedAt">
+                {{ definition?.updatedAt | absoluteDate }}<br>
+                ({{ definition?.updatedAt | relativeDate }})
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="buttons">
+            <span routerLink="/definition/{{definition?.id}}/edit" class="btn btn-primary">Edit</span>
+            <span routerLink="/definition/{{definition?.id}}/duplicate" class="btn btn-primary">Duplicate</span>
+            <span (click)="removeDefinition()" class="btn btn-danger" [ngClass]="{'disabled': !!definition.instances.length}">Remove</span>
+        </div>
+    </div>
+</div>

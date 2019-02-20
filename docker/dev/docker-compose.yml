@@ -7,7 +7,7 @@ services:
     volumes:
     - "../../api:/app"
     - "${FEATER_BUILD_DATA_PATH}:/data/build"
-    - "${FEATER_PROXY_DOMAIN_DATA_PATH}:/data/proxyDomain"
+    - "${FEATER_PROXY_DATA_PATH}:/data/proxy"
     - "${FEATER_ASSET_DATA_PATH}:/data/asset"
     - "${FEATER_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
     ports:
@@ -41,7 +41,7 @@ services:
   nginx:
     build: nginx
     volumes:
-    - "${FEATER_PROXY_DOMAIN_DATA_PATH}:/etc/nginx/conf.d/proxyDomain"
+    - "${FEATER_PROXY_DATA_PATH}:/etc/nginx/conf.d/proxy"
     ports:
     - '${FEATER_NGINX_PORT}:80'
     networks:

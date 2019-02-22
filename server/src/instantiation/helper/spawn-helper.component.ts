@@ -34,7 +34,9 @@ export class SpawnHelper {
 
         spawned.stderr
             .pipe(split())
-            .on('data', (line: string) => { commandLogger.error(line.toString()); });
+            .on('data', (line: string) => {
+                commandLogger.error(line.toString());
+            });
 
         spawned.on('error', error => {
             errorHandler(error);

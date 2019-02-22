@@ -54,7 +54,7 @@
     "@types/graphql-type-json": "^0.1.2",
     "@types/lodash": "^4.14.109",
     "@types/mongoose": "^4.7.23",
-    "@types/node": "^9.4.7",
+    "@types/node": "^10.12.26",
     "eslint": "^4.19.0",
     "nodemon": "^1.17.2",
     "ts-node": "^5.0.1",

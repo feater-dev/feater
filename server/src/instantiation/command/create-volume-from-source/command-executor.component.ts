@@ -82,7 +82,7 @@ export class CreateVolumeFromSourceCommandExecutorComponent implements SimpleCom
             [
                 'run', '--rm', '-i',
                 '-v', `${volumeName}:/target`,
-                'alpine', 'ash', '-c', 'cat > /source.tar.gz && tar -zxvf /source.tar.gz -C /target/',
+                'alpine:3.9', 'ash', '-c', 'cat > /source.tar.gz && tar -zxvf /source.tar.gz -C /target/',
             ],
             {cwd: workingDirectory},
         );
@@ -98,7 +98,7 @@ export class CreateVolumeFromSourceCommandExecutorComponent implements SimpleCom
         return Promise
             .all([
                 createSourceArchivePromise,
-                extractSourceArchiveToVolumeSpawned,
+                extractSourceArchiveToVolumePromise,
             ])
             .then(() => {});
     }

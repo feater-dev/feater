@@ -65,7 +65,7 @@
         <div class="buttons">
             <span routerLink="/definition/{{definition?.id}}/edit" class="btn btn-primary">Edit</span>
             <span routerLink="/definition/{{definition?.id}}/duplicate" class="btn btn-primary">Duplicate</span>
-            <span (click)="removeDefinition()" class="btn btn-danger" [ngClass]="{'disabled': !!definition.instances.length}">Remove</span>
+            <span (click)="removeDefinition()" class="btn btn-danger" [ngClass]="{'disabled': !!definition?.instances.length}">Remove</span>
         </div>
     </div>
 </div>

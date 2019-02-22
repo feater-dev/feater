@@ -101,6 +101,7 @@ export class InstanceCreatorComponent {
 
         this.addCreateDirectory(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addCreateVolumeFromAssetsAndCloneSource(createInstanceCommand, taskId, instanceContext, updateInstance);
+        this.addCreateVolumeFromSources(createInstanceCommand, taskId, instanceContext, updateInstance); // TODO Added temporarily.
         this.addParseDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addPrepareProxyDomains(createInstanceCommand, taskId, instanceContext, updateInstance);
         this.addPrepareSummaryItems(createInstanceCommand, taskId, instanceContext, updateInstance);
@@ -160,7 +161,7 @@ export class InstanceCreatorComponent {
                     return new CreateVolumeFromAssetCommand(
                         volume.id,
                         volume.assetId,
-                        instanceContext.dockerComposeProjectName,
+                        instanceContext.composeProjectName,
                         instanceContext.paths.dir.absolute.guest,
                     );
                 },
@@ -185,7 +186,7 @@ export class InstanceCreatorComponent {
                     source.reference.name,
                     source.paths.absolute.guest,
                     source.paths.absolute.host,
-                    instanceContext.dockerComposeProjectName,
+                    instanceContext.composeProjectName,
                     source.paths.absolute.guest, // TODO Replace with working directory.
                 ),
                 async (result: CloneSourceCommandResultInterface): Promise<void> => {
@@ -219,18 +220,18 @@ export class InstanceCreatorComponent {
             new ContextAwareCommand(
                 taskId,
                 instanceContext.id,
-                `Parse docker-compose configuration`,
+                `Parse compose configuration`,
                 () => {
-                    const source = instanceContext.findSource(instanceContext.composeFiles[0].sourceId);
+                    const composeFile = instanceContext.composeFiles[0]; // TODO Handle multiple compose files.
+                    const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new ParseDockerComposeCommand(
-                        instanceContext.composeFiles[0].composeFileRelativePaths.map(
-                            composeFileRelativePath => path.join(
-                                source.paths.absolute.guest,
-                                composeFileRelativePath,
-                            ),
-                        ),
-                        instanceContext.dockerComposeProjectName,
+                        source.dockerVolumeName,
+                        composeFile.envDirRelativePath,
+                        composeFile.composeFileRelativePaths,
+                        instanceContext.envVariables,
+                        instanceContext.composeProjectName,
+                        instanceContext.paths.dir.absolute.guest,
                     );
                 },
                 async (result: ParseDockerComposeCommandResultInterface): Promise<void> => {
@@ -370,15 +371,11 @@ export class InstanceCreatorComponent {
                     const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new RunDockerComposeCommand(
-                        path.join(source.paths.absolute.guest, composeFile.envDirRelativePath),
-                        composeFile.composeFileRelativePaths.map(
-                            composeFileRelativePath => path.join(
-                                source.paths.absolute.guest,
-                                composeFileRelativePath,
-                            ),
-                        ),
-                        instanceContext.dockerComposeProjectName,
+                        source.dockerVolumeName,
+                        composeFile.envDirRelativePath,
+                        composeFile.composeFileRelativePaths,
                         instanceContext.envVariables,
+                        instanceContext.paths.dir.absolute.guest,
                     );
                 },
             ),
@@ -401,7 +398,7 @@ export class InstanceCreatorComponent {
                 instanceContext.id,
                 `Get container ids`,
                 () => new GetContainerIdsCommand(
-                    instanceContext.dockerComposeProjectName,
+                    instanceContext.composeProjectName,
                     instanceContext.services.map(
                         service => ({
                             serviceId: service.id,

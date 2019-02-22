@@ -32,7 +32,7 @@ export class EnableProxyDomainsCommandExecutorComponent implements SimpleCommand
 
         commandLogger.info(`Reloading Nginx.`);
         execSync(
-            `service nginx reload`,
+            `nginx -s reload`, // TODO Make customizable.
             { maxBuffer: BUFFER_SIZE },
         );
 

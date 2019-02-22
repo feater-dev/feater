@@ -14,7 +14,6 @@ export interface ConfigInterface {
     };
     readonly instantiation: {
         readonly dockerBinaryPath: string;
-        readonly dockerComposeBinaryPath: string;
         readonly dockerComposeHttpTimeout: number;
         readonly containerNamePrefix: string;
         readonly proxyDomainPattern: string;

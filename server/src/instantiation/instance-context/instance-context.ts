@@ -16,7 +16,7 @@ import {SummaryItemsSet} from '../sets/summary-items-set';
 export class InstanceContext {
 
     paths: InstanceContextPathsInterface;
-    dockerComposeProjectName: string;
+    composeProjectName: string;
     sources: InstanceContextSourceInterface[];
     volumes: InstanceContextVolumeInterface[];
     services: InstanceContextServiceInterface[];

@@ -22,7 +22,7 @@ export class InstanceContextFactory {
     ): InstanceContext {
         const instanceContext = new InstanceContext(id, hash);
 
-        instanceContext.dockerComposeProjectName = `${config.instantiation.containerNamePrefix}${instanceContext.hash}`;
+        instanceContext.composeProjectName = `${config.instantiation.containerNamePrefix}${instanceContext.hash}`;
         instanceContext.paths = {
             dir: this.pathHelper.getInstancePaths(hash),
         };
@@ -89,8 +89,8 @@ export class InstanceContextFactory {
         envVariables.add('FEATER__INSTANCE_HASH', instanceContext.hash);
         featerVariables.add('instance_hash', instanceContext.hash);
 
-        envVariables.add('COMPOSE_PROJECT_NAME', instanceContext.dockerComposeProjectName);
-        featerVariables.add('compose_project_name', instanceContext.dockerComposeProjectName);
+        envVariables.add('COMPOSE_PROJECT_NAME', instanceContext.composeProjectName);
+        featerVariables.add('compose_project_name', instanceContext.composeProjectName);
 
         instanceContext.mergeEnvVariablesSet(envVariables);
         instanceContext.mergeFeaterVariablesSet(featerVariables);

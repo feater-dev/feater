@@ -26,7 +26,6 @@ export const config: ConfigInterface = {
     },
     instantiation: {
         dockerBinaryPath: process.env.FEATER_DOCKER_BINARY_PATH,
-        dockerComposeBinaryPath: process.env.FEATER_DOCKER_COMPOSE_BINARY_PATH,
         dockerComposeHttpTimeout: Number(process.env.FEATER_DOCKER_COMPOSE_HTTP_TIMEOUT),
         containerNamePrefix: process.env.FEATER_CONTAINER_NAME_PREFIX,
         proxyDomainPattern: process.env.FEATER_PROXY_DOMAIN_PATTERN,

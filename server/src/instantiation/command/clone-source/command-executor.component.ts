@@ -49,7 +49,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
         const spawnedGitClone = spawn(
             'git', // TODO
-            ['clone', typedCommand.cloneUrl, typedCommand.sourceAbsoluteGuestPath],
+            ['clone', '--quiet', typedCommand.cloneUrl, typedCommand.sourceAbsoluteGuestPath],
             {cwd: typedCommand.workingDirectory}
         );
 

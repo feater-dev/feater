@@ -1,9 +1,7 @@
-import * as _ from 'lodash';
 import * as path from 'path';
 import {spawn} from 'child_process';
 import {Injectable} from '@nestjs/common';
 import {config} from '../../../config/config';
-import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SimpleCommand} from '../../executor/simple-command';
 import {RunDockerComposeCommand} from './command';
@@ -24,41 +22,51 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
         const typedCommand = command as RunDockerComposeCommand;
         const commandLogger = typedCommand.commandLogger;
 
-        let dockerComposeArgs = [];
+        const hostDockerSocketPath = '/var/run/docker.sock'; // TODO Move to config and env variables.
 
-        for (const absoluteGuestComposeFilePath of typedCommand.absoluteGuestComposeFilePaths) {
-            dockerComposeArgs.push(
-                ['--file', path.relative(typedCommand.absoluteGuestEnvDirPath, absoluteGuestComposeFilePath)],
-            );
-        }
-        dockerComposeArgs.push(['up', '-d', '--no-color']);
+        const composeUpCommand = config.instantiation.dockerBinaryPath;
+        const composeUpArguments: string[] = [];
 
-        const runEnvVariables = new EnvVariablesSet();
-        runEnvVariables.add('COMPOSE_HTTP_TIMEOUT', `${config.instantiation.dockerComposeHttpTimeout}`);
-
-        dockerComposeArgs = _.flatten(dockerComposeArgs);
-
-        const envVariables = EnvVariablesSet.merge(
-            typedCommand.envVariables,
-            runEnvVariables,
+        composeUpArguments.push(
+            'run',
+            '--rm',
+            '-e', `COMPOSE_HTTP_TIMEOUT=${config.instantiation.dockerComposeHttpTimeout}`,
         );
 
-        commandLogger.info(`Binary: ${config.instantiation.dockerComposeBinaryPath}`);
-        commandLogger.info(`Arguments: ${JSON.stringify(dockerComposeArgs)}`);
-        commandLogger.info(`Guest working directory: ${typedCommand.absoluteGuestEnvDirPath}`);
-        commandLogger.infoWithEnvVariables(envVariables, 'Environmental variables');
+        for (const envVariable of typedCommand.envVariables.toList()) {
+            composeUpArguments.push(
+                '-e', `${envVariable.name}=${envVariable.value}`,
+            );
+        }
+
+        composeUpArguments.push(
+            '-w', path.join('/source', typedCommand.envDirRelativePath),
+            '-v', `${hostDockerSocketPath}:/var/run/docker.sock`,
+            '-v', `${typedCommand.sourceDockerVolumeName}:/source`,
+            'docker/compose:1.23.2', // TODO Move to config and env variables.
+        );
+
+        for (const composeFileRelativePath of typedCommand.composeFileRelativePaths) {
+            composeUpArguments.push(
+                '-f',
+                path.relative(typedCommand.envDirRelativePath, composeFileRelativePath),
+            );
+        }
+
+        composeUpArguments.push('up', '-d', '--no-color');
+
+        commandLogger.info(`Source volume name: ${typedCommand.sourceDockerVolumeName}`);
+        commandLogger.info(`Command: ${composeUpCommand}`);
+        commandLogger.info(`Arguments: ${JSON.stringify(composeUpArguments)}`);
 
         await this.spawnHelper.promisifySpawnedWithHeader(
             spawn(
-                config.instantiation.dockerComposeBinaryPath,
-                dockerComposeArgs,
-                {
-                    cwd: typedCommand.absoluteGuestEnvDirPath,
-                    env: envVariables.toMap(),
-                },
+                composeUpCommand,
+                composeUpArguments,
+                {cwd: typedCommand.workingDirectory},
             ),
             commandLogger,
-            'run docker-compose',
+            'run compose',
         );
 
         return {};

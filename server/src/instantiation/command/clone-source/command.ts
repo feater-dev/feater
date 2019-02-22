@@ -10,6 +10,7 @@ export class CloneSourceCommand extends SimpleCommand {
         readonly sourceAbsoluteGuestPath: string,
         readonly sourceAbsoluteHostPath: string,
         readonly dockerComposeProjectName: string,
+        readonly workingDirectory: string,
     ) {
         super();
     }

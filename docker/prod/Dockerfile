@@ -107,7 +107,11 @@ RUN yarn global add pm2
 
 RUN (cd /etc/nginx/conf.d && ln -s /data/proxy)
 
-RUN mkdir -p /data/build /data/asset /data/proxy
+RUN mkdir -p \
+        /data/asset \
+        /data/build \
+        /data/key \
+        /data/proxy
 
 RUN rm /etc/nginx/sites-enabled/default
 COPY ./server/.docker/default.conf /etc/nginx/conf.d/default.conf

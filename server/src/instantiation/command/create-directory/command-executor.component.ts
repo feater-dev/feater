@@ -1,4 +1,5 @@
 import * as fs from 'fs-extra';
+import * as path from 'path';
 import {Injectable} from '@nestjs/common';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SimpleCommand} from '../../executor/simple-command';
@@ -15,6 +16,7 @@ export class CreateDirectoryCommandExecutorComponent implements SimpleCommandExe
         const typedCommand = command as CreateDirectoryCommand;
         typedCommand.commandLogger.info(`Absolute guest path: ${typedCommand.absoluteGuestDirPath}`);
         fs.mkdirSync(typedCommand.absoluteGuestDirPath);
+        fs.mkdirSync(path.join(typedCommand.absoluteGuestDirPath, 'source'));
 
         return {};
     }

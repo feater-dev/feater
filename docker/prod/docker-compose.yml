@@ -7,6 +7,7 @@ services:
     volumes:
       - "${FEATER_HOST_PATH_ASSET}:/data/asset"
       - "${FEATER_HOST_PATH_BUILD}:/data/build"
+      - "${FEATER_HOST_PATH_KEY}:/data/key"
       - "${FEATER_HOST_PATH_PROXY}:/data/proxy"
       - "${FEATER_HOST_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
     ports:
@@ -14,9 +15,10 @@ services:
       - '80:9011'
     environment:
       FEATER_GUEST_PATH_ROOT: "${FEATER_GUEST_PATH_ROOT}"
-      FEATER_GUEST_PATH_BUILD: "/data/build"
-      FEATER_GUEST_PATH_PROXY: "/data/proxy"
       FEATER_GUEST_PATH_ASSET: "/data/asset"
+      FEATER_GUEST_PATH_BUILD: "/data/build"
+      FEATER_GUEST_PATH_KEY: "/data/key"
+      FEATER_GUEST_PATH_PROXY: "/data/proxy"
       FEATER_HOST_PATH_BUILD: "${FEATER_HOST_PATH_BUILD}"
       FEATER_HOST_PATH_ASSET: "${FEATER_HOST_PATH_ASSET}"
       FEATER_MONGO_DSN: "${FEATER_MONGO_DSN}"

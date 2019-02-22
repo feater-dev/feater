@@ -1,4 +1,3 @@
-import * as nodegit from 'nodegit';
 import * as gitUrlParse from 'git-url-parse';
 import * as sshFingerprint from 'ssh-fingerprint';
 import {Injectable} from '@nestjs/common';
@@ -11,6 +10,9 @@ import {CommandLogger} from '../../logger/command-logger';
 import {EnvVariablesSet} from "../../sets/env-variables-set";
 import {FeaterVariablesSet} from "../../sets/feater-variables-set";
 import {CloneSourceCommandResultInterface} from "./command-result.interface";
+import {spawnSync, spawn} from "child_process";
+import {SpawnHelper} from "../../helper/spawn-helper.component";
+import {mkdirSync} from "fs";
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
@@ -19,6 +21,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
     constructor(
         private readonly deployKeyRepository: DeployKeyRepository,
+        private readonly spawnHelper: SpawnHelper,
     ) {}
 
     supports(command: SimpleCommand): boolean {
@@ -33,24 +36,33 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
         commandLogger.info(`Clone URL: ${typedCommand.cloneUrl}`);
         if ('ssh' === gitUrlParse(typedCommand.cloneUrl).protocol) {
-            commandLogger.info(`Using deploy key to clone over SSH.`);
-            deployKey = await this.deployKeyRepository.findOneByCloneUrl(typedCommand.cloneUrl);
-            commandLogger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
+            throw new Error('Not implemented.'); // TODO
+            // commandLogger.info(`Using deploy key to clone over SSH.`);
+            // deployKey = await this.deployKeyRepository.findOneByCloneUrl(typedCommand.cloneUrl);
+            // commandLogger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
         } else {
             deployKey = null;
             commandLogger.info(`Not using deploy key.`);
         }
-        const repository = await nodegit.Clone.clone(
-            typedCommand.cloneUrl,
-            typedCommand.sourceAbsoluteGuestPath,
-            this.createCloneOptions(typedCommand.commandLogger, deployKey),
-        );
-        commandLogger.info(`Cloning completed.`);
 
-        await this.checkoutReference(
+        mkdirSync(typedCommand.sourceAbsoluteGuestPath);
+
+        const spawnedGitClone = spawn(
+            'git', // TODO
+            ['clone', typedCommand.cloneUrl, typedCommand.sourceAbsoluteGuestPath],
+            {cwd: typedCommand.workingDirectory}
+        );
+
+        await this.spawnHelper.promisifySpawnedWithHeader(
+            spawnedGitClone,
+            commandLogger,
+            'clone source',
+        );
+
+        this.checkoutReference(
             typedCommand.referenceType,
             typedCommand.referenceName,
-            repository,
+            typedCommand.sourceAbsoluteGuestPath,
             commandLogger
         );
 
@@ -88,68 +100,123 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         } as CloneSourceCommandResultInterface;
     }
 
-    protected createCloneOptions(commandLogger: CommandLogger, deployKey?: DeployKeyInterface): any {
-        let lastProgress: string;
+    // protected createCloneOptions(commandLogger: CommandLogger, deployKey?: DeployKeyInterface): any {
+    //     let lastProgress: string;
+    //
+    //     const callbacks: any = {};
+    //
+    //     callbacks.transferProgress = {
+    //         throttle: this.PROGRESS_THROTTLE_PERIOD,
+    //             callback: (transferProgress) => {
+    //             const progress = (100 * (
+    //                 (transferProgress.receivedObjects() + transferProgress.indexedObjects()) /
+    //                 (transferProgress.totalObjects() * 2)
+    //             )).toFixed(2);
+    //
+    //             if (progress !== lastProgress) {
+    //                 lastProgress = progress;
+    //                 commandLogger.info(`Cloning progress ${progress}%.`);
+    //             }
+    //         },
+    //     };
+    //
+    //     if (deployKey) {
+    //         callbacks.credentials = (repoUrl, username) => nodegit.Cred.sshKeyMemoryNew(
+    //             username,
+    //             deployKey.publicKey,
+    //             deployKey.privateKey,
+    //             deployKey.passphrase,
+    //         );
+    //     }
+    //
+    //     return {
+    //         fetchOpts: {
+    //             callbacks,
+    //         },
+    //     };
+    // }
 
-        const callbacks: any = {};
-
-        callbacks.transferProgress = {
-            throttle: this.PROGRESS_THROTTLE_PERIOD,
-                callback: (transferProgress) => {
-                const progress = (100 * (
-                    (transferProgress.receivedObjects() + transferProgress.indexedObjects()) /
-                    (transferProgress.totalObjects() * 2)
-                )).toFixed(2);
-
-                if (progress !== lastProgress) {
-                    lastProgress = progress;
-                    commandLogger.info(`Cloning progress ${progress}%.`);
-                }
-            },
-        };
-
-        if (deployKey) {
-            callbacks.credentials = (repoUrl, username) => nodegit.Cred.sshKeyMemoryNew(
-                username,
-                deployKey.publicKey,
-                deployKey.privateKey,
-                deployKey.passphrase,
-            );
-        }
-
-        return {
-            fetchOpts: {
-                callbacks,
-            },
-        };
-    }
-
-    protected async checkoutReference(
+    protected checkoutReference(
         referenceType: string,
         referenceName: string,
-        repo: nodegit.Repository,
+        sourceAbsoluteGuestPath: string,
         commandLogger: CommandLogger
-    ): Promise<void> {
+    ): void {
+        let commitHash: string;
+        let fullReference: string;
+        let matchedFullReference: string;
+        let matchedCommitHash: string;
+
         if ('branch' === referenceType) {
-            const reference = await repo.getBranch(`refs/remotes/origin/${referenceName}`);
-            await repo.checkoutRef(reference);
-            commandLogger.info(`Checked out branch: ${referenceName}`);
+            const showReferencesOutput = spawnSync(
+                    'git', // TODO
+                    ['show-ref', '--heads'],
+                    {cwd: sourceAbsoluteGuestPath},
+                )
+                .stdout
+                .toString()
+                .replace(/\n$/, '')
+                .split('\n');
 
-            return;
+            for (const showReferenceOutput of showReferencesOutput) {
+                [commitHash, fullReference] = showReferenceOutput.split(' ');
+                if (`refs/heads/${referenceName}` === fullReference) {
+                    matchedFullReference = fullReference;
+                    matchedCommitHash = commitHash;
+                    break;
+                }
+            }
         }
 
-        if ('tag' === referenceType) {
-            const reference = await repo.getReference(`refs/tags/${referenceName}`);
-            await repo.checkoutRef(reference);
-            commandLogger.info(`Checked out tag: ${referenceName}`);
+        else if ('tag' === referenceType) {
+            const showReferencesOutput = spawnSync(
+                    'git', // TODO
+                    ['show-ref', '--tags'],
+                    {cwd: sourceAbsoluteGuestPath},
+                )
+                .stdout
+                .toString()
+                .replace(/\n$/, '')
+                .split('\n');
+
+            for (const showReferenceOutput of showReferencesOutput) {
+                [commitHash, fullReference] = showReferenceOutput.split(' ');
+                if (`refs/tags/${referenceName}` === fullReference) {
+                    matchedFullReference = fullReference;
+                    matchedCommitHash = commitHash;
+                    break;
+                }
+            }
         }
 
-        if ('commit' === referenceType) {
-            const commit = await repo.getCommit(referenceName);
-            await repo.setHeadDetached(commit.id());
-            commandLogger.info(`Checked out commit: ${referenceName}`);
+        else if ('commit' === referenceType) {
+            matchedFullReference = matchedCommitHash = referenceName;
         }
 
-        throw new Error(`Unknown reference type '${referenceType}'.`);
+        else {
+            throw new Error(`Unknown reference type '${referenceType}'.`);
+        }
+
+        const gitLogLine = spawnSync(
+                'git', // TODO
+                ['log', '--oneline', '-1',  '--no-decorate', '--no-color', matchedCommitHash],
+                {cwd: sourceAbsoluteGuestPath},
+            )
+            .stdout
+            .toString()
+            .replace(/\n$/, '')
+            .split('\n')[0];
+        commandLogger.info(gitLogLine);
+
+        const gitLogLineSeparatorIndex = gitLogLine.indexOf(' ');
+        const matchedCommitShortHash = gitLogLine.substr(0, gitLogLineSeparatorIndex);
+        const matchedCommitMessage = gitLogLine.substr(gitLogLineSeparatorIndex + 1);
+
+        const gitCheckoutOutput = spawnSync(
+            'git',
+            ['checkout', matchedFullReference],
+            {cwd: sourceAbsoluteGuestPath},
+        );
+
     }
 }

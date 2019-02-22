@@ -186,6 +186,7 @@ export class InstanceCreatorComponent {
                     source.paths.absolute.guest,
                     source.paths.absolute.host,
                     instanceContext.dockerComposeProjectName,
+                    source.paths.absolute.guest, // TODO Replace with working directory.
                 ),
                 async (result: CloneSourceCommandResultInterface): Promise<void> => {
                     source.dockerVolumeName = result.dockerVolumeName;

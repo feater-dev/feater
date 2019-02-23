@@ -2,8 +2,6 @@ FROM node:10-alpine
 
 WORKDIR /app
 
-RUN apk add --update --no-cache bash curl unzip git
-
 COPY ./server/package.json ./server/yarn.lock ./
 
 RUN yarn install --frozen-lockfile \
@@ -39,9 +37,9 @@ RUN apk add --update --no-cache bash curl unzip git nginx
 
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 
-COPY ./server/.docker/default.conf /etc/nginx/conf.d/default.conf
+COPY ./.docker/prod/default.conf /etc/nginx/conf.d/default.conf
 
-COPY ./server/.docker/command.sh /command.sh
+COPY ./.docker/prod/command.sh /command.sh
 
 RUN \
     # Install PM2.

@@ -3,7 +3,6 @@ version: '3'
 services:
 
   app:
-    image: feater:latest
     volumes:
       - "${FEATER_HOST_PATH_ASSET}:/data/asset"
       - "${FEATER_HOST_PATH_BUILD}:/data/build"
@@ -34,7 +33,6 @@ services:
     networks:
       - internal
       - proxy
-    restart: unless-stopped
 
   mongo:
     image: mongo:3.6
@@ -42,7 +40,6 @@ services:
       - "${FEATER_MONGO_HOST_PATH_DATA}:/data/db"
     networks:
       - internal
-    restart: unless-stopped
 
 networks:
   internal:

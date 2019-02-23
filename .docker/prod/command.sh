@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 docker pull alpine:3.9
 docker pull docker/compose:1.23.2
 

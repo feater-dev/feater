@@ -68,7 +68,7 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
         // TODO Add some error handling.
 
         const combinedComposeConfiguration = dockerComposeConfigSpawnResult.stdout.toString();
-        commandLogger.info(`Combined compose configuration (env variable values not available yet):\n${combinedComposeConfiguration}`);
+        commandLogger.info(`Combined compose configuration (some environmental variable values not available yet):\n${combinedComposeConfiguration}`);
 
         const compose = jsYaml.safeLoad(combinedComposeConfiguration);
 

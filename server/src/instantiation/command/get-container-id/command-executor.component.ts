@@ -51,9 +51,6 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
         }
         commandLogger.infoWithEnvVariables(envVariables);
         commandLogger.infoWithFeaterVariables(featerVariables);
-        commandLogger.info(`Service ID to container ID map:\n${
-            JSON.stringify(serviceContainerIds, null, 2)
-        }`);
 
         return {serviceContainerIds, envVariables, featerVariables} as GetContainerIdsCommandResultInterface;
     }

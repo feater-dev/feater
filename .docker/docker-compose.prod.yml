@@ -3,7 +3,7 @@ version: '3'
 services:
 
   app:
-    image: feater:latest
+    image: feater
     restart: unless-stopped
 
   mongo:

@@ -10,8 +10,8 @@ services:
       - "${FEATER_HOST_PATH_PROXY}:/data/proxy"
       - "${FEATER_HOST_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
     ports:
-      - '${FEATER_PORT}:9010'
-      - '80:9011'
+      - '${FEATER_CLIENT_PORT}:9010'
+      - '${FEATER_INSTANCE_PORT}:9011'
     environment:
       FEATER_GUEST_PATH_ROOT: "${FEATER_GUEST_PATH_ROOT}"
       FEATER_GUEST_PATH_ASSET: "/data/asset"

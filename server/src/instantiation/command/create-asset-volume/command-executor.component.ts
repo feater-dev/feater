@@ -8,13 +8,13 @@ import {SpawnHelper} from '../../helper/spawn-helper.component';
 import {AssetHelper} from '../../../persistence/helper/asset-helper.component';
 import {SimpleCommand} from '../../executor/simple-command';
 import {EnvVariablesSet} from '../../sets/env-variables-set';
-import {CreateVolumeFromAssetCommandResultInterface} from './command-result.interface';
-import {CreateVolumeFromAssetCommand} from './command';
+import {CreateAssetVolumeCommandResultInterface} from './command-result.interface';
+import {CreateAssetVolumeCommand} from './command';
 import {FeaterVariablesSet} from '../../sets/feater-variables-set';
 import {CommandLogger} from '../../logger/command-logger';
 
 @Injectable()
-export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
+export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
 
     constructor(
         private readonly assetRepository: AssetRepository,
@@ -23,11 +23,11 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
     ) {}
 
     supports(command: SimpleCommand): boolean {
-        return (command instanceof CreateVolumeFromAssetCommand);
+        return (command instanceof CreateAssetVolumeCommand);
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as CreateVolumeFromAssetCommand;
+        const typedCommand = command as CreateAssetVolumeCommand;
         const commandLogger = typedCommand.commandLogger;
 
         commandLogger.info(`Asset ID: ${typedCommand.assetId}`);
@@ -65,7 +65,7 @@ export class CreateVolumeFromAssetCommandExecutorComponent implements SimpleComm
             dockerVolumeName,
             envVariables,
             featerVariables,
-        } as CreateVolumeFromAssetCommandResultInterface;
+        } as CreateAssetVolumeCommandResultInterface;
     }
 
     protected createVolume(

@@ -1,6 +1,6 @@
 import {SimpleCommand} from '../../executor/simple-command';
 
-export class CreateVolumeFromSourceCommand extends SimpleCommand {
+export class CreateSourceVolumeCommand extends SimpleCommand {
 
     constructor(
         readonly sourceId: string,

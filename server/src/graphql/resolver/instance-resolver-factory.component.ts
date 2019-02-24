@@ -164,7 +164,7 @@ export class InstanceResolverFactory {
         return async (obj: any, removeInstanceInput: RemoveInstanceInputTypeInterface): Promise<boolean> => {
             const instance = await this.instanceRepository.findById(removeInstanceInput.id);
             execSync(
-                'bash -c removeByProjectIdAndIdentifier-instance.sh',
+                'bash -c remove-instance.sh',
                 {
                     cwd: path.join(config.guestPaths.root, 'bin'),
                     env: {
@@ -172,7 +172,6 @@ export class InstanceResolverFactory {
                         COMPOSE_PROJECT_NAME_PREFIX: `${config.instantiation.containerNamePrefix}${instance.hash}`,
                         FEATER_GUEST_PATH_BUILD: config.guestPaths.build,
                         FEATER_GUEST_PATH_PROXY: config.guestPaths.proxy,
-                        FEATER_NGINX_CONTAINER_NAME: 'feater_nginx',
                     },
                 },
             );

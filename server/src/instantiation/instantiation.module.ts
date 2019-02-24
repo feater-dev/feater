@@ -20,8 +20,9 @@ import {RunDockerComposeCommandExecutorComponent} from './command/run-docker-com
 import {ExecuteHostCmdCommandExecutorComponent} from './command/after-build/execute-host-cmd/command-executor.component';
 import {ExecuteServiceCmdCommandExecutorComponent} from './command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from './command/after-build/copy-asset-into-container/command-executor.component';
-import {CreateVolumeFromAssetCommandExecutorComponent} from './command/create-volume-from-asset/command-executor.component';
-import {CreateVolumeFromSourceCommandExecutorComponent} from "./command/create-volume-from-source/command-executor.component";
+import {CreateAssetVolumeCommandExecutorComponent} from './command/create-asset-volume/command-executor.component';
+import {CreateSourceVolumeCommandExecutorComponent} from "./command/create-source-volume/command-executor.component";
+import {RemoveSourceVolumeCommandExecutorComponent} from "./command/remove-source-volume/command-executor.component";
 import {CopyFileCommandFactoryComponent} from './command/before-build/copy-file/command-factory.component';
 import {InterpolateFileCommandFactoryComponent} from './command/before-build/interpolate-file/command-factory.component';
 import {CopyAssetIntoContainerCommandFactoryComponent} from './command/after-build/copy-asset-into-container/command-factory.component';
@@ -60,8 +61,9 @@ import {DockerVolumeHelperComponent} from "../docker/docker-volume-helper.compon
         ExecuteHostCmdCommandExecutorComponent,
         ExecuteServiceCmdCommandExecutorComponent,
         CopyAssetIntoContainerCommandExecutorComponent,
-        CreateVolumeFromAssetCommandExecutorComponent,
-        CreateVolumeFromSourceCommandExecutorComponent,
+        CreateAssetVolumeCommandExecutorComponent,
+        CreateSourceVolumeCommandExecutorComponent,
+        RemoveSourceVolumeCommandExecutorComponent,
         EnableProxyDomainsCommandExecutorComponent,
         ContainerInfoCheckerComponent,
         ContainerStateCheckerComponent,

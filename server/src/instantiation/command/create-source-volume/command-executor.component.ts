@@ -4,12 +4,12 @@ import {config} from '../../../config/config';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SpawnHelper} from '../../helper/spawn-helper.component';
 import {SimpleCommand} from '../../executor/simple-command';
-import {CreateVolumeFromSourceCommand} from './command';
+import {CreateSourceVolumeCommand} from './command';
 import {CommandLogger} from '../../logger/command-logger';
 import {DockerVolumeHelperComponent} from "../../../docker/docker-volume-helper.component";
 
 @Injectable()
-export class CreateVolumeFromSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
+export class CreateSourceVolumeCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
 
     constructor(
         private readonly dockerVolumeHelperComponent: DockerVolumeHelperComponent,
@@ -17,14 +17,11 @@ export class CreateVolumeFromSourceCommandExecutorComponent implements SimpleCom
     ) {}
 
     supports(command: SimpleCommand): boolean {
-        return (command instanceof CreateVolumeFromSourceCommand);
+        return (command instanceof CreateSourceVolumeCommand);
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        // TODO Adjust.
-        // TODO We need to take source from directory and create new volume containing it.
-
-        const typedCommand = command as CreateVolumeFromSourceCommand;
+        const typedCommand = command as CreateSourceVolumeCommand;
         const commandLogger = typedCommand.commandLogger;
 
         commandLogger.info(`Source ID: ${typedCommand.sourceId}`);

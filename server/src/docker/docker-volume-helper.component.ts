@@ -11,7 +11,18 @@ export class DockerVolumeHelperComponent {
     ): ChildProcess {
         return spawn(
             config.instantiation.dockerBinaryPath,
-            ['volume', 'create', '--name', volumeName],
+            ['volume', 'create', volumeName],
+            {cwd: workingDirectory},
+        );
+    }
+
+    spawnVolumeRemove(
+        volumeName: string,
+        workingDirectory: string,
+    ): ChildProcess {
+        return spawn(
+            config.instantiation.dockerBinaryPath,
+            ['volume', 'rm', volumeName],
             {cwd: workingDirectory},
         );
     }

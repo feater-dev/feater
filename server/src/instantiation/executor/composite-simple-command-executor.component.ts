@@ -15,8 +15,9 @@ import {RunDockerComposeCommandExecutorComponent} from '../command/run-docker-co
 import {ExecuteHostCmdCommandExecutorComponent} from '../command/after-build/execute-host-cmd/command-executor.component';
 import {ExecuteServiceCmdCommandExecutorComponent} from '../command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from '../command/after-build/copy-asset-into-container/command-executor.component';
-import {CreateVolumeFromAssetCommandExecutorComponent} from '../command/create-volume-from-asset/command-executor.component';
-import {CreateVolumeFromSourceCommandExecutorComponent} from "../command/create-volume-from-source/command-executor.component";
+import {CreateAssetVolumeCommandExecutorComponent} from '../command/create-asset-volume/command-executor.component';
+import {CreateSourceVolumeCommandExecutorComponent} from "../command/create-source-volume/command-executor.component";
+import {RemoveSourceVolumeCommandExecutorComponent} from "../command/remove-source-volume/command-executor.component";
 import {EnableProxyDomainsCommandExecutorComponent} from '../command/enable-proxy-domains/command-executor.component';
 
 @Injectable()
@@ -39,8 +40,9 @@ export class CompositeSimpleCommandExecutorComponent {
         executeHostCmdCommandExecutorComponent: ExecuteHostCmdCommandExecutorComponent,
         executeServiceCmdCommandExecutorComponent: ExecuteServiceCmdCommandExecutorComponent,
         copyAssetIntoContainerCommandExecutorComponent: CopyAssetIntoContainerCommandExecutorComponent,
-        createVolumeFromAssetCommandExecutorComponent: CreateVolumeFromAssetCommandExecutorComponent,
-        createVolumeFromSourceCommandExecutorComponent: CreateVolumeFromSourceCommandExecutorComponent,
+        createAssetVolumeCommandExecutorComponent: CreateAssetVolumeCommandExecutorComponent,
+        createSourceVolumeCommandExecutorComponent: CreateSourceVolumeCommandExecutorComponent,
+        removeSourceVolumeCommandExecutorComponent: RemoveSourceVolumeCommandExecutorComponent,
         enableProxyDomainsCommandExecutorComponent: EnableProxyDomainsCommandExecutorComponent,
     ) {
         this.executors = [
@@ -58,8 +60,9 @@ export class CompositeSimpleCommandExecutorComponent {
             executeHostCmdCommandExecutorComponent,
             executeServiceCmdCommandExecutorComponent,
             copyAssetIntoContainerCommandExecutorComponent,
-            createVolumeFromAssetCommandExecutorComponent,
-            createVolumeFromSourceCommandExecutorComponent,
+            createAssetVolumeCommandExecutorComponent,
+            createSourceVolumeCommandExecutorComponent,
+            removeSourceVolumeCommandExecutorComponent,
             enableProxyDomainsCommandExecutorComponent,
         ];
     }

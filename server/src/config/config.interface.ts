@@ -10,9 +10,9 @@ export interface ConfigInterface {
     };
     readonly hostPaths: {
         readonly build: string;
-        readonly asset: string;
     };
     readonly instantiation: {
+        readonly gitBinaryPath: string;
         readonly dockerBinaryPath: string;
         readonly dockerComposeHttpTimeout: number;
         readonly containerNamePrefix: string;

@@ -13,6 +13,7 @@ import {CloneSourceCommandResultInterface} from "./command-result.interface";
 import {spawnSync, spawn} from "child_process";
 import {SpawnHelper} from "../../helper/spawn-helper.component";
 import {mkdirSync} from "fs";
+import {config} from "../../../config/config";
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
@@ -48,7 +49,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         mkdirSync(typedCommand.sourceAbsoluteGuestPath);
 
         const spawnedGitClone = spawn(
-            'git', // TODO
+            config.instantiation.gitBinaryPath,
             ['clone', '--quiet', typedCommand.cloneUrl, typedCommand.sourceAbsoluteGuestPath],
             {cwd: typedCommand.workingDirectory}
         );
@@ -144,13 +145,13 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
     ): void {
         let commitHash: string;
         let fullReference: string;
-        let matchedFullReference: string;
         let matchedCommitHash: string;
 
         if ('branch' === referenceType) {
+            commandLogger.info(`Finding branch ${referenceName}.`);
             const showReferencesOutput = spawnSync(
-                    'git', // TODO
-                    ['show-ref', '--heads'],
+                    config.instantiation.gitBinaryPath,
+                    ['show-ref'],
                     {cwd: sourceAbsoluteGuestPath},
                 )
                 .stdout
@@ -160,8 +161,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
             for (const showReferenceOutput of showReferencesOutput) {
                 [commitHash, fullReference] = showReferenceOutput.split(' ');
-                if (`refs/heads/${referenceName}` === fullReference) {
-                    matchedFullReference = fullReference;
+                if (`refs/remotes/origin/${referenceName}` === fullReference) {
                     matchedCommitHash = commitHash;
                     break;
                 }
@@ -169,8 +169,9 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         }
 
         else if ('tag' === referenceType) {
+            commandLogger.info(`Finding tag ${referenceName}.`);
             const showReferencesOutput = spawnSync(
-                    'git', // TODO
+                    config.instantiation.gitBinaryPath,
                     ['show-ref', '--tags'],
                     {cwd: sourceAbsoluteGuestPath},
                 )
@@ -182,7 +183,6 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
             for (const showReferenceOutput of showReferencesOutput) {
                 [commitHash, fullReference] = showReferenceOutput.split(' ');
                 if (`refs/tags/${referenceName}` === fullReference) {
-                    matchedFullReference = fullReference;
                     matchedCommitHash = commitHash;
                     break;
                 }
@@ -190,31 +190,45 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         }
 
         else if ('commit' === referenceType) {
-            matchedFullReference = matchedCommitHash = referenceName;
+            commandLogger.info(`Finding commit ${referenceName}.`);
+            matchedCommitHash = referenceName;
         }
 
         else {
-            throw new Error(`Unknown reference type '${referenceType}'.`);
+            throw new Error(`Unknown reference type ${referenceType}.`);
         }
 
-        const gitLogLine = spawnSync(
-                'git', // TODO
+        if (!matchedCommitHash) {
+            throw new Error('Failed to find reference.');
+        }
+
+        const gitLogLines = spawnSync(
+                config.instantiation.gitBinaryPath,
                 ['log', '--oneline', '-1',  '--no-decorate', '--no-color', matchedCommitHash],
                 {cwd: sourceAbsoluteGuestPath},
             )
             .stdout
             .toString()
             .replace(/\n$/, '')
-            .split('\n')[0];
-        commandLogger.info(gitLogLine);
+            .split('\n');
 
-        const gitLogLineSeparatorIndex = gitLogLine.indexOf(' ');
-        const matchedCommitShortHash = gitLogLine.substr(0, gitLogLineSeparatorIndex);
-        const matchedCommitMessage = gitLogLine.substr(gitLogLineSeparatorIndex + 1);
+        if (!gitLogLines.length) {
+            throw new Error(`Failed to find commit ${matchedCommitHash}.`);
+        }
 
-        const gitCheckoutOutput = spawnSync(
-            'git',
-            ['checkout', matchedFullReference],
+        if (gitLogLines.length > 1) {
+            throw new Error(`Multiple commits matched ${matchedCommitHash}.`);
+        }
+
+        const gitLogLineSeparatorIndex = gitLogLines[0].indexOf(' ');
+        const matchedCommitShortHash = gitLogLines[0].substr(0, gitLogLineSeparatorIndex);
+        const matchedCommitMessage = gitLogLines[0].substr(gitLogLineSeparatorIndex + 1);
+
+        commandLogger.info(`Checking out commit ${matchedCommitShortHash} with message '${matchedCommitMessage}'`);
+
+        spawnSync(
+            config.instantiation.gitBinaryPath,
+            ['checkout', matchedCommitShortHash],
             {cwd: sourceAbsoluteGuestPath},
         );
 

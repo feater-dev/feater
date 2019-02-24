@@ -1,12 +1,11 @@
-import * as path from 'path';
 import * as _ from 'lodash';
 import {Injectable} from '@nestjs/common';
 import {BaseLogger} from '../logger/base-logger';
 import {CommandsList} from './executor/commands-list';
 import {ContextAwareCommand} from './executor/context-aware-command.interface';
 import {CreateDirectoryCommand} from './command/create-directory/command';
-import {CreateVolumeFromAssetCommand} from './command/create-volume-from-asset/command';
-import {CreateVolumeFromAssetCommandResultInterface} from './command/create-volume-from-asset/command-result.interface';
+import {CreateAssetVolumeCommand} from './command/create-asset-volume/command';
+import {CreateAssetVolumeCommandResultInterface} from './command/create-asset-volume/command-result.interface';
 import {CloneSourceCommand} from './command/clone-source/command';
 import {CloneSourceCommandResultInterface} from "./command/clone-source/command-result.interface";
 import {ParseDockerComposeCommand} from './command/parse-docker-compose/command';
@@ -42,7 +41,8 @@ import {CommandsMap} from './executor/commands-map';
 import {CommandsMapItem} from './executor/commands-map-item';
 import {InstanceInterface} from '../persistence/interface/instance.interface';
 import {DefinitionInterface} from '../persistence/interface/definition.interface';
-import {CreateVolumeFromSourceCommand} from "./command/create-volume-from-source/command";
+import {CreateSourceVolumeCommand} from "./command/create-source-volume/command";
+import {RemoveSourceVolumeCommand} from "./command/remove-source-volume/command";
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -99,20 +99,29 @@ export class InstanceCreatorComponent {
 
         await updateInstance();
 
-        this.addCreateDirectory(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addCreateVolumeFromAssetsAndCloneSource(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addCreateVolumeFromSources(createInstanceCommand, taskId, instanceContext, updateInstance); // TODO Added temporarily.
-        this.addParseDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addPrepareProxyDomains(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addPrepareSummaryItems(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addBeforeBuildTasks(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addCreateVolumeFromSources(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addRunDockerCompose(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addGetContainerIds(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addConnectContainersToNetwork(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addConfigureProxyDomains(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addAfterBuildTasks(createInstanceCommand, taskId, instanceContext, updateInstance);
-        this.addEnableProxyDomains(createInstanceCommand, taskId, instanceContext, updateInstance);
+        const addStageArguments = [createInstanceCommand, taskId, instanceContext, updateInstance];
+
+        const addStageMethods = [
+            this.addCreateDirectory,
+            this.addCreateVolumeFromAssetsAndCloneSource,
+            this.addCreateComposeSourceVolumes,
+            this.addParseDockerCompose,
+            this.addRemoveComposeSourceVolumes,
+            this.addPrepareProxyDomains,
+            this.addPrepareSummaryItems,
+            this.addBeforeBuildTasks,
+            this.addCreateAllSourceVolumes,
+            this.addRunDockerCompose,
+            this.addGetContainerIds,
+            this.addConnectContainersToNetwork,
+            this.addConfigureProxyDomains,
+            this.addAfterBuildTasks,
+            this.addEnableProxyDomains,
+        ];
+
+        for (const addStageMethod of addStageMethods) {
+            addStageMethod.apply(this, addStageArguments);
+        }
 
         return this.commandExecutorComponent
             .execute(createInstanceCommand)
@@ -158,14 +167,14 @@ export class InstanceCreatorComponent {
                 instanceContext.id,
                 `Create asset volume \`${volume.id}\``,
                 () => {
-                    return new CreateVolumeFromAssetCommand(
+                    return new CreateAssetVolumeCommand(
                         volume.id,
                         volume.assetId,
                         instanceContext.composeProjectName,
                         instanceContext.paths.dir.absolute.guest,
                     );
                 },
-                async (result: CreateVolumeFromAssetCommandResultInterface): Promise<void> => {
+                async (result: CreateAssetVolumeCommandResultInterface): Promise<void> => {
                     volume.dockerVolumeName = result.dockerVolumeName;
                     instanceContext.mergeEnvVariablesSet(result.envVariables);
                     instanceContext.mergeFeaterVariablesSet(result.featerVariables);
@@ -222,7 +231,7 @@ export class InstanceCreatorComponent {
                 instanceContext.id,
                 `Parse compose configuration`,
                 () => {
-                    const composeFile = instanceContext.composeFiles[0]; // TODO Handle multiple compose files.
+                    const composeFile = instanceContext.composeFiles[0];
                     const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new ParseDockerComposeCommand(
@@ -330,7 +339,54 @@ export class InstanceCreatorComponent {
         );
     }
 
-    protected addCreateVolumeFromSources(
+    protected addCreateComposeSourceVolumes(
+        createInstanceCommand: CommandsList,
+        taskId: string,
+        instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
+    ): void {
+        const composeFile = instanceContext.composeFiles[0];
+        const source = instanceContext.findSource(composeFile.sourceId);
+
+        createInstanceCommand.addCommand(
+            new ContextAwareCommand(
+                taskId,
+                instanceContext.id,
+                `Create source volume \`${source.id}\``,
+                () => new CreateSourceVolumeCommand(
+                    source.id,
+                    source.dockerVolumeName,
+                    source.paths.absolute.guest,
+                    source.paths.absolute.guest,
+                ),
+            ),
+        );
+    }
+
+    protected addRemoveComposeSourceVolumes(
+        createInstanceCommand: CommandsList,
+        taskId: string,
+        instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
+    ): void {
+        const composeFile = instanceContext.composeFiles[0];
+        const source = instanceContext.findSource(composeFile.sourceId);
+
+        createInstanceCommand.addCommand(
+            new ContextAwareCommand(
+                taskId,
+                instanceContext.id,
+                `Remove source volume \`${source.id}\``,
+                () => new RemoveSourceVolumeCommand(
+                    source.id,
+                    source.dockerVolumeName,
+                    source.paths.absolute.guest,
+                ),
+            ),
+        );
+    }
+
+    protected addCreateAllSourceVolumes(
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
@@ -343,7 +399,7 @@ export class InstanceCreatorComponent {
                         taskId,
                         instanceContext.id,
                         `Create source volume \`${source.id}\``,
-                        () => new CreateVolumeFromSourceCommand(
+                        () => new CreateSourceVolumeCommand(
                             source.id,
                             source.dockerVolumeName,
                             source.paths.absolute.guest,
@@ -367,7 +423,7 @@ export class InstanceCreatorComponent {
                 instanceContext.id,
                 `Run docker-compose`,
                 () => {
-                    const composeFile = instanceContext.composeFiles[0]; // TODO Handle multiple compose files.
+                    const composeFile = instanceContext.composeFiles[0];
                     const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new RunDockerComposeCommand(

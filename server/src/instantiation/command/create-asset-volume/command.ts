@@ -1,6 +1,6 @@
 import {SimpleCommand} from '../../executor/simple-command';
 
-export class CreateVolumeFromAssetCommand extends SimpleCommand {
+export class CreateAssetVolumeCommand extends SimpleCommand {
 
     constructor(
         readonly volumeId: string,

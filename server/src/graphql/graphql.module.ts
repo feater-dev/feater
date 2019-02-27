@@ -15,9 +15,11 @@ import {AssetResolverFactory} from './resolver/asset-resolver-factory.component'
 import {DeployKeyResolverFactory} from './resolver/deploy-key-resolver-factory.component';
 import {CommandLogsResolverFactory} from './resolver/command-logs-resolver-factory.component';
 import {CommandLogEntriesResolverFactory} from './resolver/command-log-entries-resolver-factory.component';
+import {HelperModule} from "../helper/helper.module";
 
 @Module({
     imports: [
+        HelperModule,
         PersistenceModule,
         InstantiationModule,
     ],

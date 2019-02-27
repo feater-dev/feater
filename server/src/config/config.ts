@@ -17,9 +17,10 @@ export const config: ConfigInterface = {
     },
     guestPaths: {
         root: path.join(__dirname, '../..'),
-        build: process.env.FEATER_GUEST_PATH_BUILD,
-        proxy: process.env.FEATER_GUEST_PATH_PROXY,
         asset: process.env.FEATER_GUEST_PATH_ASSET,
+        build: process.env.FEATER_GUEST_PATH_BUILD,
+        identity: process.env.FEATER_GUEST_PATH_IDENTITY,
+        proxy: process.env.FEATER_GUEST_PATH_PROXY,
     },
     hostPaths: {
         build: process.env.FEATER_HOST_PATH_BUILD,
@@ -31,6 +32,7 @@ export const config: ConfigInterface = {
         containerNamePrefix: process.env.FEATER_CONTAINER_NAME_PREFIX,
         proxyDomainPattern: process.env.FEATER_PROXY_DOMAIN_PATTERN,
         proxyNetworkName: process.env.FEATER_PROXY_NETWORK_NAME,
+        dockerComposeVersion: process.env.FEATER_DOCKER_COMPOSE_VERSION,
     },
     logger: {
         console: {
@@ -43,7 +45,3 @@ export const config: ConfigInterface = {
 };
 
 // TODO Validate config.
-
-// TODO Remove.
-console.log('--- config');
-console.log(config);

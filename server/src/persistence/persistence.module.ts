@@ -16,6 +16,7 @@ import {LogSchema} from './schema/log.schema';
 import {CommandLogSchema} from './schema/command-log.schema';
 import {CommandLogRepository} from './repository/command-log.repository';
 import {AssetHelper} from './helper/asset-helper.component';
+import {HelperModule} from "../helper/helper.module";
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import {AssetHelper} from './helper/asset-helper.component';
           name: 'Log',
           schema: LogSchema },
       ]),
+      HelperModule,
   ],
   controllers: [],
   providers: [

@@ -196,9 +196,6 @@ export class GraphqlSchemaFactory {
             AfterBuildTask: {
                 __resolveType: (afterBuildTask: AfterBuildTaskTypeInterface): string => {
                     switch (afterBuildTask.type) {
-                        case 'executeHostCommand':
-                            return 'ExecuteHostCommandAfterBuildTask';
-
                         case 'executeServiceCommand':
                             return 'ExecuteServiceCommandAfterBuildTask';
 

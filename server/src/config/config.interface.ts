@@ -4,9 +4,10 @@ export interface ConfigInterface {
     };
     readonly guestPaths: {
         readonly root: string;
-        readonly build: string;
-        readonly proxy: string;
         readonly asset: string;
+        readonly build: string;
+        readonly identity: string;
+        readonly proxy: string;
     };
     readonly hostPaths: {
         readonly build: string;
@@ -18,6 +19,7 @@ export interface ConfigInterface {
         readonly containerNamePrefix: string;
         readonly proxyDomainPattern: string;
         readonly proxyNetworkName: string;
+        readonly dockerComposeVersion: string;
     };
     readonly logger: {
         readonly console: {

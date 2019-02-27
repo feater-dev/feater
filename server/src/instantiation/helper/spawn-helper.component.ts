@@ -4,11 +4,13 @@ import {ExecuteCommandError} from './execute-command-error';
 import {CommandLogger} from "../logger/command-logger";
 
 interface SpawnHelperOptions {
-    muteStdout: boolean;
+    muteStdout?: boolean;
+    muteStderr?: boolean;
 }
 
 const defaultSpawnHelperOptions: SpawnHelperOptions = {
     muteStdout: false,
+    muteStderr: false,
 };
 
 @Injectable()
@@ -32,11 +34,13 @@ export class SpawnHelper {
                 });
         }
 
-        spawned.stderr
-            .pipe(split())
-            .on('data', (line: string) => {
-                commandLogger.error(line.toString());
-            });
+        if (!options.muteStderr) {
+            spawned.stderr
+                .pipe(split())
+                .on('data', (line: string) => {
+                    commandLogger.error(line.toString());
+                });
+        }
 
         spawned.on('error', error => {
             errorHandler(error);

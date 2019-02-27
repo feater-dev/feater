@@ -1,15 +1,18 @@
-import {Model, Types} from 'mongoose';
+import * as easyKeygen from 'easy-keygen';
+import {writeFileSync} from 'fs';
+import * as uuidVersion4 from 'uuid/v4';
+import {Model} from 'mongoose';
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {DeployKeyInterface} from '../interface/deploy-key.interface';
-import * as nanoid from 'nanoid';
-import * as easyKeygen from 'easy-keygen';
+import {DeployKeyHelperComponent} from "../../helper/deploy-key-helper.component";
 
 @Injectable()
 export class DeployKeyRepository {
 
     constructor(
         @InjectModel('DeployKey') private readonly deployKeyModel: Model<DeployKeyInterface>,
+        private readonly deployKeyHelper: DeployKeyHelperComponent,
     ) {}
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<DeployKeyInterface[]> {
@@ -61,15 +64,21 @@ export class DeployKeyRepository {
             throw new Error('More than one deploy key found.');
         }
 
-        const passphrase = nanoid(32);
+        const passphrase = uuidVersion4().replace(/-/g, '');
+
         const {publicKey, privateKey} = await easyKeygen(null, {passphrase});
+
+        writeFileSync(
+            this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(cloneUrl),
+            privateKey,
+            {mode: 0o400},
+        );
 
         let model;
         if (1 === oldModels.length) {
             model = oldModels[0];
             if (overwrite) {
                 model.publicKey = publicKey;
-                model.privateKey = privateKey;
                 model.passphrase = passphrase;
                 model.updatedAt = new Date();
             }
@@ -77,7 +86,6 @@ export class DeployKeyRepository {
             model = new this.deployKeyModel({
                 cloneUrl,
                 publicKey,
-                privateKey,
                 passphrase,
                 createdAt: new Date(),
                 updatedAt: new Date(),

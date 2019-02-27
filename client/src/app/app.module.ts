@@ -44,7 +44,6 @@ import {DefinitionAddComposeFileFormElementComponent} from './definition/add/for
 import {DefinitionAddVolumeFormElementComponent} from './definition/add/form-element/definition-add.volume-form-element.component';
 import {DefinitionListComponent} from './definition/list/definition-list.component';
 import {DefinitionTableComponent} from './definition/table/definition-table.component';
-import {ExecuteHostCommandTaskFormElementComponent} from './definition/add/form-element/after-build-task/execute-host-command-task-form-element.component';
 import {ExecuteServiceCommandTaskFormElementComponent} from './definition/add/form-element/after-build-task/execute-service-command-task-form-element.component';
 import {CopyAssetIntoContainerTaskFormElementComponent} from './definition/add/form-element/after-build-task/copy-asset-into-container-task-form-element.component';
 
@@ -122,7 +121,6 @@ const appRoutes: Routes = [
         DefinitionAddProxiedPortFormElementComponent,
         DefinitionAddEnvVariableFormElementComponent,
         DefinitionAddComposeFileFormElementComponent,
-        ExecuteHostCommandTaskFormElementComponent,
         ExecuteServiceCommandTaskFormElementComponent,
         CopyAssetIntoContainerTaskFormElementComponent,
         DefinitionAddSummaryItemFormElementComponent,
@@ -202,7 +200,6 @@ export class AppModule {
                         kind: 'UNION',
                         name: 'AfterBuildTask',
                         possibleTypes: [
-                            {name: 'ExecuteHostCommandAfterBuildTask'},
                             {name: 'ExecuteServiceCommandAfterBuildTask'},
                             {name: 'CopyAssetIntoContainerAfterBuildTask'},
                         ],

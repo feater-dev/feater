@@ -16,7 +16,6 @@ import {
     DefinitionAddFormEnvVariableFormElement,
     DefinitionAddFormSummaryItemFormElement,
     DefinitionAddFormConfigFormElement,
-    ExecuteHostCommandTaskFormElement,
     ExecuteServiceCommandTaskFormElement,
     AfterBuildTaskFormElement,
     CopyAssetIntoContainerTaskFormElement,
@@ -149,17 +148,6 @@ export class DefinitionAddComponent implements OnInit {
         }
     }
 
-    addAfterBuildTaskExecuteHostCommand(): void {
-        this.item.config.afterBuildTasks.push({
-            type: 'executeHostCommand',
-            id: '',
-            dependsOn: [],
-            command: [''],
-            inheritedEnvVariables: [],
-            customEnvVariables: [],
-        } as ExecuteHostCommandTaskFormElement);
-    }
-
     addAfterBuildTaskExecuteServiceCommand(): void {
         this.item.config.afterBuildTasks.push({
             type: 'executeServiceCommand',
@@ -180,10 +168,6 @@ export class DefinitionAddComponent implements OnInit {
             assetId: '',
             destinationPath: '',
         } as CopyAssetIntoContainerTaskFormElement);
-    }
-
-    isAfterBuildTaskExecuteHostCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'executeHostCommand' === afterBuildTask.type;
     }
 
     isAfterBuildTaskExecuteServiceCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
@@ -244,8 +228,8 @@ export class DefinitionAddComponent implements OnInit {
 
     protected mapItem(): any {
         for (const afterBuildTask of this.item.config.afterBuildTasks) {
-            if ('executeHostCommand' === afterBuildTask.type || 'executeServiceCommand' === afterBuildTask.type) {
-                this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteHostCommandTaskFormElement);
+            if ('executeServiceCommand' === afterBuildTask.type) {
+                this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteServiceCommandTaskFormElement);
             }
         }
 
@@ -282,7 +266,7 @@ export class DefinitionAddComponent implements OnInit {
         return mappedItem;
     }
 
-    protected filterAfterBuildExecuteCommandTask(afterBuildTask: ExecuteHostCommandTaskFormElement) {
+    protected filterAfterBuildExecuteCommandTask(afterBuildTask: ExecuteServiceCommandTaskFormElement) {
         afterBuildTask.command = _.filter(afterBuildTask.command, (commandPart) => !/^ *$/.test(commandPart));
         for (const inheritedEnvVariable of afterBuildTask.inheritedEnvVariables) {
             if (/^ *$/.test(inheritedEnvVariable.alias)) {

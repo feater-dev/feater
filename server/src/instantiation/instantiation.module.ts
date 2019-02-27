@@ -17,7 +17,6 @@ import {PrepareProxyDomainCommandExecutorComponent} from './command/prepare-port
 import {ConfigureProxyDomainCommandExecutorComponent} from './command/configure-proxy-domain/command-executor.component';
 import {PrepareSummaryItemsCommandExecutorComponent} from './command/prepare-summary-items/command-executor.component';
 import {RunDockerComposeCommandExecutorComponent} from './command/run-docker-compose/command-executor.component';
-import {ExecuteHostCmdCommandExecutorComponent} from './command/after-build/execute-host-cmd/command-executor.component';
 import {ExecuteServiceCmdCommandExecutorComponent} from './command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from './command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateAssetVolumeCommandExecutorComponent} from './command/create-asset-volume/command-executor.component';
@@ -26,7 +25,6 @@ import {RemoveSourceVolumeCommandExecutorComponent} from "./command/remove-sourc
 import {CopyFileCommandFactoryComponent} from './command/before-build/copy-file/command-factory.component';
 import {InterpolateFileCommandFactoryComponent} from './command/before-build/interpolate-file/command-factory.component';
 import {CopyAssetIntoContainerCommandFactoryComponent} from './command/after-build/copy-asset-into-container/command-factory.component';
-import {ExecuteHostCmdCommandFactoryComponent} from './command/after-build/execute-host-cmd/command-factory.component';
 import {ExecuteServiceCmdCommandFactoryComponent} from './command/after-build/execute-service-cmd/command-factory.component';
 import {ContextAwareCommandExecutorComponent} from './executor/context-aware-command-executor.component';
 import {CompositeSimpleCommandExecutorComponent} from './executor/composite-simple-command-executor.component';
@@ -38,10 +36,13 @@ import {CommandsListExecutorComponent} from './executor/commands-list-executor.c
 import {CommandExecutorComponent} from './executor/command-executor.component';
 import {VariablesPredictor} from './variable/variables-predictor';
 import {IpAddressCheckerComponent} from './ip-address-checker.component';
-import {DockerVolumeHelperComponent} from "../docker/docker-volume-helper.component";
+import {DockerVolumeHelperComponent} from "./docker/docker-volume-helper.component";
+import {RemoveSourceCommandExecutorComponent} from "./command/remove-source/command-executor.component";
+import {HelperModule} from "../helper/helper.module";
 
 @Module({
     imports: [
+        HelperModule,
         LoggerModule,
         PersistenceModule,
     ],
@@ -51,6 +52,7 @@ import {DockerVolumeHelperComponent} from "../docker/docker-volume-helper.compon
         CopyFileCommandExecutorComponent,
         CreateDirectoryCommandExecutorComponent,
         CloneSourceCommandExecutorComponent,
+        RemoveSourceCommandExecutorComponent,
         GetContainerIdsCommandExecutorComponent,
         InterpolateFileCommandExecutorComponent,
         ParseDockerComposeCommandExecutorComponent,
@@ -58,7 +60,6 @@ import {DockerVolumeHelperComponent} from "../docker/docker-volume-helper.compon
         ConfigureProxyDomainCommandExecutorComponent,
         PrepareSummaryItemsCommandExecutorComponent,
         RunDockerComposeCommandExecutorComponent,
-        ExecuteHostCmdCommandExecutorComponent,
         ExecuteServiceCmdCommandExecutorComponent,
         CopyAssetIntoContainerCommandExecutorComponent,
         CreateAssetVolumeCommandExecutorComponent,
@@ -76,7 +77,6 @@ import {DockerVolumeHelperComponent} from "../docker/docker-volume-helper.compon
         CopyFileCommandFactoryComponent,
         InterpolateFileCommandFactoryComponent,
         CopyAssetIntoContainerCommandFactoryComponent,
-        ExecuteHostCmdCommandFactoryComponent,
         ExecuteServiceCmdCommandFactoryComponent,
         CommandExecutorComponent,
         CommandsMapExecutorComponent,

@@ -1,17 +1,19 @@
+import * as sshFingerprint from 'ssh-fingerprint';
+import * as _ from 'lodash';
+import * as gitUrlParse from 'git-url-parse';
+import {unlinkSync} from "fs";
 import {Injectable} from '@nestjs/common';
 import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
 import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
 import {ResolverPaginationArgumentsInterface} from './pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ResolverDeployKeyFilterArgumentsInterface} from './filter-argument/resolver-deploy-key-filter-arguments.interface';
-import * as sshFingerprint from 'ssh-fingerprint';
 import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
 import {RegenerateDeployKeyInputTypeInterface} from '../input-type/regenerate-deploy-key-input-type.interface';
 import {RemoveDeployKeyInputTypeInterface} from '../input-type/remove-deploy-key-input-type.interface';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
-import * as _ from 'lodash';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
-import * as gitUrlParse from 'git-url-parse';
+import {DeployKeyHelperComponent} from "../../helper/deploy-key-helper.component";
 
 @Injectable()
 export class DeployKeyResolverFactory {
@@ -19,6 +21,7 @@ export class DeployKeyResolverFactory {
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
         private readonly deployKeyRepository: DeployKeyRepository,
         private readonly definitionRepository: DefinitionRepository,
+        private readonly deployKeyHelper: DeployKeyHelperComponent,
     ) { }
 
     protected readonly defaultSortKey = 'created_at_asc';
@@ -81,8 +84,7 @@ export class DeployKeyResolverFactory {
     getGenerateMissingItemsResolver(): (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface) => Promise<object> {
         return async (obj: any, regenerateDeployKeyInput: RegenerateDeployKeyInputTypeInterface): Promise<object> => {
             const definitions = await this.definitionRepository.find({}, 0, 99999);
-
-            let referencedCloneUrls = [];
+            const referencedCloneUrls = [];
             for (const definition of definitions) {
                 for (const source of definition.config.sources) {
                     const cloneUrl = (source as SourceTypeInterface).cloneUrl;
@@ -92,10 +94,16 @@ export class DeployKeyResolverFactory {
                 }
             }
 
-            referencedCloneUrls = _.uniq(referencedCloneUrls);
+            const deployKeys = await this.deployKeyRepository.find({}, 0, 99999);
+            const existingDeployKeyCloneUrls = [];
+            for (const deployKey of deployKeys) {
+                existingDeployKeyCloneUrls.push(deployKey.cloneUrl);
+            }
+
+            const missingReferencedCloneUrls = _.difference(_.uniq(referencedCloneUrls), existingDeployKeyCloneUrls);
             const createPromises = [];
-            for (const referencedCloneUrl of referencedCloneUrls) {
-                createPromises.push(this.deployKeyRepository.create(referencedCloneUrl));
+            for (const missingReferencedCloneUrl of missingReferencedCloneUrls) {
+                createPromises.push(this.deployKeyRepository.create(missingReferencedCloneUrl));
             }
             await Promise.all(createPromises);
 
@@ -127,6 +135,7 @@ export class DeployKeyResolverFactory {
             const removePromises = [];
             for (const unreferencedCloneUrl of unreferencedCloneUrls) {
                 removePromises.push(this.deployKeyRepository.remove(unreferencedCloneUrl));
+                unlinkSync(this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(unreferencedCloneUrl));
             }
             await Promise.all(removePromises);
 
@@ -137,6 +146,7 @@ export class DeployKeyResolverFactory {
     getRemoveItemResolver(): (obj: any, removeDeployKeyInput: RemoveDeployKeyInputTypeInterface) => Promise<object> {
         return async (obj: any, removeDeployKeyInput: RemoveDeployKeyInputTypeInterface): Promise<object> => {
             await this.deployKeyRepository.remove(removeDeployKeyInput.cloneUrl);
+            unlinkSync(this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(removeDeployKeyInput.cloneUrl));
 
             return {removed: true};
         };

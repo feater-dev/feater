@@ -1,27 +1,26 @@
 import * as gitUrlParse from 'git-url-parse';
 import * as sshFingerprint from 'ssh-fingerprint';
+import {mkdirSync} from "fs";
+import {spawnSync, spawn, SpawnOptions} from "child_process";
 import {Injectable} from '@nestjs/common';
+import {config} from "../../../config/config";
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {DeployKeyRepository} from '../../../persistence/repository/deploy-key.repository';
 import {CloneSourceCommand} from './command';
-import {DeployKeyInterface} from '../../../persistence/interface/deploy-key.interface';
 import {SimpleCommand} from '../../executor/simple-command';
 import {CommandLogger} from '../../logger/command-logger';
 import {EnvVariablesSet} from "../../sets/env-variables-set";
 import {FeaterVariablesSet} from "../../sets/feater-variables-set";
 import {CloneSourceCommandResultInterface} from "./command-result.interface";
-import {spawnSync, spawn} from "child_process";
 import {SpawnHelper} from "../../helper/spawn-helper.component";
-import {mkdirSync} from "fs";
-import {config} from "../../../config/config";
+import {DeployKeyHelperComponent} from "../../../helper/deploy-key-helper.component";
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
 
-    readonly PROGRESS_THROTTLE_PERIOD = 200;
-
     constructor(
         private readonly deployKeyRepository: DeployKeyRepository,
+        private readonly deployKeyHelper: DeployKeyHelperComponent,
         private readonly spawnHelper: SpawnHelper,
     ) {}
 
@@ -33,31 +32,13 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         const typedCommand = (command as CloneSourceCommand);
         const commandLogger = typedCommand.commandLogger;
 
-        let deployKey;
-
-        commandLogger.info(`Clone URL: ${typedCommand.cloneUrl}`);
-        if ('ssh' === gitUrlParse(typedCommand.cloneUrl).protocol) {
-            throw new Error('Not implemented.'); // TODO
-            // commandLogger.info(`Using deploy key to clone over SSH.`);
-            // deployKey = await this.deployKeyRepository.findOneByCloneUrl(typedCommand.cloneUrl);
-            // commandLogger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
-        } else {
-            deployKey = null;
-            commandLogger.info(`Not using deploy key.`);
-        }
-
         mkdirSync(typedCommand.sourceAbsoluteGuestPath);
 
-        const spawnedGitClone = spawn(
-            config.instantiation.gitBinaryPath,
-            ['clone', '--quiet', typedCommand.cloneUrl, typedCommand.sourceAbsoluteGuestPath],
-            {cwd: typedCommand.workingDirectory}
-        );
-
-        await this.spawnHelper.promisifySpawnedWithHeader(
-            spawnedGitClone,
+        await this.cloneRepository(
+            typedCommand.cloneUrl,
+            typedCommand.sourceAbsoluteGuestPath,
+            typedCommand.workingDirectory,
             commandLogger,
-            'clone source',
         );
 
         this.checkoutReference(
@@ -70,25 +51,10 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         const dockerVolumeName = `${typedCommand.dockerComposeProjectName}_source_volume_${typedCommand.sourceId.toLowerCase()}`;
         commandLogger.info(`Volume name: ${dockerVolumeName}`);
 
-        const envVariables = new EnvVariablesSet();
-        const featerVariables = new FeaterVariablesSet();
-        // TODO Depracted, remove later. Replaced volume name below.
-        envVariables.add(
-            `FEATER__HOST_SOURCE_PATH__${typedCommand.sourceId.toUpperCase()}`,
-            typedCommand.sourceAbsoluteHostPath,
-        );
-        // TODO Depracted, remove later. Replaced volume name below.
-        featerVariables.add(
-            `host_source_path__${typedCommand.sourceId.toLowerCase()}`,
-            typedCommand.sourceAbsoluteHostPath,
-        );
-        envVariables.add(
-            `FEATER__SOURCE_VOLUME__${typedCommand.sourceId.toUpperCase()}`,
+        const {envVariables, featerVariables} = this.prepareVariables(
+            typedCommand.sourceId,
             dockerVolumeName,
-        );
-        featerVariables.add(
-            `source_volume__${typedCommand.sourceId.toLowerCase()}`,
-            dockerVolumeName,
+            typedCommand.sourceAbsoluteHostPath,
         );
 
         commandLogger.infoWithEnvVariables(envVariables);
@@ -101,41 +67,52 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         } as CloneSourceCommandResultInterface;
     }
 
-    // protected createCloneOptions(commandLogger: CommandLogger, deployKey?: DeployKeyInterface): any {
-    //     let lastProgress: string;
-    //
-    //     const callbacks: any = {};
-    //
-    //     callbacks.transferProgress = {
-    //         throttle: this.PROGRESS_THROTTLE_PERIOD,
-    //             callback: (transferProgress) => {
-    //             const progress = (100 * (
-    //                 (transferProgress.receivedObjects() + transferProgress.indexedObjects()) /
-    //                 (transferProgress.totalObjects() * 2)
-    //             )).toFixed(2);
-    //
-    //             if (progress !== lastProgress) {
-    //                 lastProgress = progress;
-    //                 commandLogger.info(`Cloning progress ${progress}%.`);
-    //             }
-    //         },
-    //     };
-    //
-    //     if (deployKey) {
-    //         callbacks.credentials = (repoUrl, username) => nodegit.Cred.sshKeyMemoryNew(
-    //             username,
-    //             deployKey.publicKey,
-    //             deployKey.privateKey,
-    //             deployKey.passphrase,
-    //         );
-    //     }
-    //
-    //     return {
-    //         fetchOpts: {
-    //             callbacks,
-    //         },
-    //     };
-    // }
+    protected async cloneRepository(
+        cloneUrl: string,
+        sourceAbsoluteGuestPath: string,
+        workingDirectory: string,
+        commandLogger: CommandLogger,
+    ): Promise<void> {
+        let deployKey;
+        let spawnedGitCloneOptions: SpawnOptions = {cwd: workingDirectory};
+
+        commandLogger.info(`Clone URL: ${cloneUrl}`);
+        if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+            commandLogger.info(`Using deploy key to clone over SSH.`);
+            deployKey = await this.deployKeyRepository.findOneByCloneUrl(cloneUrl);
+            commandLogger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
+
+            const identityFileAbsoluteGuestPath = this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(cloneUrl);
+
+            spawnedGitCloneOptions.env = {
+                GIT_SSH_COMMAND: [
+                    `sshpass`, `-e`, `-P`, `"Enter passphrase for key '${identityFileAbsoluteGuestPath}': "`,
+                    `ssh`, `-o`, `StrictHostKeyChecking=no`, `-i`, identityFileAbsoluteGuestPath,
+                ].join(' '),
+                SSHPASS: deployKey.passphrase,
+            };
+        } else {
+            deployKey = null;
+            commandLogger.info(`Not using deploy key.`);
+        }
+
+        const spawnedGitClone = spawn(
+            config.instantiation.gitBinaryPath,
+            ['clone', '--quiet', cloneUrl, sourceAbsoluteGuestPath],
+            spawnedGitCloneOptions,
+        );
+
+        // TODO Show informative messages on error.
+        await this.spawnHelper.promisifySpawnedWithHeader(
+            spawnedGitClone,
+            commandLogger,
+            'clone source',
+            {
+                muteStdout: true,
+                muteStderr: true,
+            }
+        );
+    }
 
     protected checkoutReference(
         referenceType: string,
@@ -232,5 +209,38 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
             {cwd: sourceAbsoluteGuestPath},
         );
 
+    }
+
+    protected prepareVariables(
+        sourceId: string,
+        dockerVolumeName: string,
+        sourceAbsoluteHostPath: string,
+    ): {envVariables: EnvVariablesSet, featerVariables: FeaterVariablesSet} {
+        const envVariables = new EnvVariablesSet();
+        const featerVariables = new FeaterVariablesSet();
+
+        // TODO Depracted, remove later. Replaced volume name below.
+        envVariables.add(
+            `FEATER__HOST_SOURCE_PATH__${sourceId.toUpperCase()}`,
+            sourceAbsoluteHostPath,
+        );
+        // TODO Depracted, remove later. Replaced volume name below.
+        featerVariables.add(
+            `host_source_path__${sourceId.toLowerCase()}`,
+            sourceAbsoluteHostPath,
+        );
+        envVariables.add(
+            `FEATER__SOURCE_VOLUME__${sourceId.toUpperCase()}`,
+            dockerVolumeName,
+        );
+        featerVariables.add(
+            `source_volume__${sourceId.toLowerCase()}`,
+            dockerVolumeName,
+        );
+
+        return {
+            envVariables,
+            featerVariables,
+        };
     }
 }

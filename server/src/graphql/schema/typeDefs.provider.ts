@@ -336,14 +336,7 @@ export const typeDefsProvider = {
             alias: String
         }
 
-        union AfterBuildTask = ExecuteHostCommandAfterBuildTask | ExecuteServiceCommandAfterBuildTask | CopyAssetIntoContainerAfterBuildTask
-
-        type ExecuteHostCommandAfterBuildTask {
-            type: String!
-            customEnvVariables: [AfterBuildTaskCustomEnvVariable]!
-            inheritedEnvVariables: [AfterBuildTaskInheritedEnvVariable]!
-            command: [String!]!
-        }
+        union AfterBuildTask = ExecuteServiceCommandAfterBuildTask | CopyAssetIntoContainerAfterBuildTask
 
         type ExecuteServiceCommandAfterBuildTask {
             type: String!

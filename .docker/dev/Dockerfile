@@ -1,8 +1,15 @@
-FROM node:10-alpine
+ARG DOCKER_VERSION
+
+FROM docker:${DOCKER_VERSION:-latest} AS docker
+
+# ------------------------------------------------------------------------------
+
+FROM node:10-alpine AS main
 
 WORKDIR /app
 
-RUN apk add --update --no-cache bash curl unzip git nginx
+RUN apk add --update --no-cache \
+        bash curl unzip git openssh openssh-keygen sshpass nginx
 
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 

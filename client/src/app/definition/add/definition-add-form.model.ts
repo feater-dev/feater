@@ -79,8 +79,6 @@ export interface ExecuteCommandTaskFormElement extends AfterBuildTaskFormElement
     command: string[];
 }
 
-export interface ExecuteHostCommandTaskFormElement extends ExecuteCommandTaskFormElement {}
-
 export interface ExecuteServiceCommandTaskFormElement extends ExecuteCommandTaskFormElement {
     serviceId: string;
 }

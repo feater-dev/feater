@@ -21,7 +21,7 @@ async function bootstrap() {
         stream: process.stdout,
     }));
 
-    // TODO Get port from config. How to get config here?
+    // TODO Get port from config.
     await app.listen(3000);
 }
 

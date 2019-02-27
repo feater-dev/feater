@@ -203,13 +203,6 @@
                     <div *ngIf="item.config.afterBuildTasks.length">
                         <div *ngFor="let afterBuildTask of item.config.afterBuildTasks">
 
-                            <app-execute-host-command-task-form-element
-                                    *ngIf="isAfterBuildTaskExecuteHostCommand(afterBuildTask)"
-                                    [item]="afterBuildTask"
-                                    [availableEnvVariableNames]="getAvailableEnvVariableNames()"
-                                    (deleteItem)="deleteAfterBuildTask($event)"
-                            ></app-execute-host-command-task-form-element>
-
                             <app-execute-service-command-task-form-element
                                     *ngIf="isAfterBuildTaskExecuteServiceCommand(afterBuildTask)"
                                     [item]="afterBuildTask"
@@ -230,13 +223,6 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <a
-                            class="btn btn-success btn-sm"
-                            (click)="addAfterBuildTaskExecuteHostCommand()"
-                            style="margin-right: 8px;"
-                    >
-                        Execute host command <span class="glyphicon glyphicon-plus"></span>
-                    </a>
                     <a
                             class="btn btn-success btn-sm"
                             (click)="addAfterBuildTaskExecuteServiceCommand()"

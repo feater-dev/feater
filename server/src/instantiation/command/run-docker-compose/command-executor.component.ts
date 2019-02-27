@@ -43,7 +43,7 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
             '-w', path.join('/source', typedCommand.envDirRelativePath),
             '-v', `${hostDockerSocketPath}:/var/run/docker.sock`,
             '-v', `${typedCommand.sourceDockerVolumeName}:/source`,
-            'docker/compose:1.23.2', // TODO Move to config and env variables.
+            `docker/compose:${config.instantiation.dockerComposeVersion}`,
         );
 
         for (const composeFileRelativePath of typedCommand.composeFileRelativePaths) {

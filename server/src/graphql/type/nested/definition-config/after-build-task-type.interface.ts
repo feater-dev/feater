@@ -16,9 +16,6 @@ interface ExecuteCommandAfterBuildTaskTypeInterface extends AfterBuildTaskTypeIn
     command: string[];
 }
 
-export interface ExecuteHostCommandAfterBuildTaskTypeInterface extends ExecuteCommandAfterBuildTaskTypeInterface {
-}
-
 export interface ExecuteServiceCommandAfterBuildTaskTypeInterface extends ExecuteCommandAfterBuildTaskTypeInterface {
     serviceId: string;
 }

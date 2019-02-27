@@ -9,7 +9,7 @@ import {
 import {DefinitionAddComponent} from '../add/definition-add.component';
 import gql from 'graphql-tag';
 import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {DefinitionEditForm, ExecuteHostCommandTaskFormElement} from '../add/definition-add-form.model';
+import {DefinitionEditForm} from '../add/definition-add-form.model';
 import * as _ from 'lodash';
 
 

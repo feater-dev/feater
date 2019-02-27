@@ -14,7 +14,6 @@ import {
 import {
     AfterBuildTaskTypeInterface,
     CopyAssetIntoContainerAfterBuildTaskTypeInterface,
-    ExecuteHostCommandAfterBuildTaskTypeInterface,
     ExecuteServiceCommandAfterBuildTaskTypeInterface,
 } from '../type/nested/definition-config/after-build-task-type.interface';
 import {VolumeTypeInterface} from '../type/nested/definition-config/volume-type.interface';
@@ -136,16 +135,6 @@ export class DefinitionConfigMapper {
         }
 
         switch (afterBuildTask.type) {
-            case 'executeHostCommand':
-                 mapped = {
-                     ...commonMapped,
-                     customEnvVariables: afterBuildTask.customEnvVariables,
-                     inheritedEnvVariables: afterBuildTask.inheritedEnvVariables,
-                     command: afterBuildTask.command,
-                 } as ExecuteHostCommandAfterBuildTaskTypeInterface;
-
-                 break;
-
             case 'executeServiceCommand':
                 mapped = {
                     ...commonMapped,

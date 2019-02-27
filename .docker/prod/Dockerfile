@@ -1,4 +1,10 @@
-FROM node:10-alpine
+ARG DOCKER_VERSION
+
+FROM docker:${DOCKER_VERSION:-latest} AS docker
+
+# ------------------------------------------------------------------------------
+
+FROM node:10-alpine AS server-builder
 
 WORKDIR /app
 
@@ -13,7 +19,7 @@ RUN yarn run tsc --skipLibCheck
 
 # ------------------------------------------------------------------------------
 
-FROM node:10-alpine
+FROM node:10-alpine AS client-builder
 
 WORKDIR /app
 
@@ -29,11 +35,12 @@ RUN touch src/environments/environment.ts \
 
 # ------------------------------------------------------------------------------
 
-FROM node:10-alpine
+FROM node:10-alpine AS main
 
 WORKDIR /app
 
-RUN apk add --update --no-cache bash curl unzip git nginx
+RUN apk add --update --no-cache \
+        bash curl unzip git openssh openssh-keygen sshpass nginx
 
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 
@@ -50,14 +57,14 @@ RUN \
     && chmod +x /command.sh \
     && (mkdir /data && cd /data && mkdir asset build identity proxy)
 
-COPY --from=0 /app/package.json /app/yarn.lock ./server/
+COPY --from=server-builder /app/package.json /app/yarn.lock ./server/
 
 RUN (cd ./server && yarn install --prod --frozen-lockfile) \
     && yarn cache clean
 
-COPY --from=0 /app/dist ./server
+COPY --from=server-builder /app/dist ./server
 
-COPY --from=1 /app/dist ./client
+COPY --from=client-builder /app/dist ./client
 
 EXPOSE 9010 9011
 

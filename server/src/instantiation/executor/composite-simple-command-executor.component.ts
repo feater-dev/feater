@@ -12,13 +12,13 @@ import {PrepareProxyDomainCommandExecutorComponent} from '../command/prepare-por
 import {ConfigureProxyDomainCommandExecutorComponent} from '../command/configure-proxy-domain/command-executor.component';
 import {PrepareSummaryItemsCommandExecutorComponent} from '../command/prepare-summary-items/command-executor.component';
 import {RunDockerComposeCommandExecutorComponent} from '../command/run-docker-compose/command-executor.component';
-import {ExecuteHostCmdCommandExecutorComponent} from '../command/after-build/execute-host-cmd/command-executor.component';
 import {ExecuteServiceCmdCommandExecutorComponent} from '../command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from '../command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateAssetVolumeCommandExecutorComponent} from '../command/create-asset-volume/command-executor.component';
 import {CreateSourceVolumeCommandExecutorComponent} from "../command/create-source-volume/command-executor.component";
 import {RemoveSourceVolumeCommandExecutorComponent} from "../command/remove-source-volume/command-executor.component";
 import {EnableProxyDomainsCommandExecutorComponent} from '../command/enable-proxy-domains/command-executor.component';
+import {RemoveSourceCommandExecutorComponent} from "../command/remove-source/command-executor.component";
 
 @Injectable()
 export class CompositeSimpleCommandExecutorComponent {
@@ -30,6 +30,7 @@ export class CompositeSimpleCommandExecutorComponent {
         copyFileCommandExecutorComponent: CopyFileCommandExecutorComponent,
         createDirectoryCommandExecutorComponent: CreateDirectoryCommandExecutorComponent,
         cloneSourceCommandExecutorComponent: CloneSourceCommandExecutorComponent,
+        removeSourceCommandExecutorComponent: RemoveSourceCommandExecutorComponent,
         getContainerIdsCommandExecutorComponent: GetContainerIdsCommandExecutorComponent,
         interpolateBeforeBuildTaskCommandExecutorComponent: InterpolateFileCommandExecutorComponent,
         parseDockerComposeCommandExecutorComponent: ParseDockerComposeCommandExecutorComponent,
@@ -37,7 +38,6 @@ export class CompositeSimpleCommandExecutorComponent {
         prepareProxyDomainConfigCommandExecutorComponent: ConfigureProxyDomainCommandExecutorComponent,
         prepareSummaryItemsCommandExecutorComponent: PrepareSummaryItemsCommandExecutorComponent,
         runDockerComposeCommandExecutorComponent: RunDockerComposeCommandExecutorComponent,
-        executeHostCmdCommandExecutorComponent: ExecuteHostCmdCommandExecutorComponent,
         executeServiceCmdCommandExecutorComponent: ExecuteServiceCmdCommandExecutorComponent,
         copyAssetIntoContainerCommandExecutorComponent: CopyAssetIntoContainerCommandExecutorComponent,
         createAssetVolumeCommandExecutorComponent: CreateAssetVolumeCommandExecutorComponent,
@@ -50,6 +50,7 @@ export class CompositeSimpleCommandExecutorComponent {
             copyFileCommandExecutorComponent,
             createDirectoryCommandExecutorComponent,
             cloneSourceCommandExecutorComponent,
+            removeSourceCommandExecutorComponent,
             getContainerIdsCommandExecutorComponent,
             interpolateBeforeBuildTaskCommandExecutorComponent,
             parseDockerComposeCommandExecutorComponent,
@@ -57,7 +58,6 @@ export class CompositeSimpleCommandExecutorComponent {
             prepareProxyDomainConfigCommandExecutorComponent,
             prepareSummaryItemsCommandExecutorComponent,
             runDockerComposeCommandExecutorComponent,
-            executeHostCmdCommandExecutorComponent,
             executeServiceCmdCommandExecutorComponent,
             copyAssetIntoContainerCommandExecutorComponent,
             createAssetVolumeCommandExecutorComponent,

@@ -24,7 +24,6 @@ import {CopyFileCommandFactoryComponent} from './command/before-build/copy-file/
 import {InterpolateFileCommandFactoryComponent} from './command/before-build/interpolate-file/command-factory.component';
 import {BeforeBuildTaskCommandFactoryInterface} from './command/before-build/command-factory.interface';
 import {CopyAssetIntoContainerCommandFactoryComponent} from './command/after-build/copy-asset-into-container/command-factory.component';
-import {ExecuteHostCmdCommandFactoryComponent} from './command/after-build/execute-host-cmd/command-factory.component';
 import {ExecuteServiceCmdCommandFactoryComponent} from './command/after-build/execute-service-cmd/command-factory.component';
 import {AfterBuildTaskCommandFactoryInterface} from './command/after-build/command-factory.interface';
 import {CommandExecutorComponent} from './executor/command-executor.component';
@@ -43,6 +42,7 @@ import {InstanceInterface} from '../persistence/interface/instance.interface';
 import {DefinitionInterface} from '../persistence/interface/definition.interface';
 import {CreateSourceVolumeCommand} from "./command/create-source-volume/command";
 import {RemoveSourceVolumeCommand} from "./command/remove-source-volume/command";
+import {RemoveSourceCommand} from "./command/remove-source/command";
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -58,7 +58,6 @@ export class InstanceCreatorComponent {
         protected readonly copyFileCommandFactoryComponent: CopyFileCommandFactoryComponent,
         protected readonly interpolateFileCommandFactoryComponent: InterpolateFileCommandFactoryComponent,
         protected readonly copyAssetIntoContainerCommandFactoryComponent: CopyAssetIntoContainerCommandFactoryComponent,
-        protected readonly executeHostCmdCommandFactoryComponent: ExecuteHostCmdCommandFactoryComponent,
         protected readonly executeServiceCmdCommandFactoryComponent: ExecuteServiceCmdCommandFactoryComponent,
     ) {
         this.beforeBuildTaskCommandFactoryComponents = [
@@ -68,7 +67,6 @@ export class InstanceCreatorComponent {
 
         this.afterBuildTaskCommandFactoryComponents = [
             copyAssetIntoContainerCommandFactoryComponent,
-            executeHostCmdCommandFactoryComponent,
             executeServiceCmdCommandFactoryComponent,
         ];
     }
@@ -111,6 +109,7 @@ export class InstanceCreatorComponent {
             this.addPrepareSummaryItems,
             this.addBeforeBuildTasks,
             this.addCreateAllSourceVolumes,
+            this.addRemoveSources,
             this.addRunDockerCompose,
             this.addGetContainerIds,
             this.addConnectContainersToNetwork,
@@ -403,6 +402,29 @@ export class InstanceCreatorComponent {
                             source.id,
                             source.dockerVolumeName,
                             source.paths.absolute.guest,
+                            source.paths.absolute.guest,
+                        ),
+                    ),
+                )
+            ),
+        );
+    }
+
+    protected addRemoveSources(
+        createInstanceCommand: CommandsList,
+        taskId: string,
+        instanceContext: InstanceContext,
+        updateInstanceFromInstanceContext: () => Promise<void>,
+    ): void {
+        createInstanceCommand.addCommand(
+            new CommandsList(
+                instanceContext.sources.map(
+                    source => new ContextAwareCommand(
+                        taskId,
+                        instanceContext.id,
+                        `Remove source \`${source.id}\``,
+                        () => new RemoveSourceCommand(
+                            source.id,
                             source.paths.absolute.guest,
                         ),
                     ),

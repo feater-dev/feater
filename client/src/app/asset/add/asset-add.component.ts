@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 import {AssetAddForm} from './asset-add-form.model';
@@ -8,7 +8,6 @@ import {
     GetProjectQueryInterface,
     GetProjectQueryProjectFieldInterface
 } from './get-project.query';
-import {map, switchMap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -25,10 +24,6 @@ export class AssetAddComponent implements OnInit {
         mutation ($projectId: String!, $id: String!, $description: String!) {
             createAsset(projectId: $projectId, id: $id, description: $description) {
                 id
-                description
-                project {
-                    id
-                }
             }
         }
     `;
@@ -56,6 +51,7 @@ export class AssetAddComponent implements OnInit {
     }
 
     addItem() {
+        this.spinner.show();
         this.apollo.mutate({
             mutation: this.createAssetMutation,
             variables: {
@@ -65,23 +61,23 @@ export class AssetAddComponent implements OnInit {
             },
         }).subscribe(
             ({data}) => {
-                console.log(data);
+                this.spinner.show();
                 const uploadData = new FormData();
                 uploadData.set('asset', this.item.file);
                 this.httpClient
                     .post([environment.serverBaseUrl, 'upload', 'asset', data.createAsset.id].join('/'), uploadData)
                     .subscribe(
                         () => {
-                            this.router.navigate([
-                                '/asset',
-                                data.createAsset.project.id,
-                                data.createAsset.id,
-                            ]);
+                            this.spinner.hide();
+                            this.router.navigate(['/asset', this.project.id, data.createAsset.id]);
+                        },
+                        (error) => {
+                            console.log(error); // TODO Hide spinner and handle error.
                         }
                     );
             },
             (error) => {
-                console.log(error);
+                console.log(error); // TODO Hide spinner and handle error.
             }
         );
     }
@@ -94,30 +90,19 @@ export class AssetAddComponent implements OnInit {
 
     protected getProject(): void {
         this.spinner.show();
-        this.route.params.pipe(
-            switchMap(
-                (params: Params) => {
-                    return this.apollo
-                        .watchQuery<GetProjectQueryInterface>({
-                            query: getProjectQueryGql,
-                            variables: {
-                                id: params['id'],
-                            },
-                        })
-                        .valueChanges
-                        .pipe(
-                            map(result => {
-                                return result.data.project;
-                            })
-                        );
-                }
-            ))
-            .subscribe(
-                (item: GetProjectQueryProjectFieldInterface) => {
-                    this.project = item;
-                    this.spinner.hide();
-                }
-            );
+        this.apollo
+            .watchQuery<GetProjectQueryInterface>({
+                query: getProjectQueryGql,
+                variables: {
+                    id: this.route.snapshot.params['id'],
+                },
+            })
+            .valueChanges
+            .subscribe(result => {
+                const resultData: GetProjectQueryInterface = result.data;
+                this.project = resultData.project;
+                this.spinner.hide();
+            });
     }
 
 }

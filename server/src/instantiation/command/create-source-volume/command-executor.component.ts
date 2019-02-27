@@ -6,7 +6,7 @@ import {SpawnHelper} from '../../helper/spawn-helper.component';
 import {SimpleCommand} from '../../executor/simple-command';
 import {CreateSourceVolumeCommand} from './command';
 import {CommandLogger} from '../../logger/command-logger';
-import {DockerVolumeHelperComponent} from "../../../docker/docker-volume-helper.component";
+import {DockerVolumeHelperComponent} from "../../docker/docker-volume-helper.component";
 
 @Injectable()
 export class CreateSourceVolumeCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {

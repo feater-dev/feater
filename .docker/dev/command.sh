@@ -3,7 +3,7 @@
 set -ex
 
 docker pull alpine:3.9
-docker pull docker/compose:1.23.2
+docker pull docker/compose:${FEATER_DOCKER_COMPOSE_VERSION}
 
 (cd ./server && yarn install)
 (cd ./client && yarn install)

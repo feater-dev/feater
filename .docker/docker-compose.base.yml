@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  app:
+    volumes:
+      - "${FEATER_HOST_PATH_ASSET}:/data/asset"
+      - "${FEATER_HOST_PATH_BUILD}:/data/build"
+      - "${FEATER_HOST_PATH_IDENTITY}:/data/identity"
+      - "${FEATER_HOST_PATH_PROXY}:/data/proxy"
+      - "${FEATER_HOST_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
+    ports:
+      - '${FEATER_CLIENT_PORT}:9010'
+      - '${FEATER_INSTANCE_PORT}:9011'
+    environment:
+      FEATER_GUEST_PATH_ASSET: "/data/asset"
+      FEATER_GUEST_PATH_BUILD: "/data/build"
+      FEATER_GUEST_PATH_IDENTITY: "/data/identity"
+      FEATER_GUEST_PATH_PROXY: "/data/proxy"
+      FEATER_HOST_PATH_BUILD: "${FEATER_HOST_PATH_BUILD}"
+      FEATER_MONGO_DSN: "${FEATER_MONGO_DSN}"
+      FEATER_GIT_BINARY_PATH: "/usr/bin/git"
+      FEATER_DOCKER_BINARY_PATH: "/usr/local/bin/docker"
+      FEATER_DOCKER_COMPOSE_VERSION: "${FEATER_DOCKER_COMPOSE_VERSION}"
+      FEATER_DOCKER_COMPOSE_HTTP_TIMEOUT: "${FEATER_DOCKER_COMPOSE_HTTP_TIMEOUT}"
+      FEATER_CONTAINER_NAME_PREFIX: "${FEATER_CONTAINER_NAME_PREFIX}"
+      FEATER_PROXY_DOMAIN_PATTERN: "${FEATER_PROXY_DOMAIN_PATTERN}"
+      FEATER_PROXY_NETWORK_NAME: "${COMPOSE_PROJECT_NAME}_proxy"
+      FEATER_LOG_LEVEL_CONSOLE: "${FEATER_LOG_LEVEL_CONSOLE}"
+      FEATER_LOG_LEVEL_MONGO: "${FEATER_LOG_LEVEL_MONGO}"
+    depends_on:
+      - mongo
+    networks:
+      - internal
+      - proxy
+
+  mongo:
+    image: mongo:3.6
+    volumes:
+      - "${FEATER_MONGO_HOST_PATH_DATA}:/data/db"
+    networks:
+      - internal
+
+networks:
+  internal:
+  proxy:

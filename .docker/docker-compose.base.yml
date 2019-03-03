@@ -7,6 +7,7 @@ services:
       - "${FEATER_HOST_PATH_ASSET}:/data/asset"
       - "${FEATER_HOST_PATH_BUILD}:/data/build"
       - "${FEATER_HOST_PATH_IDENTITY}:/data/identity"
+      - "${FEATER_HOST_PATH_MONGO}:/data/mongo"
       - "${FEATER_HOST_PATH_PROXY}:/data/proxy"
       - "${FEATER_HOST_DOCKER_SOCKET_PATH}:/var/run/docker.sock"
     ports:
@@ -28,19 +29,8 @@ services:
       FEATER_PROXY_NETWORK_NAME: "${COMPOSE_PROJECT_NAME}_proxy"
       FEATER_LOG_LEVEL_CONSOLE: "${FEATER_LOG_LEVEL_CONSOLE}"
       FEATER_LOG_LEVEL_MONGO: "${FEATER_LOG_LEVEL_MONGO}"
-    depends_on:
-      - mongo
     networks:
-      - internal
       - proxy
 
-  mongo:
-    image: mongo:3.6
-    volumes:
-      - "${FEATER_MONGO_HOST_PATH_DATA}:/data/db"
-    networks:
-      - internal
-
 networks:
-  internal:
   proxy:

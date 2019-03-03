@@ -40,7 +40,7 @@ FROM node:10-alpine AS main
 WORKDIR /app
 
 RUN apk add --update --no-cache \
-        bash curl unzip git openssh openssh-keygen sshpass nginx
+        bash curl unzip git openssh openssh-keygen sshpass nginx mongodb
 
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 
@@ -55,7 +55,7 @@ RUN \
     && mkdir -p /run/nginx \
     && (cd /etc/nginx/conf.d && ln -s /data/proxy) \
     && chmod +x /command.sh \
-    && (mkdir /data && cd /data && mkdir asset build identity proxy)
+    && (mkdir /data && cd /data && mkdir asset build identity mongo proxy)
 
 COPY --from=server-builder /app/package.json /app/yarn.lock ./server/
 

@@ -5,10 +5,3 @@ services:
   app:
     image: feater-prod
     restart: unless-stopped
-
-  mongo:
-    restart: unless-stopped
-
-networks:
-  internal:
-  proxy:

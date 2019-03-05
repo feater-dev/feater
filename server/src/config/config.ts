@@ -22,9 +22,6 @@ export const config: ConfigInterface = {
         identity: process.env.FEATER_GUEST_PATH_IDENTITY,
         proxy: process.env.FEATER_GUEST_PATH_PROXY,
     },
-    hostPaths: {
-        build: process.env.FEATER_HOST_PATH_BUILD,
-    },
     instantiation: {
         gitBinaryPath: process.env.FEATER_GIT_BINARY_PATH,
         dockerBinaryPath: process.env.FEATER_DOCKER_BINARY_PATH,

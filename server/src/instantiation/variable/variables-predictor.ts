@@ -46,7 +46,11 @@ export class VariablesPredictor {
                         // TODO Depracted, remove later. Replaced volume name below.
                         {
                             name: `FEATER__HOST_SOURCE_PATH__${sourceId.toUpperCase()}`,
-                            pattern: path.join(config.hostPaths.build, '{instance_hash}', sourceId.toLowerCase()),
+                            pattern: '',
+                        },
+                        {
+                            name: `FEATER__SOURCE_MOUNTPOINT__${sourceId.toUpperCase()}`,
+                            pattern: '',
                         },
                         {
                             name: `FEATER__SOURCE_VOLUME__${sourceId.toUpperCase()}`,
@@ -114,7 +118,11 @@ export class VariablesPredictor {
                         // TODO Depracted, remove later. Replaced volume name below.
                         {
                             name: `host_source_path__${sourceId.toLowerCase()}`,
-                            pattern: path.join(config.hostPaths.build, '{instance_hash}', sourceId.toLowerCase()),
+                            pattern: '',
+                        },
+                        {
+                            name: `source_mountpoint__${sourceId.toLowerCase()}`,
+                            pattern: '',
                         },
                         {
                             name: `source_volume__${sourceId.toLowerCase()}`,

@@ -12,7 +12,6 @@ export class PathHelper {
         return {
             absolute: {
                 guest: path.join(config.guestPaths.build, relative),
-                host: path.join(config.hostPaths.build, relative), // TODO Remove.
             },
         };
     }
@@ -24,7 +23,6 @@ export class PathHelper {
         return {
             absolute: {
                 guest: path.join(instancePaths.absolute.guest, relative),
-                host: path.join(instancePaths.absolute.host, relative), // TODO Remove.
             },
         };
     }

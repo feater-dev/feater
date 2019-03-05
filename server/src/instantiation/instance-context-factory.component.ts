@@ -32,6 +32,9 @@ export class InstanceContextFactory {
             instanceContext.volumes.push({
                 id: volumeConfig.id,
                 assetId: volumeConfig.assetId,
+                volume: {
+                    name: `${instanceContext.composeProjectName}_asset_volume_${volumeConfig.id.toLowerCase()}`
+                },
             });
         }
 
@@ -48,6 +51,9 @@ export class InstanceContextFactory {
                 beforeBuildTasks: sourceConfig.beforeBuildTasks.map(
                     (beforeBuildTaskConfig) => beforeBuildTaskConfig as InstanceContextBeforeBuildTaskInterface,
                 ),
+                volume: {
+                    name: `${instanceContext.composeProjectName}_source_volume_${sourceConfig.id.toLowerCase()}`
+                },
             });
         }
 

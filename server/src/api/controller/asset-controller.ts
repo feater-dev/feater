@@ -15,12 +15,18 @@ export class AssetController {
         private readonly assetHelper: AssetHelper,
     ) {}
 
-    @Post('upload/asset/:id')
-    public async create(@Request() req, @Response() res, @Next() next, @Param('id') id) {
+    @Post('upload/asset/:projectId/:id')
+    public async create(
+        @Request() req,
+        @Response() res,
+        @Next() next,
+        @Param('projectId') projectId,
+        @Param('id') id,
+    ): Promise<void> {
         let assetFilePromise;
 
         const asset = await this.assetRepository
-            .find({id}, 0, 1)
+            .find({id, projectId}, 0, 1)
             .then(assets => {
                 if (1 !== assets.length) {
                     res.status(404).send();

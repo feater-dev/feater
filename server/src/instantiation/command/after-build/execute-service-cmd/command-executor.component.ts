@@ -18,27 +18,34 @@ export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandE
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as ExecuteServiceCmdCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            collectedEnvVariables,
+            customEnvVariables,
+            inheritedEnvVariables,
+            containerId,
+            executable,
+            absoluteGuestInstancePath,
+            commandLogger,
+        } = command as ExecuteServiceCmdCommand;
 
         commandLogger.info(`Collecting environmental variables.`);
         const envVariables = new EnvVariablesSet();
-        for (const {name, value} of typedCommand.customEnvVariables.toList()) {
+        for (const {name, value} of customEnvVariables.toList()) {
             envVariables.add(name, value);
         }
         commandLogger.info(`Custom environmental variables collected.`);
 
-        const collectedEnvVariablesMap = typedCommand.collectedEnvVariables.toMap();
-        for (const {name, alias} of typedCommand.inheritedEnvVariables) {
+        const collectedEnvVariablesMap = collectedEnvVariables.toMap();
+        for (const {name, alias} of inheritedEnvVariables) {
             envVariables.add(alias || name, collectedEnvVariablesMap[name]);
         }
         commandLogger.info(`Inherited environmental variables collected.`);
 
         commandLogger.info(`Executing service command.`);
-        commandLogger.info(`Container ID: ${typedCommand.containerId}`);
-        commandLogger.info(`Command: ${typedCommand.command[0]}`);
-        commandLogger.info(`Arguments: ${JSON.stringify(typedCommand.command.slice(1))}`);
-        commandLogger.info(`Guest working directory: ${typedCommand.absoluteGuestInstancePath}`);
+        commandLogger.info(`Container ID: ${containerId}`);
+        commandLogger.info(`Command: ${executable[0]}`);
+        commandLogger.info(`Arguments: ${JSON.stringify(executable.slice(1))}`);
+        commandLogger.info(`Guest working directory: ${absoluteGuestInstancePath}`);
         commandLogger.infoWithEnvVariables(envVariables, 'Environmental variables');
 
         let cmd = ['docker', 'exec'];
@@ -47,18 +54,18 @@ export class ExecuteServiceCmdCommandExecutorComponent implements SimpleCommandE
             cmd = cmd.concat(['-e', `${name}=${value}`]);
         }
 
-        cmd.push(typedCommand.containerId);
-        cmd = cmd.concat(typedCommand.command);
+        cmd.push(containerId);
+        cmd = cmd.concat(executable);
 
         await this.spawnHelper.promisifySpawnedWithHeader(
             spawn(
                 cmd[0],
                 cmd.slice(1),
                 {
-                    cwd: typedCommand.absoluteGuestInstancePath,
+                    cwd: absoluteGuestInstancePath,
                 },
             ),
-            typedCommand.commandLogger,
+            commandLogger,
             'execute service command',
         );
 

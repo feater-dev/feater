@@ -13,17 +13,22 @@ export class CollectEnvVariablesCommandExecutorComponent implements SimpleComman
     }
 
     execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as CollectEnvVariablesCommand;
+        const {
+            envVariables,
+            envVariablesForFeaterVariables,
+            envVariablesForSources,
+            commandLogger,
+        } = command as CollectEnvVariablesCommand;
 
         return new Promise<any>(resolve => {
-            const envVariablesToCollect: EnvVariablesSet[] = [typedCommand.envVariables]
+            const envVariablesToCollect: EnvVariablesSet[] = [envVariables]
                 .concat(
-                    typedCommand.envVariablesForFeaterVariables,
-                    ...typedCommand.envVariablesForSources,
+                    envVariablesForFeaterVariables,
+                    ...envVariablesForSources,
                 );
-            const envVariables = EnvVariablesSet.merge(...envVariablesToCollect);
+            let collectedEnvVariables = EnvVariablesSet.merge(...envVariablesToCollect);
 
-            resolve({envVariables} as CollectEnvVariablesCommandResultInterface);
+            resolve({envVariables: collectedEnvVariables} as CollectEnvVariablesCommandResultInterface);
         });
     }
 }

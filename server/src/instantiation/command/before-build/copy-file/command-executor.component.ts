@@ -12,15 +12,18 @@ export class CopyFileCommandExecutorComponent implements SimpleCommandExecutorCo
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as CopyFileCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            absoluteGuestSourcePath,
+            absoluteGuestDestinationPath,
+            commandLogger,
+        } = command as CopyFileCommand;
 
-        commandLogger.info(`Absolute guest source path: ${typedCommand.absoluteGuestSourcePath}`);
-        commandLogger.info(`Absolute guest destination path: ${typedCommand.absoluteGuestDestinationPath}`);
+        commandLogger.info(`Absolute guest source path: ${absoluteGuestSourcePath}`);
+        commandLogger.info(`Absolute guest destination path: ${absoluteGuestDestinationPath}`);
 
         fs.copySync(
-            typedCommand.absoluteGuestSourcePath,
-            typedCommand.absoluteGuestDestinationPath,
+            absoluteGuestSourcePath,
+            absoluteGuestDestinationPath,
         );
 
         return {};

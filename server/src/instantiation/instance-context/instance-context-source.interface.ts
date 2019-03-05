@@ -10,5 +10,8 @@ export interface InstanceContextSourceInterface {
     };
     paths: SourcePathsInterface,
     beforeBuildTasks: InstanceContextBeforeBuildTaskInterface[];
-    dockerVolumeName?: string;
+    volume: {
+        name?: string;
+        mountpoint?: string;
+    }
 }

@@ -18,19 +18,22 @@ export class PrepareSummaryItemsCommandExecutorComponent implements SimpleComman
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as PrepareSummaryItemsCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            featerVariables,
+            summaryItems,
+            commandLogger,
+        } = command as PrepareSummaryItemsCommand;
 
         const interpolatedSummaryItems = new SummaryItemsSet();
         commandLogger.info(`Available Feater variables:${
-            typedCommand.featerVariables.isEmpty()
+            featerVariables.isEmpty()
                 ? ' none'
-                : '\n' + JSON.stringify(typedCommand.featerVariables.toMap(), null, 2)
+                : '\n' + JSON.stringify(featerVariables.toMap(), null, 2)
         }`);
-        for (const summaryItem of typedCommand.summaryItems.toList()) {
+        for (const summaryItem of summaryItems.toList()) {
             interpolatedSummaryItems.add(
                 summaryItem.name,
-                this.interpolationHelper.interpolateText(summaryItem.value, typedCommand.featerVariables),
+                this.interpolationHelper.interpolateText(summaryItem.value, featerVariables),
             );
         }
 

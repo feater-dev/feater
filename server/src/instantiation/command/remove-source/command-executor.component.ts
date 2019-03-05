@@ -12,14 +12,17 @@ export class RemoveSourceCommandExecutorComponent implements SimpleCommandExecut
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as RemoveSourceCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            sourceId,
+            sourceAbsoluteGuestPath,
+            commandLogger,
+        } = command as RemoveSourceCommand;
 
-        commandLogger.info(`Source ID: ${typedCommand.sourceId}`);
-        commandLogger.info(`Source absolute guest path: ${typedCommand.sourceAbsoluteGuestPath}`);
+        commandLogger.info(`Source ID: ${sourceId}`);
+        commandLogger.info(`Source absolute guest path: ${sourceAbsoluteGuestPath}`);
 
         commandLogger.info(`Removing source.`);
-        rimraf.sync(typedCommand.sourceAbsoluteGuestPath);
+        rimraf.sync(sourceAbsoluteGuestPath);
 
         return {};
     }

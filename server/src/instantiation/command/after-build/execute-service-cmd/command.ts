@@ -9,7 +9,7 @@ export class ExecuteServiceCmdCommand extends SimpleCommand {
         readonly customEnvVariables: EnvVariablesSet,
         readonly inheritedEnvVariables: InheritedEnvVariableInterface[],
         readonly containerId: string,
-        readonly command: string[],
+        readonly executable: string[],
         readonly absoluteGuestInstancePath: string,
     ) {
         super();

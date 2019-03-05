@@ -19,8 +19,11 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
     }
 
     async execute(command: SimpleCommand) {
-        const typedCommand = command as GetContainerIdsCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            composeProjectName,
+            serviceContainerNamePrefixes,
+            commandLogger,
+        } = command as GetContainerIdsCommand;
 
         commandLogger.info('Determining container ids.');
 
@@ -29,7 +32,7 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
                 [
                     config.instantiation.dockerBinaryPath,
                     'inspect',
-                    `$(${config.instantiation.dockerBinaryPath} ps -q --no-trunc --filter name=${typedCommand.composeProjectName})`,
+                    `$(${config.instantiation.dockerBinaryPath} ps -q --no-trunc --filter name=${composeProjectName})`,
                 ].join(' '),
                 {maxBuffer: BUFFER_SIZE},
             ).toString(),
@@ -38,7 +41,7 @@ export class GetContainerIdsCommandExecutorComponent implements SimpleCommandExe
         const envVariables = new EnvVariablesSet();
         const featerVariables = new FeaterVariablesSet();
         const serviceContainerIds: GetContainerIdsCommandResultServiceContainerIdInterface[] = [];
-        for (const {serviceId, containerNamePrefix} of typedCommand.serviceContainerNamePrefixes) {
+        for (const {serviceId, containerNamePrefix} of serviceContainerNamePrefixes) {
             const containerNameRegExp = new RegExp(`^/${escapeStringRegexp(containerNamePrefix)}_1+$`);
             for (const containerInspect of containerInspects) {
                 const containerId: string = containerInspect.Id;

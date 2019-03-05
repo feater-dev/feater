@@ -19,8 +19,15 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
     }
 
     async execute(command: SimpleCommand): Promise<ParseDockerComposeCommandResultInterface> {
-        const typedCommand = command as ParseDockerComposeCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            sourceDockerVolumeName,
+            envDirRelativePath,
+            composeFileRelativePaths,
+            envVariables,
+            composeProjectName,
+            workingDirectory,
+            commandLogger,
+        } = command as ParseDockerComposeCommand;
 
         const hostDockerSocketPath = '/var/run/docker.sock'; // TODO Move to config and env variables.
 
@@ -33,36 +40,36 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
             '-e', `COMPOSE_HTTP_TIMEOUT=${config.instantiation.dockerComposeHttpTimeout}`,
         );
 
-        for (const envVariable of typedCommand.envVariables.toList()) {
+        for (const envVariable of envVariables.toList()) {
             composeConfigArguments.push(
                 '-e', `${envVariable.name}=${envVariable.value}`,
             );
         }
 
         composeConfigArguments.push(
-            '-w', path.join('/source', typedCommand.envDirRelativePath),
-            '-v', `${typedCommand.sourceDockerVolumeName}:/source`,
+            '-w', path.join('/source', envDirRelativePath),
+            '-v', `${sourceDockerVolumeName}:/source`,
             '-v', `${hostDockerSocketPath}:/var/run/docker.sock`,
             `docker/compose:${config.instantiation.dockerComposeVersion}`,
         );
 
-        for (const composeFileRelativePath of typedCommand.composeFileRelativePaths) {
+        for (const composeFileRelativePath of composeFileRelativePaths) {
             composeConfigArguments.push(
                 '-f',
-                path.relative(typedCommand.envDirRelativePath, composeFileRelativePath),
+                path.relative(envDirRelativePath, composeFileRelativePath),
             );
         }
 
         composeConfigArguments.push('config');
 
-        commandLogger.info(`Source volume name: ${typedCommand.sourceDockerVolumeName}`);
+        commandLogger.info(`Source volume name: ${sourceDockerVolumeName}`);
         commandLogger.info(`Command: ${composeConfigCommand}`);
         commandLogger.info(`Arguments: ${JSON.stringify(composeConfigArguments)}`);
 
         const dockerComposeConfigSpawnResult = spawnSync(
             composeConfigCommand,
             composeConfigArguments,
-            {cwd: typedCommand.workingDirectory},
+            {cwd: workingDirectory},
         );
 
         // TODO Add some error handling.
@@ -81,7 +88,7 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
 
         const services: ParseDockerComposeCommandResultServiceInterface[] = [];
         for (const serviceId of serviceIds) {
-            const containerNamePrefix = `${typedCommand.composeProjectName}_${serviceId}`;
+            const containerNamePrefix = `${composeProjectName}_${serviceId}`;
             services.push({
                 id: serviceId,
                 containerNamePrefix,

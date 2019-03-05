@@ -24,6 +24,9 @@ export class AssetAddComponent implements OnInit {
         mutation ($projectId: String!, $id: String!, $description: String!) {
             createAsset(projectId: $projectId, id: $id, description: $description) {
                 id
+                project {
+                    id
+                }
             }
         }
     `;
@@ -65,7 +68,16 @@ export class AssetAddComponent implements OnInit {
                 const uploadData = new FormData();
                 uploadData.set('asset', this.item.file);
                 this.httpClient
-                    .post([environment.serverBaseUrl, 'upload', 'asset', data.createAsset.id].join('/'), uploadData)
+                    .post(
+                        [
+                            environment.serverBaseUrl,
+                            'upload',
+                            'asset',
+                            data.createAsset.project.id,
+                            data.createAsset.id
+                        ].join('/'),
+                        uploadData
+                    )
                     .subscribe(
                         () => {
                             this.spinner.hide();

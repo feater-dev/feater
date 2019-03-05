@@ -11,29 +11,34 @@ export class ConfigureProxyDomainCommandExecutorComponent implements SimpleComma
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as ConfigureProxyDomainCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            serviceId,
+            ipAddress,
+            port,
+            proxyDomain,
+            commandLogger,
+        } = command as ConfigureProxyDomainCommand;
 
-        commandLogger.info(`Port: ${typedCommand.port}`);
-        commandLogger.info(`Service ID: ${typedCommand.serviceId}`);
-        commandLogger.info(`IP address: ${typedCommand.ipAddress}`);
-        commandLogger.info(`Proxy domain: ${typedCommand.proxyDomain}`);
+        commandLogger.info(`Port: ${port}`);
+        commandLogger.info(`Service ID: ${serviceId}`);
+        commandLogger.info(`IP address: ${ipAddress}`);
+        commandLogger.info(`Proxy domain: ${proxyDomain}`);
 
         const nginxConfig =
 `
 # Proxy domain for
-# port ${typedCommand.port}
-# of ${typedCommand.serviceId}
-# running at IP address ${typedCommand.ipAddress}
+# port ${port}
+# of ${serviceId}
+# running at IP address ${ipAddress}
 #
 server {
     listen 9011;
     listen [::]:9011;
 
-    server_name ${typedCommand.proxyDomain};
+    server_name ${proxyDomain};
 
     location / {
-        proxy_pass http://${typedCommand.ipAddress}:${typedCommand.port};
+        proxy_pass http://${ipAddress}:${port};
         proxy_set_header Host $host;
     }
 }

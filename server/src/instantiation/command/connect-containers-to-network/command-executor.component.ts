@@ -16,20 +16,23 @@ export class ConnectToNetworkCommandExecutorComponent implements SimpleCommandEx
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as ConnectToNetworkCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            serviceId,
+            containerId,
+            commandLogger,
+        } = command as ConnectToNetworkCommand;
 
-        commandLogger.info(`Service ID: ${typedCommand.serviceId}`);
-        commandLogger.info(`Container ID: ${typedCommand.containerId}`);
+        commandLogger.info(`Service ID: ${serviceId}`);
+        commandLogger.info(`Container ID: ${containerId}`);
         commandLogger.info(`Network: ${config.instantiation.proxyNetworkName}`);
 
         execSync(
-            `docker network connect ${config.instantiation.proxyNetworkName} ${typedCommand.containerId}`,
+            `docker network connect ${config.instantiation.proxyNetworkName} ${containerId}`,
             { maxBuffer: BUFFER_SIZE },
         );
 
         const dockerInspectStdout = execSync(
-            `docker inspect ${typedCommand.containerId}`,
+            `docker inspect ${containerId}`,
             { maxBuffer: BUFFER_SIZE },
         );
 
@@ -39,7 +42,7 @@ export class ConnectToNetworkCommandExecutorComponent implements SimpleCommandEx
         commandLogger.info(`IP address: ${ipAddress}`);
 
         return {
-            serviceId: typedCommand.serviceId,
+            serviceId: serviceId,
             ipAddress,
         } as ConnectToNetworkCommandResultInterface;
     }

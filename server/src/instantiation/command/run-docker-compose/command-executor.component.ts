@@ -19,8 +19,14 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as RunDockerComposeCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            sourceDockerVolumeName,
+            envDirRelativePath,
+            composeFileRelativePaths,
+            envVariables,
+            workingDirectory,
+            commandLogger,
+        } = command as RunDockerComposeCommand;
 
         const hostDockerSocketPath = '/var/run/docker.sock'; // TODO Move to config and env variables.
 
@@ -33,29 +39,29 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
             '-e', `COMPOSE_HTTP_TIMEOUT=${config.instantiation.dockerComposeHttpTimeout}`,
         );
 
-        for (const envVariable of typedCommand.envVariables.toList()) {
+        for (const envVariable of envVariables.toList()) {
             composeUpArguments.push(
                 '-e', `${envVariable.name}=${envVariable.value}`,
             );
         }
 
         composeUpArguments.push(
-            '-w', path.join('/source', typedCommand.envDirRelativePath),
+            '-w', path.join('/source', envDirRelativePath),
             '-v', `${hostDockerSocketPath}:/var/run/docker.sock`,
-            '-v', `${typedCommand.sourceDockerVolumeName}:/source`,
+            '-v', `${sourceDockerVolumeName}:/source`,
             `docker/compose:${config.instantiation.dockerComposeVersion}`,
         );
 
-        for (const composeFileRelativePath of typedCommand.composeFileRelativePaths) {
+        for (const composeFileRelativePath of composeFileRelativePaths) {
             composeUpArguments.push(
                 '-f',
-                path.relative(typedCommand.envDirRelativePath, composeFileRelativePath),
+                path.relative(envDirRelativePath, composeFileRelativePath),
             );
         }
 
         composeUpArguments.push('up', '-d', '--no-color');
 
-        commandLogger.info(`Source volume name: ${typedCommand.sourceDockerVolumeName}`);
+        commandLogger.info(`Source volume name: ${sourceDockerVolumeName}`);
         commandLogger.info(`Command: ${composeUpCommand}`);
         commandLogger.info(`Arguments: ${JSON.stringify(composeUpArguments)}`);
 
@@ -63,7 +69,7 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
             spawn(
                 composeUpCommand,
                 composeUpArguments,
-                {cwd: typedCommand.workingDirectory},
+                {cwd: workingDirectory},
             ),
             commandLogger,
             'run compose',

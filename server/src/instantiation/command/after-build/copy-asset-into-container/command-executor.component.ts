@@ -23,17 +23,23 @@ export class CopyAssetIntoContainerCommandExecutorComponent implements SimpleCom
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as CopyAssetIntoContainerCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            serviceId,
+            assetId,
+            destinationPath,
+            containerId,
+            absoluteGuestInstanceDirPath,
+            commandLogger,
+        } = command as CopyAssetIntoContainerCommand;
 
-        const asset = await this.assetRepository.findUploadedById(typedCommand.assetId);
+        const asset = await this.assetRepository.findUploadedById(assetId);
         const uploadPaths = this.assetHelper.getUploadPaths(asset);
 
         await this.copyAssetToContainer(
             uploadPaths,
-            typedCommand.containerId,
-            typedCommand.destinationPath,
-            typedCommand.absoluteGuestInstanceDirPath,
+            containerId,
+            destinationPath,
+            absoluteGuestInstanceDirPath,
             commandLogger,
         );
 

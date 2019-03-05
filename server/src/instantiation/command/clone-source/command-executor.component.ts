@@ -9,9 +9,6 @@ import {DeployKeyRepository} from '../../../persistence/repository/deploy-key.re
 import {CloneSourceCommand} from './command';
 import {SimpleCommand} from '../../executor/simple-command';
 import {CommandLogger} from '../../logger/command-logger';
-import {EnvVariablesSet} from "../../sets/env-variables-set";
-import {FeaterVariablesSet} from "../../sets/feater-variables-set";
-import {CloneSourceCommandResultInterface} from "./command-result.interface";
 import {SpawnHelper} from "../../helper/spawn-helper.component";
 import {DeployKeyHelperComponent} from "../../../helper/deploy-key-helper.component";
 
@@ -29,42 +26,25 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = (command as CloneSourceCommand);
-        const commandLogger = typedCommand.commandLogger;
-
-        mkdirSync(typedCommand.sourceAbsoluteGuestPath);
-
-        await this.cloneRepository(
-            typedCommand.cloneUrl,
-            typedCommand.sourceAbsoluteGuestPath,
-            typedCommand.workingDirectory,
+        const {
+            cloneUrl,
+            referenceType,
+            referenceName,
+            sourceAbsoluteGuestPath,
+            workingDirectory,
             commandLogger,
-        );
+        } = command as CloneSourceCommand;
 
-        this.checkoutReference(
-            typedCommand.referenceType,
-            typedCommand.referenceName,
-            typedCommand.sourceAbsoluteGuestPath,
-            commandLogger
-        );
+        commandLogger.info(`Creating directory.`);
+        mkdirSync(sourceAbsoluteGuestPath);
 
-        const dockerVolumeName = `${typedCommand.dockerComposeProjectName}_source_volume_${typedCommand.sourceId.toLowerCase()}`;
-        commandLogger.info(`Volume name: ${dockerVolumeName}`);
+        commandLogger.info(`Cloning repository.`);
+        await this.cloneRepository(cloneUrl, sourceAbsoluteGuestPath, workingDirectory, commandLogger);
 
-        const {envVariables, featerVariables} = this.prepareVariables(
-            typedCommand.sourceId,
-            dockerVolumeName,
-            typedCommand.sourceAbsoluteHostPath,
-        );
+        commandLogger.info(`Checking out reference.`);
+        this.checkoutReference(referenceType, referenceName, sourceAbsoluteGuestPath, commandLogger);
 
-        commandLogger.infoWithEnvVariables(envVariables);
-        commandLogger.infoWithFeaterVariables(featerVariables);
-
-        return {
-            dockerVolumeName,
-            envVariables,
-            featerVariables,
-        } as CloneSourceCommandResultInterface;
+        return {};
     }
 
     protected async cloneRepository(
@@ -208,39 +188,6 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
             ['checkout', matchedCommitShortHash],
             {cwd: sourceAbsoluteGuestPath},
         );
-
     }
 
-    protected prepareVariables(
-        sourceId: string,
-        dockerVolumeName: string,
-        sourceAbsoluteHostPath: string,
-    ): {envVariables: EnvVariablesSet, featerVariables: FeaterVariablesSet} {
-        const envVariables = new EnvVariablesSet();
-        const featerVariables = new FeaterVariablesSet();
-
-        // TODO Depracted, remove later. Replaced volume name below.
-        envVariables.add(
-            `FEATER__HOST_SOURCE_PATH__${sourceId.toUpperCase()}`,
-            sourceAbsoluteHostPath,
-        );
-        // TODO Depracted, remove later. Replaced volume name below.
-        featerVariables.add(
-            `host_source_path__${sourceId.toLowerCase()}`,
-            sourceAbsoluteHostPath,
-        );
-        envVariables.add(
-            `FEATER__SOURCE_VOLUME__${sourceId.toUpperCase()}`,
-            dockerVolumeName,
-        );
-        featerVariables.add(
-            `source_volume__${sourceId.toLowerCase()}`,
-            dockerVolumeName,
-        );
-
-        return {
-            envVariables,
-            featerVariables,
-        };
-    }
 }

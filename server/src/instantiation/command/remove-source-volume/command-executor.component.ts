@@ -19,16 +19,20 @@ export class RemoveSourceVolumeCommandExecutorComponent implements SimpleCommand
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as RemoveSourceVolumeCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            sourceId,
+            sourceDockerVolumeName,
+            workingDirectory,
+            commandLogger,
+        } = command as RemoveSourceVolumeCommand;
 
-        commandLogger.info(`Source ID: ${typedCommand.sourceId}`);
-        commandLogger.info(`Volume name: ${typedCommand.sourceDockerVolumeName}`);
+        commandLogger.info(`Source ID: ${sourceId}`);
+        commandLogger.info(`Volume name: ${sourceDockerVolumeName}`);
 
         commandLogger.info(`Removing volume.`);
         await this.removeSourceVolume(
-            typedCommand.sourceDockerVolumeName,
-            typedCommand.workingDirectory,
+            sourceDockerVolumeName,
+            workingDirectory,
             commandLogger
         );
     }

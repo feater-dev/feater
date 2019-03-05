@@ -27,21 +27,26 @@ export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandE
     }
 
     async execute(command: SimpleCommand): Promise<any> {
-        const typedCommand = command as CreateAssetVolumeCommand;
-        const commandLogger = typedCommand.commandLogger;
+        const {
+            volumeId,
+            assetId,
+            containerNamePrefix,
+            absoluteGuestInstanceDirPath,
+            commandLogger,
+        } = command as CreateAssetVolumeCommand;
 
-        commandLogger.info(`Asset ID: ${typedCommand.assetId}`);
-        commandLogger.info(`Volume ID: ${typedCommand.volumeId}`);
+        commandLogger.info(`Asset ID: ${assetId}`);
+        commandLogger.info(`Volume ID: ${volumeId}`);
 
-        const asset = await this.assetRepository.findUploadedById(typedCommand.assetId);
+        const asset = await this.assetRepository.findUploadedById(assetId);
 
-        const dockerVolumeName = `${typedCommand.containerNamePrefix}_asset_volume_${typedCommand.volumeId}`;
+        const dockerVolumeName = `${containerNamePrefix}_asset_volume_${volumeId}`;
         commandLogger.info(`Volume name: ${dockerVolumeName}`);
 
         commandLogger.info(`Creating volume.`);
         await this.createVolume(
             dockerVolumeName,
-            typedCommand.absoluteGuestInstanceDirPath,
+            absoluteGuestInstanceDirPath,
             commandLogger,
         );
 
@@ -49,16 +54,16 @@ export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandE
         await this.extractAssetToVolume(
             this.assetHelper.getUploadPaths(asset).absolute,
             dockerVolumeName,
-            typedCommand.absoluteGuestInstanceDirPath,
+            absoluteGuestInstanceDirPath,
             commandLogger,
         );
 
         const envVariables = new EnvVariablesSet();
-        envVariables.add(`FEATER__ASSET_VOLUME__${typedCommand.volumeId.toUpperCase()}`, dockerVolumeName);
+        envVariables.add(`FEATER__ASSET_VOLUME__${volumeId.toUpperCase()}`, dockerVolumeName);
         commandLogger.infoWithEnvVariables(envVariables);
 
         const featerVariables = new FeaterVariablesSet();
-        featerVariables.add(`asset_volume__${typedCommand.volumeId.toLowerCase()}`, dockerVolumeName);
+        featerVariables.add(`asset_volume__${volumeId.toLowerCase()}`, dockerVolumeName);
         commandLogger.infoWithFeaterVariables(featerVariables);
 
         return {

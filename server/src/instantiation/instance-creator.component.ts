@@ -7,7 +7,6 @@ import {CreateDirectoryCommand} from './command/create-directory/command';
 import {CreateAssetVolumeCommand} from './command/create-asset-volume/command';
 import {CreateAssetVolumeCommandResultInterface} from './command/create-asset-volume/command-result.interface';
 import {CloneSourceCommand} from './command/clone-source/command';
-import {CloneSourceCommandResultInterface} from "./command/clone-source/command-result.interface";
 import {ParseDockerComposeCommand} from './command/parse-docker-compose/command';
 import {ParseDockerComposeCommandResultInterface} from './command/parse-docker-compose/command-result.interface';
 import {PrepareProxyDomainCommand} from './command/prepare-port-domain/command';
@@ -43,6 +42,7 @@ import {DefinitionInterface} from '../persistence/interface/definition.interface
 import {CreateSourceVolumeCommand} from "./command/create-source-volume/command";
 import {RemoveSourceVolumeCommand} from "./command/remove-source-volume/command";
 import {RemoveSourceCommand} from "./command/remove-source/command";
+import {CreateSourceVolumeCommandResultInterface} from "./command/create-source-volume/command-result.interface";
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -174,7 +174,7 @@ export class InstanceCreatorComponent {
                     );
                 },
                 async (result: CreateAssetVolumeCommandResultInterface): Promise<void> => {
-                    volume.dockerVolumeName = result.dockerVolumeName;
+                    volume.volume.name = result.dockerVolumeName;
                     instanceContext.mergeEnvVariablesSet(result.envVariables);
                     instanceContext.mergeFeaterVariablesSet(result.featerVariables);
                     await updateInstanceFromInstanceContext();
@@ -188,21 +188,12 @@ export class InstanceCreatorComponent {
                 instanceContext.id,
                 `Clone repository for source \`${source.id}\``,
                 () => new CloneSourceCommand(
-                    source.id,
                     source.cloneUrl,
                     source.reference.type,
                     source.reference.name,
                     source.paths.absolute.guest,
-                    source.paths.absolute.host,
-                    instanceContext.composeProjectName,
                     source.paths.absolute.guest, // TODO Replace with working directory.
                 ),
-                async (result: CloneSourceCommandResultInterface): Promise<void> => {
-                    source.dockerVolumeName = result.dockerVolumeName;
-                    instanceContext.mergeEnvVariablesSet(result.envVariables);
-                    instanceContext.mergeFeaterVariablesSet(result.featerVariables);
-                    await updateInstanceFromInstanceContext();
-                },
             ),
         );
 
@@ -234,7 +225,7 @@ export class InstanceCreatorComponent {
                     const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new ParseDockerComposeCommand(
-                        source.dockerVolumeName,
+                        source.volume.name,
                         composeFile.envDirRelativePath,
                         composeFile.composeFileRelativePaths,
                         instanceContext.envVariables,
@@ -354,7 +345,7 @@ export class InstanceCreatorComponent {
                 `Create source volume \`${source.id}\``,
                 () => new CreateSourceVolumeCommand(
                     source.id,
-                    source.dockerVolumeName,
+                    source.volume.name,
                     source.paths.absolute.guest,
                     source.paths.absolute.guest,
                 ),
@@ -378,9 +369,13 @@ export class InstanceCreatorComponent {
                 `Remove source volume \`${source.id}\``,
                 () => new RemoveSourceVolumeCommand(
                     source.id,
-                    source.dockerVolumeName,
+                    source.volume.name,
                     source.paths.absolute.guest,
                 ),
+                async (): Promise<void> => {
+                    delete source.volume.mountpoint;
+                    await updateInstanceFromInstanceContext();
+                },
             ),
         );
     }
@@ -400,10 +395,16 @@ export class InstanceCreatorComponent {
                         `Create source volume \`${source.id}\``,
                         () => new CreateSourceVolumeCommand(
                             source.id,
-                            source.dockerVolumeName,
+                            source.volume.name,
                             source.paths.absolute.guest,
                             source.paths.absolute.guest,
                         ),
+                        async (result: CreateSourceVolumeCommandResultInterface): Promise<void> => {
+                            source.volume.mountpoint = result.sourceVolumeMountpoint;
+                            instanceContext.mergeEnvVariablesSet(result.envVariables);
+                            instanceContext.mergeFeaterVariablesSet(result.featerVariables);
+                            await updateInstanceFromInstanceContext();
+                        },
                     ),
                 )
             ),
@@ -449,7 +450,7 @@ export class InstanceCreatorComponent {
                     const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new RunDockerComposeCommand(
-                        source.dockerVolumeName,
+                        source.volume.name,
                         composeFile.envDirRelativePath,
                         composeFile.composeFileRelativePaths,
                         instanceContext.envVariables,

@@ -4,7 +4,7 @@ export class CreateSourceVolumeCommand extends SimpleCommand {
 
     constructor(
         readonly sourceId: string,
-        readonly sourceDockerVolumeName: string,
+        readonly sourceVolumeName: string,
         readonly sourceAbsoluteGuestPath: string,
         readonly workingDirectory: string,
     ) {

@@ -41,7 +41,7 @@ export class CompositeSimpleCommandExecutorComponent {
         executeServiceCmdCommandExecutorComponent: ExecuteServiceCmdCommandExecutorComponent,
         copyAssetIntoContainerCommandExecutorComponent: CopyAssetIntoContainerCommandExecutorComponent,
         createAssetVolumeCommandExecutorComponent: CreateAssetVolumeCommandExecutorComponent,
-        createSourceVolumeCommandExecutorComponent: CreateSourceVolumeCommandExecutorComponent,
+        prepareSourceVolumeCommandExecutorComponent: CreateSourceVolumeCommandExecutorComponent,
         removeSourceVolumeCommandExecutorComponent: RemoveSourceVolumeCommandExecutorComponent,
         enableProxyDomainsCommandExecutorComponent: EnableProxyDomainsCommandExecutorComponent,
     ) {
@@ -61,7 +61,7 @@ export class CompositeSimpleCommandExecutorComponent {
             executeServiceCmdCommandExecutorComponent,
             copyAssetIntoContainerCommandExecutorComponent,
             createAssetVolumeCommandExecutorComponent,
-            createSourceVolumeCommandExecutorComponent,
+            prepareSourceVolumeCommandExecutorComponent,
             removeSourceVolumeCommandExecutorComponent,
             enableProxyDomainsCommandExecutorComponent,
         ];

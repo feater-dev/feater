@@ -7,24 +7,24 @@
 # Quick reference
 
 * Source code and where to file issues:
-  [http://github.com/boldare/feater]
+  http://github.com/boldare/feater
 
 * Example project that can be easily run with Feater:
-  [https://github.com/boldare/feater-symfony-example]
+  https://github.com/boldare/feater-symfony-example
 
 # Introduction
 
 **Feater** is a tool for rapid deployment of selected features of your web
 application to isolated testing or demo environments.
 
+**It’s open-source.**
+It's released under MIT license. You can use it for free as well as modify it to
+suit your needs.
+
 **It’s tech-agnostic.**
 It can be used regardless of languages or dependencies used in your project.
 This is possible because it uses Docker containers and Docker Compose
 configurations.
-
-**It’s open-source.**
-It's released under MIT license. You can use it for free as well as modify it to
-suit your needs.
 
 **It’s easy to use.**
 If your project has a Docker Compose setup and some build scripts you won't need
@@ -33,6 +33,11 @@ much more to run it with Feater.
 **It’s easy to host.**
 It runs in Docker containers and you can use it on your local machine or set up
 a dedicated server for it.
+
+# License
+
+Feater is released under MIT License. You can view license information at
+https://raw.githubusercontent.com/boldare/feater/master/LICENSE
 
 # How to use this image
 
@@ -129,7 +134,23 @@ $ docker run \
     feater:latest-docker-18.06.3
 ```
 
+You can also include `--restart unless-stopped` option if you want Feater to run
+continuously and to be started automatically.
+
 ## Environment variables
+
+Following environmental variables can be provided when executing `docker run`.
+
+### Controlling Docker Compose version
+
+* `FEATER_DOCKER_COMPOSE_VERSION` - defaults to `1.23.2`.
+
+### Using external MongoDB instance
+
+* `FEATER_MONGO_DSN` - DSN of MongoDB database to be used for persisting
+  projects, definitions, assets, instances, deploy keys and logs; can be
+  provided if external instance of MongoDB should be used; defaults to
+  `mongodb://localhost:27017/feater`.
 
 ### Controlling location of persistent data
 
@@ -140,10 +161,6 @@ $ docker run \
 * `FEATER_GUEST_PATH_IDENTITY` - defaults to `/data/identity`;
 
 * `FEATER_GUEST_PATH_PROXY` - defaults to `/data/proxy`.
-
-### Controlling Docker Compose version
-
-* `FEATER_DOCKER_COMPOSE_VERSION` - defaults to `1.23.2`.
 
 ### Controlling instantiation
 

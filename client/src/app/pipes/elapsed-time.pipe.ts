@@ -7,8 +7,13 @@ export class ElapsedTimePipe implements PipeTransform {
         if (!startAndEndDateString.start || !startAndEndDateString.end) {
             return '...';
         }
-        const asSeconds = moment.duration(moment(startAndEndDateString.end).diff(startAndEndDateString.start)).asSeconds();
+        const startToEndDuration = moment.duration(moment(startAndEndDateString.end).diff(startAndEndDateString.start));
+        const diffInSeconds = startToEndDuration.asSeconds();
+        const seconds = startToEndDuration.seconds();
+        const minutes = startToEndDuration.minutes();
 
-        return `${asSeconds.toFixed(2)}s`;
+        return diffInSeconds > 60
+          ? `${minutes}m ${seconds}s`
+          : `${seconds.toFixed(2)}s`;
     }
 }

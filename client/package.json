@@ -1,11 +1,11 @@
 {
-  "name": "xsolve-feat",
-  "version": "0.0.0",
+  "name": "feater-client",
+  "version": "0.1.0",
   "license": "MIT",
   "author": {
     "name": "Mariusz Bąk",
-    "email": "mariusz.bak@xsolve.pl",
-    "url": "https://xsolve.software"
+    "email": "mariusz.alef.bak@gmail.com",
+    "url": "http://github.com/malef"
   },
   "angular-cli": {},
   "scripts": {

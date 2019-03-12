@@ -15,6 +15,6 @@ for i in "${!docker_versions[@]}"; do
         --pull --no-cache \
         --build-arg DOCKER_VERSION=${docker_versions[$i]} \
         -f ./prod/Dockerfile \
-        -t feater:${version}-docker-${docker_versions[$i]} \
+        -t feater/feater:${version}-docker-${docker_versions[$i]} \
         ..
 done

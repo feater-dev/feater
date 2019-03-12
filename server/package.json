@@ -1,6 +1,6 @@
 {
-  "name": "feater-api",
-  "version": "1.0.0",
+  "name": "feater-server",
+  "version": "0.1.0",
   "license": "MIT",
   "author": {
     "name": "Mariusz Bąk",

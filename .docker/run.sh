@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 show_help () {
-
     cat << EndOfHelp
 
 Required env variables:
@@ -43,9 +42,11 @@ set -e
 proxy_network_name=${FEATER_PROXY_NETWORK_NAME:=${container_name}_proxy}
 echo "Proxy network name: ${proxy_network_name}"
 set -x
-docker network ls -q --filter name=${proxy_network_name} | grep -q . \
-    || docker network create ${proxy_network_name} \
-    && echo "Proxy network created."
+if [[ -z $(docker network ls -q --filter name=${proxy_network_name}) ]]; then
+    docker network create ${proxy_network_name}
+    echo "Proxy network created."
+fi
+
 set +x
 
 # Create data volume if it's name is provided and it doesn't exist.
@@ -53,9 +54,10 @@ data_volume_name=${FEATER_DATA_VOLUME_NAME}
 if [[ -n "${data_volume_name}" ]]; then
     echo "Data volume name: ${data_volume_name}"
     set -x
-    docker volume ls -q --filter name=${data_volume_name} | grep -q . \
-        || docker volume create ${data_volume_name} \
-        && echo "Data volume created."
+    if [[ -z $(docker volume ls -q --filter name=${data_volume_name}) ]]; then
+        docker volume create ${data_volume_name}
+        echo "Data volume created."
+    fi
     set +x
 else
     echo "Data volume name not provided."

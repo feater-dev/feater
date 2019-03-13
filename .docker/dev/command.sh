@@ -17,8 +17,8 @@ if [[ -z $(docker network ls -q --filter name=${proxy_network_name}) ]]; then
 fi
 
 # Connect to proxy network if not already connected.
-docker_inspect_format=$(printf "'{{.NetworkSettings.Networks.%s.MacAddress}}'" "${proxy_network_name}")
-if [[ $(docker inspect --format=${docker_inspect_format} ${container_id}) != '<no value>' ]]; then
+docker_inspect_format=$(printf "'{{.NetworkSettings.Networks.%s.NetworkID}}'" "${proxy_network_name}")
+if [[ $(docker inspect --format=${docker_inspect_format} ${container_id}) = '<no value>' ]]; then
     docker network connect ${proxy_network_name} ${container_id}
 fi
 

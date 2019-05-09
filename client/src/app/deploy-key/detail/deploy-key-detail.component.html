@@ -1,28 +1,22 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2><small>Deploy key</small><br>{{ item?.cloneUrl }}</h2>
-        </div>
-    </div>
-</div>
+<app-title [context]="'Deploy key'" [title]="deployKey?.cloneUrl"></app-title>
 
 <form>
     <div class="row">
         <div class="col-md-5">
             <div class="form-group">
                 <label for="inputDeployKey_cloneUrl" class="control-label">Clone URL</label>
-                <p class="form-control-static" id="inputDeployKey_cloneUrl">{{ item?.cloneUrl }}</p>
+                <p class="form-control-static" id="inputDeployKey_cloneUrl">{{ deployKey?.cloneUrl }}</p>
             </div>
             <div class="form-group">
                 <label for="inputDeployKeyFingerprint" class="control-label">Fingerprint</label>
-                <p class="form-control-static" id="inputDeployKeyFingerprint">{{ item?.fingerprint }}</p>
+                <p class="form-control-static" id="inputDeployKeyFingerprint">{{ deployKey?.fingerprint }}</p>
             </div>
         </div>
         <div class="col-md-7">
             <div class="form-group">
                 <label for="inputDeployKey_publicKey" class="control-label">Public key</label>
                 <div class="form-control-static" id="inputDeployKey_publicKey">
-                    <pre style="white-space: pre-wrap; background: none; color: #2c3e50;">{{ item?.publicKey }}</pre>
+                    <pre style="white-space: pre-wrap; background: none; color: #2c3e50;">{{ deployKey?.publicKey }}</pre>
                 </div>
             </div>
         </div>
@@ -32,21 +26,21 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label for="inputDeployKey_createdAt" class="control-label">Created</label>
-                <p class="form-control-static" id="inputDeployKey_createdAt">{{ item?.createdAt | relativeDate }}</p>
+                <p class="form-control-static" id="inputDeployKey_createdAt">{{ deployKey?.createdAt | relativeDate }}</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
                 <label for="inputDeployKey_updatedAt" class="control-label">Updated</label>
-                <p class="form-control-static" id="inputDeployKey_updatedAt">{{ item?.updatedAt | relativeDate }}</p>
+                <p class="form-control-static" id="inputDeployKey_updatedAt">{{ deployKey?.updatedAt | relativeDate }}</p>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <a class="btn btn-success" (click)="regenerateItem()">Regenerate</a>
-            <a class="btn btn-danger" (click)="removeItem()" style="margin-left: 10px;">Remove</a>
+            <a class="btn btn-success" (click)="regenerateDeployKey()">Regenerate</a>
+            <a class="btn btn-danger" (click)="removeDeployKey()" style="margin-left: 10px;">Remove</a>
         </div>
     </div>
 </form>

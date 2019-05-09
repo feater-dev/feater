@@ -30,7 +30,7 @@ export interface DefinitionAddFormSourceFormElement {
 
 export interface DefinitionAddFormVolumeFormElement {
     id: string;
-    assetId: string;
+    assetId?: string;
 }
 
 export interface DefinitionAddFormComponentReferenceFormElement {

@@ -1,4 +1,4 @@
 export interface SourceReferenceInputTypeInterface {
-    readonly type: string;
-    readonly name: string;
+    type: string;
+    name: string;
 }

@@ -43,7 +43,10 @@ const InstanceSummaryItemSchema = new Schema(
 );
 
 export const InstanceSchema = new Schema({
-    definitionId: String,
+    definitionId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Definition',
+    },
     hash: String,
     name: String,
     services: [InstanceServiceSchema],

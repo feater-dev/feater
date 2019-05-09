@@ -8,9 +8,10 @@ import {
     GetDeployKeyDetailQueryDeployKeyFieldInterface,
 } from './get-deploy-key-detail.query';
 import gql from 'graphql-tag';
-import {getDeployKeyListQueryGql} from '../list/get-deploy-key-list.query';
 import {ConfirmComponent} from '../../modal/confirm.component';
 import {DialogService} from 'ng2-bootstrap-modal';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {ToastrService} from 'ngx-toastr';
 
 
 @Component({
@@ -20,23 +21,7 @@ import {DialogService} from 'ng2-bootstrap-modal';
 })
 export class DeployKeyDetailComponent implements OnInit {
 
-    protected readonly regenerateDeployKeyMutation = gql`
-        mutation ($cloneUrl: String!) {
-            regenerateDeployKey(cloneUrl: $cloneUrl) {
-                cloneUrl
-            }
-        }
-    `;
-
-    protected readonly removeDeployKeyMutation = gql`
-        mutation ($cloneUrl: String!) {
-            removeDeployKey(cloneUrl: $cloneUrl) {
-                removed
-            }
-        }
-    `;
-
-    item: GetDeployKeyDetailQueryDeployKeyFieldInterface;
+    deployKey: GetDeployKeyDetailQueryDeployKeyFieldInterface;
 
     constructor(
         protected route: ActivatedRoute,
@@ -44,27 +29,33 @@ export class DeployKeyDetailComponent implements OnInit {
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected dialogService: DialogService,
+        protected toastr: ToastrService,
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.getDeployKey();
     }
 
-    regenerateItem() {
-        this.apollo.mutate({
-            mutation: this.regenerateDeployKeyMutation,
-            variables: {cloneUrl: this.item.cloneUrl},
-            refetchQueries: [{
-                query: getDeployKeyDetailQueryGql,
-                variables: {id: this.route.snapshot.params['id']},
-            }],
-        }).subscribe(
-            () => {},
-            (error) => { console.log(error); }
-        );
+    regenerateDeployKey(): void {
+        this.spinner.show();
+        this.apollo
+            .mutate({
+                mutation: gql`${this.getRegenerateDeployKeyMutation()}`,
+            }).subscribe(
+                () => {
+                    this.toastr.success(`Deploy key for <em>${this.deployKey.cloneUrl}</em> regenerated.`);
+                    this.spinner.hide();
+                    this.getDeployKey();
+                },
+                () => {
+                    this.toastr.error(`Failed to regenerate deploy key for <em>${this.deployKey.cloneUrl}</em>.`);
+                    this.spinner.hide();
+                    this.getDeployKey();
+                }
+            );
     }
 
-    removeItem() {
+    removeDeployKey(): void {
         this.dialogService
             .addDialog(
                 ConfirmComponent,
@@ -80,25 +71,29 @@ export class DeployKeyDetailComponent implements OnInit {
                     if (!isConfirmed) {
                         return;
                     }
-                    this.apollo.mutate({
-                        mutation: this.removeDeployKeyMutation,
-                        variables: {cloneUrl: this.item.cloneUrl},
-                    }).subscribe(
-                        () => {
-                            this.router.navigate(['/deploy-keys']);
-                        },
-                        (error) => {
-                            console.log(error);
-                        },
-                    );
+                    this.spinner.show();
+                    this.apollo
+                        .mutate({
+                            mutation: gql`${this.getRemoveDeployKeyMutation()}`,
+                        }).subscribe(
+                            () => {
+                                this.spinner.hide();
+                                this.toastr.success(`Deploy key for <em>${this.deployKey.cloneUrl}</em> removed.`);
+                                this.router.navigate(['/deploy-keys']);
+                            },
+                            (error) => {
+                                this.toastr.error(`Failed to remove deploy key for <em>${this.deployKey.cloneUrl}</em>.`);
+                                this.getDeployKey();
+                            },
+                        );
                 }
             );
     }
 
-    protected getDeployKey() {
+    protected getDeployKey(): void {
         this.spinner.show();
 
-        return this.apollo
+        this.apollo
             .watchQuery<GetDeployKeyDetailQueryInterface>({
                 query: getDeployKeyDetailQueryGql,
                 variables: {id: this.route.snapshot.params['id']},
@@ -106,9 +101,39 @@ export class DeployKeyDetailComponent implements OnInit {
             .valueChanges
             .subscribe(result => {
                 const resultData: GetDeployKeyDetailQueryInterface = result.data;
-                this.item = resultData.deployKey;
+                this.deployKey = resultData.deployKey;
                 this.spinner.hide();
             });
     }
+
+    protected getRegenerateDeployKeyMutation(): string {
+        const jsonQuery = {
+            mutation: {
+                regenerateDeployKey: {
+                    __args: {
+                        cloneUrl: this.deployKey.cloneUrl,
+                    },
+                    cloneUrl: true,
+                },
+            },
+        };
+
+        return jsonToGraphQLQuery(jsonQuery)
+    };
+
+    protected getRemoveDeployKeyMutation(): string {
+        const jsonQuery = {
+            mutation: {
+                removeDeployKey: {
+                    __args: {
+                        cloneUrl: this.deployKey.cloneUrl,
+                    },
+                    removed: true,
+                },
+            },
+        };
+
+        return jsonToGraphQLQuery(jsonQuery)
+    };
 
 }

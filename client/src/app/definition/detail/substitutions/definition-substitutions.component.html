@@ -1,62 +1,48 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2>
-                <small>Definition</small><br>
-                {{ definition?.name }}
-            </h2>
-        </div>
-    </div>
-</div>
+<app-title [context]="'Definition'" [title]="definition?.name"></app-title>
 
-<div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-pills">
-            <li><a routerLink="/definition/{{ definition?.id }}">Summary</a></li>
-            <li><a routerLink="/definition/{{ definition?.id }}/configuration">Configuration</a></li>
-            <li><a routerLink="/definition/{{ definition?.id }}/deploy-keys">Deploy keys</a></li>
-            <li><a routerLink="/definition/{{ definition?.id }}/environment">Predicted environment</a></li>
-            <li class="active"><a routerLink="/definition/{{ definition?.id }}/substitutions">Predicted substitutions</a></li>
-            <li><a routerLink="/definition/{{ definition?.id }}/instances">Instances</a></li>
-        </ul>
-    </div>
-</div>
+<div class="content-body">
+    <div class="container-fluid">
 
-<div class="row">
-    <div class="col-md-12">
-        <div *ngIf="definition?.predictedFeaterVariables?.length">
-            <div class="table-wrapper">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="fit-column">Name</th>
-                            <th scope="col" class="fit-column">Type</th>
-                            <th scope="col">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let predictedFeaterVariable of definition?.predictedFeaterVariables"
-                            class="form-control-static"
-                        >
-                            <td>
-                                <span class="env-variable-name">{{ predictedFeaterVariable.name }}</span>
-                            </td>
-                            <td>
-                                <span *ngIf="predictedFeaterVariable.value">Value</span>
-                                <span *ngIf="predictedFeaterVariable.pattern">Pattern</span>
-                            </td>
-                            <td>
-                                <span *ngIf="predictedFeaterVariable.value" class="env-variable-value">
-                                    {{ predictedFeaterVariable.value }}
-                                </span>
-                                <span *ngIf="predictedFeaterVariable.pattern" class="env-variable-pattern">
-                                    {{ predictedFeaterVariable.pattern }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <app-definition-tabs [definitionId]="definition?.id" [activeTab]="definitionTabs.predictedSubstitutions"></app-definition-tabs>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div *ngIf="definition?.predictedFeaterVariables?.length">
+                    <div class="table-wrapper">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="fit-column">Name</th>
+                                    <th scope="col" class="fit-column">Type</th>
+                                    <th scope="col">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let predictedFeaterVariable of definition?.predictedFeaterVariables"
+                                    class="form-control-static"
+                                >
+                                    <td>
+                                        <span class="env-variable-name">{{ predictedFeaterVariable.name }}</span>
+                                    </td>
+                                    <td>
+                                        <span *ngIf="predictedFeaterVariable.value">Value</span>
+                                        <span *ngIf="predictedFeaterVariable.pattern">Pattern</span>
+                                    </td>
+                                    <td>
+                                        <span *ngIf="predictedFeaterVariable.value" class="env-variable-value">
+                                            {{ predictedFeaterVariable.value }}
+                                        </span>
+                                        <span *ngIf="predictedFeaterVariable.pattern" class="env-variable-pattern">
+                                            {{ predictedFeaterVariable.pattern }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 </div>

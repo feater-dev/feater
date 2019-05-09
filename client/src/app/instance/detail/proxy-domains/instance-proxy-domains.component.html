@@ -1,50 +1,40 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2><small>Instance</small><br>{{ instance?.name }}</h2>
-        </div>
-    </div>
-</div>
+<app-title [context]="'Instance'" [title]="instance?.name"></app-title>
 
-<div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-pills">
-            <li><a routerLink="/instance/{{ instance?.id }}">Summary</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/environment">Environment</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/services">Services</a></li>
-            <li class="active"><a routerLink="/instance/{{ instance?.id }}/proxy-domains">Proxy domains</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/logs">Logs</a></li>
-        </ul>
-    </div>
-</div>
+<div class="content-body">
+    <div class="container-fluid">
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="table-wrapper">
-            <table *ngIf="instance?.proxiedPorts?.length" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col" class="fit-column">ID</th>
-                        <th scope="col" class="fit-column">Service ID</th>
-                        <th scope="col" class="fit-column">IP address</th>
-                        <th scope="col" class="fit-column">Port</th>
-                        <th scope="col" class="fit-column">Proxy domains</th>
-                        <th scope="col">Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let proxiedPort of instance?.proxiedPorts; trackBy: trackByIndex" class="form-control-static">
-                        <td>{{ proxiedPort.id }}</td>
-                        <td>{{ proxiedPort.serviceId }}</td>
-                        <td>{{ getServiceById(proxiedPort.serviceId).ipAddress || '&mdash;' }}</td>
-                        <td>{{ proxiedPort.port }}</td>
-                        <td>
-                            <span style="white-space: nowrap;">{{ proxiedPort.domain }}</span>
-                        </td>
-                        <td>{{ proxiedPort.name }}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <app-instance-tabs [instanceId]="instance?.id" [activeTab]="instanceTabs.proxyDomains"></app-instance-tabs>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-wrapper">
+                    <table *ngIf="instance?.proxiedPorts?.length" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="fit-column">ID</th>
+                                <th scope="col" class="fit-column">Service ID</th>
+                                <th scope="col" class="fit-column">IP address</th>
+                                <th scope="col" class="fit-column">Port</th>
+                                <th scope="col" class="fit-column">Proxy domains</th>
+                                <th scope="col">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let proxiedPort of instance?.proxiedPorts; trackBy: trackByIndex" class="form-control-static">
+                                <td>{{ proxiedPort.id }}</td>
+                                <td>{{ proxiedPort.serviceId }}</td>
+                                <td>{{ getServiceById(proxiedPort.serviceId).ipAddress || '&mdash;' }}</td>
+                                <td>{{ proxiedPort.port }}</td>
+                                <td>
+                                    <span style="white-space: nowrap;">{{ proxiedPort.domain }}</span>
+                                </td>
+                                <td>{{ proxiedPort.name }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
     </div>
 </div>

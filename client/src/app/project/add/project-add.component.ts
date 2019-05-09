@@ -3,6 +3,9 @@ import {Router} from '@angular/router';
 import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 import {ProjectAddForm} from './project-add-form.model';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {ToastrService} from 'ngx-toastr';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 
 @Component({
@@ -12,38 +15,51 @@ import {ProjectAddForm} from './project-add-form.model';
 })
 export class ProjectAddComponent {
 
-    protected readonly createProjectMutation = gql`
-        mutation ($name: String!) {
-            createProject(name: $name) {
-                id
-            }
-        }
-    `;
-
-    item: ProjectAddForm;
+    project: ProjectAddForm;
 
     constructor(
         protected router: Router,
         protected apollo: Apollo,
+        protected spinner: NgxSpinnerService,
+        protected toastr: ToastrService,
     ) {
-        this.item = {
+        this.project = {
             name: ''
         };
     }
 
-    addItem() {
-        this.apollo.mutate({
-            mutation: this.createProjectMutation,
-            variables: {
-                name: this.item.name,
-            },
-        }).subscribe(
-            ({data}) => {
-                this.router.navigate(['/project', data.createProject.id]);
-            },
-            (error) => {
-                console.log(error);
+    createProject() {
+        this.spinner.show();
+        this.apollo
+            .mutate({
+                mutation: gql`${this.getCreateProjectMutation()}`,
+            })
+            .subscribe(
+                ({data}) => {
+                    this.spinner.hide();
+                    this.toastr.success(`Project <em>${data.createProject.name}</em> created.`);
+                    this.router.navigate(['/project', data.createProject.id]);
+                },
+                (error) => {
+                    this.spinner.hide();
+                    this.toastr.error(`Failed to create project <em>${this.project.name}</em>.`);
+                }
+            );
+    }
+
+    protected getCreateProjectMutation(): string {
+        const mutation = {
+            mutation: {
+                createProject: {
+                    __args: {
+                        name: this.project.name,
+                    },
+                    id: true,
+                    name: true,
+                }
             }
-        );
+        };
+
+        return jsonToGraphQLQuery(mutation);
     }
 }

@@ -40,7 +40,13 @@ body {
 
 .sidebar {
     color: #ffffff;
-    padding-top: 14px;
+}
+
+.sidebar-top {
+    height: 95px;
+    padding-top: 9px;
+    background: rgba(0, 0, 0, 0.15);
+    box-shadow: rgba(255, 255, 255, 0.2) 0 0 200px;
 }
 
 .sidebar a {
@@ -59,42 +65,46 @@ body {
 }
 
 .sidebar .logo {
-    font-family: Khand,Lato,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 62px;
-    font-weight: 600;
+    font-size: 35px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.sidebar .version {
+    font-size: 14px;
     text-align: center;
 }
 
 .sidebar .main-menu {
     list-style: none;
-    margin: 20px 0 0 0;
+    margin: 0;
     padding: 0;
 }
 
 .sidebar .main-menu a {
     display: block;
     background-color: transparent;
-    padding: 5px 12px 5px 12px;
+    padding: 5px 8px 5px 8px;
     margin: 0;
 }
 
 .sidebar .main-menu a:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Content */
 
-.content {
+.content-body {
     padding: 10px;
 }
 
-.content .table-wrapper {
+.content-body .table-wrapper {
     border: 2px solid #ecf0f1;
     overflow-x: auto;
     margin-bottom: 20px;
 }
 
-.table {
+.table-wrapper .table {
     margin-bottom: 0;
 }
 
@@ -102,11 +112,7 @@ body {
     text-decoration: none;
 }
 
-
-
-
-
-.fit-column {
+.table .fit-column {
     white-space: nowrap;
     width: 1%;
 }
@@ -154,19 +160,27 @@ body {
 
 body {
     padding-bottom: 60px;
+    background: #fcfcfc !important;
 }
 
-.page-header {
+.content-header {
     margin: 0 0 8px 0;
-    padding: 0;
+    padding: 10px;
+    height: 95px;
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 0 200px;
 }
 
-.page-header h2 {
+h2 {
+    font-size: 24px;
+}
+
+.content-header h2 {
     margin-top: 0;
 }
 
-.page-header h2.single-line {
-    margin-top: 36px;
+.content-header h2.single-line {
+    margin-top: 34px;
 }
 
 .tab-pane {
@@ -246,7 +260,7 @@ h2 {
 }
 
 .nav-pills {
-    margin-bottom: 30px;
+    margin-bottom: 30px !important;
 }
 
 .env-variable-name,
@@ -270,4 +284,58 @@ h2 {
 
 .table-quick-search {
     margin-bottom: 8px;
+}
+
+.help-block {
+    color: #808080 !important;
+}
+
+.toast-container .ngx-toastr {
+    width: 450px;
+}
+
+.nav-pills>li.active>a,
+.nav-pills>li.active>a:hover,
+.nav-pills>li.active>a:focus {
+    color: #18bc9c;
+    background-color: transparent;
+    border-top-width: 0;
+    border-bottom: 4px solid #18bc9c;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-radius: 0;
+    padding: 10px 15px 5px 15px;
+}
+
+.nav>li>a:hover,
+.nav>li>a:focus {
+    text-decoration: none;
+    background-color: transparent;
+    border-top-width: 0;
+    border-bottom: 4px solid #c8cbcc;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-radius: 0;
+    padding: 10px 15px 5px 15px;
+}
+
+.service-actions {
+    white-space: nowrap;
+}
+
+.service-action,
+a.service-action {
+    display: inline-block;
+    padding: 0 4px 0 0;
+    cursor: pointer;
+    color: #2c3e50;
+}
+
+a.service-action:hover,
+a.service-action:visited,
+a.service-action:focus,
+a.service-action:focus-visible,
+a.service-action:focus-within,
+a.service-action:active {
+    color: #2c3e50;
 }

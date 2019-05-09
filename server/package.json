@@ -24,6 +24,7 @@
     "apollo-server-express": "^1.3.6",
     "base32-encode": "^1.1.0",
     "busboy": "^0.2.14",
+    "content-disposition": "^0.5.3",
     "dotenv": "^6.2.0",
     "easy-keygen": "^1.1.1",
     "escape-string-regexp": "^1.0.5",

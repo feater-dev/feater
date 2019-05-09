@@ -1,10 +1,15 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2 class="single-line">Instances</h2>
+<app-title [title]="'Instances'"></app-title>
+
+<div class="content-body">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div *ngIf="instances">
+                    <app-instance-table [instances]="instances"></app-instance-table>
+                </div>
+            </div>
         </div>
-        <div *ngIf="instances">
-            <app-instance-table [instances]="instances"></app-instance-table>
-        </div>
+
     </div>
 </div>

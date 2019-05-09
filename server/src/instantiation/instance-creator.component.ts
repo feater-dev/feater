@@ -168,9 +168,9 @@ export class InstanceCreatorComponent {
                 () => {
                     return new CreateAssetVolumeCommand(
                         volume.id,
-                        volume.assetId,
                         instanceContext.composeProjectName,
                         instanceContext.paths.dir.absolute.guest,
+                        volume.assetId,
                     );
                 },
                 async (result: CreateAssetVolumeCommandResultInterface): Promise<void> => {

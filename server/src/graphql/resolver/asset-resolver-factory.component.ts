@@ -51,7 +51,7 @@ export class AssetResolverFactory {
                 args as ResolverAssetFilterArgumentsInterface,
             );
             const assets = await this.assetRepository.find(
-                criteria,
+                {...criteria, uploaded: true},
                 this.resolveListOptionsHelper.getOffset(resolverListOptions.offset),
                 this.resolveListOptionsHelper.getLimit(resolverListOptions.limit),
                 this.resolveListOptionsHelper.getSort(this.defaultSortKey, this.sortMap, resolverListOptions.sortKey),
@@ -105,7 +105,7 @@ export class AssetResolverFactory {
     protected mapPersistentModelToTypeModel(asset: AssetInterface): AssetTypeInterface {
         return {
             id: asset.id,
-            projectId: asset.projectId,
+            projectId: asset.projectId.toString(),
             description: asset.description,
             createdAt: asset.createdAt,
             updatedAt: asset.updatedAt,

@@ -22,8 +22,8 @@ export const getDefinitionSummaryQueryGql = gql`
 export interface GetDefinitionSummaryQueryDefinitionFieldInterface {
     id: string;
     name: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     project: {
         id: string;
         name: string;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
@@ -6,6 +6,7 @@ import {
     GetProjectListQueryInterface,
     GetProjectListQueryProjectsFieldItemInterface,
 } from './get-project-list.query';
+import {ActionButtonInterface, ActionButtonType} from '../../title/title.component';
 
 
 @Component({
@@ -17,13 +18,26 @@ export class ProjectListComponent implements OnInit {
 
     projects: GetProjectListQueryProjectsFieldItemInterface[];
 
+    actions: ActionButtonInterface[];
+
     constructor(
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
     ) {}
 
     ngOnInit() {
+        this.setUpActions();
         this.getProjects();
+    }
+
+    protected setUpActions(): void {
+        this.actions = [
+            {
+                type: ActionButtonType.success,
+                label: 'Add',
+                routerLink: '/project/add',
+            },
+        ];
     }
 
     protected getProjects() {

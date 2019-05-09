@@ -7,6 +7,7 @@ import {
     GetDefinitionEnvironmentQueryInterface,
     getDefinitionEnvironmentQueryGql,
 } from './get-definition-environment.query';
+import {DefinitionTabs} from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-environment',
@@ -14,6 +15,8 @@ import {
     styles: []
 })
 export class DefinitionEnvironmentComponent implements OnInit {
+
+    readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionEnvironmentQueryDefinitionFieldInterface;
 

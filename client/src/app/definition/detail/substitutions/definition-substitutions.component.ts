@@ -7,6 +7,7 @@ import {
     GetDefinitionSubstitutionsQueryInterface,
     getDefinitionSubstitutionsQueryGql,
 } from './get-definition-substitutions.query';
+import {DefinitionTabs} from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-substitutions',
@@ -14,6 +15,8 @@ import {
     styles: []
 })
 export class DefinitionSubstitutionsComponent implements OnInit {
+
+    readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionSubstitutionsQueryDefinitionFieldInterface;
 

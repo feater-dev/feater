@@ -14,6 +14,7 @@ import {
     updateInstanceLogsQueryGql,
     UpdateInstanceLogsQueryInterface,
 } from './update-instance-logs.query';
+import {InstanceTabs} from '../tabs/instance-tabs.component';
 
 @Component({
     selector: 'app-instance-logs',
@@ -22,15 +23,18 @@ import {
 })
 export class InstanceLogsComponent implements OnInit, OnDestroy {
 
-    readonly POLLING_INTERVAL = 5000; // 5 seconds.
-    readonly TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:mm:ss';
-
-    readonly COLLAPSED = 1;
-    readonly EXPANDED = 2;
+    readonly instanceTabs = InstanceTabs;
 
     instance: GetInstanceLogsQueryInstanceFieldInterface;
 
-    pollingSubscription: Subscription;
+    protected readonly pollingInterval = 5000; // 5 seconds.
+
+    protected pollingSubscription: Subscription;
+
+    protected readonly dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
+    protected readonly commandLogCollapsed = 1;
+    protected readonly commandLogExpanded = 2;
 
     lastCommandLogEntryId: string = null;
 
@@ -72,19 +76,19 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
         return obj.id;
     }
 
-    expand(commandLog: {id: string, completedAt?: Date}): void {
-        this.expandToggles[commandLog.id] = this.EXPANDED;
+    expand(commandLog: {id: string}): void {
+        this.expandToggles[commandLog.id] = this.commandLogExpanded;
     }
 
-    collapse(commandLog: {id: string, completedAt?: Date}): void {
-        this.expandToggles[commandLog.id] = this.COLLAPSED;
+    collapse(commandLog: {id: string}): void {
+        this.expandToggles[commandLog.id] = this.commandLogCollapsed;
     }
 
-    isExpanded(commandLog: {id: string, completedAt?: Date}): boolean {
-        if (this.EXPANDED === this.expandToggles[commandLog.id]) {
+    isExpanded(commandLog: {id: string, completedAt?: string}): boolean {
+        if (this.commandLogExpanded === this.expandToggles[commandLog.id]) {
             return true;
         }
-        if (this.COLLAPSED === this.expandToggles[commandLog.id]) {
+        if (this.commandLogCollapsed === this.expandToggles[commandLog.id]) {
             return false;
         }
 
@@ -118,7 +122,7 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
                 }
 
                 if (!this.pollingSubscription) {
-                    this.pollingSubscription = interval(this.POLLING_INTERVAL)
+                    this.pollingSubscription = interval(this.pollingInterval)
                         .subscribe(
                             () => {
                                 this.updateInstance();
@@ -214,7 +218,7 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
     }
 
     protected formatTimestamp(timestamp: string): string {
-        return moment(timestamp).format(this.TIMESTAMP_FORMAT);
+        return moment(timestamp).format(this.dateFormat);
     }
 
 }

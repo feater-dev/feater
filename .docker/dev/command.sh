@@ -17,8 +17,7 @@ if [[ -z $(docker network ls -q --filter name=${proxy_network_name}) ]]; then
 fi
 
 # Connect to proxy network if not already connected.
-docker_inspect_format=$(printf "'{{.NetworkSettings.Networks.%s.NetworkID}}'" "${proxy_network_name}")
-if [[ $(docker inspect --format=${docker_inspect_format} ${container_id}) = '<no value>' ]]; then
+if [[ $(docker inspect --format={{.NetworkSettings.Networks.${proxy_network_name}.NetworkID}} ${container_id}) = '<no value>' ]]; then
     docker network connect ${proxy_network_name} ${container_id}
 fi
 
@@ -32,7 +31,6 @@ mongod --fork --bind_ip 0.0.0.0 --logpath /var/log/mongodb.log --dbpath /data/mo
 (cd ./server && yarn install && yarn start:dev:watch 1>&1 2>&2 &)
 (cd ./client && yarn install && yarn start:dev:watch 1>&1 2>&2 &)
 
-set +x
-
 # Wait infinitely.
+set +x
 while true; do sleep 10; done

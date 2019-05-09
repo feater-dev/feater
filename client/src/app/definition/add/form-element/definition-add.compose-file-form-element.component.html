@@ -5,7 +5,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Source id</label>
-                <select class="form-control" [(ngModel)]="item.sourceId">
+                <select class="form-control" [(ngModel)]="composeFile.sourceId">
                     <option *ngFor="let source of sources" [value]="source.id" selected>{{ source.id }}</option>
                 </select>
             </div>
@@ -14,19 +14,19 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Env directory relative path</label>
-                <input type="text" class="form-control" [(ngModel)]="item.envDirRelativePath">
+                <input type="text" class="form-control" [(ngModel)]="composeFile.envDirRelativePath">
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Compose file relative paths</label>
-                <div *ngFor="let composeFileRelativePath of item.composeFileRelativePaths; trackBy: trackByIndex; let i = index"
+                <div *ngFor="let composeFileRelativePath of composeFile.composeFileRelativePaths; trackBy: trackByIndex; let i = index"
                      style="position: relative; padding-right: 40px;"
                 >
                     <input type="text"
                            class="form-control"
-                           [(ngModel)]="item.composeFileRelativePaths[i]"
+                           [(ngModel)]="composeFile.composeFileRelativePaths[i]"
                     >
                     <a class="btn btn-danger btn-sm"
                        *ngIf="i > 0"

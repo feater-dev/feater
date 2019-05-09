@@ -15,23 +15,23 @@
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">ID</label>
-                <input type="text" class="form-control" [(ngModel)]="item.id">
+                <input type="text" class="form-control" [(ngModel)]="task.id">
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">Depends on</label>
-                <div *ngIf="0 === item.dependsOn.length">
+                <div *ngIf="0 === task.dependsOn.length">
                     <p>No depends on ids to list.</p>
                 </div>
-                <div *ngIf="0 < item.dependsOn.length">
-                    <div *ngFor="let dependsOnItem of item.dependsOn; trackBy: trackByIndex; let i = index"
+                <div *ngIf="0 < task.dependsOn.length">
+                    <div *ngFor="let dependsOnItem of task.dependsOn; trackBy: trackByIndex; let i = index"
                          style="position: relative; padding-right: 40px;"
                     >
                         <input type="text"
                                class="form-control"
-                               [(ngModel)]="item.dependsOn[i]"
+                               [(ngModel)]="task.dependsOn[i]"
                         >
                         <a class="btn btn-danger btn-sm"
                            (click)="deleteDependsOn(i)"
@@ -56,21 +56,21 @@
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">Service ID</label>
-                <input type="text" class="form-control" [(ngModel)]="item.serviceId">
+                <input type="text" class="form-control" [(ngModel)]="task.serviceId">
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">Asset ID</label>
-                <input type="text" class="form-control" [(ngModel)]="item.assetId">
+                <input type="text" class="form-control" [(ngModel)]="task.assetId">
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">Destination path</label>
-                <input type="text" class="form-control" [(ngModel)]="item.destinationPath">
+                <input type="text" class="form-control" [(ngModel)]="task.destinationPath">
             </div>
         </div>
     </div>

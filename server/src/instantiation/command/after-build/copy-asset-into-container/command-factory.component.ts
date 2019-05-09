@@ -24,11 +24,14 @@ export class CopyAssetIntoContainerCommandFactoryComponent implements AfterBuild
         updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         const typedAfterBuildTask = afterBuildTask as InstanceContextCopyAssetIntoContainerInterface;
+        const taskIdDescriptionPart = typedAfterBuildTask.id
+            ? ` \`${typedAfterBuildTask.id}\``
+            : '';
 
         return new ContextAwareCommand(
             taskId,
             instanceContext.id,
-            `Copy asset \`${typedAfterBuildTask.assetId}\` for service \`${typedAfterBuildTask.serviceId}\``,
+            `Running after build task${taskIdDescriptionPart} and copying asset \`${typedAfterBuildTask.assetId}\` for service \`${typedAfterBuildTask.serviceId}\``,
             () => {
                 const service = instanceContext.findService(typedAfterBuildTask.serviceId);
 

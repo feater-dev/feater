@@ -12,9 +12,12 @@ docker_versions=(
 
 for i in "${!docker_versions[@]}"; do
     docker build \
-        --pull --no-cache \
+        --pull \
         --build-arg DOCKER_VERSION=${docker_versions[$i]} \
         -f ./prod/Dockerfile \
         -t feater/feater:${version}-docker-${docker_versions[$i]} \
         ..
+
+    docker push feater/feater:${version}-docker-${docker_versions[$i]}
 done
+

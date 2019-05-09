@@ -74,9 +74,13 @@ import {TooltipModule} from 'ng2-tooltip-directive';
 import {FilterPipeModule} from 'ngx-filter-pipe';
 import {BootstrapModalModule} from 'ng2-bootstrap-modal';
 import {ConfirmComponent} from './modal/confirm.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToastrModule} from 'ngx-toastr';
+import {TitleComponent} from './title/title.component';
+import {DefinitionTabsComponent} from './definition/detail/tabs/definition-tabs.component';
+import {InstanceTabsComponent} from './instance/detail/tabs/instance-tabs.component';
 
 const appRoutes: Routes = [
-    { path: '', component: AboutComponent },
     { path: 'projects', component: ProjectListComponent },
     { path: 'project/add', component: ProjectAddComponent },
     { path: 'project/:id', component: ProjectDetailComponent },
@@ -97,12 +101,13 @@ const appRoutes: Routes = [
     { path: 'instance/:id/environment', component: InstanceEnvironmentComponent},
     { path: 'instance/:id/services', component: InstanceServicesComponent},
     { path: 'instance/:id/proxy-domains', component: InstanceProxyDomainsComponent},
-    { path: 'instance/:id/logs', component: InstanceLogsComponent},
+    { path: 'instance/:id/build-logs', component: InstanceLogsComponent},
     { path: 'assets', component: AssetListComponent },
     { path: 'asset/:projectId/:id', component: AssetDetailComponent },
     { path: 'deploy-keys', component: DeployKeyListComponent },
     { path: 'deploy-key/:id', component: DeployKeyDetailComponent },
-    { path: '**', redirectTo: '', pathMatch: 'full' }
+    { path: 'about', component: AboutComponent },
+    { path: '**', redirectTo: 'projects', pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -158,6 +163,9 @@ const appRoutes: Routes = [
         RelativeDatePipe,
         ElapsedTimePipe,
         ConfirmComponent,
+        TitleComponent,
+        DefinitionTabsComponent,
+        InstanceTabsComponent,
     ],
     imports: [
         BrowserModule,
@@ -171,6 +179,11 @@ const appRoutes: Routes = [
         TooltipModule,
         FilterPipeModule,
         BootstrapModalModule.forRoot({container:document.body}),
+        BrowserAnimationsModule,
+        ToastrModule.forRoot({
+            enableHtml: true,
+            positionClass: 'toast-bottom-right',
+        }),
     ],
     entryComponents: [
         ConfirmComponent,

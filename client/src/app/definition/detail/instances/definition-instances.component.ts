@@ -7,6 +7,7 @@ import {
     GetDefinitionInstancesQueryInterface,
     getDefinitionInstancesQueryGql,
 } from './get-definition-instances.query';
+import {DefinitionTabs} from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-instances',
@@ -14,6 +15,8 @@ import {
     styles: []
 })
 export class DefinitionInstancesComponent implements OnInit {
+
+    readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionInstancesQueryDefinitionFieldInterface;
 

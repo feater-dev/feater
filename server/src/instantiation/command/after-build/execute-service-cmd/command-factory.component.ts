@@ -25,11 +25,14 @@ export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskC
         updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType {
         const typedAfterBuildTask = afterBuildTask as InstanceContextExecuteServiceCmdInterface;
+        const taskIdDescriptionPart = typedAfterBuildTask.id
+            ? ` \`${typedAfterBuildTask.id}\``
+            : '';
 
         return new ContextAwareCommand(
             taskId,
             instanceContext.id,
-            `Execute service command for service \`${typedAfterBuildTask.serviceId}\``,
+            `Running after build task${taskIdDescriptionPart} and executing service command for service \`${typedAfterBuildTask.serviceId}\``,
             () => {
                 const service = instanceContext.findService(typedAfterBuildTask.serviceId);
 

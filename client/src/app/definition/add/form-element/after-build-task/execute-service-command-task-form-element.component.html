@@ -7,31 +7,32 @@
     <div class="row">
         <div class="col-lg-4">
             <div class="form-group">
-                <label class="control-label">Type</label>
-                <p class="form-control-static">Execute service command</p>
+                <label class="control-label">Task type</label>
+                <p class="form-control-static">Execute command on service container</p>
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">ID</label>
-                <input type="text" class="form-control" [(ngModel)]="item.id">
+                <input type="text" class="form-control" [(ngModel)]="task.id">
+                <span class="help-block">ID can be provided to be referenced later in <em>Depends on</em> property of other tasks in order to define the order in which they should be executed.</span>
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">Depends on</label>
-                <div *ngIf="0 === item.dependsOn.length">
+                <div *ngIf="0 === task.dependsOn.length">
                     <p>No depends on ids to list.</p>
                 </div>
-                <div *ngIf="0 < item.dependsOn.length">
-                    <div *ngFor="let dependsOnItem of item.dependsOn; trackBy: trackByIndex; let i = index"
+                <div *ngIf="0 < task.dependsOn.length">
+                    <div *ngFor="let dependsOnItem of task.dependsOn; trackBy: trackByIndex; let i = index"
                          style="position: relative; padding-right: 40px;"
                     >
                         <input type="text"
                                class="form-control"
-                               [(ngModel)]="item.dependsOn[i]"
+                               [(ngModel)]="task.dependsOn[i]"
                         >
                         <a class="btn btn-danger btn-sm"
                            (click)="deleteDependsOn(i)"
@@ -56,31 +57,32 @@
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">Service ID</label>
-                <input type="text" class="form-control" [(ngModel)]="item.serviceId">
+                <input type="text" class="form-control" [(ngModel)]="task.serviceId">
+                <span class="help-block">It is assumed that service named <code>{{ task.serviceId }}</code> is defined in Docker Compose configuration and that it will be running in <code>{{ task.serviceId }}_1</code> container named .</span>
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">Command</label>
-                <input type="text" class="form-control" [(ngModel)]="item.command[0]">
+                <input type="text" class="form-control" [(ngModel)]="task.command[0]">
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="control-label">Arguments</label>
-                <div *ngIf="2 > item.command.length">
+                <div *ngIf="2 > task.command.length">
                     <p>No arguments to list.</p>
                 </div>
-                <div *ngIf="1 < item.command.length">
-                    <div *ngFor="let argument of item.command; trackBy: trackByIndex; let i = index"
+                <div *ngIf="1 < task.command.length">
+                    <div *ngFor="let argument of task.command; trackBy: trackByIndex; let i = index"
                          style="position: relative; padding-right: 40px;"
                     >
                         <div *ngIf="i > 0">
                             <input type="text"
                                    class="form-control"
-                                   [(ngModel)]="item.command[i]"
+                                   [(ngModel)]="task.command[i]"
                             >
                             <a class="btn btn-danger btn-sm"
                                (click)="deleteArgument(i)"
@@ -106,13 +108,13 @@
 
     <div class="row">
         <div class="col-lg-6">
-            <app-inherited-env-vars-form-element [inheritedEnvVars]="item.inheritedEnvVariables"
+            <app-inherited-env-vars-form-element [inheritedEnvVars]="task.inheritedEnvVariables"
                                                  [availableEnvVarNames]="availableEnvVariableNames"
             ></app-inherited-env-vars-form-element>
         </div>
 
         <div class="col-lg-6">
-            <app-custom-env-vars-form-element [customEnvVars]="item.customEnvVariables"></app-custom-env-vars-form-element>
+            <app-custom-env-vars-form-element [customEnvVars]="task.customEnvVariables"></app-custom-env-vars-form-element>
         </div>
 
     </div>

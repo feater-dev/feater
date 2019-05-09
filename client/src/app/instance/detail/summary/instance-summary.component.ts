@@ -11,6 +11,9 @@ import {Subscription, interval} from 'rxjs';
 import gql from 'graphql-tag';
 import {ConfirmComponent} from '../../../modal/confirm.component';
 import {DialogService} from 'ng2-bootstrap-modal';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {ToastrService} from 'ngx-toastr';
+import {InstanceTabs} from '../tabs/instance-tabs.component';
 
 
 @Component({
@@ -22,15 +25,11 @@ export class InstanceSummaryComponent implements OnInit, OnDestroy {
 
     instance: GetInstanceSummaryQueryInstanceFieldInterface;
 
-    protected readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    readonly instanceTabs = InstanceTabs;
+
+    protected readonly pollingInterval = 5000; // 5 seconds.
 
     protected pollingSubscription: Subscription;
-
-    protected readonly removeInstanceMutation = gql`
-        mutation ($id: String!) {
-            removeInstance(id: $id)
-        }
-    `;
 
     constructor(
         protected route: ActivatedRoute,
@@ -38,11 +37,12 @@ export class InstanceSummaryComponent implements OnInit, OnDestroy {
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected dialogService: DialogService,
+        protected toastr: ToastrService,
     ) {}
 
     ngOnInit() {
         this.getInstance();
-        const polling = interval(this.POLLING_INTERVAL);
+        const polling = interval(this.pollingInterval);
         this.pollingSubscription = polling.subscribe(
             () => { this.getInstance(false); },
         );
@@ -69,17 +69,21 @@ export class InstanceSummaryComponent implements OnInit, OnDestroy {
                         return;
                     }
                     this.spinner.show();
-                    this.apollo.mutate({
-                        mutation: this.removeInstanceMutation,
-                        variables: {
-                            id: this.instance.id,
-                        },
-                    }).subscribe(
-                        () => {
-                            this.router.navigateByUrl(`/definition/${this.instance.definition.id}`);
-                            this.spinner.hide();
-                        }
-                    );
+                    this.toastr.info(`Removing instance <em>${this.instance.name}</em>.`);
+                    this.apollo
+                        .mutate({
+                            mutation: gql`${this.getRemoveInstanceMutation()}`,
+                        }).subscribe(
+                            () => {
+                                this.spinner.hide();
+                                this.toastr.success(`Instance <em>${this.instance.name}</em> removed.`);
+                                this.router.navigateByUrl(`/definition/${this.instance.definition.id}`);
+                            },
+                            () => {
+                                this.toastr.error(`Failed to remove instance <em>${this.instance.name}</em>.`);
+                                this.getInstance(true);
+                            },
+                        );
                 }
             );
     }
@@ -100,12 +104,29 @@ export class InstanceSummaryComponent implements OnInit, OnDestroy {
                 },
             })
             .valueChanges
-            .subscribe(result => {
-                const resultData: GetInstanceSummaryQueryInterface = result.data;
-                this.instance = resultData.instance;
-                if (spinner) {
-                    this.spinner.hide();
-                }
-            });
+            .subscribe(
+                result => {
+                    const resultData: GetInstanceSummaryQueryInterface = result.data;
+                    this.instance = resultData.instance;
+                    if (spinner) {
+                        this.spinner.hide();
+                    }
+                },
+            );
+    }
+
+    protected getRemoveInstanceMutation(): string {
+        const jsonQuery = {
+            mutation: {
+                removeInstance: {
+                    __args: {
+                        id: this.instance.id,
+                    },
+                    // TODO Add `removed` field.
+                },
+            },
+        };
+
+        return jsonToGraphQLQuery(jsonQuery);
     }
 }

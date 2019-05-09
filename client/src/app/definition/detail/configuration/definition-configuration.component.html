@@ -1,32 +1,18 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2>
-                <small>Definition</small><br>
-                {{ definition?.name }}
-            </h2>
-        </div>
-    </div>
-</div>
+<app-title [context]="'Definition'" [title]="definition?.name"></app-title>
 
-<div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-pills">
-            <li><a routerLink="/definition/{{ definition?.id }}">Summary</a></li>
-            <li class="active"><a routerLink="/definition/{{ definition?.id }}/configuration">Configuration</a></li>
-            <li><a routerLink="/definition/{{ definition?.id }}/deploy-keys">Deploy keys</a></li>
-            <li><a routerLink="/definition/{{ definition?.id }}/environment">Predicted environment</a></li>
-            <li><a routerLink="/definition/{{ definition?.id }}/substitutions">Predicted substitutions</a></li>
-            <li><a routerLink="/definition/{{ definition?.id }}/instances">Instances</a></li>
-        </ul>
-    </div>
-</div>
+<div class="content-body">
+    <div class="container-fluid">
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group">
-            <label for="inputDefinition_configAsYaml" class="control-label">Configuration in Yaml</label>
-            <pre class="form-control-static" id="inputDefinition_configAsYaml">{{ definition?.configAsYaml }}</pre>
+        <app-definition-tabs [definitionId]="definition?.id" [activeTab]="definitionTabs.configuration"></app-definition-tabs>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="inputDefinition_configAsYaml" class="control-label">Configuration in Yaml</label>
+                    <pre class="form-control-static" id="inputDefinition_configAsYaml">{{ definition?.configAsYaml }}</pre>
+                </div>
+            </div>
         </div>
+
     </div>
 </div>

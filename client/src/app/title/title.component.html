@@ -1,0 +1,31 @@
+<div class="content-header" style="position: relative">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="pull-right" style="top: 30px; right: 0px; position: absolute;">
+                    <span *ngFor="let action of actions">
+                        <a
+                                *ngIf="action.eventEmitter"
+                                [ngClass]="{'btn-success': action.type === actionButtonType.success, 'btn-danger': action.type === actionButtonType.danger}"
+                                (click)="action.eventEmitter.emit()"
+                                class="btn btn-sm"
+                                style="margin-left: 10px;"
+                        >
+                            {{ action.label }}
+                        </a>
+                        <a
+                                *ngIf="action.routerLink"
+                                class="btn"
+                                [ngClass]="{'btn-success': action.type === actionButtonType.success, 'btn-danger': action.type === actionButtonType.danger}"
+                                routerLink="{{ action.routerLink}}"
+                                style="margin-left: 10px;"
+                        >
+                            {{ action.label }}
+                        </a>
+                    </span>
+                </div>
+                <h2><small>{{ context }}</small><br>{{ title }}</h2>
+            </div>
+        </div>
+    </div>
+</div>

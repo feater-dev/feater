@@ -10,6 +10,8 @@ import {
 import gql from 'graphql-tag';
 import {ConfirmComponent} from '../../modal/confirm.component';
 import {DialogService} from 'ng2-bootstrap-modal';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {ToastrService} from 'ngx-toastr';
 
 
 @Component({
@@ -21,21 +23,13 @@ export class AssetDetailComponent implements OnInit {
 
     asset: GetAssetDetailQueryAssetFieldInterface;
 
-    protected readonly removeAssetMutation = gql`
-        mutation ($id: String! $projectId: String!) {
-            removeAsset(
-                projectId: $projectId
-                id: $id
-            )
-        }
-    `;
-
     constructor(
         protected route: ActivatedRoute,
         protected router: Router,
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected dialogService: DialogService,
+        protected toastr: ToastrService,
     ) {}
 
     ngOnInit() {
@@ -60,18 +54,20 @@ export class AssetDetailComponent implements OnInit {
                     }
 
                     this.spinner.show();
-                    this.apollo.mutate({
-                        mutation: this.removeAssetMutation,
-                        variables: {
-                            projectId: this.asset.project.id,
-                            id: this.asset.id,
-                        },
-                    }).subscribe(
-                        () => {
-                            this.spinner.hide();
-                            this.router.navigateByUrl(`/project/${this.asset.project.id}`);
-                        }
-                    );
+                    this.apollo
+                        .mutate({
+                            mutation: gql`${this.getRemoveAssetMutation()}`,
+                        }).subscribe(
+                            () => {
+                                this.spinner.hide();
+                                this.toastr.success(`Asset <em>${this.asset.id}</em> removed.`);
+                                this.router.navigateByUrl(`/project/${this.asset.project.id}`);
+                            },
+                            () => {
+                                this.spinner.hide();
+                                this.toastr.error(`Failed to remove asset <em>${this.asset.id}</em>.`);
+                            },
+                        );
                 }
             );
     }
@@ -95,4 +91,18 @@ export class AssetDetailComponent implements OnInit {
             });
     }
 
+    protected getRemoveAssetMutation(): string {
+        const mutation = {
+            mutation: {
+                removeAsset: {
+                    __args: {
+                        id: this.asset.id,
+                        projectId: this.asset.project.id,
+                    },
+                },
+            },
+        };
+
+        return jsonToGraphQLQuery(mutation);
+    }
 }

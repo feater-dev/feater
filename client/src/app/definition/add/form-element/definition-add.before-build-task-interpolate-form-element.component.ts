@@ -15,15 +15,15 @@ import {InterpolateTaskFormElement} from '../definition-add-form.model';
 })
 export class DefinitionAddBeforeBuildTaskInterpolateFormElementComponent implements OnInit {
 
-    @Input() item: InterpolateTaskFormElement;
+    @Input() task: InterpolateTaskFormElement;
 
-    @Output() deleteItem: EventEmitter<InterpolateTaskFormElement> =
+    @Output() deleteTask: EventEmitter<InterpolateTaskFormElement> =
         new EventEmitter<InterpolateTaskFormElement>();
 
     ngOnInit() {}
 
     delete() {
-        this.deleteItem.emit(this.item);
+        this.deleteTask.emit(this.task);
     }
 
 }

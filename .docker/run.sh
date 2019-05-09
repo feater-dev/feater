@@ -41,40 +41,39 @@ set -e
 # Create proxy network if it doesn't exist.
 proxy_network_name=${FEATER_PROXY_NETWORK_NAME:=${container_name}_proxy}
 echo "Proxy network name: ${proxy_network_name}"
-set -x
 if [[ -z $(docker network ls -q --filter name=${proxy_network_name}) ]]; then
+    echo "Creating proxy network."
     docker network create ${proxy_network_name}
     echo "Proxy network created."
+else
+    echo "Proxy network exists."
 fi
-
-set +x
 
 # Create data volume if it's name is provided and it doesn't exist.
 data_volume_name=${FEATER_DATA_VOLUME_NAME}
 if [[ -n "${data_volume_name}" ]]; then
-    echo "Data volume name: ${data_volume_name}"
-    set -x
+	echo "Data volume name: ${data_volume_name}"
     if [[ -z $(docker volume ls -q --filter name=${data_volume_name}) ]]; then
+        echo "Creating data volume."
         docker volume create ${data_volume_name}
         echo "Data volume created."
+	else
+        echo "Data volume exists."
     fi
-    set +x
 else
     echo "Data volume name not provided."
 fi
 
-# Build image.
+echo "Building image."
 image_tag=feater-${env}
-set -x
 docker build .. \
     --pull \
     --build-arg DOCKER_VERSION=${FEATER_DOCKER_VERSION:-18.06.3} \
     -f ./${env}/Dockerfile \
     -t ${image_tag}
-set +x
+echo "Image built."
 
-# Run container.
-set -x
+echo "Running container."
 docker run \
     -p ${FEATER_PORT_MANAGEMENT:-9010}:9010 \
     -p ${FEATER_PORT_PROXY:-9011}:9011 \
@@ -85,4 +84,4 @@ docker run \
     -d \
     --name ${container_name} \
     ${image_tag}
-set +x
+echo "Container run."

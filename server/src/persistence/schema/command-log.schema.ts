@@ -11,7 +11,10 @@ const CommandLogDetailItemSchema = new Schema(
 
 export const CommandLogSchema = new Schema({
     taskId: String,
-    instanceId: String,
+    instanceId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Instance',
+    },
     description: String,
     details: [CommandLogDetailItemSchema],
     createdAt: Date,
@@ -19,5 +22,3 @@ export const CommandLogSchema = new Schema({
     completedAt: Date,
     failedAt: Date,
 });
-
-// TODO Add index.

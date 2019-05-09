@@ -1,65 +1,86 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2><small>Instance</small><br>{{ instance?.name }}</h2>
-        </div>
-    </div>
-</div>
+<app-title [context]="'Instance'" [title]="instance?.name"></app-title>
 
-<div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-pills">
-            <li><a routerLink="/instance/{{ instance?.id }}">Summary</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/environment">Environment</a></li>
-            <li class="active"><a routerLink="/instance/{{ instance?.id }}/services">Services</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/proxy-domains">Proxy domains</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/logs">Logs</a></li>
-        </ul>
-    </div>
-</div>
+<div class="content-body">
+    <div class="container-fluid">
 
-<div class="form form-horizontal">
-    <div class="row">
-        <div class="col-md-12">
-            <div *ngIf="instance?.services?.length">
-                <div class="table-wrapper">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="fit-column">ID</th>
-                                <th scope="col" class="fit-column">Container ID</th>
-                                <th scope="col">IP address</th>
-                                <th scope="col" class="fit-column">Container state</th>
-                                <th scope="col" class="fit-column">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let service of instance?.services; trackBy: trackByIndex" class="form-control-static">
-                                <td>{{ service.id }}</td>
-                                <td>{{ service.containerId | slice:0:12 }}</td>
-                                <td>{{ service.ipAddress }}</td>
-                                <td>{{ service.containerState }}</td>
-                                <td class="service-actions">
-                                    <span [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"
-                                          (click)="startOrUnpauseService(service)"
-                                          class="glyphicon glyphicon-play"
-                                    ></span>
+        <app-instance-tabs [instanceId]="instance?.id" [activeTab]="instanceTabs.services"></app-instance-tabs>
 
-                                    <span [ngClass]="{disabled: 'running' !== service.containerState}"
-                                          (click)="pauseService(service)"
-                                          class="glyphicon glyphicon-pause"
-                                    ></span>
-
-                                    <span [ngClass]="{disabled: 'running' !== service.containerState}"
-                                          (click)="stopService(service)"
-                                          class="glyphicon glyphicon-stop"
-                                    ></span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <div class="form form-horizontal">
+            <div class="row">
+                <div class="col-md-12">
+                    <div *ngIf="instance?.services?.length">
+                        <div class="table-wrapper">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="fit-column">ID</th>
+                                        <th scope="col" class="fit-column">Container ID</th>
+                                        <th scope="col">IP address</th>
+                                        <th scope="col" class="fit-column">Container state</th>
+                                        <th scope="col" class="fit-column">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let service of instance?.services; trackBy: trackByIndex" class="form-control-static">
+                                        <td>{{ service.id }}</td>
+                                        <td>{{ service.containerId | slice:0:12 }}</td>
+                                        <td>{{ service.ipAddress }}</td>
+                                        <td>{{ service.containerState }}</td>
+                                        <td class="service-actions">
+                                            <span tooltip="Start or unpause service"
+                                                  placement="left"
+                                                  theme="light"
+                                                  show-delay="200"
+                                            >
+                                                <span
+                                                    [ngClass]="{disabled: 'exited' !== service.containerState && 'paused' !== service.containerState}"
+                                                    (click)="startOrUnpauseService(service)"
+                                                    class="glyphicon glyphicon-play service-action"
+                                                ></span>
+                                            </span>
+                                            <span tooltip="Pause service"
+                                                  placement="left"
+                                                  theme="light"
+                                                  show-delay="200"
+                                            >
+                                                <span
+                                                    [ngClass]="{disabled: 'running' !== service.containerState}"
+                                                    (click)="pauseService(service)"
+                                                    class="glyphicon glyphicon-pause service-action"
+                                                ></span>
+                                            </span>
+                                            <span tooltip="Stop service"
+                                                  placement="left"
+                                                  theme="light"
+                                                  show-delay="200"
+                                            >
+                                                <span
+                                                    [ngClass]="{disabled: 'running' !== service.containerState}"
+                                                    (click)="stopService(service)"
+                                                    class="glyphicon glyphicon-stop service-action"
+                                                ></span>
+                                            </span>
+                                            <span tooltip="Download service logs"
+                                                  placement="left"
+                                                  theme="light"
+                                                  show-delay="200"
+                                            >
+                                                <a
+                                                    href="{{ baseDownloadLogsUrl + '/' + service.id }}"
+                                                    class="service-action"
+                                                >
+                                                    <span class="glyphicon glyphicon-download"></span>
+                                                </a>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>

@@ -15,7 +15,7 @@ export class AssetHelper {
     constructor() {}
 
     getUploadPaths(asset: AssetInterface): AssetUploadPathsInterface {
-        const relativeToAssetDirectory = path.join(asset.projectId, asset.id);
+        const relativeToAssetDirectory = path.join(asset.projectId.toString(), asset.id);
 
         return {
             relativeToAssetDirectory,

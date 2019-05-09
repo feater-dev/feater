@@ -47,13 +47,13 @@ export class DefinitionDuplicateComponent extends DefinitionAddComponent impleme
                 }
             ))
             .subscribe(
-                (item: GetDefinitionConfigQueryDefinitionFieldInterface) => {
-                    this.project = item.project;
+                (definition: GetDefinitionConfigQueryDefinitionFieldInterface) => {
+                    this.project = definition.project;
                     this.sourceDefinition = {
-                        name: item.name,
+                        name: definition.name,
                     };
-                    this.item.name = `${item.name} - copy`;
-                    this.importYamlConfig(item.configAsYaml);
+                    this.definition.name = `${definition.name} - copy`;
+                    this.importYamlConfig(definition.configAsYaml);
                     this.spinner.hide();
                 }
             );

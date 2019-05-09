@@ -199,7 +199,7 @@ export class InstanceResolverFactory {
             id: instance._id,
             hash: instance.hash,
             name: instance.name,
-            definitionId: instance.definitionId,
+            definitionId: instance.definitionId.toString(),
             services: instance.services,
             summaryItems: instance.summaryItems,
             envVariables: instance.envVariables,

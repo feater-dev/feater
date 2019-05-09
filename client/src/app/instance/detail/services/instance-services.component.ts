@@ -9,6 +9,10 @@ import {
 } from './get-instance-services.query';
 import gql from 'graphql-tag';
 import {Subscription, interval} from 'rxjs';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {ToastrService} from 'ngx-toastr';
+import {InstanceTabs} from '../tabs/instance-tabs.component';
+import {environment} from '../../../../environments/environment';
 
 @Component({
     selector: 'app-instance-services',
@@ -17,53 +21,26 @@ import {Subscription, interval} from 'rxjs';
 })
 export class InstanceServicesComponent implements OnInit, OnDestroy {
 
-    readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    readonly instanceTabs = InstanceTabs;
 
     instance: GetInstanceServicesQueryInstanceFieldInterface;
 
-    pollingSubscription: Subscription;
+    baseDownloadLogsUrl;
 
-    protected readonly stopServiceMutation = gql`
-        mutation ($instanceId: String!, $serviceId: String!) {
-            stopService(instanceId: $instanceId, serviceId: $serviceId, ) {
-                id
-            }
-        }
-    `;
+    protected readonly pollingInterval = 5000; // 5 seconds.
 
-    protected readonly pauseServiceMutation = gql`
-        mutation ($instanceId: String!, $serviceId: String!) {
-            pauseService(instanceId: $instanceId, serviceId: $serviceId, ) {
-                id
-            }
-        }
-    `;
-
-    protected readonly startServiceMutation = gql`
-        mutation ($instanceId: String!, $serviceId: String!) {
-            startService(instanceId: $instanceId, serviceId: $serviceId, ) {
-                id
-            }
-        }
-    `;
-
-    protected readonly unpauseServiceMutation = gql`
-        mutation ($instanceId: String!, $serviceId: String!) {
-            unpauseService(instanceId: $instanceId, serviceId: $serviceId, ) {
-                id
-            }
-        }
-    `;
+    protected pollingSubscription: Subscription;
 
     constructor(
         protected route: ActivatedRoute,
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
+        protected toastr: ToastrService,
     ) {}
 
     ngOnInit() {
         this.getInstance();
-        const polling = interval(this.POLLING_INTERVAL);
+        const polling = interval(this.pollingInterval);
         this.pollingSubscription = polling.subscribe(
             () => { this.getInstance(false); },
         );
@@ -76,59 +53,82 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
     startOrUnpauseService(service) {
         switch (service.containerState) {
             case 'exited':
-                this.apollo.mutate({
-                    mutation: this.startServiceMutation,
-                    variables: {
-                        instanceId: this.instance.id,
-                        serviceId: service.id,
-                    },
-                }).subscribe(
-                    () => { this.getInstance(false); }
-                );
+                this.toastr.info(`Starting service <em>${service.id}</em>.`);
+                this.apollo
+                    .mutate({
+                        mutation: gql`${this.getServiceMutation('startService', service)}`,
+                    }).subscribe(
+                        () => {
+                            this.toastr.success(`Service <em>${service.id}</em> started.`);
+                            this.getInstance(false);
+                        },
+                        () => {
+                            this.toastr.error(`Failed to start service <em>${service.id}</em>.`);
+                            this.getInstance(false);
+                        }
+                    );
                 break;
 
             case 'paused':
-                this.apollo.mutate({
-                    mutation: this.unpauseServiceMutation,
-                    variables: {
-                        instanceId: this.instance.id,
-                        serviceId: service.id,
-                    },
-                }).subscribe(
-                    () => { this.getInstance(false); }
-                );
+                this.toastr.info(`Unpausing service <em>${service.id}</em>.`);
+                this.apollo
+                    .mutate({
+                        mutation: gql`${this.getServiceMutation('unpauseService', service)}`,
+                    }).subscribe(
+                        () => {
+                            this.toastr.success(`Service <em>${service.id}</em> unpaused.`);
+                            this.getInstance(false);
+                        },
+                        () => {
+                            this.toastr.error(`Failed to unpause service <em>${service.id}</em>.`);
+                            this.getInstance(false);
+                        }
+                    );
                 break;
         }
     }
 
     pauseService(service) {
-        if (service.containerState === 'running') {
-            this.apollo.mutate({
-                mutation: this.pauseServiceMutation,
-                variables: {
-                    instanceId: this.instance.id,
-                    serviceId: service.id,
-                },
-            }).subscribe(
-                () => { this.getInstance(false); }
-            );
+        if (service.containerState !== 'running') {
+            return;
         }
+
+        this.toastr.info(`Pausing service <em>${service.id}</em>.`);
+
+        this.apollo
+            .mutate({
+                mutation: gql`${this.getServiceMutation('pauseService', service)}`,
+            }).subscribe(
+                () => {
+                    this.toastr.success(`Service <em>${service.id}</em> paused.`);
+                    this.getInstance(false);
+                },
+                () => {
+                    this.toastr.error(`Failed to pause service <em>${service.id}</em>.`);
+                    this.getInstance(false);
+                }
+            );
     }
 
     stopService(service) {
-        if (service.containerState === 'running') {
-            this.apollo.mutate({
-                mutation: this.stopServiceMutation,
-                variables: {
-                    instanceId: this.instance.id,
-                    serviceId: service.id,
-                },
+        if (service.containerState !== 'running') {
+            return;
+        }
+
+        this.toastr.info(`Stopping service <em>${service.id}</em>.`);
+        this.apollo
+            .mutate({
+                mutation: gql`${this.getServiceMutation('stopService', service)}`,
             }).subscribe(
                 () => {
+                    this.toastr.success(`Service <em>${service.id}</em> stopped.`);
+                    this.getInstance();
+                },
+                () => {
+                    this.toastr.error(`Failed to stop service <em>${service.id}</em>.`);
                     this.getInstance();
                 }
             );
-        }
     }
 
     trackByIndex(index: number, obj: any): any {
@@ -150,9 +150,24 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 const resultData: GetInstanceServicesQueryInterface = result.data;
                 this.instance = resultData.instance;
+                this.baseDownloadLogsUrl = `${environment.serverBaseUrl}/download/docker-logs/${this.instance.id}`;
                 if (spinner) {
                     this.spinner.hide();
                 }
             });
     }
+
+    protected getServiceMutation(mutationName: string, service): string {
+        const queryJson = {mutation: {}};
+        queryJson.mutation[mutationName] = {
+            __args: {
+                instanceId: this.instance.id,
+                serviceId: service.id,
+            },
+            id: true,
+        };
+
+        return jsonToGraphQLQuery(queryJson);
+    }
+
 }

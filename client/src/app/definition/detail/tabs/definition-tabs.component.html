@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills">
+            <li [ngClass]="{'active': activeTab === definitionTabs.summary}">
+                <a routerLink="/definition/{{ definitionId }}">Summary</a>
+            </li>
+            <li [ngClass]="{'active': activeTab === definitionTabs.configuration}">
+                <a routerLink="/definition/{{ definitionId }}/configuration">Configuration</a>
+            </li>
+            <li [ngClass]="{'active': activeTab === definitionTabs.deployKeys}">
+                <a routerLink="/definition/{{ definitionId }}/deploy-keys">Deploy keys</a>
+            </li>
+            <li [ngClass]="{'active': activeTab === definitionTabs.predictedEnvironment}">
+                <a routerLink="/definition/{{ definitionId }}/environment">Predicted environment</a>
+            </li>
+            <li [ngClass]="{'active': activeTab === definitionTabs.predictedSubstitutions}">
+                <a routerLink="/definition/{{ definitionId }}/substitutions">Predicted substitutions</a>
+            </li>
+            <li [ngClass]="{'active': activeTab === definitionTabs.instances}">
+                <a routerLink="/definition/{{ definitionId }}/instances">Instances</a>
+            </li>
+        </ul>
+    </div>
+</div>

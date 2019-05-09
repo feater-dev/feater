@@ -5,7 +5,7 @@ import {DebugElement} from '@angular/core';
 
 import {NavbarComponent} from './navbar.component';
 
-describe('NavbarComponent', () => {
+describe('NotFoundComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
 

@@ -1,49 +1,51 @@
-<div class="row">
-    <div class="col-md-12">
-        <h2><small>Add asset for project</small><br>{{ project?.name}}</h2>
+<app-title [context]="'Asset'" [title]="'Add for project ' + project?.name"></app-title>
+
+<div class="content-body">
+    <div class="container-fluid">
+
+        <div class="form form-horizontal">
+
+            <div class="well well-sm">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="addAssetId" class="col-md-2 control-label">ID</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="addAssetId" name="addAssetId" [(ngModel)]="asset.id">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="addAssetDescription" class="col-md-2 control-label">Description</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="addAssetDescription" name="addAssetDescription" [(ngModel)]="asset.description">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="addAssetFile" class="col-md-2 control-label">File</label>
+                            <div class="col-md-10">
+                                <input type="file" class="form-control" id="addAssetFile" name="addAssetFile" (change)="onFileChange($event)" #fileInput>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-section">
+                <div class="col-md-12" style="text-align: right;">
+                    <a routerLink="/assets" class="btn btn-default">Cancel</a>
+                    <button type="submit" class="btn btn-success" (click)="createItem()">Submit</button>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </div>
-
-<form class="form-horizontal">
-
-    <div class="well well-sm">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="addAssetId" class="col-md-2 control-label">ID</label>
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="addAssetId" name="addAssetId" [(ngModel)]="item.id">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="addAssetDescription" class="col-md-2 control-label">Description</label>
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="addAssetDescription" name="addAssetDescription" [(ngModel)]="item.description">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="addAssetFile" class="col-md-2 control-label">File</label>
-                    <div class="col-md-10">
-                        <input type="file" class="form-control" id="addAssetFile" name="addAssetFile" (change)="onFileChange($event)" #fileInput>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row form-section">
-        <div class="col-md-12" style="text-align: right;">
-            <a routerLink="/assets" class="btn btn-default">Cancel</a>
-            <button type="submit" class="btn btn-success" (click)="addItem()">Submit</button>
-        </div>
-    </div>
-
-</form>

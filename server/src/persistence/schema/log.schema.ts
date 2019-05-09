@@ -7,4 +7,4 @@ export const LogSchema = new Schema({
     timestamp: Date,
 });
 
-// TODO Add index.
+LogSchema.index({'meta.commandLogId': 1});

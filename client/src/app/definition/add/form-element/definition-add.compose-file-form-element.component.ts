@@ -18,18 +18,18 @@ import {
 })
 export class DefinitionAddComposeFileFormElementComponent implements OnInit {
 
-    @Input() item: DefinitionAddComposeFileFormElement;
+    @Input() composeFile: DefinitionAddComposeFileFormElement;
 
     @Input() sources: DefinitionAddFormSourceFormElement[];
 
     ngOnInit() {}
 
     addComposeFileRelativePath(): void {
-        this.item.composeFileRelativePaths.push('');
+        this.composeFile.composeFileRelativePaths.push('');
     }
 
     deleteComposeFileRelativePath(index: number) {
-        this.item.composeFileRelativePaths.splice(index, 1);
+        this.composeFile.composeFileRelativePaths.splice(index, 1);
     }
 
     trackByIndex(index: number, obj: any): any {

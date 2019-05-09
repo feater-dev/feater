@@ -1,4 +1,4 @@
 export interface SummaryItemInputTypeInterface {
-    readonly name: string;
-    readonly value: string;
+    name: string;
+    value: string;
 }

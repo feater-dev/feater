@@ -9,13 +9,13 @@ import {DefinitionAddFormProxiedPortFormElement} from '../definition-add-form.mo
 })
 export class DefinitionAddProxiedPortFormElementComponent {
 
-    @Input() item: DefinitionAddFormProxiedPortFormElement;
+    @Input() proxiedPort: DefinitionAddFormProxiedPortFormElement;
 
-    @Output() deleteItem: EventEmitter<DefinitionAddFormProxiedPortFormElement> =
+    @Output() deleteProxiedPort: EventEmitter<DefinitionAddFormProxiedPortFormElement> =
         new EventEmitter<DefinitionAddFormProxiedPortFormElement>();
 
     delete() {
-        this.deleteItem.emit(this.item);
+        this.deleteProxiedPort.emit(this.proxiedPort);
     }
 
 }

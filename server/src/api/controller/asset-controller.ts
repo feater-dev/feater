@@ -25,17 +25,26 @@ export class AssetController {
     ): Promise<void> {
         let assetFilePromise;
 
-        const asset = await this.assetRepository
-            .find({id, projectId}, 0, 1)
-            .then(assets => {
-                if (1 !== assets.length) {
-                    res.status(404).send();
+        const assets = await this.assetRepository.find(
+            {
+                id,
+                projectId,
+            },
+            0,
+            1,
+        );
 
-                    throw new Error('Asset not found.');
-                }
+        if (1 !== assets.length) {
+            res.status(404).send();
 
-                return assets[0];
-            });
+            throw new Error('Asset not found.');
+        }
+
+        const asset = assets[0];
+
+        if (asset.uploaded) {
+            throw new Error('Asset already exists.');
+        }
 
         const busboy = new Busboy({ headers: req.headers });
 

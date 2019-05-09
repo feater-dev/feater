@@ -15,14 +15,14 @@ import {DefinitionAddFormEnvVariableFormElement} from '../definition-add-form.mo
 })
 export class DefinitionAddEnvVariableFormElementComponent implements OnInit {
 
-    @Input() item: DefinitionAddFormEnvVariableFormElement;
+    @Input() envVariable: DefinitionAddFormEnvVariableFormElement;
 
-    @Output() deleteItem: EventEmitter<DefinitionAddFormEnvVariableFormElement> =
+    @Output() deleteEnvVariable: EventEmitter<DefinitionAddFormEnvVariableFormElement> =
         new EventEmitter<DefinitionAddFormEnvVariableFormElement>();
 
     ngOnInit() {}
 
     delete() {
-        this.deleteItem.emit(this.item);
+        this.deleteEnvVariable.emit(this.envVariable);
     }
 }

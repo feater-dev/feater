@@ -95,10 +95,15 @@ export class DefinitionConfigMapper {
     }
 
     protected mapVolume(volume: any): VolumeTypeInterface {
-        return {
+        let mappedVolume: VolumeTypeInterface = {
             id: volume.id,
-            assetId: volume.assetId,
-        } as VolumeTypeInterface;
+        };
+
+        if (volume.assetId) {
+            mappedVolume.assetId = volume.assetId;
+        }
+
+        return mappedVolume;
     }
 
     protected mapBeforeBuildTask(beforeBuildTask: any): BeforeBuildTaskTypeInterface {

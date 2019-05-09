@@ -10,6 +10,8 @@ import {
 import gql from 'graphql-tag';
 import {DialogService} from 'ng2-bootstrap-modal';
 import {ConfirmComponent} from '../../../modal/confirm.component';
+import {ToastrService} from 'ngx-toastr';
+import {DefinitionTabs} from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-summary',
@@ -17,6 +19,8 @@ import {ConfirmComponent} from '../../../modal/confirm.component';
     styles: []
 })
 export class DefinitionSummaryComponent implements OnInit {
+
+    readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionSummaryQueryDefinitionFieldInterface;
 
@@ -32,6 +36,7 @@ export class DefinitionSummaryComponent implements OnInit {
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected dialogService: DialogService,
+        protected toastr: ToastrService,
     ) {}
 
     ngOnInit() {
@@ -65,7 +70,11 @@ export class DefinitionSummaryComponent implements OnInit {
                         },
                     }).subscribe(
                         () => {
+                            this.toastr.success(`Definition <em>${this.definition.name}</em> removed.`);
                             this.router.navigateByUrl(`/project/${this.definition.project.id}`);
+                        },
+                        error => {
+                            this.toastr.error(`Failed to remove definition <em>${this.definition.name}</em>.`);
                         }
                     );
                 }
@@ -82,10 +91,12 @@ export class DefinitionSummaryComponent implements OnInit {
                 },
             })
             .valueChanges
-            .subscribe(result => {
-                const resultData: GetDefinitionSummaryQueryInterface = result.data;
-                this.definition = resultData.definition;
-                this.spinner.hide();
-            });
+            .subscribe(
+                result => {
+                    const resultData: GetDefinitionSummaryQueryInterface = result.data;
+                    this.definition = resultData.definition;
+                    this.spinner.hide();
+                },
+            );
     }
 }

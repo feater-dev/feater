@@ -20,9 +20,11 @@ import * as _ from 'lodash';
 })
 export class DefinitionEditComponent extends DefinitionAddComponent implements OnInit {
 
-    item: DefinitionEditForm;
+    static readonly actionEdit = 'edit';
 
-    action = 'edit';
+    definition: DefinitionEditForm;
+
+    action = DefinitionEditComponent.actionEdit;
 
     sourceDefinition: {
         name: string;
@@ -53,36 +55,40 @@ export class DefinitionEditComponent extends DefinitionAddComponent implements O
                 }
             ))
             .subscribe(
-                (item: GetDefinitionConfigQueryDefinitionFieldInterface) => {
-                    this.project = item.project;
+                (definition: GetDefinitionConfigQueryDefinitionFieldInterface) => {
+                    this.project = definition.project;
                     this.sourceDefinition = {
-                        name: item.name,
+                        name: definition.name,
                     };
-                    this.item.id = item.id;
-                    this.item.name = item.name;
-                    this.importYamlConfig(item.configAsYaml);
+                    this.definition.id = definition.id;
+                    this.definition.name = definition.name;
+                    this.importYamlConfig(definition.configAsYaml);
                     this.spinner.hide();
                 }
             );
     }
 
-    submit(): void {
+    createDefinition(): void {
+        this.spinner.show();
         this.apollo.mutate({
             mutation: gql`${this.getUpdateDefinitionMutation()}`,
         }).subscribe(
             ({data}) => {
+                this.spinner.hide();
+                this.toastr.success(`Definition <em>${data.updateDefinition.name}</em> updated.`);
                 this.router.navigate(['/definition', data.updateDefinition.id]);
             },
-            (error) => {
-                console.log(error);
+            () => {
+                this.spinner.hide();
+                this.toastr.error(`Failed to update definition <em>${this.definition.name}</em>.`);
             }
         );
     }
 
-    protected mapItem(): any {
-        const mappedItem = super.mapItem();
+    protected mapDefinitionToDto(): any {
+        const mappedItem = super.mapDefinitionToDto();
         delete mappedItem.projectId;
-        mappedItem.id = this.item.id;
+        mappedItem.id = this.definition.id;
 
         return mappedItem;
     }
@@ -91,8 +97,9 @@ export class DefinitionEditComponent extends DefinitionAddComponent implements O
         const mutation = {
             mutation: {
                 updateDefinition: {
-                    __args: this.mapItem(),
+                    __args: this.mapDefinitionToDto(),
                     id: true,
+                    name: true,
                 }
             }
         };

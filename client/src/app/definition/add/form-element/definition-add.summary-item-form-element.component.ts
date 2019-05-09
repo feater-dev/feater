@@ -15,15 +15,15 @@ import {DefinitionAddFormSummaryItemFormElement} from '../definition-add-form.mo
 })
 export class DefinitionAddSummaryItemFormElementComponent implements OnInit {
 
-    @Input() item: DefinitionAddFormSummaryItemFormElement;
+    @Input() summaryItem: DefinitionAddFormSummaryItemFormElement;
 
-    @Output() deleteItem: EventEmitter<DefinitionAddFormSummaryItemFormElement> =
+    @Output() deleteSummaryItem: EventEmitter<DefinitionAddFormSummaryItemFormElement> =
         new EventEmitter<DefinitionAddFormSummaryItemFormElement>();
 
     ngOnInit() {}
 
     delete() {
-        this.deleteItem.emit(this.item);
+        this.deleteSummaryItem.emit(this.summaryItem);
     }
 
 }

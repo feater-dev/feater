@@ -25,6 +25,7 @@ import {
     GetProjectQueryInterface,
     GetProjectQueryProjectFieldInterface,
 } from './get-project.query';
+import {ToastrService} from 'ngx-toastr';
 
 
 @Component({
@@ -32,15 +33,20 @@ import {
     templateUrl: './definition-add.component.html',
     styles: []
 })
-export class DefinitionAddComponent implements OnInit {
+export class DefinitionAddComponent implements OnInit { // TODO Extract some shared base controller for add/edit/duplicate.
 
-    item: DefinitionAddForm;
+    static readonly actionAdd = 'add'; // TODO Change to enum.
+
+    static readonly modeForm = 'form'; // TODO Change to enum.
+    static readonly modeYamlImport = 'yaml'; // TODO Change to enum.
+
+    definition: DefinitionAddForm;
 
     project: GetProjectQueryProjectFieldInterface;
 
-    action = 'add';
+    action = DefinitionAddComponent.actionAdd;
 
-    mode = 'form';
+    mode = DefinitionAddComponent.modeForm;
 
     @ViewChild('yamlConfig') yamlConfigElement: ElementRef;
 
@@ -49,8 +55,9 @@ export class DefinitionAddComponent implements OnInit {
         protected router: Router,
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
+        protected toastr: ToastrService,
     ) {
-        this.item = {
+        this.definition = {
             name: '',
             config: {
                 sources: [],
@@ -72,21 +79,25 @@ export class DefinitionAddComponent implements OnInit {
         this.getProject();
     }
 
-    submit(): void {
+    createDefinition(): void {
+        this.spinner.show();
         this.apollo.mutate({
             mutation: gql`${this.getCreateDefinitionMutation()}`,
         }).subscribe(
             ({data}) => {
+                this.spinner.hide();
+                this.toastr.success(`Definition <em>${data.createDefinition.name}</em> created.`);
                 this.router.navigate(['/definition', data.createDefinition.id]);
             },
-            (error) => {
-                console.log(error);
+            () => {
+                this.spinner.hide();
+                this.toastr.error(`Failed to create definition <em>${this.definition.name}</em>.`);
             }
         );
     }
 
     addSource(): void {
-        this.item.config.sources.push({
+        this.definition.config.sources.push({
             id: '',
             cloneUrl: '',
             reference: {
@@ -98,28 +109,28 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteSource(source: DefinitionAddFormSourceFormElement): void {
-        const index = this.item.config.sources.indexOf(source);
+        const index = this.definition.config.sources.indexOf(source);
         if (-1 !== index) {
-            this.item.config.sources.splice(index, 1);
+            this.definition.config.sources.splice(index, 1);
         }
     }
 
     addVolume(): void {
-        this.item.config.volumes.push({
+        this.definition.config.volumes.push({
             id: '',
             assetId: '',
         });
     }
 
     deleteVolume(volume: DefinitionAddFormVolumeFormElement): void {
-        const index = this.item.config.volumes.indexOf(volume);
+        const index = this.definition.config.volumes.indexOf(volume);
         if (-1 !== index) {
-            this.item.config.volumes.splice(index, 1);
+            this.definition.config.volumes.splice(index, 1);
         }
     }
 
     addProxiedPort(): void {
-        this.item.config.proxiedPorts.push({
+        this.definition.config.proxiedPorts.push({
             serviceId: '',
             id: '',
             name: '',
@@ -128,28 +139,28 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteProxiedPort(proxiedPort: DefinitionAddFormProxiedPortFormElement): void {
-        const index = this.item.config.proxiedPorts.indexOf(proxiedPort);
+        const index = this.definition.config.proxiedPorts.indexOf(proxiedPort);
         if (-1 !== index) {
-            this.item.config.proxiedPorts.splice(index, 1);
+            this.definition.config.proxiedPorts.splice(index, 1);
         }
     }
 
     addEnvVariable(): void {
-        this.item.config.envVariables.push({
+        this.definition.config.envVariables.push({
             name: '',
             value: ''
         });
     }
 
     deleteEnvVariable(envVariable: DefinitionAddFormEnvVariableFormElement): void {
-        const index = this.item.config.envVariables.indexOf(envVariable);
+        const index = this.definition.config.envVariables.indexOf(envVariable);
         if (-1 !== index) {
-            this.item.config.envVariables.splice(index, 1);
+            this.definition.config.envVariables.splice(index, 1);
         }
     }
 
     addAfterBuildTaskExecuteServiceCommand(): void {
-        this.item.config.afterBuildTasks.push({
+        this.definition.config.afterBuildTasks.push({
             type: 'executeServiceCommand',
             id: '',
             dependsOn: [],
@@ -160,7 +171,7 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     addAfterBuildTaskCopyAssetIntoContainer(): void {
-        this.item.config.afterBuildTasks.push({
+        this.definition.config.afterBuildTasks.push({
             type: 'copyAssetIntoContainer',
             id: '',
             dependsOn: [],
@@ -179,23 +190,23 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     deleteAfterBuildTask(afterBuildTask: AfterBuildTaskFormElement): void {
-        const index = this.item.config.afterBuildTasks.indexOf(afterBuildTask);
+        const index = this.definition.config.afterBuildTasks.indexOf(afterBuildTask);
         if (-1 !== index) {
-            this.item.config.afterBuildTasks.splice(index, 1);
+            this.definition.config.afterBuildTasks.splice(index, 1);
         }
     }
 
     addSummaryItem(): void {
-        this.item.config.summaryItems.push({
+        this.definition.config.summaryItems.push({
             name: '',
             value: ''
         });
     }
 
     deleteSummaryItem(summaryItem: DefinitionAddFormSummaryItemFormElement): void {
-        const index = this.item.config.summaryItems.indexOf(summaryItem);
+        const index = this.definition.config.summaryItems.indexOf(summaryItem);
         if (-1 !== index) {
-            this.item.config.summaryItems.splice(index, 1);
+            this.definition.config.summaryItems.splice(index, 1);
         }
     }
 
@@ -204,30 +215,42 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     toggleMode(): void {
-        this.switchMode('yaml' === this.mode ? 'form' : 'yaml');
+        this.switchMode(
+            DefinitionAddComponent.modeYamlImport === this.mode
+                ? DefinitionAddComponent.modeForm
+                : DefinitionAddComponent.modeYamlImport,
+        );
+    }
+
+    isModeForm(): boolean {
+        return DefinitionAddComponent.modeForm === this.mode;
+    }
+
+    isModeYamlImport(): boolean {
+        return DefinitionAddComponent.modeYamlImport === this.mode;
     }
 
     importYamlConfig(yamlConfig): void {
-        this.item.config = this.mapYamlConfig(yamlConfig);
+        this.definition.config = this.mapYamlConfig(yamlConfig);
         this.yamlConfigElement.nativeElement.value = '';
-        this.switchMode('form');
+        this.switchMode(DefinitionAddComponent.modeForm);
     }
 
     getAvailableEnvVariableNames(): string[] {
         const availableEnvVariableNames = [];
-        for (const envVariable of this.item.config.envVariables) {
+        for (const envVariable of this.definition.config.envVariables) {
             availableEnvVariableNames.push(envVariable.name);
         }
         availableEnvVariableNames.push('FEATER__INSTANCE_ID');
-        for (const proxiedPort of this.item.config.proxiedPorts) {
+        for (const proxiedPort of this.definition.config.proxiedPorts) {
             availableEnvVariableNames.push(`FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
         }
 
         return availableEnvVariableNames;
     }
 
-    protected mapItem(): any {
-        for (const afterBuildTask of this.item.config.afterBuildTasks) {
+    protected mapDefinitionToDto(): any {
+        for (const afterBuildTask of this.definition.config.afterBuildTasks) {
             if ('executeServiceCommand' === afterBuildTask.type) {
                 this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteServiceCommandTaskFormElement);
             }
@@ -235,24 +258,30 @@ export class DefinitionAddComponent implements OnInit {
 
         const mappedItem = {
             projectId: this.project.id,
-            name: this.item.name,
+            name: this.definition.name,
             config: {
-                sources: this.item.config.sources,
-                volumes: this.item.config.volumes,
-                proxiedPorts: this.item.config.proxiedPorts.map(proxiedPort => ({
+                sources: this.definition.config.sources,
+                volumes: this.definition.config.volumes,
+                proxiedPorts: this.definition.config.proxiedPorts.map(proxiedPort => ({
                     id: proxiedPort.id,
                     serviceId: proxiedPort.serviceId,
                     port: parseInt(proxiedPort.port, 10),
                     name: proxiedPort.name,
                 })),
-                envVariables: this.item.config.envVariables,
+                envVariables: this.definition.config.envVariables,
                 composeFiles: [
-                    this.item.config.composeFile,
+                    this.definition.config.composeFile,
                 ],
-                afterBuildTasks: _.cloneDeep(this.item.config.afterBuildTasks),
-                summaryItems: this.item.config.summaryItems,
+                afterBuildTasks: _.cloneDeep(this.definition.config.afterBuildTasks),
+                summaryItems: this.definition.config.summaryItems,
             },
         };
+
+        for (const volume of mappedItem.config.volumes) {
+            if ('' === volume.assetId) {
+                delete volume.assetId;
+            }
+        }
 
         for (const afterBuildTask of mappedItem.config.afterBuildTasks) {
             if ('' === afterBuildTask.id) {
@@ -276,8 +305,6 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     protected mapYamlConfig(yamlConfig: any): DefinitionAddFormConfigFormElement {
-        // TODO Check schema validity of Yaml config.
-
         const camelCaseYamlConfig = camelCaseKeys(jsYaml.safeLoad(yamlConfig), {deep: true});
 
         const mappedYamlConfig = {
@@ -342,8 +369,9 @@ export class DefinitionAddComponent implements OnInit {
         const mutation = {
             mutation: {
                 createDefinition: {
-                    __args: this.mapItem(),
+                    __args: this.mapDefinitionToDto(),
                     id: true,
+                    name: true,
                 }
             }
         };
@@ -372,8 +400,8 @@ export class DefinitionAddComponent implements OnInit {
                 }
             ))
             .subscribe(
-                (item: GetProjectQueryProjectFieldInterface) => {
-                    this.project = item;
+                (project: GetProjectQueryProjectFieldInterface) => {
+                    this.project = project;
                     this.spinner.hide();
                 }
             );

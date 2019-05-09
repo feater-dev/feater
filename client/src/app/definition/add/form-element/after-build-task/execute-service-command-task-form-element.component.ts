@@ -9,31 +9,31 @@ import {ExecuteServiceCommandTaskFormElement} from '../../definition-add-form.mo
 })
 export class ExecuteServiceCommandTaskFormElementComponent {
 
-    @Input() item: ExecuteServiceCommandTaskFormElement;
+    @Input() task: ExecuteServiceCommandTaskFormElement;
 
     @Input() availableEnvVariableNames: string[];
 
-    @Output() deleteItem: EventEmitter<ExecuteServiceCommandTaskFormElement> =
+    @Output() deleteTask: EventEmitter<ExecuteServiceCommandTaskFormElement> =
         new EventEmitter<ExecuteServiceCommandTaskFormElement>();
 
     delete(): void {
-        this.deleteItem.emit(this.item);
+        this.deleteTask.emit(this.task);
     }
 
     addArgument(): void {
-        this.item.command.push('');
+        this.task.command.push('');
     }
 
     deleteArgument(i: number) {
-        this.item.command.splice(i, 1);
+        this.task.command.splice(i, 1);
     }
 
     addDependsOn(): void {
-        this.item.dependsOn.push('');
+        this.task.dependsOn.push('');
     }
 
     deleteDependsOn(i: number) {
-        this.item.dependsOn.splice(i, 1);
+        this.task.dependsOn.splice(i, 1);
     }
 
     trackByIndex(index: number, obj: any): any {

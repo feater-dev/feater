@@ -11,6 +11,8 @@ import {
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {ToastrService} from 'ngx-toastr';
 
 
 @Component({
@@ -20,18 +22,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
 })
 export class AssetAddComponent implements OnInit {
 
-    protected readonly createAssetMutation = gql`
-        mutation ($projectId: String!, $id: String!, $description: String!) {
-            createAsset(projectId: $projectId, id: $id, description: $description) {
-                id
-                project {
-                    id
-                }
-            }
-        }
-    `;
-
-    item: AssetAddForm;
+    asset: AssetAddForm;
 
     project: GetProjectQueryProjectFieldInterface;
 
@@ -41,8 +32,9 @@ export class AssetAddComponent implements OnInit {
         protected apollo: Apollo,
         protected httpClient: HttpClient,
         protected spinner: NgxSpinnerService,
+        protected toastr: ToastrService,
     ) {
-        this.item = {
+        this.asset = {
             id: '',
             description: '',
             file: null,
@@ -53,50 +45,53 @@ export class AssetAddComponent implements OnInit {
         this.getProject();
     }
 
-    addItem() {
+    createItem() {
         this.spinner.show();
-        this.apollo.mutate({
-            mutation: this.createAssetMutation,
-            variables: {
-                projectId: this.project.id,
-                id: this.item.id,
-                description: this.item.description,
-            },
-        }).subscribe(
-            ({data}) => {
-                this.spinner.show();
-                const uploadData = new FormData();
-                uploadData.set('asset', this.item.file);
-                this.httpClient
-                    .post(
-                        [
-                            environment.serverBaseUrl,
-                            'upload',
-                            'asset',
-                            data.createAsset.project.id,
-                            data.createAsset.id
-                        ].join('/'),
-                        uploadData
-                    )
-                    .subscribe(
-                        () => {
-                            this.spinner.hide();
-                            this.router.navigate(['/asset', this.project.id, data.createAsset.id]);
-                        },
-                        (error) => {
-                            console.log(error); // TODO Hide spinner and handle error.
-                        }
-                    );
-            },
-            (error) => {
-                console.log(error); // TODO Hide spinner and handle error.
-            }
-        );
+        this.apollo
+            .mutate({
+                mutation: gql`${this.getCreateAssetMutation()}`,
+            })
+            .subscribe(
+                ({data}) => {
+                    this.spinner.show();
+                    this.toastr.info(`Uploading file for asset <em>${data.createAsset.id}</em>.`);
+                    const uploadData = new FormData();
+                    uploadData.set('asset', this.asset.file);
+                    this.httpClient
+                        .post(
+                            [
+                                environment.serverBaseUrl,
+                                'upload',
+                                'asset',
+                                data.createAsset.project.id,
+                                data.createAsset.id
+                            ].join('/'),
+                            uploadData
+                        )
+                        .subscribe(
+                            () => {
+                                this.spinner.hide();
+                                this.toastr.success(`Upload completed, asset <em>${data.createAsset.id}</em> created.`);
+                                this.router.navigate(['/asset', this.project.id, data.createAsset.id]);
+                            },
+                            (error) => {
+                                this.spinner.hide();
+                                this.toastr.error(`Failed to upload file and create asset <em>${this.asset.id}</em>.`);
+                                this.router.navigate(['/asset', this.project.id]);
+                            }
+                        );
+                },
+                (error) => {
+                    this.spinner.hide();
+                    this.toastr.error(`Failed to create asset <em>${this.asset.id}</em>.`);
+                    this.router.navigate(['/asset', this.project.id]);
+                }
+            );
     }
 
     onFileChange(event) {
         if (event.target.files.length > 0) {
-            this.item.file = event.target.files[0];
+            this.asset.file = event.target.files[0];
         }
     }
 
@@ -115,6 +110,26 @@ export class AssetAddComponent implements OnInit {
                 this.project = resultData.project;
                 this.spinner.hide();
             });
+    }
+
+    protected getCreateAssetMutation(): string {
+        const mutation = {
+            mutation: {
+                createAsset: {
+                    __args: {
+                        projectId: this.project.id,
+                        id: this.asset.id,
+                        description: this.asset.description,
+                    },
+                    id: true,
+                    project: {
+                        id: true,
+                    },
+                },
+            },
+        };
+
+        return jsonToGraphQLQuery(mutation);
     }
 
 }

@@ -9,6 +9,8 @@ import {
     GetDefinitionQueryInterface,
     getDefinitionQueryGql,
 } from './get-definition.query';
+import {ToastrService} from 'ngx-toastr';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
 
 @Component({
     selector: 'app-instance-add',
@@ -17,15 +19,7 @@ import {
 })
 export class InstanceAddComponent implements OnInit {
 
-    protected readonly mutation = gql`
-        mutation ($definitionId: String!, $name: String!) {
-            createInstance(definitionId: $definitionId, name: $name) {
-                id
-            }
-        }
-    `;
-
-    item: InstanceAddForm;
+    instance: InstanceAddForm;
 
     definition: GetDefinitionQueryDefinitionFieldInterface;
 
@@ -34,8 +28,9 @@ export class InstanceAddComponent implements OnInit {
         protected router: Router,
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
+        protected toastr: ToastrService,
     ) {
-        this.item = {
+        this.instance = {
             name: ''
         };
     }
@@ -45,20 +40,21 @@ export class InstanceAddComponent implements OnInit {
     }
 
     addItem() {
-        this.apollo.mutate({
-            mutation: this.mutation,
-            variables: {
-                definitionId: this.definition.id,
-                name: this.item.name,
-            },
-        }).subscribe(
-            ({data}) => {
-                this.router.navigate(['/instance', data.createInstance.id]);
-            },
-            (error) => {
-                console.log(error);
-            }
-        );
+        this.spinner.show();
+        this.apollo
+            .mutate({
+                mutation: gql`${this.getCreateInstanceMutation()}`,
+            }).subscribe(
+                ({data}) => {
+                    this.spinner.hide();
+                    this.toastr.success(`Instance <em>${data.createInstance.name}</em> created, build started.`);
+                    this.router.navigate(['/instance', data.createInstance.id]);
+                },
+                () => {
+                    this.toastr.error(`Failed to create <em>${this.instance.name}</em>.`);
+                    this.spinner.hide();
+                }
+            );
     }
 
     protected getDefinition() {
@@ -76,6 +72,23 @@ export class InstanceAddComponent implements OnInit {
                 this.definition = resultData.definition;
                 this.spinner.hide();
             });
+    }
+
+    protected getCreateInstanceMutation(): string {
+        const jsonQuery = {
+            mutation: {
+                createInstance: {
+                    __args: {
+                        definitionId: this.definition.id,
+                        name: this.instance.name,
+                    },
+                    id: true,
+                    name: true,
+                },
+            },
+        };
+
+        return jsonToGraphQLQuery(jsonQuery);
     }
 
 }

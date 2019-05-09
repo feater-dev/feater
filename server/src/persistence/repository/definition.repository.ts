@@ -7,6 +7,7 @@ import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/s
 import {DeployKeyRepository} from './deploy-key.repository';
 import * as gitUrlParse from 'git-url-parse';
 import {UpdateDefinitionInputTypeInterface} from '../../graphql/input-type/update-definition-input-type.interface';
+import {ProjectInterface} from "../interface/project.interface";
 
 @Injectable()
 export class DefinitionRepository {

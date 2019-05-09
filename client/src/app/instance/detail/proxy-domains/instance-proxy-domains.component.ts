@@ -8,6 +8,7 @@ import {
     GetInstanceProxyDomainsQueryInterface,
 } from './get-instance-proxy-domains.query';
 import {Subscription, interval} from 'rxjs';
+import {InstanceTabs} from '../tabs/instance-tabs.component';
 
 @Component({
     selector: 'app-instance-proxy-domains',
@@ -16,11 +17,13 @@ import {Subscription, interval} from 'rxjs';
 })
 export class InstanceProxyDomainsComponent implements OnInit, OnDestroy {
 
-    readonly POLLING_INTERVAL = 5000; // 5 seconds.
+    readonly instanceTabs = InstanceTabs;
 
     instance: GetInstanceProxyDomainsQueryInstanceFieldInterface;
 
-    pollingSubscription: Subscription;
+    protected readonly pollingInterval = 5000; // 5 seconds.
+
+    protected pollingSubscription: Subscription;
 
     constructor(
         protected route: ActivatedRoute,
@@ -30,7 +33,7 @@ export class InstanceProxyDomainsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getInstance();
-        const polling = interval(this.POLLING_INTERVAL);
+        const polling = interval(this.pollingInterval);
         this.pollingSubscription = polling.subscribe(
             () => { this.getInstance(false); },
         );

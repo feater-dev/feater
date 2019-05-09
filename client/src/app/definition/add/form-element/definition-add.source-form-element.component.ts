@@ -20,15 +20,15 @@ import {
 })
 export class DefinitionAddSourceFormElementComponent implements OnInit {
 
-    @Input() item: DefinitionAddFormSourceFormElement;
+    @Input() source: DefinitionAddFormSourceFormElement;
 
-    @Output() deleteItem: EventEmitter<DefinitionAddFormSourceFormElement> =
+    @Output() deleteSource: EventEmitter<DefinitionAddFormSourceFormElement> =
         new EventEmitter<DefinitionAddFormSourceFormElement>();
 
     ngOnInit() {}
 
     delete() {
-        this.deleteItem.emit(this.item);
+        this.deleteSource.emit(this.source);
     }
 
     isBeforeBuildTaskCopy(beforeBuildTask: BeforeBuildTaskFormElement) {
@@ -40,7 +40,7 @@ export class DefinitionAddSourceFormElementComponent implements OnInit {
     }
 
     addBeforeBuildTaskCopy() {
-        this.item.beforeBuildTasks.push(<TaskFormElement>{
+        this.source.beforeBuildTasks.push(<TaskFormElement>{
             type: 'copy',
             sourceRelativePath: '',
             destinationRelativePath: ''
@@ -48,7 +48,7 @@ export class DefinitionAddSourceFormElementComponent implements OnInit {
     }
 
     addBeforeBuildTaskInterpolate() {
-        this.item.beforeBuildTasks.push(<InterpolateTaskFormElement>{
+        this.source.beforeBuildTasks.push(<InterpolateTaskFormElement>{
 
             type: 'interpolate',
             relativePath: ''
@@ -56,9 +56,9 @@ export class DefinitionAddSourceFormElementComponent implements OnInit {
     }
 
     deleteBeforeBuildTask(beforeBuildTask: BeforeBuildTaskFormElement) {
-        const index = this.item.beforeBuildTasks.indexOf(beforeBuildTask);
+        const index = this.source.beforeBuildTasks.indexOf(beforeBuildTask);
         if (-1 !== index) {
-            this.item.beforeBuildTasks.splice(index, 1);
+            this.source.beforeBuildTasks.splice(index, 1);
         }
     }
 }

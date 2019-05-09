@@ -4,9 +4,9 @@ export class CreateAssetVolumeCommand extends SimpleCommand {
 
     constructor(
         readonly volumeId: string,
-        readonly assetId: string,
         readonly containerNamePrefix: string,
         readonly absoluteGuestInstanceDirPath: string,
+        readonly assetId?: string,
     ) {
         super();
     }

@@ -21,9 +21,14 @@
               "src/favicon.ico"
             ],
             "styles": [
+              "src/assets/bootstrap/bootstrap-flatly.min.css",
+              "node_modules/ngx-toastr/toastr.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/jquery/jquery-1.10.2.min.js",
+              "src/assets/bootstrap/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -70,13 +75,18 @@
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/polyfills.ts",
-            "scripts": [],
-            "styles": [
-              "src/styles.css"
-            ],
             "assets": [
               "src/assets",
               "src/favicon.ico"
+            ],
+            "styles": [
+              "src/styles.css",
+              "src/assets/bootstrap/bootstrap-flatly.min.css",
+              "node_modules/ngx-toastr/toastr.css"
+            ],
+            "scripts": [
+              "src/assets/jquery/jquery-1.10.2.min.js",
+              "src/assets/bootstrap/bootstrap.min.js"
             ]
           }
         },

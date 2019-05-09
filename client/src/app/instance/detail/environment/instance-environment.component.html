@@ -1,46 +1,36 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2><small>Instance</small><br>{{ instance?.name }}</h2>
-        </div>
-    </div>
-</div>
+<app-title [context]="'Instance'" [title]="instance?.name"></app-title>
 
-<div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-pills">
-            <li><a routerLink="/instance/{{ instance?.id }}">Summary</a></li>
-            <li class="active"><a routerLink="/instance/{{ instance?.id }}/environment">Environment</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/services">Services</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/proxy-domains">Proxy domains</a></li>
-            <li><a routerLink="/instance/{{ instance?.id }}/logs">Logs</a></li>
-        </ul>
-    </div>
-</div>
+<div class="content-body">
+    <div class="container-fluid">
 
-<div class="row">
-    <div class="col-md-12">
-        <div *ngIf="instance?.envVariables?.length">
-            <div class="table-wrapper">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="fit-column">Name</th>
-                        <th scope="col">Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let envVariable of instance?.envVariables; trackBy: trackByIndex" class="form-control-static">
-                        <td>
-                            <span class="env-variable-name">{{ envVariable.name }}</span>
-                        </td>
-                        <td>
-                            <span class="env-variable-value">{{ envVariable.value }}</span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+        <app-instance-tabs [instanceId]="instance?.id" [activeTab]="instanceTabs.environment"></app-instance-tabs>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div *ngIf="instance?.envVariables?.length">
+                    <div class="table-wrapper">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="fit-column">Name</th>
+                                <th scope="col">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let envVariable of instance?.envVariables; trackBy: trackByIndex" class="form-control-static">
+                                <td>
+                                    <span class="env-variable-name">{{ envVariable.name }}</span>
+                                </td>
+                                <td>
+                                    <span class="env-variable-value">{{ envVariable.value }}</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 </div>

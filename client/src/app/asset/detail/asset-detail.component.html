@@ -1,55 +1,55 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2><small>Asset</small><br>{{ asset?.id }}</h2>
+<app-title [context]="'Asset'" [title]="asset?.id"></app-title>
+
+<div class="content-body">
+    <div class="container-fluid">
+
+        <div class="form">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="inputAssetId" class="control-label">ID</label>
+                        <p class="form-control-static" id="inputAssetId">{{ asset?.id}}</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="inputAssetProject" class="control-label">Project</label>
+                        <p class="form-control-static" id="inputAssetProject">
+                            <a routerLink="/project/{{asset?.project.id}}">{{ asset?.project.name }}</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="inputAssetDescription" class="control-label">Description</label>
+                        <p class="form-control-static" id="inputAssetDescription">{{ asset?.description || '&mdash;' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="inputAsset_createdAt" class="control-label">Created</label>
+                        <p class="form-control-static" id="inputAsset_createdAt">{{ asset?.createdAt | relativeDate }}</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="inputAsset_updatedAt" class="control-label">Updated</label>
+                        <p class="form-control-static" id="inputAsset_updatedAt">{{ asset?.updatedAt | relativeDate }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <span (click)="removeAsset()" class="btn btn-danger">Remove</span>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
 </div>
-
-<form>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="inputAssetId" class="control-label">ID</label>
-                <p class="form-control-static" id="inputAssetId">{{ asset?.id}}</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="inputAssetProject" class="control-label">Project</label>
-                <p class="form-control-static" id="inputAssetProject">
-                    <a routerLink="/project/{{asset?.project.id}}">{{ asset?.project.name }}</a>
-                </p>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="inputAssetDescription" class="control-label">Description</label>
-                <p class="form-control-static" id="inputAssetDescription">{{ asset?.description || '&mdash;' }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="inputAsset_createdAt" class="control-label">Created</label>
-                <p class="form-control-static" id="inputAsset_createdAt">{{ asset?.createdAt | relativeDate }}</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="inputAsset_updatedAt" class="control-label">Updated</label>
-                <p class="form-control-static" id="inputAsset_updatedAt">{{ asset?.updatedAt | relativeDate }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div>
-                <span (click)="removeAsset()" class="btn btn-danger">Remove</span>
-            </div>
-        </div>
-    </div>
-</form>

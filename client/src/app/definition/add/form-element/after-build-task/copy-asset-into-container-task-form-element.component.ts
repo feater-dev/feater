@@ -9,21 +9,21 @@ import {CopyAssetIntoContainerTaskFormElement} from '../../definition-add-form.m
 })
 export class CopyAssetIntoContainerTaskFormElementComponent {
 
-    @Input() item: CopyAssetIntoContainerTaskFormElement;
+    @Input() task: CopyAssetIntoContainerTaskFormElement;
 
-    @Output() deleteItem: EventEmitter<CopyAssetIntoContainerTaskFormElement> =
+    @Output() deleteTask: EventEmitter<CopyAssetIntoContainerTaskFormElement> =
         new EventEmitter<CopyAssetIntoContainerTaskFormElement>();
 
     addDependsOn(): void {
-        this.item.dependsOn.push('');
+        this.task.dependsOn.push('');
     }
 
     deleteDependsOn(i: number) {
-        this.item.dependsOn.splice(i, 1);
+        this.task.dependsOn.splice(i, 1);
     }
 
     delete(): void {
-        this.deleteItem.emit(this.item);
+        this.deleteTask.emit(this.task);
     }
 
 }

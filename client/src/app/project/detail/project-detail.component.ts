@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
@@ -19,6 +19,7 @@ export class ProjectDetailComponent implements OnInit {
     project: GetProjectDetailQueryProjectFieldInterface;
 
     constructor(
+        protected router: Router,
         protected route: ActivatedRoute,
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
@@ -41,8 +42,13 @@ export class ProjectDetailComponent implements OnInit {
             .valueChanges
             .subscribe(result => {
                 const resultData: GetProjectDetailQueryInterface = result.data;
-                this.project = resultData.project;
                 this.spinner.hide();
+                if (null === resultData) {
+                    this.router.navigate(['/projects']);
+
+                    return;
+                }
+                this.project = resultData.project;
             });
     }
 }

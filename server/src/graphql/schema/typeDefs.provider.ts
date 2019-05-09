@@ -89,7 +89,7 @@ export const typeDefsProvider = {
 
         input VolumeInput {
             id: String!
-            assetId: String!
+            assetId: String
         }
 
         input BeforeBuildTaskInput {
@@ -291,7 +291,7 @@ export const typeDefsProvider = {
 
         type Volume {
             id: String!
-            assetId: String!
+            assetId: String
         }
 
         type Source {

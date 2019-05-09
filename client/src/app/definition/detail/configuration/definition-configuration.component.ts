@@ -7,6 +7,7 @@ import {
     GetDefinitionConfigurationQueryInterface,
     getDefinitionConfigurationQueryGql,
 } from './get-definition-configuration.query';
+import {DefinitionTabs} from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-configuration',
@@ -14,6 +15,8 @@ import {
     styles: []
 })
 export class DefinitionConfigurationComponent implements OnInit {
+
+    readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionConfigurationQueryDefinitionFieldInterface;
 

@@ -15,15 +15,15 @@ import {TaskFormElement} from '../definition-add-form.model';
 })
 export class DefinitionAddBeforeBuildTaskCopyFormElementComponent implements OnInit {
 
-    @Input() item: TaskFormElement;
+    @Input() task: TaskFormElement;
 
-    @Output() deleteItem: EventEmitter<TaskFormElement> =
+    @Output() deleteTask: EventEmitter<TaskFormElement> =
         new EventEmitter<TaskFormElement>();
 
     ngOnInit() {}
 
     delete() {
-        this.deleteItem.emit(this.item);
+        this.deleteTask.emit(this.task);
     }
 
 }

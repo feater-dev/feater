@@ -35,10 +35,8 @@ export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandE
             commandLogger,
         } = command as CreateAssetVolumeCommand;
 
-        commandLogger.info(`Asset ID: ${assetId}`);
+        commandLogger.info(assetId ? `Asset ID: ${assetId}` : `No asset used.`);
         commandLogger.info(`Volume ID: ${volumeId}`);
-
-        const asset = await this.assetRepository.findUploadedById(assetId);
 
         const dockerVolumeName = `${containerNamePrefix}_asset_volume_${volumeId}`;
         commandLogger.info(`Volume name: ${dockerVolumeName}`);
@@ -50,13 +48,16 @@ export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandE
             commandLogger,
         );
 
-        commandLogger.info(`Extracting asset to volume.`);
-        await this.extractAssetToVolume(
-            this.assetHelper.getUploadPaths(asset).absolute,
-            dockerVolumeName,
-            absoluteGuestInstanceDirPath,
-            commandLogger,
-        );
+        if (assetId) {
+            const asset = await this.assetRepository.findUploadedById(assetId);
+            commandLogger.info(`Extracting asset to volume.`);
+            await this.extractAssetToVolume(
+                this.assetHelper.getUploadPaths(asset).absolute,
+                dockerVolumeName,
+                absoluteGuestInstanceDirPath,
+                commandLogger,
+            );
+        }
 
         const envVariables = new EnvVariablesSet();
         envVariables.add(`FEATER__ASSET_VOLUME__${volumeId.toUpperCase()}`, dockerVolumeName);

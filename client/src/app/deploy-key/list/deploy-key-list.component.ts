@@ -1,64 +1,60 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
+    GetDeployKeyListQueryDeployKeysFieldItemInterface,
     getDeployKeyListQueryGql,
     GetDeployKeyListQueryInterface,
-    GetDeployKeyListQueryDeployKeysFieldItemInterface,
 } from './get-deploy-key-list.query';
 import gql from 'graphql-tag';
 import {DialogService} from 'ng2-bootstrap-modal';
 import {ConfirmComponent} from '../../modal/confirm.component';
+import {ToastrService} from 'ngx-toastr';
+import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import {ActionButtonInterface, ActionButtonType} from '../../title/title.component';
 
 
 @Component({
     selector: 'app-deploy-key-list',
     templateUrl: './deploy-key-list.component.html',
-    styles: []
+    styles: [],
 })
 export class DeployKeyListComponent implements OnInit {
 
-    protected readonly generateMissingDeployKeysMutation = gql`
-        mutation {
-            generateMissingDeployKeys {
-                generated
-            }
-        }
-    `;
-
-    protected readonly removeUnusedDeployKeysMutation = gql`
-        mutation {
-            removeUnusedDeployKeys {
-                removed
-            }
-        }
-    `;
-
     deployKeys: GetDeployKeyListQueryDeployKeysFieldItemInterface[];
+
+    actions: ActionButtonInterface[];
 
     constructor(
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected dialogService: DialogService,
+        protected toastr: ToastrService,
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
+        this.setUpActions();
         this.getDeployKeys();
     }
 
-    generateMissingItems() {
-        this.apollo.mutate({
-            mutation: this.generateMissingDeployKeysMutation,
-            refetchQueries: [{
-                query: getDeployKeyListQueryGql,
-            }],
-        }).subscribe(
-            () => {},
-            (error) => { console.log(error); }
-        );
+    protected generateMissingItems(): void {
+        this.spinner.show();
+        this.apollo
+            .mutate({
+                mutation: gql`${this.getGenerateMissingDeployKeysMutation()}`,
+            }).subscribe(
+                () => {
+                    this.toastr.success(`Missing deploy keys generated.`);
+                    this.getDeployKeys();
+                },
+                () => {
+                    this.toastr.error(`Failed to generate missing deploy keys.`);
+                    this.getDeployKeys();
+                },
+            );
     }
 
-    removeUnusedItems() {
+    protected removeUnusedItems(): void {
         this.dialogService
             .addDialog(
                 ConfirmComponent,
@@ -74,23 +70,54 @@ export class DeployKeyListComponent implements OnInit {
                     if (!isConfirmed) {
                         return;
                     }
-                    this.apollo.mutate({
-                        mutation: this.removeUnusedDeployKeysMutation,
-                        refetchQueries: [{
-                            query: getDeployKeyListQueryGql,
-                        }],
-                    }).subscribe(
-                        () => {
-                        },
-                        (error) => {
-                            console.log(error);
-                        }
-                    );
-                }
+                    this.spinner.show();
+                    this.apollo
+                        .mutate({
+                            mutation: gql`${this.getRemoveUnusedDeployKeysMutation()}`,
+                        }).subscribe(
+                            () => {
+                                this.toastr.success(`Unused deploy keys removed.`);
+                                this.getDeployKeys();
+                            },
+                            () => {
+                                this.toastr.error(`Failed to remove unused deploy keys.`);
+                                this.getDeployKeys();
+                            },
+                        );
+                },
             );
     }
 
-    protected getDeployKeys() {
+    protected setUpActions(): void {
+        const removeUnusedEventEmitter = new EventEmitter<void>();
+        removeUnusedEventEmitter.subscribe(
+            () => {
+                this.removeUnusedItems();
+            },
+        );
+
+        const generateMissingItemsEventEmitter = new EventEmitter<void>();
+        generateMissingItemsEventEmitter.subscribe(
+            () => {
+                this.generateMissingItems();
+            },
+        );
+
+        this.actions = [
+            {
+                type: ActionButtonType.success,
+                label: 'Generate missing items',
+                eventEmitter: generateMissingItemsEventEmitter,
+            },
+            {
+                type: ActionButtonType.danger,
+                label: 'Remove unused',
+                eventEmitter: removeUnusedEventEmitter,
+            },
+        ];
+    }
+
+    protected getDeployKeys(): void {
         this.spinner.show();
         this.apollo
             .watchQuery<GetDeployKeyListQueryInterface>({
@@ -103,4 +130,29 @@ export class DeployKeyListComponent implements OnInit {
                 this.spinner.hide();
             });
     }
+
+    protected getGenerateMissingDeployKeysMutation(): string {
+        const jsonQuery = {
+            mutation: {
+                generateMissingDeployKeys: {
+                    generated: true,
+                },
+            },
+        };
+
+        return jsonToGraphQLQuery(jsonQuery);
+    }
+
+    protected getRemoveUnusedDeployKeysMutation(): string {
+        const jsonQuery = {
+            mutation: {
+                removeUnusedDeployKeys: {
+                    removed: true,
+                },
+            },
+        };
+
+        return jsonToGraphQLQuery(jsonQuery);
+    }
+
 }

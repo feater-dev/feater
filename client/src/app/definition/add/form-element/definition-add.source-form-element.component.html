@@ -9,14 +9,14 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">ID</label>
-                <input type="text" class="form-control" [(ngModel)]="item.id">
+                <input type="text" class="form-control" [(ngModel)]="source.id">
             </div>
         </div>
 
         <div class="col-md-8">
             <div class="form-group">
                 <label class="control-label">Clone URL</label>
-                <input type="text" class="form-control" [(ngModel)]="item.cloneUrl">
+                <input type="text" class="form-control" [(ngModel)]="source.cloneUrl">
             </div>
         </div>
 
@@ -27,7 +27,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Source reference type</label>
-                <select class="form-control" [(ngModel)]="item.reference.type">
+                <select class="form-control" [(ngModel)]="source.reference.type">
                     <option value="branch" selected>Branch</option>
                     <option value="tag">Tag</option>
                     <option value="commit">Commit</option>
@@ -38,7 +38,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Source reference name</label>
-                <input type="text" class="form-control" [(ngModel)]="item.reference.name">
+                <input type="text" class="form-control" [(ngModel)]="source.reference.name">
             </div>
         </div>
 
@@ -57,23 +57,23 @@
     <div class="row">
 
         <div class="col-md-12">
-            <div *ngIf="!item.beforeBuildTasks.length">
+            <div *ngIf="!source.beforeBuildTasks.length">
                 <p>No before build tasks to list.</p>
             </div>
-            <div *ngIf="item.beforeBuildTasks.length">
-                <div *ngFor="let beforeBuildTask of item.beforeBuildTasks" style="margin-bottom: 16px;">
+            <div *ngIf="source.beforeBuildTasks.length">
+                <div *ngFor="let beforeBuildTask of source.beforeBuildTasks" style="margin-bottom: 16px;">
                     <div style="padding: 16px; margin-bottom: 8px; border: 1px solid rgba(44,62,80,0.15); background-color: #f7f8f9; border-radius: 3px; position: relative;">
 
                         <app-definition-add-before-build-task-copy-form-element
                                 *ngIf="isBeforeBuildTaskCopy(beforeBuildTask)"
-                                [item]="beforeBuildTask"
-                                (deleteItem)="deleteBeforeBuildTask($event)"
+                                [task]="beforeBuildTask"
+                                (deleteTask)="deleteBeforeBuildTask($event)"
                         ></app-definition-add-before-build-task-copy-form-element>
 
                         <app-definition-add-before-build-task-interpolate-form-element
                                 *ngIf="isBeforeBuildTaskInterpolate(beforeBuildTask)"
-                                [item]="beforeBuildTask"
-                                (deleteItem)="deleteBeforeBuildTask($event)"
+                                [task]="beforeBuildTask"
+                                (deleteTask)="deleteBeforeBuildTask($event)"
                         ></app-definition-add-before-build-task-interpolate-form-element>
 
                     </div>

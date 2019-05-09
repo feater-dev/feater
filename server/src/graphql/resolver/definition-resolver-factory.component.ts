@@ -20,11 +20,13 @@ import {PredictedFeaterVariableTypeInterface} from '../type/predicted-feater-var
 import {UpdateDefinitionInputTypeInterface} from '../input-type/update-definition-input-type.interface';
 import {RemoveDefinitionInputTypeInterface} from '../input-type/remove-definition-input-type.interface';
 import {InstanceRepository} from '../../persistence/repository/instance.repository';
+import {ProjectRepository} from "../../persistence/repository/project.repository";
 
 @Injectable()
 export class DefinitionResolverFactory {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
+        private readonly projectRepository: ProjectRepository,
         private readonly definitionRepository: DefinitionRepository,
         private readonly instanceRepository: InstanceRepository,
         private readonly deployKeyRepository: DeployKeyRepository,
@@ -88,6 +90,7 @@ export class DefinitionResolverFactory {
     public getCreateItemResolver(): (obj: any, createDefinitionInput: CreateDefinitionInputTypeInterface) => Promise<DefinitionTypeInterface> {
         return async (obj: any, createDefinitionInput: CreateDefinitionInputTypeInterface): Promise<DefinitionTypeInterface> => {
             // TODO Add input validation.
+            const project = await this.projectRepository.findByIdOrFail(createDefinitionInput.projectId);
             const definition = await this.definitionRepository.create(createDefinitionInput);
 
             return this.mapPersistentModelToTypeModel(definition);
@@ -198,7 +201,7 @@ export class DefinitionResolverFactory {
         return {
             id: definition._id,
             name: definition.name,
-            projectId: definition.projectId,
+            projectId: definition.projectId.toString(),
             config: this.definitionConfigMapper.map(definition.config),
             createdAt: definition.createdAt,
             updatedAt: definition.updatedAt,

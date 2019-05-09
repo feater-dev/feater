@@ -1,12 +1,15 @@
-<div class="row">
-    <div class="col-lg-12">
-        <div class="page-header">
-            <a class="btn btn-danger pull-right" (click)="removeUnusedItems()" style="margin-left: 10px;">Remove unused</a>
-            <a class="btn btn-success pull-right" (click)="generateMissingItems()">Generate missing</a>
-            <h2 class="single-line">Deploy keys</h2>
+<app-title [title]="'Deploy keys'" [actions]="actions"></app-title>
+
+<div class="content-body">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div *ngIf="deployKeys">
+                    <app-deploy-key-table [deployKeys]="deployKeys"></app-deploy-key-table>
+                </div>
+            </div>
         </div>
-        <div *ngIf="deployKeys">
-            <app-deploy-key-table [deployKeys]="deployKeys"></app-deploy-key-table>
-        </div>
+
     </div>
 </div>

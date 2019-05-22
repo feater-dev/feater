@@ -50,7 +50,7 @@ export class DefinitionRepository {
 
         for (const source of createdDefinition.config.sources) {
             const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-            if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+            if ((source as SourceTypeInterface).useDeployKey) {
                 const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(cloneUrl);
                 if (!deployKeyExists) {
                     await this.deployKeyRepository.create(cloneUrl);
@@ -73,7 +73,7 @@ export class DefinitionRepository {
 
         for (const source of definition.config.sources) {
             const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-            if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+            if ((source as SourceTypeInterface).useDeployKey) {
                 const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(cloneUrl);
                 if (!deployKeyExists) {
                     await this.deployKeyRepository.create(cloneUrl);

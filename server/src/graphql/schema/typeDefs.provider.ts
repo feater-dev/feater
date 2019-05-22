@@ -83,6 +83,7 @@ export const typeDefsProvider = {
         input SourceInput {
             id: String!
             cloneUrl: String!
+            useDeployKey: Boolean!
             reference: SourceReferenceInput!
             beforeBuildTasks: [BeforeBuildTaskInput!]!
         }
@@ -297,6 +298,7 @@ export const typeDefsProvider = {
         type Source {
             id: String!
             cloneUrl: String!
+            useDeployKey: Boolean!
             reference: SourceReference!
             beforeBuildTasks: [BeforeBuildTask!]!
         }

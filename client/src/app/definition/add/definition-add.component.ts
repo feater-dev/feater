@@ -1,44 +1,34 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
-import gql from 'graphql-tag';
 import {Apollo} from 'apollo-angular';
 import {jsonToGraphQLQuery} from 'json-to-graphql-query';
 import {NgxSpinnerService} from 'ngx-spinner';
-import * as _ from 'lodash';
-import * as jsYaml from 'js-yaml';
-import * as camelCaseKeys from 'camelcase-keys';
-import {
-    DefinitionAddForm,
-    DefinitionAddFormSourceFormElement,
-    DefinitionAddFormVolumeFormElement,
-    DefinitionAddFormProxiedPortFormElement,
-    DefinitionAddFormEnvVariableFormElement,
-    DefinitionAddFormSummaryItemFormElement,
-    DefinitionAddFormConfigFormElement,
-    ExecuteServiceCommandTaskFormElement,
-    AfterBuildTaskFormElement,
-    CopyAssetIntoContainerTaskFormElement,
-} from './definition-add-form.model';
-import {
-    getProjectQueryGql,
-    GetProjectQueryInterface,
-    GetProjectQueryProjectFieldInterface,
-} from './get-project.query';
+import {DefinitionConfigFormElement, ExecuteServiceCommandTaskFormElement} from '../config-form/definition-config-form.model';
+import {getProjectQueryGql, GetProjectQueryInterface, GetProjectQueryProjectFieldInterface} from './get-project.query';
 import {ToastrService} from 'ngx-toastr';
+import {DefinitionConfigYamlMapperService} from '../import-yaml/definition-config-yaml-mapper.service';
+import gql from 'graphql-tag';
+import _ from 'lodash';
 
+
+interface DefinitionAddForm {
+    name: string;
+    config: DefinitionConfigFormElement;
+}
 
 @Component({
     selector: 'app-definition-add',
     templateUrl: './definition-add.component.html',
     styles: []
 })
-export class DefinitionAddComponent implements OnInit { // TODO Extract some shared base controller for add/edit/duplicate.
+export class DefinitionAddComponent implements OnInit {
+
+    // TODO Extract some shared base controller for add/edit/duplicate.
 
     static readonly actionAdd = 'add'; // TODO Change to enum.
-
     static readonly modeForm = 'form'; // TODO Change to enum.
-    static readonly modeYamlImport = 'yaml'; // TODO Change to enum.
+    static readonly modeYamlImport = 'configYaml'; // TODO Change to enum.
 
     definition: DefinitionAddForm;
 
@@ -48,14 +38,13 @@ export class DefinitionAddComponent implements OnInit { // TODO Extract some sha
 
     mode = DefinitionAddComponent.modeForm;
 
-    @ViewChild('yamlConfig') yamlConfigElement: ElementRef;
-
     constructor(
         protected route: ActivatedRoute,
         protected router: Router,
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected toastr: ToastrService,
+        protected readonly definitionConfigYamlMapperComponent: DefinitionConfigYamlMapperService,
     ) {
         this.definition = {
             name: '',
@@ -96,120 +85,6 @@ export class DefinitionAddComponent implements OnInit { // TODO Extract some sha
         );
     }
 
-    addSource(): void {
-        this.definition.config.sources.push({
-            id: '',
-            cloneUrl: '',
-            reference: {
-                type: 'branch',
-                name: ''
-            },
-            beforeBuildTasks: []
-        });
-    }
-
-    deleteSource(source: DefinitionAddFormSourceFormElement): void {
-        const index = this.definition.config.sources.indexOf(source);
-        if (-1 !== index) {
-            this.definition.config.sources.splice(index, 1);
-        }
-    }
-
-    addVolume(): void {
-        this.definition.config.volumes.push({
-            id: '',
-            assetId: '',
-        });
-    }
-
-    deleteVolume(volume: DefinitionAddFormVolumeFormElement): void {
-        const index = this.definition.config.volumes.indexOf(volume);
-        if (-1 !== index) {
-            this.definition.config.volumes.splice(index, 1);
-        }
-    }
-
-    addProxiedPort(): void {
-        this.definition.config.proxiedPorts.push({
-            serviceId: '',
-            id: '',
-            name: '',
-            port: null,
-        });
-    }
-
-    deleteProxiedPort(proxiedPort: DefinitionAddFormProxiedPortFormElement): void {
-        const index = this.definition.config.proxiedPorts.indexOf(proxiedPort);
-        if (-1 !== index) {
-            this.definition.config.proxiedPorts.splice(index, 1);
-        }
-    }
-
-    addEnvVariable(): void {
-        this.definition.config.envVariables.push({
-            name: '',
-            value: ''
-        });
-    }
-
-    deleteEnvVariable(envVariable: DefinitionAddFormEnvVariableFormElement): void {
-        const index = this.definition.config.envVariables.indexOf(envVariable);
-        if (-1 !== index) {
-            this.definition.config.envVariables.splice(index, 1);
-        }
-    }
-
-    addAfterBuildTaskExecuteServiceCommand(): void {
-        this.definition.config.afterBuildTasks.push({
-            type: 'executeServiceCommand',
-            id: '',
-            dependsOn: [],
-            command: [''],
-            inheritedEnvVariables: [],
-            customEnvVariables: [],
-        } as ExecuteServiceCommandTaskFormElement);
-    }
-
-    addAfterBuildTaskCopyAssetIntoContainer(): void {
-        this.definition.config.afterBuildTasks.push({
-            type: 'copyAssetIntoContainer',
-            id: '',
-            dependsOn: [],
-            serviceId: '',
-            assetId: '',
-            destinationPath: '',
-        } as CopyAssetIntoContainerTaskFormElement);
-    }
-
-    isAfterBuildTaskExecuteServiceCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'executeServiceCommand' === afterBuildTask.type;
-    }
-
-    isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'copyAssetIntoContainer' === afterBuildTask.type;
-    }
-
-    deleteAfterBuildTask(afterBuildTask: AfterBuildTaskFormElement): void {
-        const index = this.definition.config.afterBuildTasks.indexOf(afterBuildTask);
-        if (-1 !== index) {
-            this.definition.config.afterBuildTasks.splice(index, 1);
-        }
-    }
-
-    addSummaryItem(): void {
-        this.definition.config.summaryItems.push({
-            name: '',
-            value: ''
-        });
-    }
-
-    deleteSummaryItem(summaryItem: DefinitionAddFormSummaryItemFormElement): void {
-        const index = this.definition.config.summaryItems.indexOf(summaryItem);
-        if (-1 !== index) {
-            this.definition.config.summaryItems.splice(index, 1);
-        }
-    }
-
     switchMode(mode: string): void {
         this.mode = mode;
     }
@@ -230,23 +105,9 @@ export class DefinitionAddComponent implements OnInit { // TODO Extract some sha
         return DefinitionAddComponent.modeYamlImport === this.mode;
     }
 
-    importYamlConfig(yamlConfig): void {
-        this.definition.config = this.mapYamlConfig(yamlConfig);
-        this.yamlConfigElement.nativeElement.value = '';
+    importYamlConfig(config: DefinitionConfigFormElement): void {
+        this.definition.config = config;
         this.switchMode(DefinitionAddComponent.modeForm);
-    }
-
-    getAvailableEnvVariableNames(): string[] {
-        const availableEnvVariableNames = [];
-        for (const envVariable of this.definition.config.envVariables) {
-            availableEnvVariableNames.push(envVariable.name);
-        }
-        availableEnvVariableNames.push('FEATER__INSTANCE_ID');
-        for (const proxiedPort of this.definition.config.proxiedPorts) {
-            availableEnvVariableNames.push(`FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
-        }
-
-        return availableEnvVariableNames;
     }
 
     protected mapDefinitionToDto(): any {
@@ -256,7 +117,7 @@ export class DefinitionAddComponent implements OnInit { // TODO Extract some sha
             }
         }
 
-        const mappedItem = {
+        const dto = {
             projectId: this.project.id,
             name: this.definition.name,
             config: {
@@ -277,13 +138,13 @@ export class DefinitionAddComponent implements OnInit { // TODO Extract some sha
             },
         };
 
-        for (const volume of mappedItem.config.volumes) {
+        for (const volume of dto.config.volumes) {
             if ('' === volume.assetId) {
                 delete volume.assetId;
             }
         }
 
-        for (const afterBuildTask of mappedItem.config.afterBuildTasks) {
+        for (const afterBuildTask of dto.config.afterBuildTasks) {
             if ('' === afterBuildTask.id) {
                 delete afterBuildTask.id;
             }
@@ -292,7 +153,7 @@ export class DefinitionAddComponent implements OnInit { // TODO Extract some sha
             }
         }
 
-        return mappedItem;
+        return dto;
     }
 
     protected filterAfterBuildExecuteCommandTask(afterBuildTask: ExecuteServiceCommandTaskFormElement) {
@@ -302,67 +163,6 @@ export class DefinitionAddComponent implements OnInit { // TODO Extract some sha
                 inheritedEnvVariable.alias = null;
             }
         }
-    }
-
-    protected mapYamlConfig(yamlConfig: any): DefinitionAddFormConfigFormElement {
-        const camelCaseYamlConfig = camelCaseKeys(jsYaml.safeLoad(yamlConfig), {deep: true});
-
-        const mappedYamlConfig = {
-            sources: [],
-            volumes: [],
-            proxiedPorts: [],
-            envVariables: [],
-            composeFile: null,
-            afterBuildTasks: [],
-            summaryItems: [],
-        };
-
-        for (const source of camelCaseYamlConfig.sources) {
-            mappedYamlConfig.sources.push(source);
-        }
-
-        for (const volume of camelCaseYamlConfig.volumes) {
-            mappedYamlConfig.volumes.push(volume);
-        }
-
-        for (const proxiedPort of camelCaseYamlConfig.proxiedPorts) {
-            mappedYamlConfig.proxiedPorts.push({
-                id: proxiedPort.id,
-                serviceId: proxiedPort.serviceId,
-                port: `${proxiedPort.port}`,
-                name: proxiedPort.name,
-            });
-        }
-
-        for (const envVariable of camelCaseYamlConfig.envVariables) {
-            mappedYamlConfig.envVariables.push(envVariable);
-        }
-
-        mappedYamlConfig.composeFile = {
-            sourceId: camelCaseYamlConfig.composeFiles[0].sourceId,
-            envDirRelativePath: camelCaseYamlConfig.composeFiles[0].envDirRelativePath,
-            composeFileRelativePaths: camelCaseYamlConfig.composeFiles[0].composeFileRelativePaths,
-        };
-
-        for (const afterBuildTask of camelCaseYamlConfig.afterBuildTasks) {
-            const mappedAfterBuildTask = afterBuildTask;
-
-            if (!afterBuildTask.id) {
-                mappedAfterBuildTask.id = '';
-            }
-
-            if (!afterBuildTask.dependsOn) {
-                mappedAfterBuildTask.dependsOn = [];
-            }
-
-            mappedYamlConfig.afterBuildTasks.push(mappedAfterBuildTask);
-        }
-
-        for (const summaryItem of camelCaseYamlConfig.summaryItems) {
-            mappedYamlConfig.summaryItems.push(summaryItem);
-        }
-
-        return mappedYamlConfig;
     }
 
     protected getCreateDefinitionMutation(): string {

@@ -6,11 +6,11 @@ import {
     EventEmitter,
 } from '@angular/core';
 import {
-    DefinitionAddFormSourceFormElement,
+    DefinitionSourceFormElement,
     BeforeBuildTaskFormElement,
     TaskFormElement,
     InterpolateTaskFormElement,
-} from '../definition-add-form.model';
+} from '../../config-form/definition-config-form.model';
 
 
 @Component({
@@ -20,10 +20,10 @@ import {
 })
 export class DefinitionAddSourceFormElementComponent implements OnInit {
 
-    @Input() source: DefinitionAddFormSourceFormElement;
+    @Input() source: DefinitionSourceFormElement;
 
-    @Output() deleteSource: EventEmitter<DefinitionAddFormSourceFormElement> =
-        new EventEmitter<DefinitionAddFormSourceFormElement>();
+    @Output() deleteSource: EventEmitter<DefinitionSourceFormElement> =
+        new EventEmitter<DefinitionSourceFormElement>();
 
     ngOnInit() {}
 

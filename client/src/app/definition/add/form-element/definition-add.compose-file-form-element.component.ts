@@ -6,9 +6,9 @@ import {
     EventEmitter,
 } from '@angular/core';
 import {
-    DefinitionAddFormSourceFormElement,
+    DefinitionSourceFormElement,
     DefinitionAddComposeFileFormElement
-} from '../definition-add-form.model';
+} from '../../config-form/definition-config-form.model';
 
 
 @Component({
@@ -20,7 +20,7 @@ export class DefinitionAddComposeFileFormElementComponent implements OnInit {
 
     @Input() composeFile: DefinitionAddComposeFileFormElement;
 
-    @Input() sources: DefinitionAddFormSourceFormElement[];
+    @Input() sources: DefinitionSourceFormElement[];
 
     ngOnInit() {}
 

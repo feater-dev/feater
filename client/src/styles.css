@@ -46,7 +46,7 @@ body {
     height: 95px;
     padding-top: 9px;
     background: rgba(0, 0, 0, 0.15);
-    box-shadow: rgba(255, 255, 255, 0.2) 0 0 200px;
+    box-shadow: rgba(255, 255, 255, 0.1) 0 0 200px;
 }
 
 .sidebar a {
@@ -338,4 +338,15 @@ a.service-action:focus-visible,
 a.service-action:focus-within,
 a.service-action:active {
     color: #2c3e50;
+}
+
+.content-header-buttons {
+    top: 20px;
+    right: 0px;
+    position: absolute;
+}
+
+.content-header-buttons .btn,
+.content-header-buttons .btn {
+    margin-left: 10px;
 }

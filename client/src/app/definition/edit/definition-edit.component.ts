@@ -9,13 +9,18 @@ import {
 import {DefinitionAddComponent} from '../add/definition-add.component';
 import gql from 'graphql-tag';
 import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {DefinitionEditForm} from '../add/definition-add-form.model';
-import * as _ from 'lodash';
+import {DefinitionConfigFormElement} from '../config-form/definition-config-form.model';
 
+
+interface DefinitionEditForm {
+    id: string;
+    name: string;
+    config: DefinitionConfigFormElement;
+}
 
 @Component({
     selector: 'app-definition-edit',
-    templateUrl: './../add/definition-add.component.html',
+    templateUrl: './definition-edit.component.html',
     styles: []
 })
 export class DefinitionEditComponent extends DefinitionAddComponent implements OnInit {
@@ -62,7 +67,7 @@ export class DefinitionEditComponent extends DefinitionAddComponent implements O
                     };
                     this.definition.id = definition.id;
                     this.definition.name = definition.name;
-                    this.importYamlConfig(definition.configAsYaml);
+                    this.definition.config = this.definitionConfigYamlMapperComponent.map(definition.configAsYaml);
                     this.spinner.hide();
                 }
             );

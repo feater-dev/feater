@@ -8,14 +8,15 @@ import {InstanceContext} from '../../instantiation/instance-context/instance-con
 @Injectable()
 export class InstanceRepository {
 
-    protected instancesSaveBuffer: {
-        instance: InstanceInterface,
-        resolve: (instance: InstanceInterface) => void,
-    }[] = [];
+    protected saveInSequencePromise: Promise<void>;
 
     constructor(
         @InjectModel('Instance') private readonly instanceModel: Model<InstanceInterface>,
-    ) {}
+    ) {
+        this.saveInSequencePromise = new Promise<void>((resolve) => {
+            resolve();
+        });
+    }
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<InstanceInterface[]> {
         const query = this.instanceModel.find(criteria);
@@ -52,7 +53,7 @@ export class InstanceRepository {
     }
 
     async remove(id: string): Promise<boolean> {
-        const removal = await this.instanceModel.findByIdAndRemove(id);
+        await this.instanceModel.findByIdAndRemove(id);
 
         return true;
     }
@@ -60,23 +61,13 @@ export class InstanceRepository {
     save(instance: InstanceInterface): Promise<InstanceInterface> {
         instance.updatedAt = new Date();
 
-        return new Promise<InstanceInterface>(resolve => {
-            this.instancesSaveBuffer.push({
-                instance,
-                resolve,
-            });
-            this.saveNextFromBuffer();
-        });
-    }
+        return new Promise<InstanceInterface>((resolve) => {
+            this.saveInSequencePromise = this.saveInSequencePromise.then(async () => {
+                await instance.save();
+                resolve(instance);
 
-    protected async saveNextFromBuffer(): Promise<void> {
-        if (0 === this.instancesSaveBuffer.length) {
-            return;
-        }
-        const {instance, resolve} = await this.instancesSaveBuffer[0];
-        await instance.save();
-        resolve(instance);
-        this.instancesSaveBuffer = this.instancesSaveBuffer.slice(1);
-        this.saveNextFromBuffer();
+                return;
+            });
+        });
     }
 }

@@ -5,7 +5,7 @@ import {
     Output,
     EventEmitter,
 } from '@angular/core';
-import {InterpolateTaskFormElement} from '../definition-add-form.model';
+import {InterpolateTaskFormElement} from '../../config-form/definition-config-form.model';
 
 
 @Component({

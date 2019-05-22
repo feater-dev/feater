@@ -69,55 +69,11 @@
             "browserTarget": "angular2-fundamentals:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
-            "assets": [
-              "src/assets",
-              "src/favicon.ico"
-            ],
-            "styles": [
-              "src/styles.css",
-              "src/assets/bootstrap/bootstrap-flatly.min.css",
-              "node_modules/ngx-toastr/toastr.css"
-            ],
-            "scripts": [
-              "src/assets/jquery/jquery-1.10.2.min.js",
-              "src/assets/bootstrap/bootstrap.min.js"
-            ]
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
               "src/tsconfig.json"
-            ],
-            "exclude": []
-          }
-        }
-      }
-    },
-    "angular2-fundamentals-e2e": {
-      "root": "",
-      "sourceRoot": "",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "angular2-fundamentals:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "e2e/tsconfig.json"
             ],
             "exclude": []
           }

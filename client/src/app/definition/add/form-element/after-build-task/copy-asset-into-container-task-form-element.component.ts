@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {CopyAssetIntoContainerTaskFormElement} from '../../definition-add-form.model';
+import {CopyAssetIntoContainerTaskFormElement} from '../../../config-form/definition-config-form.model';
 
 
 @Component({

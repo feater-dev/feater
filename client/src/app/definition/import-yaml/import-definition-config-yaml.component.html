@@ -1,0 +1,21 @@
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label">Yaml config</label>
+                <textarea
+                    [(ngModel)]="configYaml"
+                    class="form-control"
+                    rows="10"
+                    style="font-family: monospace;"
+                ></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-success" (click)="import()">Import</button>
+        </div>
+    </div>
+</div>

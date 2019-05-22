@@ -1,0 +1,243 @@
+<!-- Sources-->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Sources</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!config.sources.length" class="row">
+        <div class="col-md-12">
+            <p>No sources defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="config.sources.length">
+        <div *ngFor="let source of config.sources">
+            <app-definition-add-source-form-element
+                [source]="source"
+                (deleteSource)="deleteSource($event)"
+            ></app-definition-add-source-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm"
+               (click)="addSource()"
+            >
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Volumes-->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Volumes</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!config.volumes.length" class="row">
+        <div class="col-md-12">
+            <p>No volumes defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="config.volumes.length">
+        <div *ngFor="let volume of config.volumes">
+            <app-definition-add-volume-form-element
+                [volume]="volume"
+                (deleteItem)="deleteVolume($event)"
+            ></app-definition-add-volume-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm"
+               (click)="addVolume()"
+            >
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Proxied ports -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Proxied ports</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!config.proxiedPorts.length" class="row">
+        <div class="col-md-12">
+            <p>No proxied ports defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="config.proxiedPorts.length">
+        <div *ngFor="let proxiedPort of config.proxiedPorts">
+            <app-definition-add-proxied-port-form-element
+                [proxiedPort]="proxiedPort"
+                (deleteProxiedPort)="deleteProxiedPort($event)"
+            ></app-definition-add-proxied-port-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm"
+               (click)="addProxiedPort()"
+            >
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Environmental variables -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Environmental variables</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!config.envVariables.length" class="row">
+        <div class="col-md-12">
+            <p>No environmental variables defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="config.envVariables.length">
+        <div *ngFor="let envVariable of config.envVariables">
+            <app-definition-add-environmental-variable-form-element
+                [envVariable]="envVariable"
+                (deleteEnvVariable)="deleteEnvVariable($event)"
+            ></app-definition-add-environmental-variable-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm"
+               (click)="addEnvVariable()"
+            >
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Compose files -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Compose files</h3>
+        </div>
+    </div>
+
+    <app-definition-add-compose-file-form-element
+        [composeFile]="this.config.composeFile"
+        [sources]="this.config.sources"
+    ></app-definition-add-compose-file-form-element>
+</div>
+
+<!-- After build tasks -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 style="display: inline;">After build tasks</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p *ngIf="!config.afterBuildTasks.length">
+                No after build tasks defined.
+            </p>
+            <div *ngIf="config.afterBuildTasks.length">
+                <div *ngFor="let afterBuildTask of config.afterBuildTasks">
+
+                    <app-execute-service-command-task-form-element
+                            *ngIf="isAfterBuildTaskExecuteServiceCommand(afterBuildTask)"
+                            [task]="afterBuildTask"
+                            [availableEnvVariableNames]="getAvailableEnvVariableNames()"
+                            (deleteTask)="deleteAfterBuildTask($event)"
+                    ></app-execute-service-command-task-form-element>
+
+                    <app-copy-asset-into-container-task-form-element
+                            *ngIf="isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask)"
+                            [task]="afterBuildTask"
+                            (deleteTask)="deleteAfterBuildTask($event)"
+                    ></app-copy-asset-into-container-task-form-element>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a
+                    class="btn btn-success btn-sm"
+                    (click)="addAfterBuildTaskExecuteServiceCommand()"
+                    style="margin-right: 8px;"
+            >
+                Execute service command  <span class="glyphicon glyphicon-plus"></span>
+            </a>
+            <a
+                    class="btn btn-success btn-sm"
+                    (click)="addAfterBuildTaskCopyAssetIntoContainer()"
+                    style="margin-right: 8px;"
+            >
+                Copy asset into container <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Summary items -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Summary items</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!config.summaryItems.length" class="row">
+        <div class="col-md-12">
+            <p>No summary items defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="config.summaryItems.length">
+        <div *ngFor="let summaryItem of config.summaryItems">
+            <app-definition-add-summary-item-form-element [summaryItem]="summaryItem"
+                                                          (deleteSummaryItem)="deleteSummaryItem($event)"
+            ></app-definition-add-summary-item-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm"
+               (click)="addSummaryItem()"
+            >
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>

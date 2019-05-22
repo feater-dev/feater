@@ -5,7 +5,7 @@ import {
     Output,
     EventEmitter,
 } from '@angular/core';
-import {TaskFormElement} from '../definition-add-form.model';
+import {TaskFormElement} from '../../config-form/definition-config-form.model';
 
 
 @Component({

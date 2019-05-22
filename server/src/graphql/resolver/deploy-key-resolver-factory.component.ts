@@ -1,7 +1,6 @@
 import * as sshFingerprint from 'ssh-fingerprint';
 import * as _ from 'lodash';
-import * as gitUrlParse from 'git-url-parse';
-import {unlinkSync} from "fs";
+import {unlinkSync} from 'fs';
 import {Injectable} from '@nestjs/common';
 import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
 import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
@@ -13,7 +12,7 @@ import {RegenerateDeployKeyInputTypeInterface} from '../input-type/regenerate-de
 import {RemoveDeployKeyInputTypeInterface} from '../input-type/remove-deploy-key-input-type.interface';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
 import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
-import {DeployKeyHelperComponent} from "../../helper/deploy-key-helper.component";
+import {DeployKeyHelperComponent} from '../../helper/deploy-key-helper.component';
 
 @Injectable()
 export class DeployKeyResolverFactory {
@@ -88,7 +87,7 @@ export class DeployKeyResolverFactory {
             for (const definition of definitions) {
                 for (const source of definition.config.sources) {
                     const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-                    if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+                    if ((source as SourceTypeInterface).useDeployKey) {
                         referencedCloneUrls.push(cloneUrl);
                     }
                 }
@@ -125,7 +124,7 @@ export class DeployKeyResolverFactory {
             for (const definition of definitions) {
                 for (const source of definition.config.sources) {
                     const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-                    if ('ssh' === gitUrlParse(cloneUrl).protocol) {
+                    if ((source as SourceTypeInterface).useDeployKey) {
                         referencedCloneUrls.push(cloneUrl);
                     }
                 }

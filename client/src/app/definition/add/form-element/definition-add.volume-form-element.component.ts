@@ -6,11 +6,11 @@ import {
     EventEmitter,
 } from '@angular/core';
 import {
-    DefinitionAddFormVolumeFormElement,
+    DefinitionVolumeFormElement,
     BeforeBuildTaskFormElement,
     TaskFormElement,
     InterpolateTaskFormElement,
-} from '../definition-add-form.model';
+} from '../../config-form/definition-config-form.model';
 
 
 @Component({
@@ -20,10 +20,10 @@ import {
 })
 export class DefinitionAddVolumeFormElementComponent implements OnInit {
 
-    @Input() volume: DefinitionAddFormVolumeFormElement;
+    @Input() volume: DefinitionVolumeFormElement;
 
-    @Output() deleteItem: EventEmitter<DefinitionAddFormVolumeFormElement> =
-        new EventEmitter<DefinitionAddFormVolumeFormElement>();
+    @Output() deleteItem: EventEmitter<DefinitionVolumeFormElement> =
+        new EventEmitter<DefinitionVolumeFormElement>();
 
     ngOnInit() {}
 

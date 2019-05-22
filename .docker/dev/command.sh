@@ -22,14 +22,20 @@ if [[ $(docker inspect --format={{.NetworkSettings.Networks.${proxy_network_name
 fi
 
 # Run Nginx.
-nginx -g "daemon on;" # TODO It may vary depending on OS used.
+# TODO It may vary depending on OS used.
+nginx -g "daemon on;"
 
 # Run MongoDB.
-mongod --fork --bind_ip 0.0.0.0 --logpath /var/log/mongodb.log --dbpath /data/mongo # TODO It may vary depending on OS used.
+# TODO It may vary depending on OS used.
+mongod --fork --bind_ip 0.0.0.0 --logpath /var/log/mongodb.log --dbpath /data/mongo
 
 # Build server and client application.
-(cd ./server && yarn install && yarn start:dev:watch 1>&1 2>&2 &)
-(cd ./client && yarn install && yarn start:dev:watch 1>&1 2>&2 &)
+(cd ./server && yarn install)
+(cd ./client && yarn install)
+
+# Serve server and client application.
+(cd ./server && yarn start:dev:watch 1>&1 2>&2 &)
+(cd ./client && yarn start:dev:watch 1>&1 2>&2 &)
 
 # Wait infinitely.
 set +x

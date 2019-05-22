@@ -1,13 +1,13 @@
 <app-title
-    *ngIf="action === 'add'"
+    *ngIf="action === 'edit'"
     [context]="'Definition'"
-    [title]="'Add for project ' + project?.name"
+    [title]="'Edit ' + sourceDefinition?.name"
 ></app-title>
 
 <div class="content-body">
     <div class="container-fluid">
 
-        <div class="form build-defintion-form">
+        <div class="form build-defintion-add-form">
 
             <div class="row form-section">
                 <div class="col-md-12">

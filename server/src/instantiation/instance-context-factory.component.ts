@@ -43,6 +43,7 @@ export class InstanceContextFactory {
             instanceContext.sources.push({
                 id: sourceConfig.id,
                 cloneUrl: sourceConfig.cloneUrl,
+                useDeployKey: sourceConfig.useDeployKey,
                 reference: {
                     type: sourceConfig.reference.type,
                     name: sourceConfig.reference.name,

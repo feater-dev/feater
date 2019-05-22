@@ -7,16 +7,24 @@ import {
     GetDefinitionConfigQueryDefinitionFieldInterface,
 } from './get-definition-config.query';
 import {DefinitionAddComponent} from '../add/definition-add.component';
+import {DefinitionConfigFormElement} from '../config-form/definition-config-form.model';
 
+
+interface DefinitionDuplicateForm {
+    name: string;
+    config: DefinitionConfigFormElement;
+}
 
 @Component({
     selector: 'app-definition-duplicate',
-    templateUrl: './../add/definition-add.component.html',
+    templateUrl: './definition-duplicate.component.html',
     styles: []
 })
 export class DefinitionDuplicateComponent extends DefinitionAddComponent implements OnInit {
 
     action = 'duplicate';
+
+    definition: DefinitionDuplicateForm;
 
     sourceDefinition: {
         name: string;
@@ -53,7 +61,7 @@ export class DefinitionDuplicateComponent extends DefinitionAddComponent impleme
                         name: definition.name,
                     };
                     this.definition.name = `${definition.name} - copy`;
-                    this.importYamlConfig(definition.configAsYaml);
+                    this.definition.config = this.definitionConfigYamlMapperComponent.map(definition.configAsYaml);
                     this.spinner.hide();
                 }
             );

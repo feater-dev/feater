@@ -4,6 +4,7 @@ import {BeforeBuildTaskTypeInterface} from './before-build-task-type.interface';
 export interface SourceTypeInterface {
     readonly id: string;
     readonly cloneUrl: string;
+    readonly useDeployKey: boolean;
     readonly reference: SourceReferenceTypeInterface;
     readonly beforeBuildTasks: BeforeBuildTaskTypeInterface[];
 }

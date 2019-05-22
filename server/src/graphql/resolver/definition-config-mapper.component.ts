@@ -89,6 +89,7 @@ export class DefinitionConfigMapper {
         return {
             id: source.id,
             cloneUrl: source.cloneUrl,
+            useDeployKey: source.useDeployKey,
             reference: this.mapSourceReference(source.reference),
             beforeBuildTasks: mappedBeforeBuildTasks,
         } as SourceTypeInterface;

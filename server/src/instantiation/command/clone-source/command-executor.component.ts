@@ -1,16 +1,15 @@
-import * as gitUrlParse from 'git-url-parse';
 import * as sshFingerprint from 'ssh-fingerprint';
-import {mkdirSync} from "fs";
-import {spawnSync, spawn, SpawnOptions} from "child_process";
+import {mkdirSync} from 'fs';
+import {spawnSync, spawn, SpawnOptions} from 'child_process';
 import {Injectable} from '@nestjs/common';
-import {config} from "../../../config/config";
+import {config} from '../../../config/config';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {DeployKeyRepository} from '../../../persistence/repository/deploy-key.repository';
 import {CloneSourceCommand} from './command';
 import {SimpleCommand} from '../../executor/simple-command';
 import {CommandLogger} from '../../logger/command-logger';
-import {SpawnHelper} from "../../helper/spawn-helper.component";
-import {DeployKeyHelperComponent} from "../../../helper/deploy-key-helper.component";
+import {SpawnHelper} from '../../helper/spawn-helper.component';
+import {DeployKeyHelperComponent} from '../../../helper/deploy-key-helper.component';
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
@@ -28,6 +27,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
     async execute(command: SimpleCommand): Promise<any> {
         const {
             cloneUrl,
+            useDeployKey,
             referenceType,
             referenceName,
             sourceAbsoluteGuestPath,
@@ -39,7 +39,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         mkdirSync(sourceAbsoluteGuestPath);
 
         commandLogger.info(`Cloning repository.`);
-        await this.cloneRepository(cloneUrl, sourceAbsoluteGuestPath, workingDirectory, commandLogger);
+        await this.cloneRepository(cloneUrl, useDeployKey, sourceAbsoluteGuestPath, workingDirectory, commandLogger);
 
         commandLogger.info(`Checking out reference.`);
         this.checkoutReference(referenceType, referenceName, sourceAbsoluteGuestPath, commandLogger);
@@ -49,16 +49,17 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
 
     protected async cloneRepository(
         cloneUrl: string,
+        useDeployKey: boolean,
         sourceAbsoluteGuestPath: string,
         workingDirectory: string,
         commandLogger: CommandLogger,
     ): Promise<void> {
         let deployKey;
-        let spawnedGitCloneOptions: SpawnOptions = {cwd: workingDirectory};
+        const spawnedGitCloneOptions: SpawnOptions = {cwd: workingDirectory};
 
         commandLogger.info(`Clone URL: ${cloneUrl}`);
-        if ('ssh' === gitUrlParse(cloneUrl).protocol) {
-            commandLogger.info(`Using deploy key to clone over SSH.`);
+        if (useDeployKey) {
+            commandLogger.info(`Using deploy key to clone.`);
             deployKey = await this.deployKeyRepository.findOneByCloneUrl(cloneUrl);
             commandLogger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
 

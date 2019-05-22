@@ -79,6 +79,9 @@ import {ToastrModule} from 'ngx-toastr';
 import {TitleComponent} from './title/title.component';
 import {DefinitionTabsComponent} from './definition/detail/tabs/definition-tabs.component';
 import {InstanceTabsComponent} from './instance/detail/tabs/instance-tabs.component';
+import {DefinitionConfigFormComponent} from './definition/config-form/definition-config-form.component';
+import {ImportDefinitionConfigYamlComponent} from './definition/import-yaml/import-definition-config-yaml.component';
+import {DefinitionConfigYamlMapperService} from './definition/import-yaml/definition-config-yaml-mapper.service';
 
 const appRoutes: Routes = [
     { path: 'projects', component: ProjectListComponent },
@@ -116,6 +119,8 @@ const appRoutes: Routes = [
         ProjectAddComponent,
         ProjectDetailComponent,
         ProjectListComponent,
+        DefinitionConfigFormComponent,
+        ImportDefinitionConfigYamlComponent,
         DefinitionAddComponent,
         DefinitionDuplicateComponent,
         DefinitionEditComponent,
@@ -187,6 +192,9 @@ const appRoutes: Routes = [
     ],
     entryComponents: [
         ConfirmComponent,
+    ],
+    providers: [
+        DefinitionConfigYamlMapperService,
     ],
     bootstrap: [
         AppComponent,

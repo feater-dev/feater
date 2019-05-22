@@ -5,7 +5,7 @@ import {
     Output,
     EventEmitter,
 } from '@angular/core';
-import {DefinitionAddFormSummaryItemFormElement} from '../definition-add-form.model';
+import {DefinitionSummaryItemFormElement} from '../../config-form/definition-config-form.model';
 
 
 @Component({
@@ -15,10 +15,10 @@ import {DefinitionAddFormSummaryItemFormElement} from '../definition-add-form.mo
 })
 export class DefinitionAddSummaryItemFormElementComponent implements OnInit {
 
-    @Input() summaryItem: DefinitionAddFormSummaryItemFormElement;
+    @Input() summaryItem: DefinitionSummaryItemFormElement;
 
-    @Output() deleteSummaryItem: EventEmitter<DefinitionAddFormSummaryItemFormElement> =
-        new EventEmitter<DefinitionAddFormSummaryItemFormElement>();
+    @Output() deleteSummaryItem: EventEmitter<DefinitionSummaryItemFormElement> =
+        new EventEmitter<DefinitionSummaryItemFormElement>();
 
     ngOnInit() {}
 

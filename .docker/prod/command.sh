@@ -22,10 +22,12 @@ if [[ $(docker inspect --format={{.NetworkSettings.Networks.${proxy_network_name
 fi
 
 # Run Nginx.
-nginx -g "daemon on;" # TODO It may vary depending on OS used.
+# TODO It may vary depending on OS used.
+nginx -g "daemon on;"
 
 # Run MongoDB.
-mongod --fork --bind_ip 0.0.0.0 --logpath /var/log/mongodb.log --dbpath /data/mongo # TODO It may vary depending on OS used.
+# TODO It may vary depending on OS used.
+mongod --fork --bind_ip 0.0.0.0 --logpath /var/log/mongodb.log --dbpath /data/mongo
 
 # Start server application with PM2.
 pm2-runtime --name feater_server /app/server/main.js

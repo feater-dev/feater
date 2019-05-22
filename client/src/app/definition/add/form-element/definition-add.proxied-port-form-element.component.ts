@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {DefinitionAddFormProxiedPortFormElement} from '../definition-add-form.model';
+import {DefinitionProxiedPortFormElement} from '../../config-form/definition-config-form.model';
 
 
 @Component({
@@ -9,10 +9,10 @@ import {DefinitionAddFormProxiedPortFormElement} from '../definition-add-form.mo
 })
 export class DefinitionAddProxiedPortFormElementComponent {
 
-    @Input() proxiedPort: DefinitionAddFormProxiedPortFormElement;
+    @Input() proxiedPort: DefinitionProxiedPortFormElement;
 
-    @Output() deleteProxiedPort: EventEmitter<DefinitionAddFormProxiedPortFormElement> =
-        new EventEmitter<DefinitionAddFormProxiedPortFormElement>();
+    @Output() deleteProxiedPort: EventEmitter<DefinitionProxiedPortFormElement> =
+        new EventEmitter<DefinitionProxiedPortFormElement>();
 
     delete() {
         this.deleteProxiedPort.emit(this.proxiedPort);

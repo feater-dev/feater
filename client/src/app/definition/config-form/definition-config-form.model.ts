@@ -1,26 +1,29 @@
-export interface DefinitionAddForm {
-    name: string;
-    config: DefinitionAddFormConfigFormElement;
-}
+// export interface DefinitionDuplicateForm {
+//     name: string;
+//     config: DefinitionConfigFormElement;
+// }
 
-export interface DefinitionEditForm extends DefinitionAddForm {
-    id: string;
-}
+// export interface DefinitionEditForm {
+//     id: string;
+//     name: string;
+//     config: DefinitionConfigFormElement;
+// }
 
-export interface DefinitionAddFormConfigFormElement {
-    sources: DefinitionAddFormSourceFormElement[];
-    volumes: DefinitionAddFormVolumeFormElement[];
-    proxiedPorts: DefinitionAddFormProxiedPortFormElement[];
-    envVariables: DefinitionAddFormEnvVariableFormElement[];
+export interface DefinitionConfigFormElement {
+    sources: DefinitionSourceFormElement[];
+    volumes: DefinitionVolumeFormElement[];
+    proxiedPorts: DefinitionProxiedPortFormElement[];
+    envVariables: DefinitionEnvVariableFormElement[];
     composeFile: DefinitionAddComposeFileFormElement;
     afterBuildTasks: AfterBuildTaskFormElement[];
-    summaryItems: DefinitionAddFormSummaryItemFormElement[];
+    summaryItems: DefinitionSummaryItemFormElement[];
 }
 
-export interface DefinitionAddFormSourceFormElement {
+export interface DefinitionSourceFormElement {
     id: string;
     cloneUrl: string;
-    reference: DefinitionAddFormComponentReferenceFormElement;
+    useDeployKey: boolean;
+    reference: DefinitionComponentReferenceFormElement;
     beforeBuildTasks: Array<
         BeforeBuildTaskFormElement|
         TaskFormElement|
@@ -28,29 +31,29 @@ export interface DefinitionAddFormSourceFormElement {
     >;
 }
 
-export interface DefinitionAddFormVolumeFormElement {
+export interface DefinitionVolumeFormElement {
     id: string;
     assetId?: string;
 }
 
-export interface DefinitionAddFormComponentReferenceFormElement {
+export interface DefinitionComponentReferenceFormElement {
     type: string;
     name: string;
 }
 
-export interface DefinitionAddFormProxiedPortFormElement {
+export interface DefinitionProxiedPortFormElement {
     serviceId: string;
     id: string;
     name: string;
     port: string;
 }
 
-export interface DefinitionAddFormEnvVariableFormElement {
+export interface DefinitionEnvVariableFormElement {
     name: string;
     value: string;
 }
 
-export interface DefinitionAddFormSummaryItemFormElement {
+export interface DefinitionSummaryItemFormElement {
     name: string;
     value: string;
 }

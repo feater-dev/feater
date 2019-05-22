@@ -5,7 +5,7 @@ import {
     Output,
     EventEmitter,
 } from '@angular/core';
-import {DefinitionAddFormEnvVariableFormElement} from '../definition-add-form.model';
+import {DefinitionEnvVariableFormElement} from '../../config-form/definition-config-form.model';
 
 
 @Component({
@@ -15,10 +15,10 @@ import {DefinitionAddFormEnvVariableFormElement} from '../definition-add-form.mo
 })
 export class DefinitionAddEnvVariableFormElementComponent implements OnInit {
 
-    @Input() envVariable: DefinitionAddFormEnvVariableFormElement;
+    @Input() envVariable: DefinitionEnvVariableFormElement;
 
-    @Output() deleteEnvVariable: EventEmitter<DefinitionAddFormEnvVariableFormElement> =
-        new EventEmitter<DefinitionAddFormEnvVariableFormElement>();
+    @Output() deleteEnvVariable: EventEmitter<DefinitionEnvVariableFormElement> =
+        new EventEmitter<DefinitionEnvVariableFormElement>();
 
     ngOnInit() {}
 

@@ -189,6 +189,7 @@ export class InstanceCreatorComponent {
                 `Clone repository for source \`${source.id}\``,
                 () => new CloneSourceCommand(
                     source.cloneUrl,
+                    source.useDeployKey,
                     source.reference.type,
                     source.reference.name,
                     source.paths.absolute.guest,

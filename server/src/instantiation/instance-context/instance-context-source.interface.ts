@@ -4,6 +4,7 @@ import {InstanceContextBeforeBuildTaskInterface} from './before-build/instance-c
 export interface InstanceContextSourceInterface {
     id: string;
     cloneUrl: string;
+    useDeployKey: boolean;
     reference: {
         type: string;
         name: string;

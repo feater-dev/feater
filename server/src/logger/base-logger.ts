@@ -23,6 +23,7 @@ export class BaseLogger implements LoggerInterface {
                     collection: 'logs',
                     tryReconnect: true,
                     decolorize: true,
+                    metaKey: 'meta',
                 }),
             ],
         });
@@ -53,7 +54,7 @@ export class BaseLogger implements LoggerInterface {
     }
 
     info(message: string, meta: object = {}) {
-        this.logger.info(message, {meta});
+        this.logger.log({level: 'info', message, meta});
     }
 
     debug(message: string, meta: object = {}) {

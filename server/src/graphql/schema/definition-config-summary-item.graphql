@@ -1,0 +1,4 @@
+type DefinitionConfigSummaryItem {
+    name: String!
+    value: String!
+}

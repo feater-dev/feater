@@ -1,0 +1,7 @@
+type InstanceProxiedPort {
+    id: String!
+    serviceId: String!
+    name: String!
+    port: Int!
+    domain: String!
+}

@@ -1,3 +1,5 @@
+// TODO Refactor and remove.
+
 import {execSync} from 'child_process';
 import * as nanoidGenerate from 'nanoid/generate';
 import * as escapeStringRegexp from 'escape-string-regexp';

@@ -1,0 +1,10 @@
+type InstanceCommandLog {
+    id: String!
+    description: String!
+    createdAt: String!
+    completedAt: String
+    failedAt: String
+    entries(
+        afterId: String
+    ): [InstanceCommandLogEntry!]!
+}

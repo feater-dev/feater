@@ -1,3 +1,5 @@
+// TODO Refactor and remove.
+
 import {Injectable} from '@nestjs/common';
 import {CommandLogTypeInterface} from '../type/command-log-type.interface';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';

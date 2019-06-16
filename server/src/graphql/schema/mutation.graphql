@@ -1,0 +1,73 @@
+type Mutation {
+    createProject(
+        name: String!
+    ): Project
+
+    createDefinition(
+        projectId: String!
+        name: String!
+        config: DefinitionConfigInput!
+    ): Definition
+
+    updateDefinition(
+        id: String!
+        name: String!
+        config: DefinitionConfigInput!
+    ): Definition
+
+    removeDefinition(
+        id: String!
+    ): Boolean
+
+    createAsset(
+        projectId: String!
+        id: String!
+        description: String
+    ): Asset
+
+    removeAsset(
+        projectId: String!
+        id: String!
+    ): Boolean
+
+    createInstance(
+        definitionId: String!
+        name: String!
+    ): Instance
+
+    removeInstance(
+        id: String!
+    ): Boolean
+
+    stopService(
+        instanceId: String!
+        serviceId: String!
+    ): Instance
+
+    pauseService(
+        instanceId: String!
+        serviceId: String!
+    ): Instance
+
+    startService(
+        instanceId: String!
+        serviceId: String!
+    ): Instance
+
+    unpauseService(
+        instanceId: String!
+        serviceId: String!
+    ): Instance
+
+    regenerateDeployKey(
+        cloneUrl: String!
+    ): DeployKey
+
+    generateMissingDeployKeys: GenerateMissingDeployKeysResult
+
+    removeUnusedDeployKeys: RemoveUnusedDeployKeysResult
+
+    removeDeployKey(
+        cloneUrl: String!
+    ): RemoveDeployKeyResult
+}

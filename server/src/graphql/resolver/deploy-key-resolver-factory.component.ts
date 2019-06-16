@@ -1,3 +1,5 @@
+// TODO Refactor and remove.
+
 import * as sshFingerprint from 'ssh-fingerprint';
 import * as _ from 'lodash';
 import {unlinkSync} from 'fs';

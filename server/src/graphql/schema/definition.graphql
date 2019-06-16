@@ -1,0 +1,17 @@
+type Definition {
+    id: String!
+    name: String!
+    project: Project!
+    instances(
+        limit: Int
+        offset: Int
+        sortKey: String
+    ): [Instance!]!
+    config: DefinitionConfig!
+    configAsYaml: String!
+    deployKeys: [DeployKey!]!
+    predictedEnvVariables: [DefinitionPredictedEnvVariable]!
+    predictedFeaterVariables: [DefinitionPredictedFeaterVariable]!
+    createdAt: String!
+    updatedAt: String!
+}

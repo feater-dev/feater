@@ -1,0 +1,5 @@
+type DefinitionConfigComposeFile {
+    sourceId: String!
+    envDirRelativePath: String!
+    composeFileRelativePaths: [String!]!
+}

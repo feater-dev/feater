@@ -1,0 +1,16 @@
+type Project {
+    id: String!
+    name: String!
+    definitions(
+        limit: Int
+        offset: Int
+        sortKey: String
+    ): [Definition!]!
+    assets(
+        limit: Int
+        offset: Int
+        sortKey: String
+    ): [Asset!]!
+    createdAt: String!
+    updatedAt: String!
+}

@@ -21,11 +21,14 @@ import {CommandLogsResolverFactory} from '../resolver/command-logs-resolver-fact
 import {CommandLogTypeInterface} from '../type/command-log-type.interface';
 import {CommandLogEntriesResolverFactory} from '../resolver/command-log-entries-resolver-factory.component';
 import {LogInterface} from '../../persistence/interface/log.interface';
+import {ApolloServerExpressConfig} from 'apollo-server-express/src/ApolloServer';
+
+// TODO Refactor
 
 @Injectable()
 export class GraphqlSchemaFactory {
     constructor(
-        @Inject('TypeDefsProvider') private readonly typeDefsProvider,
+        @Inject('TypeDefsProvider') private readonly typeDefsProvider, // TODO Removed
         private readonly projectsResolverFactory: ProjectsResolverFactory,
         private readonly definitionResolverFactory: DefinitionResolverFactory,
         private readonly instanceResolverFactory: InstanceResolverFactory,
@@ -37,11 +40,11 @@ export class GraphqlSchemaFactory {
         private readonly dockerDaemonResolverFactory: DockerDaemonResolverFactory,
     ) { }
 
-    public createSchema(): GraphQLSchema {
-        return makeExecutableSchema({
+    public createConfig(): ApolloServerExpressConfig {
+        return {
             typeDefs: this.typeDefsProvider,
             resolvers: this.createResolvers(),
-        });
+        };
     }
 
     protected createResolvers(): any {
@@ -49,10 +52,6 @@ export class GraphqlSchemaFactory {
             JSON: GraphQLJSON,
 
             Query: {
-                projects: this.projectsResolverFactory.getListResolver(),
-                project: this.projectsResolverFactory.getItemResolver(
-                    (obj: any, args: any): string => args.id,
-                ),
                 definitions: this.definitionResolverFactory.getListResolver(),
                 definition: this.definitionResolverFactory.getItemResolver(
                     (obj: any, args: any): string => args.id,
@@ -75,7 +74,6 @@ export class GraphqlSchemaFactory {
             },
 
             Mutation: {
-                createProject: this.projectsResolverFactory.getCreateItemResolver(),
                 createDefinition: this.definitionResolverFactory.getCreateItemResolver(),
                 updateDefinition: this.definitionResolverFactory.getUpdateItemResolver(),
                 removeDefinition: this.definitionResolverFactory.getRemoveItemResolver(),
@@ -91,24 +89,6 @@ export class GraphqlSchemaFactory {
                 generateMissingDeployKeys: this.deployKeyResolverFactory.getGenerateMissingItemsResolver(),
                 removeUnusedDeployKeys: this.deployKeyResolverFactory.getRemoveUnusedItemsResolver(),
                 removeDeployKey: this.deployKeyResolverFactory.getRemoveItemResolver(),
-            },
-
-            Project: {
-                definitions: this.definitionResolverFactory.getListResolver(
-                    (project: ProjectTypeInterface) => ({projectId: project.id.toString()}),
-                ),
-                assets: this.assetResolverFactory.getListResolver(
-                    (project: ProjectTypeInterface) => ({
-                        projectId: project.id,
-                        uploaded: true,
-                    }),
-                ),
-                createdAt: this.dateResolverFactory.getDateResolver(
-                    (project: ProjectTypeInterface) => project.createdAt,
-                ),
-                updatedAt: this.dateResolverFactory.getDateResolver(
-                    (project: ProjectTypeInterface) => project.updatedAt,
-                ),
             },
 
             Definition: {

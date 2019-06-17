@@ -11,7 +11,7 @@
   "scripts": {
     "start:dev": "NODE_ENV=development node index.js",
     "start:dev:watch": "NODE_ENV=development nodemon",
-    "prestart:prod": "tsc",
+    "build": "rm -rf dist && tsc -p tsconfig.json --skipLibCheck && copyfiles -f src/**/*.graphql dist/api/schema",
     "start:prod": "node dist/main.js"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "base32-encode": "^1.1.0",
     "busboy": "^0.2.14",
     "content-disposition": "^0.5.3",
+    "copyfiles": "^2.1.0",
     "dotenv": "^6.2.0",
     "easy-keygen": "^1.1.1",
     "escape-string-regexp": "^1.0.5",

@@ -2,7 +2,7 @@ import {Model} from 'mongoose';
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {ProjectInterface} from '../interface/project.interface';
-import {CreateProjectInputTypeInterface} from '../../graphql/input-type/create-project-input-type.interface';
+import {CreateProjectInputTypeInterface} from '../../api/input-type/create-project-input-type.interface';
 
 @Injectable()
 export class ProjectRepository {

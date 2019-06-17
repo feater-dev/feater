@@ -1,0 +1,5 @@
+type DefinitionPredictedEnvVariable {
+    name: String!
+    value: String
+    pattern: String
+}

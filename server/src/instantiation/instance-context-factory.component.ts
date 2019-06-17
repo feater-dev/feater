@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {PathHelper} from './helper/path-helper.component';
 import {config} from '../config/config';
 import {InstanceContextBeforeBuildTaskInterface} from './instance-context/before-build/instance-context-before-build-task.interface';
-import {AfterBuildTaskTypeInterface} from '../graphql/type/nested/definition-config/after-build-task-type.interface';
+import {AfterBuildTaskTypeInterface} from '../api/type/nested/definition-config/after-build-task-type.interface';
 import {FeaterVariablesSet} from './sets/feater-variables-set';
 import {InstanceContext} from './instance-context/instance-context';
 import {EnvVariablesSet} from './sets/env-variables-set';

@@ -1,0 +1,5 @@
+input DefinitionConfigComposeFileInput {
+    sourceId: String!
+    envDirRelativePath: String!
+    composeFileRelativePaths: [String!]!
+}

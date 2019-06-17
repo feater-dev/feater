@@ -1,0 +1,4 @@
+type DefinitionConfigAfterBuildTaskInheritedEnvVariable {
+    name: String!
+    alias: String
+}

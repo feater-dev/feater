@@ -2,12 +2,12 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {DefinitionInterface} from '../interface/definition.interface';
-import {CreateDefinitionInputTypeInterface} from '../../graphql/input-type/create-definition-input-type.interface';
-import {SourceTypeInterface} from '../../graphql/type/nested/definition-config/source-type.interface';
+import {CreateDefinitionInputTypeInterface} from '../../api/input-type/create-definition-input-type.interface';
+import {SourceTypeInterface} from '../../api/type/nested/definition-config/source-type.interface';
 import {DeployKeyRepository} from './deploy-key.repository';
 import * as gitUrlParse from 'git-url-parse';
-import {UpdateDefinitionInputTypeInterface} from '../../graphql/input-type/update-definition-input-type.interface';
-import {ProjectInterface} from "../interface/project.interface";
+import {UpdateDefinitionInputTypeInterface} from '../../api/input-type/update-definition-input-type.interface';
+import {ProjectInterface} from '../interface/project.interface';
 
 @Injectable()
 export class DefinitionRepository {

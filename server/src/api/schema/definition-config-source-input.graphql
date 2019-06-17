@@ -1,0 +1,7 @@
+input DefinitionConfigSourceInput {
+    id: String!
+    cloneUrl: String!
+    useDeployKey: Boolean!
+    reference: DefinitionConfigSourceReferenceInput!
+    beforeBuildTasks: [DefinitionConfigBeforeBuildTaskInput!]!
+}

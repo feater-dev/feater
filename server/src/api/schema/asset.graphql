@@ -1,0 +1,7 @@
+type Asset {
+    id: String!
+    description: String
+    project: Project!
+    createdAt: String!
+    updatedAt: String!
+}

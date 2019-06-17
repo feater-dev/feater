@@ -1,0 +1,8 @@
+type DeployKey {
+    id: String!
+    cloneUrl: String!
+    publicKey: String!
+    fingerprint: String!
+    createdAt: String!
+    updatedAt: String!
+}

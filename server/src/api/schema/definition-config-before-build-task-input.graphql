@@ -1,0 +1,6 @@
+input DefinitionConfigBeforeBuildTaskInput {
+    type: String!
+    sourceRelativePath: String
+    destinationRelativePath: String
+    relativePath: String
+}

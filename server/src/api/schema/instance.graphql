@@ -1,0 +1,15 @@
+type Instance {
+    id: String!
+    hash: String
+    name: String!
+    definition: Definition!
+    services: [InstanceService!]
+    envVariables: [InstanceEnvVariable!]
+    proxiedPorts: [InstanceProxiedPort!]
+    summaryItems: [InstanceSummaryItem!]
+    createdAt: String
+    updatedAt: String
+    completedAt: String
+    failedAt: String
+    commandLogs: [InstanceCommandLog!]!
+}

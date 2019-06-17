@@ -1,0 +1,5 @@
+type DefinitionPredictedFeaterVariable {
+    name: String!
+    value: String
+    pattern: String
+}

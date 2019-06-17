@@ -1,0 +1,6 @@
+type DefinitionConfigCopyAssetIntoContainerAfterBuildTask {
+    type: String!
+    serviceId: String!
+    assetId: String!
+    destinationPath: String!
+}

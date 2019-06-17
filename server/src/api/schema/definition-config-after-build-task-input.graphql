@@ -1,0 +1,11 @@
+input DefinitionConfigAfterBuildTaskInput {
+    type: String!
+    id: String
+    dependsOn: [String]
+    customEnvVariables: [DefinitionConfigAfterBuildTaskCustomEnvVariableInput]
+    inheritedEnvVariables: [DefinitionConfigAfterBuildTaskInheritedEnvVariableInput]
+    command: [String!]
+    serviceId: String
+    assetId: String
+    destinationPath: String
+}

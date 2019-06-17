@@ -1,7 +1,7 @@
 import * as split from 'split';
 import {Injectable} from '@nestjs/common';
 import {ExecuteCommandError} from './execute-command-error';
-import {CommandLogger} from "../logger/command-logger";
+import {CommandLogger} from '../logger/command-logger';
 
 interface SpawnHelperOptions {
     muteStdout?: boolean;

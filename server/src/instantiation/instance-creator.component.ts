@@ -39,10 +39,10 @@ import {CommandsMap} from './executor/commands-map';
 import {CommandsMapItem} from './executor/commands-map-item';
 import {InstanceInterface} from '../persistence/interface/instance.interface';
 import {DefinitionInterface} from '../persistence/interface/definition.interface';
-import {CreateSourceVolumeCommand} from "./command/create-source-volume/command";
-import {RemoveSourceVolumeCommand} from "./command/remove-source-volume/command";
-import {RemoveSourceCommand} from "./command/remove-source/command";
-import {CreateSourceVolumeCommandResultInterface} from "./command/create-source-volume/command-result.interface";
+import {CreateSourceVolumeCommand} from './command/create-source-volume/command';
+import {RemoveSourceVolumeCommand} from './command/remove-source-volume/command';
+import {RemoveSourceCommand} from './command/remove-source/command';
+import {CreateSourceVolumeCommandResultInterface} from './command/create-source-volume/command-result.interface';
 
 @Injectable()
 export class InstanceCreatorComponent {

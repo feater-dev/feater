@@ -1,0 +1,4 @@
+type DefinitionConfigAfterBuildTaskCustomEnvVariable {
+    name: String!
+    value: String!
+}

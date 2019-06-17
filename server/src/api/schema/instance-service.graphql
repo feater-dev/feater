@@ -1,0 +1,7 @@
+type InstanceService {
+    id: String!
+    containerNamePrefix: String!
+    containerId: String
+    ipAddress: String
+    containerState: String
+}

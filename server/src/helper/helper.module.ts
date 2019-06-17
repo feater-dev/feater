@@ -1,5 +1,5 @@
 import {Module} from '@nestjs/common';
-import {DeployKeyHelperComponent} from "./deploy-key-helper.component";
+import {DeployKeyHelperComponent} from './deploy-key-helper.component';
 
 @Module({
     providers: [

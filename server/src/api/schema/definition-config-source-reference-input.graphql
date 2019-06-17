@@ -1,0 +1,4 @@
+input DefinitionConfigSourceReferenceInput {
+    type: String!
+    name: String!
+}

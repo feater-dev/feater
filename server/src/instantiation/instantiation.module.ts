@@ -20,8 +20,8 @@ import {RunDockerComposeCommandExecutorComponent} from './command/run-docker-com
 import {ExecuteServiceCmdCommandExecutorComponent} from './command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from './command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateAssetVolumeCommandExecutorComponent} from './command/create-asset-volume/command-executor.component';
-import {CreateSourceVolumeCommandExecutorComponent} from "./command/create-source-volume/command-executor.component";
-import {RemoveSourceVolumeCommandExecutorComponent} from "./command/remove-source-volume/command-executor.component";
+import {CreateSourceVolumeCommandExecutorComponent} from './command/create-source-volume/command-executor.component';
+import {RemoveSourceVolumeCommandExecutorComponent} from './command/remove-source-volume/command-executor.component';
 import {CopyFileCommandFactoryComponent} from './command/before-build/copy-file/command-factory.component';
 import {InterpolateFileCommandFactoryComponent} from './command/before-build/interpolate-file/command-factory.component';
 import {CopyAssetIntoContainerCommandFactoryComponent} from './command/after-build/copy-asset-into-container/command-factory.component';
@@ -36,9 +36,9 @@ import {CommandsListExecutorComponent} from './executor/commands-list-executor.c
 import {CommandExecutorComponent} from './executor/command-executor.component';
 import {VariablesPredictor} from './variable/variables-predictor';
 import {IpAddressCheckerComponent} from './ip-address-checker.component';
-import {DockerVolumeHelperComponent} from "./docker/docker-volume-helper.component";
-import {RemoveSourceCommandExecutorComponent} from "./command/remove-source/command-executor.component";
-import {HelperModule} from "../helper/helper.module";
+import {DockerVolumeHelperComponent} from './docker/docker-volume-helper.component';
+import {RemoveSourceCommandExecutorComponent} from './command/remove-source/command-executor.component';
+import {HelperModule} from '../helper/helper.module';
 
 @Module({
     imports: [

@@ -1,6 +1,6 @@
-import * as path from "path";
+import * as path from 'path';
 import * as jsYaml from 'js-yaml';
-import {spawnSync} from "child_process";
+import {spawnSync} from 'child_process';
 import {Injectable} from '@nestjs/common';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {ParseDockerComposeCommand} from './command';
@@ -9,7 +9,7 @@ import {
     ParseDockerComposeCommandResultServiceInterface,
 } from './command-result.interface';
 import {SimpleCommand} from '../../executor/simple-command';
-import {config} from "../../../config/config";
+import {config} from '../../../config/config';
 
 @Injectable()
 export class ParseDockerComposeCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {

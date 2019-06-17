@@ -2,7 +2,7 @@ import {Model} from 'mongoose';
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {AssetInterface} from '../interface/asset.interface';
-import {CreateAssetInputTypeInterface} from '../../graphql/input-type/create-asset-input-type.interface';
+import {CreateAssetInputTypeInterface} from '../../api/input-type/create-asset-input-type.interface';
 import {AssetHelper} from '../helper/asset-helper.component';
 import * as rimraf from 'rimraf';
 
@@ -24,6 +24,18 @@ export class AssetRepository {
         }
 
         return query.exec();
+    }
+
+    async findOneOrFail(criteria: object): Promise<AssetInterface> {
+        const assets = await this.find(criteria, 0, 2);
+        if (assets.length > 1) {
+            throw new Error(`More than one asset document found.`);
+        }
+        if (assets.length === 0) {
+            throw new Error(`No asset document found.`);
+        }
+
+        return assets.pop();
     }
 
     findById(id: string): Promise<AssetInterface> {

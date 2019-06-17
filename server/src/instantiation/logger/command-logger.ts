@@ -1,7 +1,7 @@
 import {CommandLogInterface} from '../../persistence/interface/command-log.interface';
 import {BaseLogger} from '../../logger/base-logger';
-import {EnvVariablesSet} from "../sets/env-variables-set";
-import {FeaterVariablesSet} from "../sets/feater-variables-set";
+import {EnvVariablesSet} from '../sets/env-variables-set';
+import {FeaterVariablesSet} from '../sets/feater-variables-set';
 
 export class CommandLogger {
 

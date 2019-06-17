@@ -1,6 +1,6 @@
-import {ChildProcess, spawn} from "child_process";
-import {config} from "../../config/config";
-import {Injectable} from "@nestjs/common";
+import {ChildProcess, spawn} from 'child_process';
+import {config} from '../../config/config';
+import {Injectable} from '@nestjs/common';
 
 @Injectable()
 export class DockerVolumeHelperComponent {

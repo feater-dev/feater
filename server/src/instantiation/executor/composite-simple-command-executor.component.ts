@@ -15,10 +15,10 @@ import {RunDockerComposeCommandExecutorComponent} from '../command/run-docker-co
 import {ExecuteServiceCmdCommandExecutorComponent} from '../command/after-build/execute-service-cmd/command-executor.component';
 import {CopyAssetIntoContainerCommandExecutorComponent} from '../command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateAssetVolumeCommandExecutorComponent} from '../command/create-asset-volume/command-executor.component';
-import {CreateSourceVolumeCommandExecutorComponent} from "../command/create-source-volume/command-executor.component";
-import {RemoveSourceVolumeCommandExecutorComponent} from "../command/remove-source-volume/command-executor.component";
+import {CreateSourceVolumeCommandExecutorComponent} from '../command/create-source-volume/command-executor.component';
+import {RemoveSourceVolumeCommandExecutorComponent} from '../command/remove-source-volume/command-executor.component';
 import {EnableProxyDomainsCommandExecutorComponent} from '../command/enable-proxy-domains/command-executor.component';
-import {RemoveSourceCommandExecutorComponent} from "../command/remove-source/command-executor.component";
+import {RemoveSourceCommandExecutorComponent} from '../command/remove-source/command-executor.component';
 
 @Injectable()
 export class CompositeSimpleCommandExecutorComponent {

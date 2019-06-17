@@ -5,7 +5,7 @@ import {Model} from 'mongoose';
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {DeployKeyInterface} from '../interface/deploy-key.interface';
-import {DeployKeyHelperComponent} from "../../helper/deploy-key-helper.component";
+import {DeployKeyHelperComponent} from '../../helper/deploy-key-helper.component';
 
 @Injectable()
 export class DeployKeyRepository {

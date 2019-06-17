@@ -6,10 +6,10 @@ import {SpawnHelper} from '../../helper/spawn-helper.component';
 import {SimpleCommand} from '../../executor/simple-command';
 import {CreateSourceVolumeCommand} from './command';
 import {CommandLogger} from '../../logger/command-logger';
-import {EnvVariablesSet} from "../../sets/env-variables-set";
-import {FeaterVariablesSet} from "../../sets/feater-variables-set";
-import {CreateSourceVolumeCommandResultInterface} from "./command-result.interface";
-import {DockerVolumeHelperComponent} from "../../docker/docker-volume-helper.component";
+import {EnvVariablesSet} from '../../sets/env-variables-set';
+import {FeaterVariablesSet} from '../../sets/feater-variables-set';
+import {CreateSourceVolumeCommandResultInterface} from './command-result.interface';
+import {DockerVolumeHelperComponent} from '../../docker/docker-volume-helper.component';
 
 const BUFFER_SIZE = 64 * 1048576; // 64M
 

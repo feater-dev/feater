@@ -15,7 +15,7 @@ RUN yarn install --frozen-lockfile \
 
 COPY ./server .
 
-RUN yarn run tsc --skipLibCheck
+RUN yarn run build
 
 # ------------------------------------------------------------------------------
 

@@ -3,6 +3,7 @@ import {GraphQLModule} from '@nestjs/graphql';
 import {ApiModule} from './api/api.module';
 import {PersistenceModule} from './persistence/persistence.module';
 import {HelperModule} from './helper/helper.module';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -10,7 +11,7 @@ import {HelperModule} from './helper/helper.module';
       PersistenceModule,
       ApiModule,
       GraphQLModule.forRoot({
-          typePaths: ['./src/api/schema/*.graphql'],
+          typePaths: [path.join(__dirname, 'api/schema/*.graphql')],
           path: '/api',
           debug: false,
           playground: false,

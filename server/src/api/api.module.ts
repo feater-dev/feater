@@ -4,7 +4,7 @@ import {InstantiationModule} from '../instantiation/instantiation.module';
 import {AssetController} from './controller/asset-controller';
 import {DockerLogsController} from './controller/docker-logs-controller';
 import {HelperModule} from '../helper/helper.module';
-import {DefinitionConfigMapper} from './model-to-type-mapper/definition-config-mapper.component';
+import {DefinitionConfigMapper} from '../instantiation/definition-config-mapper.component';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ProjectsResolver} from './resolver/projects-resolver.component';
 import {DefinitionResolver} from './resolver/definition-resolver.component';
@@ -25,8 +25,6 @@ import {CommandLogModelToTypeMapper} from './model-to-type-mapper/command-log-mo
 import {LogModelToTypeMapper} from './model-to-type-mapper/log-model-to-type-mapper.component';
 import {AssetModelToTypeMapper} from './model-to-type-mapper/asset-model-to-type-mapper.component';
 import {DeployKeyModelToTypeMapper} from './model-to-type-mapper/deploy-key-model-to-type-mapper.service';
-import {DefinitionConfigSourceBeforeBuildTaskResolver} from './resolver/definition-config-source-before-build-task-resolver.component';
-import {DefinitionConfigAfterBuildTaskResolver} from './resolver/definition-config-after-build-task-resolver.component';
 import {DateConverter} from './date-converter.component';
 
 @Module({
@@ -60,10 +58,7 @@ import {DateConverter} from './date-converter.component';
         AssetModelToTypeMapper,
         DeployKeyModelToTypeMapper,
         CommandLogModelToTypeMapper,
-        DefinitionConfigSourceBeforeBuildTaskResolver,
-        DefinitionConfigAfterBuildTaskResolver,
         DateConverter,
-        DefinitionConfigMapper,
         ResolverPaginationArgumentsHelper,
     ],
 })

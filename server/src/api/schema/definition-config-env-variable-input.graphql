@@ -1,4 +1,0 @@
-input DefinitionConfigEnvVariableInput {
-    name: String!
-    value: String!
-}

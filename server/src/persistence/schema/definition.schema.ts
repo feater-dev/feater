@@ -6,7 +6,7 @@ export const DefinitionSchema = new Schema({
         ref: 'Project',
     },
     name: String,
-    config: Schema.Types.Mixed,
+    configAsYaml: String,
     createdAt: Date,
     updatedAt: Date,
 });

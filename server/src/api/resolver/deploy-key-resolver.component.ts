@@ -12,6 +12,7 @@ import {DeployKeyLister} from '../lister/deploy-key-lister.component';
 import {DeployKeyModelToTypeMapper} from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
 import {unlinkSync} from 'fs';
 import * as _ from 'lodash';
+import {DefinitionConfigMapper} from '../../instantiation/definition-config-mapper.component';
 
 @Resolver('DeployKey')
 export class DeployKeyResolver {
@@ -21,6 +22,7 @@ export class DeployKeyResolver {
         private readonly deployKeyHelper: DeployKeyHelperComponent,
         private readonly deployKeyLister: DeployKeyLister,
         private readonly deployKeyModelToTypeMapper: DeployKeyModelToTypeMapper,
+        private readonly definitionConfigMapper: DefinitionConfigMapper,
     ) { }
 
     @Query('deployKeys')
@@ -61,7 +63,8 @@ export class DeployKeyResolver {
         const definitions = await this.definitionRepository.find({}, 0, 99999);
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            for (const source of definition.config.sources) {
+            const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
+            for (const source of definitionConfig.sources) {
                 const cloneUrl = (source as SourceTypeInterface).cloneUrl;
                 if ((source as SourceTypeInterface).useDeployKey) {
                     referencedCloneUrls.push(cloneUrl);
@@ -99,7 +102,8 @@ export class DeployKeyResolver {
 
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            for (const source of definition.config.sources) {
+            const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
+            for (const source of definitionConfig.sources) {
                 const cloneUrl = (source as SourceTypeInterface).cloneUrl;
                 if ((source as SourceTypeInterface).useDeployKey) {
                     referencedCloneUrls.push(cloneUrl);

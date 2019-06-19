@@ -4,14 +4,14 @@ import {Apollo} from 'apollo-angular';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
     DefinitionSourceFormElement,
-    DefinitionVolumeFormElement,
+    DefinitionAssetVolumeFormElement,
     DefinitionProxiedPortFormElement,
     DefinitionEnvVariableFormElement,
     DefinitionSummaryItemFormElement,
     DefinitionConfigFormElement,
     ExecuteServiceCommandTaskFormElement,
     AfterBuildTaskFormElement,
-    CopyAssetIntoContainerTaskFormElement,
+    CopyAssetIntoContainerTaskFormElement, DefinitionSourceVolumeFormElement,
 } from './definition-config-form.model';
 import {ToastrService} from 'ngx-toastr';
 
@@ -54,17 +54,32 @@ export class DefinitionConfigFormComponent {
         }
     }
 
-    addVolume(): void {
-        this.config.volumes.push({
+    addSourceVolume(): void {
+        this.config.sourceVolumes.push({
+            id: '',
+            sourceId: '',
+            relativePath: '',
+        });
+    }
+
+    deleteSourceVolume(volume: DefinitionSourceVolumeFormElement): void {
+        const index = this.config.sourceVolumes.indexOf(volume);
+        if (-1 !== index) {
+            this.config.sourceVolumes.splice(index, 1);
+        }
+    }
+
+    addAssetVolume(): void {
+        this.config.assetVolumes.push({
             id: '',
             assetId: '',
         });
     }
 
-    deleteVolume(volume: DefinitionVolumeFormElement): void {
-        const index = this.config.volumes.indexOf(volume);
+    deleteAssetVolume(volume: DefinitionAssetVolumeFormElement): void {
+        const index = this.config.assetVolumes.indexOf(volume);
         if (-1 !== index) {
-            this.config.volumes.splice(index, 1);
+            this.config.assetVolumes.splice(index, 1);
         }
     }
 

@@ -29,7 +29,8 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
             commandLogger,
         } = command as ParseDockerComposeCommand;
 
-        const hostDockerSocketPath = '/var/run/docker.sock'; // TODO Move to config and env variables.
+        // TODO Move to config and env variables.
+        const hostDockerSocketPath = '/var/run/docker.sock';
 
         const composeConfigCommand = config.instantiation.dockerBinaryPath;
         const composeConfigArguments: string[] = [];

@@ -1,4 +1,0 @@
-input DefinitionConfigAfterBuildTaskCustomEnvVariableInput {
-    name: String!
-    value: String!
-}

@@ -1,3 +1,0 @@
-union DefinitionConfigAfterBuildTask =
-    DefinitionConfigExecuteServiceCommandAfterBuildTask
-    | DefinitionConfigCopyAssetIntoContainerAfterBuildTask

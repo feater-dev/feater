@@ -1,9 +1,0 @@
-input DefinitionConfigInput {
-    sources: [DefinitionConfigSourceInput!]!
-    volumes: [DefinitionConfigVolumeInput!]!
-    proxiedPorts: [DefinitionConfigProxiedPortInput!]!
-    envVariables: [DefinitionConfigEnvVariableInput!]!
-    composeFiles: [DefinitionConfigComposeFileInput!]!
-    afterBuildTasks: [DefinitionConfigAfterBuildTaskInput!]!
-    summaryItems: [DefinitionConfigSummaryItemInput!]!
-}

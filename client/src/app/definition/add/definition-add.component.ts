@@ -10,6 +10,8 @@ import {ToastrService} from 'ngx-toastr';
 import {DefinitionConfigYamlMapperService} from '../import-yaml/definition-config-yaml-mapper.service';
 import gql from 'graphql-tag';
 import _ from 'lodash';
+import * as jsYaml from 'js-yaml';
+import * as snakeCaseKeys from 'snakecase-keys';
 
 
 interface DefinitionAddForm {
@@ -50,7 +52,8 @@ export class DefinitionAddComponent implements OnInit {
             name: '',
             config: {
                 sources: [],
-                volumes: [],
+                sourceVolumes: [],
+                assetVolumes: [],
                 proxiedPorts: [],
                 envVariables: [],
                 composeFile: {
@@ -117,34 +120,38 @@ export class DefinitionAddComponent implements OnInit {
             }
         }
 
-        const dto = {
-            projectId: this.project.id,
-            name: this.definition.name,
-            config: {
-                sources: this.definition.config.sources,
-                volumes: this.definition.config.volumes,
-                proxiedPorts: this.definition.config.proxiedPorts.map(proxiedPort => ({
-                    id: proxiedPort.id,
-                    serviceId: proxiedPort.serviceId,
-                    port: parseInt(proxiedPort.port, 10),
-                    name: proxiedPort.name,
-                })),
-                envVariables: this.definition.config.envVariables,
-                composeFiles: [
-                    this.definition.config.composeFile,
-                ],
-                afterBuildTasks: _.cloneDeep(this.definition.config.afterBuildTasks),
-                summaryItems: this.definition.config.summaryItems,
-            },
+        const config = {
+            schemaVersion: '0.1.0',
+            sources: this.definition.config.sources,
+            sourceVolumes: this.definition.config.sourceVolumes,
+            assetVolumes: this.definition.config.assetVolumes,
+            proxiedPorts: this.definition.config.proxiedPorts.map(proxiedPort => ({
+                id: proxiedPort.id,
+                serviceId: proxiedPort.serviceId,
+                port: parseInt(proxiedPort.port, 10),
+                name: proxiedPort.name,
+            })),
+            envVariables: this.definition.config.envVariables,
+            composeFiles: [
+                this.definition.config.composeFile,
+            ],
+            afterBuildTasks: _.cloneDeep(this.definition.config.afterBuildTasks),
+            summaryItems: this.definition.config.summaryItems,
         };
 
-        for (const volume of dto.config.volumes) {
-            if ('' === volume.assetId) {
-                delete volume.assetId;
+        for (const assetVolume of config.assetVolumes) {
+            if ('' === assetVolume.assetId) {
+                delete assetVolume.assetId;
             }
         }
 
-        for (const afterBuildTask of dto.config.afterBuildTasks) {
+        for (const sourceVolume of config.sourceVolumes) {
+            if ('' === sourceVolume.relativePath) {
+                delete sourceVolume.relativePath;
+            }
+        }
+
+        for (const afterBuildTask of config.afterBuildTasks) {
             if ('' === afterBuildTask.id) {
                 delete afterBuildTask.id;
             }
@@ -152,6 +159,15 @@ export class DefinitionAddComponent implements OnInit {
                 delete afterBuildTask.dependsOn;
             }
         }
+
+        const dto = {
+            projectId: this.project.id,
+            name: this.definition.name,
+            configAsYaml: jsYaml.safeDump(
+                snakeCaseKeys(config, {deep: true}),
+                {indent: 4, flowLevel: -1},
+            ),
+        };
 
         return dto;
     }

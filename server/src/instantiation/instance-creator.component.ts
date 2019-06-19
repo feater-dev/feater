@@ -40,9 +40,10 @@ import {CommandsMapItem} from './executor/commands-map-item';
 import {InstanceInterface} from '../persistence/interface/instance.interface';
 import {DefinitionInterface} from '../persistence/interface/definition.interface';
 import {CreateSourceVolumeCommand} from './command/create-source-volume/command';
-import {RemoveSourceVolumeCommand} from './command/remove-source-volume/command';
+import {RemoveVolumeCommand} from './command/remove-source-volume/command';
 import {RemoveSourceCommand} from './command/remove-source/command';
 import {CreateSourceVolumeCommandResultInterface} from './command/create-source-volume/command-result.interface';
+import {DefinitionConfigMapper} from './definition-config-mapper.component';
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -59,6 +60,7 @@ export class InstanceCreatorComponent {
         protected readonly interpolateFileCommandFactoryComponent: InterpolateFileCommandFactoryComponent,
         protected readonly copyAssetIntoContainerCommandFactoryComponent: CopyAssetIntoContainerCommandFactoryComponent,
         protected readonly executeServiceCmdCommandFactoryComponent: ExecuteServiceCmdCommandFactoryComponent,
+        protected readonly definitionConfigMapper: DefinitionConfigMapper,
     ) {
         this.beforeBuildTaskCommandFactoryComponents = [
             copyFileCommandFactoryComponent,
@@ -76,7 +78,7 @@ export class InstanceCreatorComponent {
         hash: string,
         definition: DefinitionInterface,
     ): Promise<any> {
-        const {config: definitionConfig} = definition;
+        const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
         const id = instance.id;
         const taskId = 'instance_creation';
         const instanceContext = this.instanceContextFactory.create(id, hash, definitionConfig);
@@ -86,11 +88,22 @@ export class InstanceCreatorComponent {
         const updateInstance = async (): Promise<void> => {
             instance.hash = instanceContext.hash;
             instance.envVariables = instanceContext.envVariables.toList();
+            instance.featerVariables = instanceContext.featerVariables.toList();
             instance.summaryItems = instanceContext.summaryItems.toList();
             instance.services = _.cloneDeep(instanceContext.services);
             instance.proxiedPorts = _.cloneDeep(instanceContext.proxiedPorts);
-            // TODO Handle feature variables.
-            // TODO Handle volumes.
+            instance.sourceVolumes = instanceContext.sourceVolumes.map(
+                sourceVolume => ({
+                    id: sourceVolume.id,
+                    dockerVolumeName: sourceVolume.dockerVolumeName,
+                }),
+            );
+            instance.assetVolumes = instanceContext.assetVolumes.map(
+                assetVolume => ({
+                    id: assetVolume.id,
+                    dockerVolumeName: assetVolume.dockerVolumeName,
+                }),
+            );
 
             await this.instanceRepository.save(instance);
         };
@@ -102,9 +115,9 @@ export class InstanceCreatorComponent {
         const addStageMethods = [
             this.addCreateDirectory,
             this.addCreateVolumeFromAssetsAndCloneSource,
-            this.addCreateComposeSourceVolumes,
+            this.addCreateComposeVolumes,
             this.addParseDockerCompose,
-            this.addRemoveComposeSourceVolumes,
+            this.addRemoveComposeVolumes,
             this.addPrepareProxyDomains,
             this.addPrepareSummaryItems,
             this.addBeforeBuildTasks,
@@ -160,21 +173,20 @@ export class InstanceCreatorComponent {
         instanceContext: InstanceContext,
         updateInstanceFromInstanceContext: () => Promise<void>,
     ): void {
-        const createVolumeFromAssetCommands = instanceContext.volumes.map(
-            volume => new ContextAwareCommand(
+        const createVolumeFromAssetCommands = instanceContext.assetVolumes.map(
+            assetVolume => new ContextAwareCommand(
                 taskId,
                 instanceContext.id,
-                `Create asset volume \`${volume.id}\``,
+                `Create asset volume \`${assetVolume.id}\``,
                 () => {
                     return new CreateAssetVolumeCommand(
-                        volume.id,
-                        instanceContext.composeProjectName,
+                        assetVolume.id,
+                        assetVolume.dockerVolumeName,
                         instanceContext.paths.dir.absolute.guest,
-                        volume.assetId,
+                        assetVolume.assetId,
                     );
                 },
                 async (result: CreateAssetVolumeCommandResultInterface): Promise<void> => {
-                    volume.volume.name = result.dockerVolumeName;
                     instanceContext.mergeEnvVariablesSet(result.envVariables);
                     instanceContext.mergeFeaterVariablesSet(result.featerVariables);
                     await updateInstanceFromInstanceContext();
@@ -226,7 +238,7 @@ export class InstanceCreatorComponent {
                     const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new ParseDockerComposeCommand(
-                        source.volume.name,
+                        composeFile.dockerVolumeName,
                         composeFile.envDirRelativePath,
                         composeFile.composeFileRelativePaths,
                         instanceContext.envVariables,
@@ -330,7 +342,7 @@ export class InstanceCreatorComponent {
         );
     }
 
-    protected addCreateComposeSourceVolumes(
+    protected addCreateComposeVolumes(
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
@@ -343,18 +355,20 @@ export class InstanceCreatorComponent {
             new ContextAwareCommand(
                 taskId,
                 instanceContext.id,
-                `Create source volume \`${source.id}\``,
+                `Create compose volume.`,
                 () => new CreateSourceVolumeCommand(
+                    composeFile.dockerVolumeName,
                     source.id,
-                    source.volume.name,
                     source.paths.absolute.guest,
                     source.paths.absolute.guest,
+                    null,
+                    null,
                 ),
             ),
         );
     }
 
-    protected addRemoveComposeSourceVolumes(
+    protected addRemoveComposeVolumes(
         createInstanceCommand: CommandsList,
         taskId: string,
         instanceContext: InstanceContext,
@@ -367,16 +381,11 @@ export class InstanceCreatorComponent {
             new ContextAwareCommand(
                 taskId,
                 instanceContext.id,
-                `Remove source volume \`${source.id}\``,
-                () => new RemoveSourceVolumeCommand(
-                    source.id,
-                    source.volume.name,
+                `Remove compose volume.`,
+                () => new RemoveVolumeCommand(
+                    composeFile.dockerVolumeName,
                     source.paths.absolute.guest,
                 ),
-                async (): Promise<void> => {
-                    delete source.volume.mountpoint;
-                    await updateInstanceFromInstanceContext();
-                },
             ),
         );
     }
@@ -389,25 +398,30 @@ export class InstanceCreatorComponent {
     ): void {
         createInstanceCommand.addCommand(
             new CommandsList(
-                instanceContext.sources.map(
-                    source => new ContextAwareCommand(
-                        taskId,
-                        instanceContext.id,
-                        `Create source volume \`${source.id}\``,
-                        () => new CreateSourceVolumeCommand(
-                            source.id,
-                            source.volume.name,
-                            source.paths.absolute.guest,
-                            source.paths.absolute.guest,
-                        ),
-                        async (result: CreateSourceVolumeCommandResultInterface): Promise<void> => {
-                            source.volume.mountpoint = result.sourceVolumeMountpoint;
-                            instanceContext.mergeEnvVariablesSet(result.envVariables);
-                            instanceContext.mergeFeaterVariablesSet(result.featerVariables);
-                            await updateInstanceFromInstanceContext();
-                        },
-                    ),
-                )
+                instanceContext.sourceVolumes.map(
+                    sourceVolume => {
+                        const source = instanceContext.findSource(sourceVolume.sourceId);
+
+                        return new ContextAwareCommand(
+                            taskId,
+                            instanceContext.id,
+                            `Create source volume \`${sourceVolume.id}\``,
+                            () => new CreateSourceVolumeCommand(
+                                sourceVolume.dockerVolumeName,
+                                source.id,
+                                source.paths.absolute.guest,
+                                source.paths.absolute.guest,
+                                sourceVolume.relativePath,
+                                sourceVolume.id,
+                            ),
+                            async (result: CreateSourceVolumeCommandResultInterface): Promise<void> => {
+                                instanceContext.mergeEnvVariablesSet(result.envVariables);
+                                instanceContext.mergeFeaterVariablesSet(result.featerVariables);
+                                await updateInstanceFromInstanceContext();
+                            },
+                        );
+                    },
+                ),
             ),
         );
     }
@@ -430,7 +444,7 @@ export class InstanceCreatorComponent {
                             source.paths.absolute.guest,
                         ),
                     ),
-                )
+                ),
             ),
         );
     }
@@ -451,7 +465,7 @@ export class InstanceCreatorComponent {
                     const source = instanceContext.findSource(composeFile.sourceId);
 
                     return new RunDockerComposeCommand(
-                        source.volume.name,
+                        source.dockerVolumeName,
                         composeFile.envDirRelativePath,
                         composeFile.composeFileRelativePaths,
                         instanceContext.envVariables,

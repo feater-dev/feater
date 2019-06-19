@@ -1,4 +1,0 @@
-input DefinitionConfigVolumeInput {
-    id: String!
-    assetId: String
-}

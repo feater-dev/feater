@@ -1,6 +1,0 @@
-input DefinitionConfigProxiedPortInput {
-    id: String!
-    serviceId: String!
-    port: Int!
-    name: String!
-}

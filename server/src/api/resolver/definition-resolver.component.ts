@@ -1,6 +1,6 @@
 import {DefinitionTypeInterface} from '../type/definition-type.interface';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
-import {DefinitionConfigMapper} from '../model-to-type-mapper/definition-config-mapper.component';
+import {DefinitionConfigMapper} from '../../instantiation/definition-config-mapper.component';
 import {CreateDefinitionInputTypeInterface} from '../input-type/create-definition-input-type.interface';
 import {ResolverPaginationArgumentsInterface} from '../pagination-argument/resolver-pagination-arguments.interface';
 import {ResolverDefinitionFilterArgumentsInterface} from '../filter-argument/resolver-definition-filter-arguments.interface';
@@ -24,9 +24,8 @@ import {InstanceLister} from '../lister/instance-lister.component';
 import {InstanceModelToTypeMapper} from '../model-to-type-mapper/instance-model-to-type-mapper.component';
 import {InstanceTypeInterface} from '../type/instance-type.interface';
 import {DeployKeyModelToTypeMapper} from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
+import {DefintionRecipeZeroOneZeroValidator} from '../../instantiation/validation/defintion-recipe-zero-one-zero-validator.component';
 import * as escapeStringRegexp from 'escape-string-regexp';
-import * as jsYaml from 'js-yaml';
-import * as snakeCaseKeys from 'snakecase-keys';
 
 @Resolver('Definition')
 export class DefinitionResolver {
@@ -43,6 +42,7 @@ export class DefinitionResolver {
         private readonly instanceLister: InstanceLister,
         private readonly instanceModelToTypeMapper: InstanceModelToTypeMapper,
         private readonly deployKeyModelToTypeMapper: DeployKeyModelToTypeMapper,
+        private readonly defintionRecipeZeroOneZeroValidator: DefintionRecipeZeroOneZeroValidator,
     ) { }
 
     @Query('definitions')
@@ -88,8 +88,9 @@ export class DefinitionResolver {
     async getDeployKeys(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<DeployKeyTypeInterface[]> {
+        const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
         const deployKeys: DeployKeyInterface[] = [];
-        for (const source of definition.config.sources) {
+        for (const source of definitionConfig.sources) {
             const sourceDeployKeys = await this.deployKeyRepository.findByCloneUrl((source as SourceTypeInterface).cloneUrl);
             if (1 < sourceDeployKeys.length) {
                 throw new Error('More than one deploy key found.');
@@ -106,7 +107,8 @@ export class DefinitionResolver {
     async getPredictedEnvVariables(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<PredictedEnvVariableTypeInterface[]> {
-        const predictedEnvVariables = this.variablePredictor.predictEnvVariables(definition.config);
+        const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
+        const predictedEnvVariables = this.variablePredictor.predictEnvVariables(definitionConfig);
         const mappedPredictedEnvVariables: PredictedEnvVariableTypeInterface[] = [];
 
         for (const predictedEnvVariable of predictedEnvVariables) {
@@ -124,7 +126,8 @@ export class DefinitionResolver {
     async getPredictedFeaterVariables(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<PredictedFeaterVariableTypeInterface[]> {
-        const predictedFeaterVariables = this.variablePredictor.predictFeaterVariables(definition.config);
+        const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
+        const predictedFeaterVariables = this.variablePredictor.predictFeaterVariables(definitionConfig);
         const mappedPredictedFeaterVariables: PredictedFeaterVariableTypeInterface[] = [];
 
         for (const predictedFeaterVariable of predictedFeaterVariables) {
@@ -142,9 +145,27 @@ export class DefinitionResolver {
     async create(
         @Args() createDefinitionInput: CreateDefinitionInputTypeInterface,
     ): Promise<DefinitionTypeInterface> {
-        // TODO Add input validation.
         await this.projectRepository.findByIdOrFail(createDefinitionInput.projectId);
-        const definition = await this.definitionRepository.create(createDefinitionInput);
+
+        // TODO Add input validation. Handle validation result.
+        // this.defintionRecipeZeroOneZeroValidator.validateRecipe(configAsYaml);
+
+        const definition = await this.definitionRepository.create(
+            createDefinitionInput.projectId,
+            createDefinitionInput.name,
+            createDefinitionInput.configAsYaml,
+        );
+
+        const config = this.definitionConfigMapper.map(definition.configAsYaml);
+        for (const source of config.sources) {
+            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
+            if ((source as SourceTypeInterface).useDeployKey) {
+                const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(cloneUrl);
+                if (!deployKeyExists) {
+                    await this.deployKeyRepository.create(cloneUrl);
+                }
+            }
+        }
 
         return this.definitionModelToTypeMapper.mapOne(definition);
     }
@@ -153,8 +174,25 @@ export class DefinitionResolver {
     async update(
         @Args() updateDefinitionInput: UpdateDefinitionInputTypeInterface,
     ): Promise<DefinitionTypeInterface> {
-        // TODO Add input validation.
-        const definition = await this.definitionRepository.update(updateDefinitionInput.id, updateDefinitionInput);
+        // TODO Add input validation. Handle validation result.
+        // this.defintionRecipeZeroOneZeroValidator.validateRecipe(configAsYaml);
+
+        const definition = await this.definitionRepository.update(
+            updateDefinitionInput.id,
+            updateDefinitionInput.name,
+            updateDefinitionInput.configAsYaml,
+        );
+
+        const config = this.definitionConfigMapper.map(definition.configAsYaml);
+        for (const source of config.sources) {
+            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
+            if ((source as SourceTypeInterface).useDeployKey) {
+                const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(cloneUrl);
+                if (!deployKeyExists) {
+                    await this.deployKeyRepository.create(cloneUrl);
+                }
+            }
+        }
 
         return this.definitionModelToTypeMapper.mapOne(definition);
     }
@@ -170,17 +208,6 @@ export class DefinitionResolver {
         }
 
         return await this.definitionRepository.remove(removeDefinitionInput.id);
-    }
-
-    @ResolveProperty('configAsYaml')
-    getConfigAsYaml(@Parent() definition: DefinitionTypeInterface): string {
-        return jsYaml.safeDump(
-            snakeCaseKeys(definition.config),
-            {
-                indent: 4,
-                flowLevel: -1,
-            },
-        );
     }
 
     // TODO Move somewhere else.

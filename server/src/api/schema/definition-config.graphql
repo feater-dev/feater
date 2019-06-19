@@ -1,9 +1,0 @@
-type DefinitionConfig {
-    sources: [DefinitionConfigSource!]!
-    volumes: [DefinitionConfigVolume!]!
-    proxiedPorts: [DefinitionConfigProxiedPort!]!
-    envVariables: [DefinitionConfigEnvVariable!]!
-    composeFiles: [DefinitionConfigComposeFile!]!
-    afterBuildTasks: [DefinitionConfigAfterBuildTask]!
-    summaryItems: [DefinitionConfigSummaryItem!]!
-}

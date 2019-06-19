@@ -1,14 +1,5 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    Output,
-    EventEmitter,
-} from '@angular/core';
-import {
-    DefinitionSourceFormElement,
-    DefinitionAddComposeFileFormElement
-} from '../../config-form/definition-config-form.model';
+import {Component, OnInit, Input} from '@angular/core';
+import {DefinitionSourceFormElement, DefinitionAddComposeFileFormElement} from '../../config-form/definition-config-form.model';
 
 
 @Component({

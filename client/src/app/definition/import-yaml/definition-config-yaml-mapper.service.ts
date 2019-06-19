@@ -12,7 +12,8 @@ export class DefinitionConfigYamlMapperService {
 
         const mappedYamlConfig = {
             sources: [],
-            volumes: [],
+            sourceVolumes: [],
+            assetVolumes: [],
             proxiedPorts: [],
             envVariables: [],
             composeFile: null,
@@ -26,8 +27,12 @@ export class DefinitionConfigYamlMapperService {
             mappedYamlConfig.sources.push(source);
         }
 
-        for (const volume of camelCaseYamlConfig.volumes) {
-            mappedYamlConfig.volumes.push(volume);
+        for (const sourceVolume of camelCaseYamlConfig.sourceVolumes) {
+            mappedYamlConfig.sourceVolumes.push(sourceVolume);
+        }
+
+        for (const assetVolume of camelCaseYamlConfig.assetVolumes) {
+            mappedYamlConfig.assetVolumes.push(assetVolume);
         }
 
         for (const proxiedPort of camelCaseYamlConfig.proxiedPorts) {

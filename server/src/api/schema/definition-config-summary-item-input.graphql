@@ -1,4 +1,0 @@
-input DefinitionConfigSummaryItemInput {
-    name: String!
-    value: String!
-}

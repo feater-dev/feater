@@ -1,4 +1,0 @@
-input DefinitionConfigAfterBuildTaskInheritedEnvVariableInput {
-    name: String!
-    alias: String
-}

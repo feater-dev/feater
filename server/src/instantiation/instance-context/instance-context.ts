@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {InstanceContextPathsInterface} from './instance-context-paths.interface';
 import {InstanceContextSourceInterface} from './instance-context-source.interface';
-import {InstanceContextVolumeInterface} from './instance-context-volume.interface';
+import {InstanceContextAssetVolumeInterface} from './instance-context-asset-volume.interface';
 import {InstanceContextServiceInterface} from './instance-context-service.interface';
 import {InstanceContextProxiedPortInterface} from './instance-context-proxied-port.interface';
 import {InstanceContextAfterBuildTaskInterface} from './after-build/instance-context-after-build-task.interface';
@@ -12,13 +12,15 @@ import {InstanceContextSummaryItemInterface} from './instance-context-summary-it
 import {InstanceContextFeaterVariableInterface} from './instance-context-feater-variable.interface';
 import {FeaterVariablesSet} from '../sets/feater-variables-set';
 import {SummaryItemsSet} from '../sets/summary-items-set';
+import {InstanceContextSourceVolumeInterface} from './instance-context-source-volume.interface';
 
 export class InstanceContext {
 
     paths: InstanceContextPathsInterface;
     composeProjectName: string;
     sources: InstanceContextSourceInterface[];
-    volumes: InstanceContextVolumeInterface[];
+    sourceVolumes: InstanceContextSourceVolumeInterface[];
+    assetVolumes: InstanceContextAssetVolumeInterface[];
     services: InstanceContextServiceInterface[];
     proxiedPorts: InstanceContextProxiedPortInterface[];
     afterBuildTasks: InstanceContextAfterBuildTaskInterface[];

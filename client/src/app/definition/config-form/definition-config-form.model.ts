@@ -11,7 +11,8 @@
 
 export interface DefinitionConfigFormElement {
     sources: DefinitionSourceFormElement[];
-    volumes: DefinitionVolumeFormElement[];
+    sourceVolumes: DefinitionSourceVolumeFormElement[];
+    assetVolumes: DefinitionAssetVolumeFormElement[];
     proxiedPorts: DefinitionProxiedPortFormElement[];
     envVariables: DefinitionEnvVariableFormElement[];
     composeFile: DefinitionAddComposeFileFormElement;
@@ -31,7 +32,13 @@ export interface DefinitionSourceFormElement {
     >;
 }
 
-export interface DefinitionVolumeFormElement {
+export interface DefinitionSourceVolumeFormElement {
+    id: string;
+    sourceId: string;
+    relativePath: string;
+}
+
+export interface DefinitionAssetVolumeFormElement {
     id: string;
     assetId?: string;
 }

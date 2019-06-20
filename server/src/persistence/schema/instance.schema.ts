@@ -11,7 +11,34 @@ const InstanceServiceSchema = new Schema(
     },
 );
 
+const InstanceAssetVolumeSchema = new Schema(
+    {
+        id: String,
+        dockerVolumeName: String,
+    }, {
+        _id: false,
+    },
+);
+
+const InstanceSourceVolumeSchema = new Schema(
+    {
+        id: String,
+        dockerVolumeName: String,
+    }, {
+        _id: false,
+    },
+);
+
 const InstanceEnvVariableSchema = new Schema(
+    {
+        name: String,
+        value: String,
+    }, {
+        _id: false,
+    },
+);
+
+const InstanceFeaterVariableSchema = new Schema(
     {
         name: String,
         value: String,
@@ -50,7 +77,10 @@ export const InstanceSchema = new Schema({
     hash: String,
     name: String,
     services: [InstanceServiceSchema],
+    sourceVolumes: [InstanceSourceVolumeSchema],
+    assetVolumes: [InstanceAssetVolumeSchema],
     envVariables: [InstanceEnvVariableSchema],
+    featerVariables: [InstanceFeaterVariableSchema],
     proxiedPorts: [InstanceProxiedPortSchema],
     summaryItems: [InstanceSummaryItemSchema],
     createdAt: Date,

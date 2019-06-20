@@ -2,12 +2,12 @@ import {Injectable} from '@nestjs/common';
 import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
 import {SpawnHelper} from '../../helper/spawn-helper.component';
 import {SimpleCommand} from '../../executor/simple-command';
-import {RemoveSourceVolumeCommand} from './command';
+import {RemoveVolumeCommand} from './command';
 import {CommandLogger} from '../../logger/command-logger';
 import {DockerVolumeHelperComponent} from '../../docker/docker-volume-helper.component';
 
 @Injectable()
-export class RemoveSourceVolumeCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
+export class RemoveVolumeCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
 
     constructor(
         private readonly dockerVolumeHelperComponent: DockerVolumeHelperComponent,
@@ -15,35 +15,33 @@ export class RemoveSourceVolumeCommandExecutorComponent implements SimpleCommand
     ) {}
 
     supports(command: SimpleCommand): boolean {
-        return (command instanceof RemoveSourceVolumeCommand);
+        return (command instanceof RemoveVolumeCommand);
     }
 
     async execute(command: SimpleCommand): Promise<any> {
         const {
-            sourceId,
-            sourceDockerVolumeName,
+            dockerVolumeName,
             workingDirectory,
             commandLogger,
-        } = command as RemoveSourceVolumeCommand;
+        } = command as RemoveVolumeCommand;
 
-        commandLogger.info(`Source ID: ${sourceId}`);
-        commandLogger.info(`Volume name: ${sourceDockerVolumeName}`);
+        commandLogger.info(`Volume name: ${dockerVolumeName}`);
 
         commandLogger.info(`Removing volume.`);
-        await this.removeSourceVolume(
-            sourceDockerVolumeName,
+        await this.removeVolume(
+            dockerVolumeName,
             workingDirectory,
-            commandLogger
+            commandLogger,
         );
     }
 
-    protected removeSourceVolume(
-        volumeName: string,
+    protected removeVolume(
+        dockerVolumeName: string,
         workingDirectory: string,
         commandLogger: CommandLogger,
     ): Promise<void> {
         return this.spawnHelper.promisifySpawnedWithHeader(
-            this.dockerVolumeHelperComponent.spawnVolumeRemove(volumeName, workingDirectory),
+            this.dockerVolumeHelperComponent.spawnVolumeRemove(dockerVolumeName, workingDirectory),
             commandLogger,
             'remove source volume',
         );

@@ -41,7 +41,7 @@ import {DefinitionAddProxiedPortFormElementComponent} from './definition/add/for
 import {DefinitionAddEnvVariableFormElementComponent} from './definition/add/form-element/definition-add.environmental-variable-form-element.component';
 import {DefinitionAddSummaryItemFormElementComponent} from './definition/add/form-element/definition-add.summary-item-form-element.component';
 import {DefinitionAddComposeFileFormElementComponent} from './definition/add/form-element/definition-add.compose-file-form-element.component';
-import {DefinitionAddVolumeFormElementComponent} from './definition/add/form-element/definition-add.volume-form-element.component';
+import {DefinitionAddAssetVolumeFormElementComponent} from './definition/add/form-element/definition-add.asset-volume-form-element.component';
 import {DefinitionListComponent} from './definition/list/definition-list.component';
 import {DefinitionTableComponent} from './definition/table/definition-table.component';
 import {ExecuteServiceCommandTaskFormElementComponent} from './definition/add/form-element/after-build-task/execute-service-command-task-form-element.component';
@@ -51,7 +51,7 @@ import {InstanceAddComponent} from './instance/add/instance-add.component';
 import {InstanceListComponent} from './instance/list/instance-list.component';
 import {InstanceTableComponent} from './instance/table/instance-table.component';
 
-import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory';
+import {InMemoryCache} from 'apollo-cache-inmemory';
 import {LinkifyPipe} from './pipes/linkify.pipe';
 import {YamlPipe} from './pipes/yaml.pipe';
 import {AbsoluteDatePipe} from './pipes/absolute-date.pipe';
@@ -82,6 +82,8 @@ import {InstanceTabsComponent} from './instance/detail/tabs/instance-tabs.compon
 import {DefinitionConfigFormComponent} from './definition/config-form/definition-config-form.component';
 import {ImportDefinitionConfigYamlComponent} from './definition/import-yaml/import-definition-config-yaml.component';
 import {DefinitionConfigYamlMapperService} from './definition/import-yaml/definition-config-yaml-mapper.service';
+import {DefinitionAddSourceVolumeFormElementComponent} from './definition/add/form-element/definition-add.source-volume-form-element.component';
+import {NgxTrimDirectiveModule} from 'ngx-trim-directive';
 
 const appRoutes: Routes = [
     { path: 'projects', component: ProjectListComponent },
@@ -125,7 +127,8 @@ const appRoutes: Routes = [
         DefinitionDuplicateComponent,
         DefinitionEditComponent,
         DefinitionAddSourceFormElementComponent,
-        DefinitionAddVolumeFormElementComponent,
+        DefinitionAddSourceVolumeFormElementComponent,
+        DefinitionAddAssetVolumeFormElementComponent,
         DefinitionAddBeforeBuildTaskCopyFormElementComponent,
         DefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
         DefinitionAddProxiedPortFormElementComponent,
@@ -183,12 +186,13 @@ const appRoutes: Routes = [
         NgxSpinnerModule,
         TooltipModule,
         FilterPipeModule,
-        BootstrapModalModule.forRoot({container:document.body}),
+        BootstrapModalModule.forRoot({container: document.body}),
         BrowserAnimationsModule,
         ToastrModule.forRoot({
             enableHtml: true,
             positionClass: 'toast-bottom-right',
         }),
+        NgxTrimDirectiveModule,
     ],
     entryComponents: [
         ConfirmComponent,
@@ -205,32 +209,6 @@ export class AppModule {
         apollo: Apollo,
         httpLink: HttpLink
     ) {
-        const introspectionQueryResultData = {
-            __schema: {
-                types: [
-                    {
-                        kind: 'UNION',
-                        name: 'BeforeBuildTask',
-                        possibleTypes: [
-                            {name: 'CopyBeforeBuildTask'},
-                            {name: 'InterpolateBeforeBuildTask'},
-                            {name: 'ReplaceBeforeBuildTask'},
-                        ],
-                    },
-                    {
-                        kind: 'UNION',
-                        name: 'AfterBuildTask',
-                        possibleTypes: [
-                            {name: 'ExecuteServiceCommandAfterBuildTask'},
-                            {name: 'CopyAssetIntoContainerAfterBuildTask'},
-                        ],
-                    },
-                ],
-            }
-        };
-
-        const fragmentMatcher = new IntrospectionFragmentMatcher({ introspectionQueryResultData });
-
         apollo.create({
             link: httpLink.create({ uri: [environment.serverBaseUrl, 'api'].join('/') }),
             defaultOptions: {
@@ -243,7 +221,7 @@ export class AppModule {
                     errorPolicy: 'all',
                 },
             },
-            cache: new InMemoryCache({fragmentMatcher}),
+            cache: new InMemoryCache(),
         });
     }
 }

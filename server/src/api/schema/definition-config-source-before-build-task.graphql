@@ -1,3 +1,0 @@
-union DefinitionConfigSourceBeforeBuildTask =
-    DefinitionConfigSourceCopyBeforeBuildTask
-    | DefinitionConfigSourceInterpolateBeforeBuildTask

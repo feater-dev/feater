@@ -11,11 +11,23 @@ export interface InstanceInterface extends Document {
         containerId?: string;
         ipAddress?: string;
     }[];
+    sourceVolumes: {
+        id: string;
+        dockerVolumeName: string;
+    }[];
+    assetVolumes: {
+        id: string;
+        dockerVolumeName: string;
+    }[];
     summaryItems: {
         name: string;
         value: string;
     }[];
     envVariables: {
+        name: string;
+        value: string;
+    }[];
+    featerVariables: {
         name: string;
         value: string;
     }[];

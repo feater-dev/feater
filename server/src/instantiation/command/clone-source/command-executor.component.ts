@@ -91,7 +91,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
             {
                 muteStdout: true,
                 muteStderr: true,
-            }
+            },
         );
     }
 
@@ -99,7 +99,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         referenceType: string,
         referenceName: string,
         sourceAbsoluteGuestPath: string,
-        commandLogger: CommandLogger
+        commandLogger: CommandLogger,
     ): void {
         let commitHash: string;
         let fullReference: string;

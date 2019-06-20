@@ -6,13 +6,13 @@ type Mutation {
     createDefinition(
         projectId: String!
         name: String!
-        config: DefinitionConfigInput!
+        configAsYaml: String!
     ): Definition
 
     updateDefinition(
         id: String!
         name: String!
-        config: DefinitionConfigInput!
+        configAsYaml: String!
     ): Definition
 
     removeDefinition(

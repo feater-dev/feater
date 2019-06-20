@@ -21,7 +21,7 @@ import {ExecuteServiceCmdCommandExecutorComponent} from './command/after-build/e
 import {CopyAssetIntoContainerCommandExecutorComponent} from './command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateAssetVolumeCommandExecutorComponent} from './command/create-asset-volume/command-executor.component';
 import {CreateSourceVolumeCommandExecutorComponent} from './command/create-source-volume/command-executor.component';
-import {RemoveSourceVolumeCommandExecutorComponent} from './command/remove-source-volume/command-executor.component';
+import {RemoveVolumeCommandExecutorComponent} from './command/remove-source-volume/command-executor.component';
 import {CopyFileCommandFactoryComponent} from './command/before-build/copy-file/command-factory.component';
 import {InterpolateFileCommandFactoryComponent} from './command/before-build/interpolate-file/command-factory.component';
 import {CopyAssetIntoContainerCommandFactoryComponent} from './command/after-build/copy-asset-into-container/command-factory.component';
@@ -39,6 +39,8 @@ import {IpAddressCheckerComponent} from './ip-address-checker.component';
 import {DockerVolumeHelperComponent} from './docker/docker-volume-helper.component';
 import {RemoveSourceCommandExecutorComponent} from './command/remove-source/command-executor.component';
 import {HelperModule} from '../helper/helper.module';
+import {DefinitionConfigMapper} from './definition-config-mapper.component';
+import {DefintionRecipeZeroOneZeroValidator} from './validation/defintion-recipe-zero-one-zero-validator.component';
 
 @Module({
     imports: [
@@ -64,7 +66,7 @@ import {HelperModule} from '../helper/helper.module';
         CopyAssetIntoContainerCommandExecutorComponent,
         CreateAssetVolumeCommandExecutorComponent,
         CreateSourceVolumeCommandExecutorComponent,
-        RemoveSourceVolumeCommandExecutorComponent,
+        RemoveVolumeCommandExecutorComponent,
         EnableProxyDomainsCommandExecutorComponent,
         ContainerInfoCheckerComponent,
         ContainerStateCheckerComponent,
@@ -85,12 +87,16 @@ import {HelperModule} from '../helper/helper.module';
         CompositeSimpleCommandExecutorComponent,
         VariablesPredictor,
         DockerVolumeHelperComponent,
+        DefinitionConfigMapper,
+        DefintionRecipeZeroOneZeroValidator,
     ],
     exports: [
         InstanceCreatorComponent,
         ContainerStateCheckerComponent,
         IpAddressCheckerComponent,
         VariablesPredictor,
+        DefinitionConfigMapper,
+        DefintionRecipeZeroOneZeroValidator,
     ],
 })
 export class InstantiationModule {}

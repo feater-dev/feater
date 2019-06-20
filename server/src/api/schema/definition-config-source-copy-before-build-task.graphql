@@ -1,5 +1,0 @@
-type DefinitionConfigSourceCopyBeforeBuildTask {
-    type: String!
-    sourceRelativePath: String!
-    destinationRelativePath: String!
-}

@@ -15,7 +15,7 @@
     "start:prod": "node dist/main.js"
   },
   "dependencies": {
-    "@hapi/joi": "^15.0.2",
+    "@hapi/joi": "^15.0.3",
     "@nestjs/common": "^6.3.1",
     "@nestjs/core": "^6.3.1",
     "@nestjs/graphql": "^6.2.4",
@@ -26,6 +26,7 @@
     "apollo-server-express": "^2.6.3",
     "base32-encode": "^1.1.0",
     "busboy": "^0.2.14",
+    "camelcase-keys": "^6.0.0",
     "content-disposition": "^0.5.3",
     "copyfiles": "^2.1.0",
     "dotenv": "^6.2.0",
@@ -58,6 +59,8 @@
   },
   "devDependencies": {
     "@types/graphql-type-json": "^0.3.0",
+    "@types/hapi__joi": "^15.0.2",
+    "@types/js-yaml": "^3.12.1",
     "@types/lodash": "^4.14.109",
     "@types/mongoose": "^5.5.6",
     "@types/node": "^10.12.26",

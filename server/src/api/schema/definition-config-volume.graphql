@@ -1,4 +1,0 @@
-type DefinitionConfigVolume {
-    id: String!
-    assetId: String
-}

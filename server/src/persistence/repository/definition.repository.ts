@@ -2,19 +2,14 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {DefinitionInterface} from '../interface/definition.interface';
-import {CreateDefinitionInputTypeInterface} from '../../api/input-type/create-definition-input-type.interface';
-import {SourceTypeInterface} from '../../api/type/nested/definition-config/source-type.interface';
 import {DeployKeyRepository} from './deploy-key.repository';
-import * as gitUrlParse from 'git-url-parse';
-import {UpdateDefinitionInputTypeInterface} from '../../api/input-type/update-definition-input-type.interface';
-import {ProjectInterface} from '../interface/project.interface';
+import {DefinitionConfigMapper} from '../../instantiation/definition-config-mapper.component';
 
 @Injectable()
 export class DefinitionRepository {
 
     constructor(
         @InjectModel('Definition') private readonly definitionModel: Model<DefinitionInterface>,
-        private readonly deployKeyRepository: DeployKeyRepository,
     ) {}
 
     find(criteria: object, offset: number, limit: number, sort?: object): Promise<DefinitionInterface[]> {
@@ -42,46 +37,38 @@ export class DefinitionRepository {
         return definition;
     }
 
-    async create(createDefinitionInputType: CreateDefinitionInputTypeInterface): Promise<DefinitionInterface> {
-        const createdDefinition = new this.definitionModel(createDefinitionInputType);
+    async create(
+        projectId: string,
+        name: string,
+        configAsYaml: string,
+    ): Promise<DefinitionInterface> {
+        const createdDefinition = new this.definitionModel({
+            projectId,
+            name,
+        });
+        createdDefinition.configAsYaml = configAsYaml;
         createdDefinition.createdAt = new Date();
         createdDefinition.updatedAt = new Date();
         await createdDefinition.save();
 
-        for (const source of createdDefinition.config.sources) {
-            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-            if ((source as SourceTypeInterface).useDeployKey) {
-                const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(cloneUrl);
-                if (!deployKeyExists) {
-                    await this.deployKeyRepository.create(cloneUrl);
-                }
-            }
-        }
-
         return createdDefinition;
     }
 
-    async update(id: string, updateDefinitionInputType: UpdateDefinitionInputTypeInterface): Promise<DefinitionInterface> {
-        const definition = await this.findById(id);
-        if (null === definition) {
+    async update(
+        id: string,
+        name: string,
+        configAsYaml: string,
+    ): Promise<DefinitionInterface> {
+        const updatedDefinition = await this.findById(id);
+        if (null === updatedDefinition) {
             throw new Error(`Definition document with id ${id} not found.`);
         }
-        definition.name = updateDefinitionInputType.name;
-        definition.config = updateDefinitionInputType.config;
-        definition.updatedAt = new Date();
-        await definition.save();
+        updatedDefinition.name = name;
+        updatedDefinition.configAsYaml = configAsYaml;
+        updatedDefinition.updatedAt = new Date();
+        await updatedDefinition.save();
 
-        for (const source of definition.config.sources) {
-            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-            if ((source as SourceTypeInterface).useDeployKey) {
-                const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(cloneUrl);
-                if (!deployKeyExists) {
-                    await this.deployKeyRepository.create(cloneUrl);
-                }
-            }
-        }
-
-        return definition;
+        return updatedDefinition;
     }
 
     async remove(id: string): Promise<boolean> {

@@ -1,7 +1,0 @@
-type DefinitionConfigSource {
-    id: String!
-    cloneUrl: String!
-    useDeployKey: Boolean!
-    reference: DefinitionConfigSourceReference!
-    beforeBuildTasks: [DefinitionConfigSourceBeforeBuildTask!]!
-}

@@ -14,7 +14,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Env directory relative path</label>
-                <input type="text" class="form-control" [(ngModel)]="composeFile.envDirRelativePath">
+                <input type="text" trim class="form-control" [(ngModel)]="composeFile.envDirRelativePath">
             </div>
         </div>
 
@@ -24,10 +24,7 @@
                 <div *ngFor="let composeFileRelativePath of composeFile.composeFileRelativePaths; trackBy: trackByIndex; let i = index"
                      style="position: relative; padding-right: 40px;"
                 >
-                    <input type="text"
-                           class="form-control"
-                           [(ngModel)]="composeFile.composeFileRelativePaths[i]"
-                    >
+                    <input type="text" trim class="form-control" [(ngModel)]="composeFile.composeFileRelativePaths[i]">
                     <a class="btn btn-danger btn-sm"
                        *ngIf="i > 0"
                        (click)="deleteComposeFileRelativePath(i)"

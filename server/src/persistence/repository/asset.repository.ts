@@ -53,8 +53,9 @@ export class AssetRepository {
 
     async findByProjectIdAndIdentifierOrFail(
         projectId: string,
-        identifier: string
-    ): Promise<AssetInterface> { // TODO Find better name for identifier.
+        identifier: string,
+    ): Promise<AssetInterface> {
+        // TODO Find better name for identifier.
         const asset = this.assetModel.findOne({projectId, id: identifier});
         if (!asset) {
             throw new Error(`Asset document with project ID ${projectId} identifier ${identifier} not found.`);

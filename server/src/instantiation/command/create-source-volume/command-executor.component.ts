@@ -10,6 +10,7 @@ import {EnvVariablesSet} from '../../sets/env-variables-set';
 import {FeaterVariablesSet} from '../../sets/feater-variables-set';
 import {CreateSourceVolumeCommandResultInterface} from './command-result.interface';
 import {DockerVolumeHelperComponent} from '../../docker/docker-volume-helper.component';
+import * as path from 'path';
 
 const BUFFER_SIZE = 64 * 1048576; // 64M
 
@@ -27,93 +28,72 @@ export class CreateSourceVolumeCommandExecutorComponent implements SimpleCommand
 
     async execute(command: SimpleCommand): Promise<any> {
         const {
+            sourceDockerVolumeName,
             sourceId,
-            sourceVolumeName,
             sourceAbsoluteGuestPath,
             workingDirectory,
+            sourceVolumeRelativePath,
+            sourceVolumeId,
             commandLogger,
         } = command as CreateSourceVolumeCommand;
 
+        if (sourceVolumeId) {
+            commandLogger.info(`Source volume ID: ${sourceVolumeId}`);
+        }
+        commandLogger.info(`Source volume name: ${sourceDockerVolumeName}`);
         commandLogger.info(`Source ID: ${sourceId}`);
-        commandLogger.info(`Volume name: ${sourceVolumeName}`);
+        commandLogger.info(`Source volume relative path: ${sourceVolumeRelativePath}`);
         commandLogger.info(`Source absolute guest path: ${sourceAbsoluteGuestPath}`);
 
         commandLogger.info(`Creating source volume.`);
-        await this.createVolume(sourceVolumeName, workingDirectory, commandLogger);
-
-        commandLogger.info(`Determining source volume mountpoint.`);
-        const sourceVolumeMountpoint = this.determineVolumeMountpoint(sourceVolumeName);
+        await this.createVolume(sourceDockerVolumeName, workingDirectory, commandLogger);
 
         commandLogger.info(`Copying source to volume.`);
         await this.copyFromAbsoluteGuestPathToVolume(
-            sourceAbsoluteGuestPath,
-            sourceVolumeName,
+            path.join(sourceAbsoluteGuestPath, sourceVolumeRelativePath || ''),
+            sourceDockerVolumeName,
             workingDirectory,
-            commandLogger
+            commandLogger,
         );
 
-        const {envVariables, featerVariables} = this.prepareVariables(
-            sourceId,
-            sourceVolumeName,
-            sourceVolumeMountpoint
-        );
+        const envVariables = new EnvVariablesSet();
+        const featerVariables = new FeaterVariablesSet();
+
+        if (sourceVolumeId) {
+            this.prepareVariables(sourceVolumeId, sourceDockerVolumeName, envVariables, featerVariables);
+        }
 
         return {
-            sourceVolumeMountpoint,
             envVariables,
             featerVariables,
         } as CreateSourceVolumeCommandResultInterface;
     }
 
     protected createVolume(
-        sourceVolumeName: string,
+        sourceDockerVolumeName: string,
         workingDirectory: string,
         commandLogger: CommandLogger,
     ): Promise<void> {
         return this.spawnHelper.promisifySpawnedWithHeader(
-            this.dockerVolumeHelperComponent.spawnVolumeCreate(sourceVolumeName, workingDirectory),
+            this.dockerVolumeHelperComponent.spawnVolumeCreate(sourceDockerVolumeName, workingDirectory),
             commandLogger,
             'create source volume',
         );
     }
 
-    protected determineVolumeMountpoint(sourceVolumeName: string): string {
-        const volumeInspect = JSON.parse(
-            execSync(
-                [config.instantiation.dockerBinaryPath, 'volume', 'inspect', sourceVolumeName].join(' '),
-                {maxBuffer: BUFFER_SIZE},
-            ).toString(),
-        );
-
-        return volumeInspect[0].Mountpoint;
-    }
-
     protected prepareVariables(
         sourceId: string,
-        sourceVolumeName: string,
-        sourceVolumeMountpoint: string,
-    ): {envVariables: EnvVariablesSet, featerVariables: FeaterVariablesSet} {
-        const envVariables = new EnvVariablesSet();
-        const featerVariables = new FeaterVariablesSet();
-
-        envVariables.add(`FEATER__SOURCE_MOUNTPOINT__${sourceId.toUpperCase()}`, sourceVolumeMountpoint);
-        envVariables.add(`FEATER__SOURCE_VOLUME__${sourceId.toUpperCase()}`, sourceVolumeName);
-        featerVariables.add(`source_mountpoint__${sourceId.toLowerCase()}`, sourceVolumeMountpoint);
-        featerVariables.add(`source_volume__${sourceId.toLowerCase()}`, sourceVolumeName);
-
-        // TODO Depracted, remove later. Replaced volume name below.
-        envVariables.add(`FEATER__HOST_SOURCE_PATH__${sourceId.toUpperCase()}`, sourceVolumeMountpoint);
-        featerVariables.add(`host_source_path__${sourceId.toLowerCase()}`, sourceVolumeMountpoint);
-
-        return {
-            envVariables,
-            featerVariables,
-        };
+        sourceDockerVolumeName: string,
+        envVariables: EnvVariablesSet,
+        featerVariables: FeaterVariablesSet,
+    ): void {
+        envVariables.add(`FEATER__SOURCE_VOLUME__${sourceId.toUpperCase()}`, sourceDockerVolumeName);
+        featerVariables.add(`source_volume__${sourceId.toLowerCase()}`, sourceDockerVolumeName);
     }
 
     protected copyFromAbsoluteGuestPathToVolume(
         absoluteGuestPath: string,
-        volumeName: string,
+        dockerVolumeName: string,
         workingDirectory: string,
         commandLogger: CommandLogger,
     ): Promise<void> {
@@ -133,7 +113,7 @@ export class CreateSourceVolumeCommandExecutorComponent implements SimpleCommand
             config.instantiation.dockerBinaryPath,
             [
                 'run', '--rm', '-i',
-                '-v', `${volumeName}:/target`,
+                '-v', `${dockerVolumeName}:/target`,
                 'alpine:3.9', 'ash', '-c', 'cat > /source.tar.gz && tar -zxvf /source.tar.gz -C /target/',
             ],
             {cwd: workingDirectory},

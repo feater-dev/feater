@@ -7,7 +7,6 @@ type Definition {
         offset: Int
         sortKey: String
     ): [Instance!]!
-    config: DefinitionConfig!
     configAsYaml: String!
     deployKeys: [DeployKey!]!
     predictedEnvVariables: [DefinitionPredictedEnvVariable]!

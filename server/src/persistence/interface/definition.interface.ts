@@ -4,7 +4,7 @@ export interface DefinitionInterface extends Document {
     readonly _id: string;
     projectId: string;
     name: string;
-    config: any; // TODO Add interface for this.
+    configAsYaml: string;
     createdAt: Date;
     updatedAt: Date;
 }

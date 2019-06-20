@@ -43,25 +43,16 @@ export class VariablesPredictor {
             sourceIds.map(
                 (sourceId: string): PredictedEnvVariableInterface[] => {
                     return [
-                        // TODO Depracted, remove later. Replaced volume name below.
-                        {
-                            name: `FEATER__HOST_SOURCE_PATH__${sourceId.toUpperCase()}`,
-                            pattern: '',
-                        },
-                        {
-                            name: `FEATER__SOURCE_MOUNTPOINT__${sourceId.toUpperCase()}`,
-                            pattern: '',
-                        },
                         {
                             name: `FEATER__SOURCE_VOLUME__${sourceId.toUpperCase()}`,
-                            pattern: `${config.instantiation.containerNamePrefix}_{instance_hash}_source_volume_${sourceId.toLowerCase()}`, // TODO Move to some helper.
+                            pattern: `${config.instantiation.containerNamePrefix}_{instance_hash}_source_volume_${sourceId.toLowerCase()}`,
                         },
                     ];
                 },
             ),
         );
 
-        const volumeIds = _.filter(_.map(definitionConfig.volumes, 'id'));
+        const volumeIds = _.filter(_.map(definitionConfig.assetVolumes, 'id'));
         envVariables.push(
             volumeIds.map(
                 (volumeId: string): PredictedEnvVariableInterface => {
@@ -115,25 +106,16 @@ export class VariablesPredictor {
             sourceIds.map(
                 (sourceId: string): PredictedFeaterVariableInterface[] => {
                     return [
-                        // TODO Depracted, remove later. Replaced volume name below.
-                        {
-                            name: `host_source_path__${sourceId.toLowerCase()}`,
-                            pattern: '',
-                        },
-                        {
-                            name: `source_mountpoint__${sourceId.toLowerCase()}`,
-                            pattern: '',
-                        },
                         {
                             name: `source_volume__${sourceId.toLowerCase()}`,
-                            pattern: `${config.instantiation.containerNamePrefix}_{instance_hash}_source_volume_${sourceId.toLowerCase()}`, // TODO Move to some helper.
+                            pattern: `${config.instantiation.containerNamePrefix}_{instance_hash}_source_volume_${sourceId.toLowerCase()}`,
                         },
                     ];
                 },
             ),
         );
 
-        const volumeIds = _.filter(_.map(definitionConfig.volumes, 'id'));
+        const volumeIds = _.filter(_.map(definitionConfig.assetVolumes, 'id'));
         featerVariables.push(
             volumeIds.map(
                 (volumeId: string): PredictedFeaterVariableInterface => {

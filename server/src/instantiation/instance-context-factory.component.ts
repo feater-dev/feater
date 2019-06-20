@@ -18,7 +18,7 @@ export class InstanceContextFactory {
     create(
         id: string,
         hash: string,
-        definitionConfig: any, // TODO
+        definitionConfig: any,
     ): InstanceContext {
         const instanceContext = new InstanceContext(id, hash);
 
@@ -26,17 +26,6 @@ export class InstanceContextFactory {
         instanceContext.paths = {
             dir: this.pathHelper.getInstancePaths(hash),
         };
-
-        instanceContext.volumes = [];
-        for (const volumeConfig of definitionConfig.volumes) {
-            instanceContext.volumes.push({
-                id: volumeConfig.id,
-                assetId: volumeConfig.assetId,
-                volume: {
-                    name: `${instanceContext.composeProjectName}_asset_volume_${volumeConfig.id.toLowerCase()}`
-                },
-            });
-        }
 
         instanceContext.sources = [];
         for (const sourceConfig of definitionConfig.sources) {
@@ -49,12 +38,31 @@ export class InstanceContextFactory {
                     name: sourceConfig.reference.name,
                 },
                 paths: this.pathHelper.getSourcePaths(hash, sourceConfig.id),
+                dockerVolumeName: `${instanceContext.composeProjectName}_source_volume_${sourceConfig.id.toLowerCase()}`,
                 beforeBuildTasks: sourceConfig.beforeBuildTasks.map(
                     (beforeBuildTaskConfig) => beforeBuildTaskConfig as InstanceContextBeforeBuildTaskInterface,
                 ),
-                volume: {
-                    name: `${instanceContext.composeProjectName}_source_volume_${sourceConfig.id.toLowerCase()}`
-                },
+            });
+        }
+
+        instanceContext.sourceVolumes = [];
+        for (const sourceVolumeConfig of definitionConfig.sourceVolumes) {
+            const sourceDockerVolumeName = `${instanceContext.composeProjectName}_source_volume_${sourceVolumeConfig.id.toLowerCase()}`;
+            instanceContext.sourceVolumes.push({
+                id: sourceVolumeConfig.id,
+                sourceId: sourceVolumeConfig.sourceId,
+                relativePath: sourceVolumeConfig.relativePath,
+                dockerVolumeName: sourceDockerVolumeName,
+            });
+        }
+
+        instanceContext.assetVolumes = [];
+        for (const assetVolumeConfig of definitionConfig.assetVolumes) {
+            const assetDockerVolumeName = `${instanceContext.composeProjectName}_asset_volume_${assetVolumeConfig.id.toLowerCase()}`;
+            instanceContext.assetVolumes.push({
+                id: assetVolumeConfig.id,
+                assetId: assetVolumeConfig.assetId,
+                dockerVolumeName: assetDockerVolumeName,
             });
         }
 
@@ -78,9 +86,12 @@ export class InstanceContextFactory {
         instanceContext.nonInterpolatedSummaryItems = SummaryItemsSet.fromList(definitionConfig.summaryItems);
 
         instanceContext.composeFiles = [];
-        for (const composeFileConfig of definitionConfig.composeFiles) {
-            instanceContext.composeFiles.push(composeFileConfig);
-        }
+        const composeFileConfig = definitionConfig.composeFiles[0];
+        const composeFileVolumeName = `${instanceContext.composeProjectName}_compose_file_volume`;
+        instanceContext.composeFiles.push({
+            ...composeFileConfig,
+            dockerVolumeName: composeFileVolumeName,
+        });
 
         const envVariables = EnvVariablesSet.fromList(definitionConfig.envVariables);
         const featerVariables = new FeaterVariablesSet();

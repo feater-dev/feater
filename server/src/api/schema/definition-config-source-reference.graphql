@@ -1,4 +1,0 @@
-type DefinitionConfigSourceReference {
-    type: String!
-    name: String!
-}

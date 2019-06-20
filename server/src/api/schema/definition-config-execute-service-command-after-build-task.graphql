@@ -1,7 +1,0 @@
-type DefinitionConfigExecuteServiceCommandAfterBuildTask {
-    type: String!
-    serviceId: String!
-    customEnvVariables: [DefinitionConfigAfterBuildTaskCustomEnvVariable]!
-    inheritedEnvVariables: [DefinitionConfigAfterBuildTaskInheritedEnvVariable]!
-    command: [String!]!
-}

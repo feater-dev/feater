@@ -28,22 +28,21 @@ export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandE
 
     async execute(command: SimpleCommand): Promise<any> {
         const {
-            volumeId,
+            assetVolumeId,
             assetId,
-            containerNamePrefix,
+            assetDockerVolumeName,
             absoluteGuestInstanceDirPath,
             commandLogger,
         } = command as CreateAssetVolumeCommand;
 
         commandLogger.info(assetId ? `Asset ID: ${assetId}` : `No asset used.`);
-        commandLogger.info(`Volume ID: ${volumeId}`);
+        commandLogger.info(`Asset volume ID: ${assetVolumeId}`);
 
-        const dockerVolumeName = `${containerNamePrefix}_asset_volume_${volumeId}`;
-        commandLogger.info(`Volume name: ${dockerVolumeName}`);
+        commandLogger.info(`Asset volume name: ${assetDockerVolumeName}`);
 
-        commandLogger.info(`Creating volume.`);
+        commandLogger.info(`Creating asset volume.`);
         await this.createVolume(
-            dockerVolumeName,
+            assetDockerVolumeName,
             absoluteGuestInstanceDirPath,
             commandLogger,
         );
@@ -53,36 +52,35 @@ export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandE
             commandLogger.info(`Extracting asset to volume.`);
             await this.extractAssetToVolume(
                 this.assetHelper.getUploadPaths(asset).absolute,
-                dockerVolumeName,
+                assetDockerVolumeName,
                 absoluteGuestInstanceDirPath,
                 commandLogger,
             );
         }
 
         const envVariables = new EnvVariablesSet();
-        envVariables.add(`FEATER__ASSET_VOLUME__${volumeId.toUpperCase()}`, dockerVolumeName);
+        envVariables.add(`FEATER__ASSET_VOLUME__${assetVolumeId.toUpperCase()}`, assetDockerVolumeName);
         commandLogger.infoWithEnvVariables(envVariables);
 
         const featerVariables = new FeaterVariablesSet();
-        featerVariables.add(`asset_volume__${volumeId.toLowerCase()}`, dockerVolumeName);
+        featerVariables.add(`asset_volume__${assetVolumeId.toLowerCase()}`, assetDockerVolumeName);
         commandLogger.infoWithFeaterVariables(featerVariables);
 
         return {
-            dockerVolumeName,
             envVariables,
             featerVariables,
         } as CreateAssetVolumeCommandResultInterface;
     }
 
     protected createVolume(
-        volumeName: string,
+        dockerVolumeName: string,
         workingDirectory: string,
         commandLogger: CommandLogger,
     ): Promise<void> {
         return this.spawnHelper.promisifySpawnedWithHeader(
             spawn(
                 config.instantiation.dockerBinaryPath,
-                ['volume', 'create', '--name', volumeName],
+                ['volume', 'create', '--name', dockerVolumeName],
                 {cwd: workingDirectory},
             ),
             commandLogger,
@@ -92,7 +90,7 @@ export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandE
 
     protected extractAssetToVolume(
         absoluteUploadedAssetGuestPath: string,
-        volumeName: string,
+        dockerVolumeName: string,
         workingDirectory: string,
         commandLogger,
     ): Promise<void> {
@@ -100,7 +98,7 @@ export class CreateAssetVolumeCommandExecutorComponent implements SimpleCommandE
             config.instantiation.dockerBinaryPath,
             [
                 'run', '--rm', '-i',
-                '-v', `${volumeName}:/target`,
+                '-v', `${dockerVolumeName}:/target`,
                 'alpine:3.9', 'ash', '-c', 'cat > /source.tar.gz && tar -zxvf /source.tar.gz -C /target/',
             ],
             {cwd: workingDirectory},

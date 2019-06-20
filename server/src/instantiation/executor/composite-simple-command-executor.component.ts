@@ -16,7 +16,7 @@ import {ExecuteServiceCmdCommandExecutorComponent} from '../command/after-build/
 import {CopyAssetIntoContainerCommandExecutorComponent} from '../command/after-build/copy-asset-into-container/command-executor.component';
 import {CreateAssetVolumeCommandExecutorComponent} from '../command/create-asset-volume/command-executor.component';
 import {CreateSourceVolumeCommandExecutorComponent} from '../command/create-source-volume/command-executor.component';
-import {RemoveSourceVolumeCommandExecutorComponent} from '../command/remove-source-volume/command-executor.component';
+import {RemoveVolumeCommandExecutorComponent} from '../command/remove-source-volume/command-executor.component';
 import {EnableProxyDomainsCommandExecutorComponent} from '../command/enable-proxy-domains/command-executor.component';
 import {RemoveSourceCommandExecutorComponent} from '../command/remove-source/command-executor.component';
 
@@ -42,7 +42,7 @@ export class CompositeSimpleCommandExecutorComponent {
         copyAssetIntoContainerCommandExecutorComponent: CopyAssetIntoContainerCommandExecutorComponent,
         createAssetVolumeCommandExecutorComponent: CreateAssetVolumeCommandExecutorComponent,
         prepareSourceVolumeCommandExecutorComponent: CreateSourceVolumeCommandExecutorComponent,
-        removeSourceVolumeCommandExecutorComponent: RemoveSourceVolumeCommandExecutorComponent,
+        removeSourceVolumeCommandExecutorComponent: RemoveVolumeCommandExecutorComponent,
         enableProxyDomainsCommandExecutorComponent: EnableProxyDomainsCommandExecutorComponent,
     ) {
         this.executors = [

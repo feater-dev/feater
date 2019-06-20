@@ -33,34 +33,69 @@
     </div>
 </div>
 
-<!-- Volumes-->
+<!-- Source volumes -->
 
 <div class="form-section">
     <div class="row">
         <div class="col-md-12">
-            <h3>Volumes</h3>
+            <h3>Source volumes</h3>
         </div>
     </div>
 
-    <div *ngIf="!config.volumes.length" class="row">
+    <div *ngIf="!config.sourceVolumes.length" class="row">
         <div class="col-md-12">
-            <p>No volumes defined.</p>
+            <p>No source volumes defined.</p>
         </div>
     </div>
 
-    <div *ngIf="config.volumes.length">
-        <div *ngFor="let volume of config.volumes">
-            <app-definition-add-volume-form-element
-                [volume]="volume"
-                (deleteItem)="deleteVolume($event)"
-            ></app-definition-add-volume-form-element>
+    <div *ngIf="config.sourceVolumes.length">
+        <div *ngFor="let sourceVolume of config.sourceVolumes">
+            <app-definition-add-source-volume-form-element
+                    [sourceVolume]="sourceVolume"
+                (deleteItem)="deleteSourceVolume($event)"
+            ></app-definition-add-source-volume-form-element>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
             <a class="btn btn-success btn-sm"
-               (click)="addVolume()"
+               (click)="addSourceVolume()"
+            >
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Asset volumes -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Asset volumes</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!config.assetVolumes.length" class="row">
+        <div class="col-md-12">
+            <p>No asset volumes defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="config.assetVolumes.length">
+        <div *ngFor="let assetVolume of config.assetVolumes">
+            <app-definition-add-asset-volume-form-element
+                    [assetVolume]="assetVolume"
+                (deleteItem)="deleteAssetVolume($event)"
+            ></app-definition-add-asset-volume-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm"
+               (click)="addAssetVolume()"
             >
                 <span class="glyphicon glyphicon-plus"></span>
             </a>

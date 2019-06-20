@@ -4,7 +4,7 @@ export interface DefinitionTypeInterface {
     readonly id: string;
     readonly name: string;
     readonly projectId: string;
-    readonly config: ConfigTypeInterface;
+    readonly configAsYaml: string;
     readonly createdAt: string;
     readonly updatedAt: string;
 }

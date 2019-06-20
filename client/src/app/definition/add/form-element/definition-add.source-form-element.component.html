@@ -9,14 +9,14 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">ID</label>
-                <input type="text" class="form-control" [(ngModel)]="source.id">
+                <input type="text" trim class="form-control" [(ngModel)]="source.id">
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Clone URL</label>
-                <input type="text" class="form-control" [(ngModel)]="source.cloneUrl">
+                <input type="text" trim class="form-control" [(ngModel)]="source.cloneUrl">
             </div>
         </div>
 
@@ -49,7 +49,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Source reference name</label>
-                <input type="text" class="form-control" [(ngModel)]="source.reference.name">
+                <input type="text" trim class="form-control" [(ngModel)]="source.reference.name">
             </div>
         </div>
 

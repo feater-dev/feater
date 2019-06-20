@@ -1,10 +1,9 @@
 import {SimpleCommand} from '../../executor/simple-command';
 
-export class RemoveSourceVolumeCommand extends SimpleCommand {
+export class RemoveVolumeCommand extends SimpleCommand {
 
     constructor(
-        readonly sourceId: string,
-        readonly sourceDockerVolumeName: string,
+        readonly dockerVolumeName: string,
         readonly workingDirectory: string,
     ) {
         super();

@@ -1,46 +1,59 @@
 import {Injectable} from '@nestjs/common';
-import {ConfigTypeInterface} from '../type/nested/definition-config/config-type.interface';
-import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
-import {SourceReferenceTypeInterface} from '../type/nested/definition-config/source-reference-type.interface';
-import {ProxiedPortTypeInterface} from '../type/nested/definition-config/proxied-port-type.interface';
-import {SummaryItemTypeInterface} from '../type/nested/definition-config/summary-item-type.interface';
-import {ComposeFileTypeInterface} from '../type/nested/definition-config/compose-file-type.interface';
-import {EnvVariableTypeInterface} from '../type/nested/definition-config/env-variable-type.interface';
+import {ConfigTypeInterface} from '../api/type/nested/definition-config/config-type.interface';
+import {SourceTypeInterface} from '../api/type/nested/definition-config/source-type.interface';
+import {SourceReferenceTypeInterface} from '../api/type/nested/definition-config/source-reference-type.interface';
+import {ProxiedPortTypeInterface} from '../api/type/nested/definition-config/proxied-port-type.interface';
+import {SummaryItemTypeInterface} from '../api/type/nested/definition-config/summary-item-type.interface';
+import {ComposeFileTypeInterface} from '../api/type/nested/definition-config/compose-file-type.interface';
+import {EnvVariableTypeInterface} from '../api/type/nested/definition-config/env-variable-type.interface';
 import {
     BeforeBuildTaskTypeInterface,
     CopyBeforeBuildTaskTypeInterface,
     InterpolateBeforeBuildTaskTypeInterface,
-} from '../type/nested/definition-config/before-build-task-type.interface';
+} from '../api/type/nested/definition-config/before-build-task-type.interface';
 import {
     AfterBuildTaskTypeInterface,
     CopyAssetIntoContainerAfterBuildTaskTypeInterface,
     ExecuteServiceCommandAfterBuildTaskTypeInterface,
-} from '../type/nested/definition-config/after-build-task-type.interface';
-import {VolumeTypeInterface} from '../type/nested/definition-config/volume-type.interface';
+} from '../api/type/nested/definition-config/after-build-task-type.interface';
+import {AssetVolumeTypeInterface} from '../api/type/nested/definition-config/asset-volume-type.interface';
+import {SourceVolumeTypeInterface} from '../api/type/nested/definition-config/source-volume-type.interface';
+import * as jsYaml from 'js-yaml';
+import * as camelCaseKeys from 'camelcase-keys';
 
 @Injectable()
 export class DefinitionConfigMapper {
-    map(config: any): ConfigTypeInterface {
+
+    protected readonly supportedSchemaVersions = [
+        '0.1.0',
+    ];
+
+    map(configAsYaml: string): ConfigTypeInterface {
+        const configAsJson: any = camelCaseKeys(jsYaml.safeLoad(configAsYaml), {deep: true});
+        if (-1 === this.supportedSchemaVersions.indexOf(configAsJson.schemaVersion)) {
+            throw new Error(`Unsupported schema version ${configAsJson.schemaVersion}.`);
+        }
+
+        // TODO Some interface can be used once schema version is determined.
+
         const mappedSources: SourceTypeInterface[] = [];
-        for (const source of config.sources) {
+        for (const source of configAsJson.sources) {
             mappedSources.push(this.mapSource(source));
         }
 
-        const mappedVolumes: VolumeTypeInterface[] = [];
-        for (const volume of config.volumes) {
-            mappedVolumes.push(this.mapVolume(volume));
+        const mappedAssetVolumes: AssetVolumeTypeInterface[] = [];
+        for (const assetVolume of configAsJson.assetVolumes) {
+            mappedAssetVolumes.push(this.mapAssetVolume(assetVolume));
         }
 
-        const mappedProxiedPorts: ProxiedPortTypeInterface[] = [];
-        for (const proxiedPort of config.proxiedPorts) {
-            mappedProxiedPorts.push(
-                this.mapProxiedPort(proxiedPort),
-            );
+        const mappedSourceVolumes: AssetVolumeTypeInterface[] = [];
+        for (const sourceVolume of configAsJson.sourceVolumes) {
+            mappedSourceVolumes.push(this.mapSourceVolume(sourceVolume));
         }
 
         const mappedEnvVariables: EnvVariableTypeInterface[] = [];
-        if (config.envVariables) {
-            for (const envVariable of config.envVariables) {
+        if (configAsJson.envVariables) {
+            for (const envVariable of configAsJson.envVariables) {
                 mappedEnvVariables.push(
                     this.mapEnvVariable(envVariable),
                 );
@@ -48,27 +61,33 @@ export class DefinitionConfigMapper {
         }
 
         const mappedComposeFiles: ComposeFileTypeInterface[] = [];
-        if (config.composeFiles) {
-            for (const composeFile of config.composeFiles) {
+        if (configAsJson.composeFiles) {
+            for (const composeFile of configAsJson.composeFiles) {
                 mappedComposeFiles.push(this.mapComposeFile(composeFile));
             }
-        } else {
-            mappedComposeFiles.push(this.mapComposeFile(config.composeFile));
+        }
+
+        const mappedProxiedPorts: ProxiedPortTypeInterface[] = [];
+        for (const proxiedPort of configAsJson.proxiedPorts) {
+            mappedProxiedPorts.push(
+                this.mapProxiedPort(proxiedPort),
+            );
         }
 
         const mappedAfterBuildTasks: AfterBuildTaskTypeInterface[] = [];
-        for (const afterBuildTask of config.afterBuildTasks) {
+        for (const afterBuildTask of configAsJson.afterBuildTasks) {
             mappedAfterBuildTasks.push(this.mapAfterBuildTask(afterBuildTask));
         }
 
         const mappedSummaryItems: SummaryItemTypeInterface[] = [];
-        for (const summaryItem of config.summaryItems) {
+        for (const summaryItem of configAsJson.summaryItems) {
             mappedSummaryItems.push(this.mapSummaryItem(summaryItem));
         }
 
         return {
             sources: mappedSources,
-            volumes: mappedVolumes,
+            sourceVolumes: mappedSourceVolumes,
+            assetVolumes: mappedAssetVolumes,
             proxiedPorts: mappedProxiedPorts,
             envVariables: mappedEnvVariables,
             composeFiles: mappedComposeFiles,
@@ -95,16 +114,29 @@ export class DefinitionConfigMapper {
         } as SourceTypeInterface;
     }
 
-    protected mapVolume(volume: any): VolumeTypeInterface {
-        let mappedVolume: VolumeTypeInterface = {
-            id: volume.id,
+    protected mapAssetVolume(assetVolume: any): AssetVolumeTypeInterface {
+        const mappedAssetVolume: AssetVolumeTypeInterface = {
+            id: assetVolume.id,
         };
 
-        if (volume.assetId) {
-            mappedVolume.assetId = volume.assetId;
+        if (assetVolume.assetId) {
+            mappedAssetVolume.assetId = assetVolume.assetId;
         }
 
-        return mappedVolume;
+        return mappedAssetVolume;
+    }
+
+    protected mapSourceVolume(sourceVolume: any): SourceVolumeTypeInterface {
+        const mappedSourceVolume: SourceVolumeTypeInterface = {
+            id: sourceVolume.id,
+            sourceId: sourceVolume.sourceId,
+        };
+
+        if (sourceVolume.relativePath) {
+            mappedSourceVolume.relativePath = sourceVolume.relativePath;
+        }
+
+        return mappedSourceVolume;
     }
 
     protected mapBeforeBuildTask(beforeBuildTask: any): BeforeBuildTaskTypeInterface {

@@ -1,6 +1,0 @@
-type DefinitionConfigProxiedPort {
-    id: String!
-    serviceId: String!
-    port: Int!
-    name: String!
-}

@@ -39,9 +39,11 @@
             </div>
 
             <div class="row form-section">
-                <div class="col-md-12" style="text-align: right;">
-                    <a routerLink="/assets" class="btn btn-default">Cancel</a>
-                    <button type="submit" class="btn btn-success" (click)="createItem()">Submit</button>
+                <div class="col-md-12">
+                    <div class="btn-block">
+                        <button type="submit" class="btn btn-success" (click)="createItem()">Submit</button>
+                        <a routerLink="/assets" class="btn btn-default">Cancel</a>
+                    </div>
                 </div>
             </div>
 

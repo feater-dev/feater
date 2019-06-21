@@ -10,7 +10,7 @@ import {Injectable} from '@nestjs/common';
 @Injectable()
 export class CopyAssetIntoContainerCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
 
-    protected readonly TYPE = 'copyAssetIntoContainer';
+    readonly TYPE = 'copy_asset_into_container';
 
     supportsType(type: string): boolean {
         return this.TYPE === type;

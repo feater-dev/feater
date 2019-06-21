@@ -11,7 +11,7 @@ import {Injectable} from '@nestjs/common';
 @Injectable()
 export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
 
-    protected readonly TYPE = 'executeServiceCommand';
+    protected readonly TYPE = 'execute_service_command';
 
     supportsType(type: string): boolean {
         return this.TYPE === type;

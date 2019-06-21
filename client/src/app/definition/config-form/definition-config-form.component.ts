@@ -115,7 +115,7 @@ export class DefinitionConfigFormComponent {
 
     addAfterBuildTaskExecuteServiceCommand(): void {
         this.config.afterBuildTasks.push({
-            type: 'executeServiceCommand',
+            type: 'execute_service_command',
             id: '',
             dependsOn: [],
             command: [''],
@@ -126,7 +126,7 @@ export class DefinitionConfigFormComponent {
 
     addAfterBuildTaskCopyAssetIntoContainer(): void {
         this.config.afterBuildTasks.push({
-            type: 'copyAssetIntoContainer',
+            type: 'copy_asset_into_container',
             id: '',
             dependsOn: [],
             serviceId: '',
@@ -136,11 +136,11 @@ export class DefinitionConfigFormComponent {
     }
 
     isAfterBuildTaskExecuteServiceCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'executeServiceCommand' === afterBuildTask.type;
+        return 'execute_service_command' === afterBuildTask.type;
     }
 
     isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: AfterBuildTaskFormElement): boolean {
-        return 'copyAssetIntoContainer' === afterBuildTask.type;
+        return 'copy_asset_into_container' === afterBuildTask.type;
     }
 
     deleteAfterBuildTask(afterBuildTask: AfterBuildTaskFormElement): void {

@@ -274,14 +274,6 @@ h2 {
     padding: 0;
 }
 
-.buttons .btn {
-    margin-right: 4px;
-}
-
-.btn .spinner {
-    margin-right: 0.25em;
-}
-
 .table-quick-search {
     margin-bottom: 8px;
 }
@@ -349,4 +341,8 @@ a.service-action:active {
 .content-header-buttons .btn,
 .content-header-buttons .btn {
     margin-left: 10px;
+}
+
+.btn-block .btn {
+    margin-right: 0.5em;
 }

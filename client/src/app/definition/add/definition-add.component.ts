@@ -115,7 +115,7 @@ export class DefinitionAddComponent implements OnInit {
 
     protected mapDefinitionToDto(): any {
         for (const afterBuildTask of this.definition.config.afterBuildTasks) {
-            if ('executeServiceCommand' === afterBuildTask.type) {
+            if ('execute_service_command' === afterBuildTask.type) {
                 this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteServiceCommandTaskFormElement);
             }
         }

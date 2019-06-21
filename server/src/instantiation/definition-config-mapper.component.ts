@@ -173,7 +173,7 @@ export class DefinitionConfigMapper {
         }
 
         switch (afterBuildTask.type) {
-            case 'executeServiceCommand':
+            case 'execute_service_command':
                 mapped = {
                     ...commonMapped,
                     serviceId: afterBuildTask.serviceId,
@@ -184,7 +184,7 @@ export class DefinitionConfigMapper {
 
                 break;
 
-            case 'copyAssetIntoContainer':
+            case 'copy_asset_into_container':
                 mapped = {
                     ...commonMapped,
                     serviceId: afterBuildTask.serviceId,

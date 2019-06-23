@@ -58,7 +58,7 @@ export class VariablesPredictor {
                 (volumeId: string): PredictedEnvVariableInterface => {
                     return {
                         name: `FEATER__ASSET_VOLUME__${volumeId.toUpperCase()}`,
-                        pattern: `${config.instantiation.containerNamePrefix}{instance_hash}_${volumeId.toLowerCase()}`,
+                        pattern: `${config.instantiation.containerNamePrefix}{instance_hash}_asset_volume_${volumeId.toLowerCase()}`,
                     };
                 },
             ),
@@ -88,6 +88,17 @@ export class VariablesPredictor {
                 pattern: `${config.instantiation.containerNamePrefix}{instance_hash}`,
             },
         ]);
+
+        featerVariables.push(
+            definitionConfig.envVariables.map(
+                (envVariable: {name: string, value: string}): PredictedFeaterVariableInterface => {
+                    return {
+                        name: `env__${envVariable.name.toLowerCase()}`,
+                        value: envVariable.value,
+                    };
+                },
+            ),
+        );
 
         const proxiedPortIds = _.filter(_.map(definitionConfig.proxiedPorts, 'id'));
         featerVariables.push(
@@ -121,7 +132,7 @@ export class VariablesPredictor {
                 (volumeId: string): PredictedFeaterVariableInterface => {
                     return {
                         name: `asset_volume__${volumeId.toLowerCase()}`,
-                        pattern: `${config.instantiation.containerNamePrefix}{instance_hash}_${volumeId.toLowerCase()}`,
+                        pattern: `${config.instantiation.containerNamePrefix}{instance_hash}_asset_volume_${volumeId.toLowerCase()}`,
                     };
                 },
             ),

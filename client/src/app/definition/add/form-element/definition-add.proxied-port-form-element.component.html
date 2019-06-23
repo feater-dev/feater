@@ -8,7 +8,7 @@
 
         <div class="col-md-3">
             <div class="form-group">
-                <label class="col-md-1 control-label">ID</label>
+                <label class="control-label">ID</label>
                 <input type="text" trim class="form-control" [(ngModel)]="proxiedPort.id">
             </div>
         </div>
@@ -31,6 +31,43 @@
             <div class="form-group">
                 <label class="control-label">Proxied port</label>
                 <input type="text" trim class="form-control" [(ngModel)]="proxiedPort.port">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Nginx configuration</label>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="proxiedPort.useDefaultNginxConfigTemplate"> Use default template
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div
+                    *ngIf="!proxiedPort.useDefaultNginxConfigTemplate"
+                    class="form-group"
+            >
+                <label class="control-label">Custom Nginx configuration template</label>
+                <textarea
+                        [(ngModel)]="proxiedPort.nginxConfigTemplate"
+                        class="form-control"
+                        rows="10"
+                        style="font-family: monospace;"
+                ></textarea>
+                <p>
+                    Available tokens:
+                    <code ngNonBindable>{{{proxy_domain}}</code>,
+                    <code ngNonBindable>{{{service_id}}</code>,
+                    <code ngNonBindable>{{{ip_address}}</code>,
+                    <code ngNonBindable>{{{port}}</code>
+                </p>
             </div>
         </div>
 

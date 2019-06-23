@@ -6,7 +6,7 @@
         <app-instance-tabs [instanceId]="instance?.id" [activeTab]="instanceTabs.buildLogs"></app-instance-tabs>
 
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div class="form-group" [hidden]="!instance?.commandLogs?.length">
                     <div *ngFor="let commandLog of instance?.commandLogs; trackBy: trackById">
                         <div class="panel panel-default command-log">

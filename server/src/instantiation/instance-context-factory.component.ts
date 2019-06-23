@@ -73,6 +73,7 @@ export class InstanceContextFactory {
                 serviceId: proxiedPort.serviceId,
                 name: proxiedPort.name,
                 port: proxiedPort.port,
+                nginxConfigTemplate: proxiedPort.nginxConfigTemplate,
             });
         }
 

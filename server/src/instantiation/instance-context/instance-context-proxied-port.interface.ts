@@ -4,5 +4,6 @@ export interface InstanceContextProxiedPortInterface {
     readonly serviceId: string;
     readonly port: number;
     domain?: string;
+    nginxConfigTemplate?: string;
     nginxConfig?: string;
 }

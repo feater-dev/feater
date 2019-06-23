@@ -26,11 +26,14 @@ interface DefinitionAddForm {
 })
 export class DefinitionAddComponent implements OnInit {
 
-    // TODO Extract some shared base controller for add/edit/duplicate.
+    // TODO Change to enum.
+    static readonly actionAdd = 'add';
 
-    static readonly actionAdd = 'add'; // TODO Change to enum.
-    static readonly modeForm = 'form'; // TODO Change to enum.
-    static readonly modeYamlImport = 'configYaml'; // TODO Change to enum.
+    // TODO Change to enum.
+    static readonly modeForm = 'form';
+
+    // TODO Change to enum.
+    static readonly modeYamlImport = 'configYaml';
 
     definition: DefinitionAddForm;
 
@@ -46,7 +49,7 @@ export class DefinitionAddComponent implements OnInit {
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected toastr: ToastrService,
-        protected readonly definitionConfigYamlMapperComponent: DefinitionConfigYamlMapperService,
+        protected definitionConfigYamlMapperComponent: DefinitionConfigYamlMapperService,
     ) {
         this.definition = {
             name: '',
@@ -125,12 +128,20 @@ export class DefinitionAddComponent implements OnInit {
             sources: this.definition.config.sources,
             sourceVolumes: this.definition.config.sourceVolumes,
             assetVolumes: this.definition.config.assetVolumes,
-            proxiedPorts: this.definition.config.proxiedPorts.map(proxiedPort => ({
-                id: proxiedPort.id,
-                serviceId: proxiedPort.serviceId,
-                port: parseInt(proxiedPort.port, 10),
-                name: proxiedPort.name,
-            })),
+            proxiedPorts: this.definition.config.proxiedPorts.map(proxiedPort => {
+                const mappedProxiedPort: any = {
+                    id: proxiedPort.id,
+                    serviceId: proxiedPort.serviceId,
+                    port: parseInt(proxiedPort.port, 10),
+                    name: proxiedPort.name,
+                };
+
+                if (!proxiedPort.useDefaultNginxConfigTemplate) {
+                    mappedProxiedPort.nginx_config_template = proxiedPort.nginxConfigTemplate;
+                }
+
+                return mappedProxiedPort;
+            }),
             envVariables: this.definition.config.envVariables,
             composeFiles: [
                 this.definition.config.composeFile,
@@ -139,15 +150,15 @@ export class DefinitionAddComponent implements OnInit {
             summaryItems: this.definition.config.summaryItems,
         };
 
-        for (const assetVolume of config.assetVolumes) {
-            if ('' === assetVolume.assetId) {
-                delete assetVolume.assetId;
-            }
-        }
-
         for (const sourceVolume of config.sourceVolumes) {
             if ('' === sourceVolume.relativePath) {
                 delete sourceVolume.relativePath;
+            }
+        }
+
+        for (const assetVolume of config.assetVolumes) {
+            if ('' === assetVolume.assetId) {
+                delete assetVolume.assetId;
             }
         }
 

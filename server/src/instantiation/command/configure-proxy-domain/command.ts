@@ -7,6 +7,7 @@ export class ConfigureProxyDomainCommand extends SimpleCommand {
         readonly ipAddress: string,
         readonly port: number,
         readonly proxyDomain: string,
+        readonly nginxConfigTemplate?: string,
     ) {
         super();
     }

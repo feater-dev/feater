@@ -5,21 +5,21 @@
     </a>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Type</label>
                 <p class="form-control-static">Copy asset into container</p>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">ID</label>
                 <input type="text" trim class="form-control" [(ngModel)]="task.id">
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Depends on</label>
                 <div *ngIf="0 === task.dependsOn.length">
@@ -50,21 +50,21 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Service ID</label>
                 <input type="text" trim class="form-control" [(ngModel)]="task.serviceId">
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Asset ID</label>
                 <input type="text" trim class="form-control" [(ngModel)]="task.assetId">
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Destination path</label>
                 <input type="text" trim class="form-control" [(ngModel)]="task.destinationPath">

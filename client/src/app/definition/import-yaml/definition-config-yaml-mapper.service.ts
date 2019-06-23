@@ -7,6 +7,23 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class DefinitionConfigYamlMapperService {
 
+    readonly defaultNginxConfigTemplate = `# Proxy domain for
+# port {{{port}}}
+# of {{{service_id}}}
+# running at IP address {{{ip_address}}}
+#
+server {
+    listen 9011;
+    listen [::]:9011;
+
+    server_name {{{proxy_domain}}};
+
+    location / {
+        proxy_pass http://{{{ip_address}}}:{{{port}}};
+        proxy_set_header Host $host;
+    }
+}`;
+
     map(configYaml: string): DefinitionConfigFormElement {
         const camelCaseYamlConfig: any = camelCaseKeys(jsYaml.safeLoad(configYaml), {deep: true});
 
@@ -41,6 +58,8 @@ export class DefinitionConfigYamlMapperService {
                 serviceId: proxiedPort.serviceId,
                 port: `${proxiedPort.port}`,
                 name: proxiedPort.name,
+                useDefaultNginxConfigTemplate: !proxiedPort.nginxConfigTemplate,
+                nginxConfigTemplate: proxiedPort.nginxConfigTemplate || this.defaultNginxConfigTemplate
             });
         }
 

@@ -14,6 +14,7 @@ import {
     CopyAssetIntoContainerTaskFormElement, DefinitionSourceVolumeFormElement,
 } from './definition-config-form.model';
 import {ToastrService} from 'ngx-toastr';
+import {DefinitionConfigYamlMapperService} from '../import-yaml/definition-config-yaml-mapper.service';
 
 
 @Component({
@@ -31,8 +32,8 @@ export class DefinitionConfigFormComponent {
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected toastr: ToastrService,
-    ) {
-    }
+        protected definitionConfigYamlMapperService: DefinitionConfigYamlMapperService,
+    ) {}
 
     addSource(): void {
         this.config.sources.push({
@@ -89,6 +90,8 @@ export class DefinitionConfigFormComponent {
             id: '',
             name: '',
             port: null,
+            useDefaultNginxConfigTemplate: true,
+            nginxConfigTemplate: this.definitionConfigYamlMapperService.defaultNginxConfigTemplate,
         });
     }
 

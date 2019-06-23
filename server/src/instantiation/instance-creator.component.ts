@@ -570,6 +570,7 @@ export class InstanceCreatorComponent {
                                 service.ipAddress,
                                 proxiedPort.port,
                                 proxiedPort.domain,
+                                proxiedPort.nginxConfigTemplate,
                             );
                         },
                         async (result: ConfigureProxyDomainCommandResultInterface): Promise<void> => {

@@ -214,6 +214,7 @@ export class DefinitionConfigMapper {
             serviceId: proxiedPort.serviceId,
             port: proxiedPort.port,
             name: proxiedPort.name,
+            nginxConfigTemplate: proxiedPort.nginxConfigTemplate,
         } as ProxiedPortTypeInterface;
     }
 

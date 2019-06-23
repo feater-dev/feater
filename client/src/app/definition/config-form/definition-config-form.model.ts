@@ -53,6 +53,8 @@ export interface DefinitionProxiedPortFormElement {
     id: string;
     name: string;
     port: string;
+    useDefaultNginxConfigTemplate: boolean;
+    nginxConfigTemplate?: string;
 }
 
 export interface DefinitionEnvVariableFormElement {

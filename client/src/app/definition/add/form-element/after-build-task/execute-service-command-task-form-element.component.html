@@ -5,22 +5,30 @@
     </a>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Task type</label>
                 <p class="form-control-static">Execute command on service container</p>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
-                <label class="control-label">ID</label>
+                <label class="control-label">
+                    ID
+                    <span tooltip="ID can be provided for after build task in order to define the order in which they should be executed. It can be referenced in <em>Depends on</em> property of other tasks."
+                          placement="right"
+                          theme="light"
+                          show-delay="200"
+                    >
+                        <span class="glyphicon glyphicon-question-sign"></span>
+                    </span>
+                </label>
                 <input type="text" trim class="form-control" [(ngModel)]="task.id">
-                <span class="help-block">ID can be provided to be referenced later in <em>Depends on</em> property of other tasks in order to define the order in which they should be executed.</span>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Depends on</label>
                 <div *ngIf="0 === task.dependsOn.length">
@@ -51,22 +59,31 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
-                <label class="control-label">Service ID</label>
+                <label class="control-label">
+                    Service ID
+                    <span *ngIf="task.serviceId"
+                          tooltip="It is assumed that service named <code>{{ task.serviceId }}</code> is defined in Docker Compose configuration."
+                          placement="right"
+                          theme="light"
+                          show-delay="200"
+                    >
+                        <span class="glyphicon glyphicon-question-sign"></span>
+                    </span>
+                </label>
                 <input type="text" trim class="form-control" [(ngModel)]="task.serviceId">
-                <span class="help-block">It is assumed that service named <code>{{ task.serviceId }}</code> is defined in Docker Compose configuration and that it will be running in <code>{{ task.serviceId }}_1</code> container named .</span>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Command</label>
                 <input type="text" trim class="form-control" [(ngModel)]="task.command[0]">
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Arguments</label>
                 <div *ngIf="2 > task.command.length">
@@ -101,13 +118,13 @@
     <hr style="border-color: rgba(44,62,80,0.15);">
 
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-md-6">
             <app-inherited-env-vars-form-element [inheritedEnvVars]="task.inheritedEnvVariables"
                                                  [availableEnvVarNames]="availableEnvVariableNames"
             ></app-inherited-env-vars-form-element>
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-md-6">
             <app-custom-env-vars-form-element [customEnvVars]="task.customEnvVariables"></app-custom-env-vars-form-element>
         </div>
 

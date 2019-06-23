@@ -7,15 +7,15 @@
 # Quick reference
 
 * Source code and where to file issues:
-  http://github.com/boldare/feater
+  http://github.com/feater-dev/feater
 
 * Example project that can be easily run with Feater:
-  https://github.com/boldare/feater-symfony-example
+  https://github.com/feater-dev/symfony-example
 
 # Introduction
 
-**Feater** is a tool for rapid deployment of selected features of your web
-application to isolated testing or demo environments.
+**Feater** is a tool for **rapid deployment of selected features** of your web
+application **to isolated testing or demo environments**.
 
 **It’s open-source.**
 It's released under MIT license. You can use it for free as well as modify it to
@@ -37,7 +37,7 @@ a dedicated server for it.
 # License
 
 Feater is released under MIT License. You can view license information at
-https://raw.githubusercontent.com/boldare/feater/master/LICENSE
+https://raw.githubusercontent.com/feater-dev/feater/master/LICENSE
 
 # How to use this image
 

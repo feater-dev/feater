@@ -3,4 +3,5 @@ export interface ProxiedPortTypeInterface {
     readonly serviceId: string;
     readonly port: number;
     readonly name: string;
+    readonly nginxConfigTemplate?: string;
 }

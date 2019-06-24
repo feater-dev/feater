@@ -28,7 +28,7 @@ import {DeployKeyDetailComponent} from './deploy-key/detail/deploy-key-detail.co
 import {DeployKeyTableComponent} from './deploy-key/table/deploy-key-table.component';
 
 import {DefinitionSummaryComponent} from './definition/detail/summary/definition-summary.component';
-import {DefinitionConfigurationComponent} from './definition/detail/configuration/definition-configuration.component';
+import {DefinitionRecipeComponent} from './definition/detail/recipe/definition-recipe.component';
 import {DefinitionDeployKeysComponent} from './definition/detail/deploy-keys/definition-deploy-keys.component';
 import {DefinitionEnvironmentComponent} from './definition/detail/environment/definition-environment.component';
 import {DefinitionSubstitutionsComponent} from './definition/detail/substitutions/definition-substitutions.component';
@@ -79,9 +79,9 @@ import {ToastrModule} from 'ngx-toastr';
 import {TitleComponent} from './title/title.component';
 import {DefinitionTabsComponent} from './definition/detail/tabs/definition-tabs.component';
 import {InstanceTabsComponent} from './instance/detail/tabs/instance-tabs.component';
-import {DefinitionConfigFormComponent} from './definition/config-form/definition-config-form.component';
-import {ImportDefinitionConfigYamlComponent} from './definition/import-yaml/import-definition-config-yaml.component';
-import {DefinitionConfigYamlMapperService} from './definition/import-yaml/definition-config-yaml-mapper.service';
+import {DefinitionRecipeFormComponent} from './definition/recipe-form/definition-recipe-form.component';
+import {ImportDefinitionRecipeYamlComponent} from './definition/import-yaml/import-definition-recipe-yaml.component';
+import {DefinitionRecipeYamlMapperService} from './definition/import-yaml/definition-recipe-yaml-mapper.service';
 import {DefinitionAddSourceVolumeFormElementComponent} from './definition/add/form-element/definition-add.source-volume-form-element.component';
 import {NgxTrimDirectiveModule} from 'ngx-trim-directive';
 
@@ -93,7 +93,7 @@ const appRoutes: Routes = [
     { path: 'project/:id/asset/add', component: AssetAddComponent},
     { path: 'definitions', component: DefinitionListComponent },
     { path: 'definition/:id', component: DefinitionSummaryComponent},
-    { path: 'definition/:id/configuration', component: DefinitionConfigurationComponent},
+    { path: 'definition/:id/recipe', component: DefinitionRecipeComponent},
     { path: 'definition/:id/deploy-keys', component: DefinitionDeployKeysComponent},
     { path: 'definition/:id/substitutions', component: DefinitionSubstitutionsComponent},
     { path: 'definition/:id/environment', component: DefinitionEnvironmentComponent},
@@ -121,8 +121,8 @@ const appRoutes: Routes = [
         ProjectAddComponent,
         ProjectDetailComponent,
         ProjectListComponent,
-        DefinitionConfigFormComponent,
-        ImportDefinitionConfigYamlComponent,
+        DefinitionRecipeFormComponent,
+        ImportDefinitionRecipeYamlComponent,
         DefinitionAddComponent,
         DefinitionDuplicateComponent,
         DefinitionEditComponent,
@@ -140,7 +140,7 @@ const appRoutes: Routes = [
         InheritedEnvVarsFormElementComponent,
         CustomEnvVarsFormElementComponent,
         DefinitionSummaryComponent,
-        DefinitionConfigurationComponent,
+        DefinitionRecipeComponent,
         DefinitionDeployKeysComponent,
         DefinitionSubstitutionsComponent,
         DefinitionEnvironmentComponent,
@@ -198,7 +198,7 @@ const appRoutes: Routes = [
         ConfirmComponent,
     ],
     providers: [
-        DefinitionConfigYamlMapperService,
+        DefinitionRecipeYamlMapperService,
     ],
     bootstrap: [
         AppComponent,

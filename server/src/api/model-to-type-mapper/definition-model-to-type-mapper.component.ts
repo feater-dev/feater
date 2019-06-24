@@ -1,13 +1,13 @@
 import {Injectable} from '@nestjs/common';
 import {DefinitionInterface} from '../../persistence/interface/definition.interface';
 import {DefinitionTypeInterface} from '../type/definition-type.interface';
-import {DefinitionConfigMapper} from '../../instantiation/definition-config-mapper.component';
+import {DefinitionRecipeMapper} from '../../instantiation/definition-recipe-mapper.component';
 import {DateConverter} from '../date-converter.component';
 
 @Injectable()
 export class DefinitionModelToTypeMapper {
     constructor(
-        private readonly definitionConfigMapper: DefinitionConfigMapper,
+        private readonly definitionRecipeMapper: DefinitionRecipeMapper,
         private readonly dateConverter: DateConverter,
     ) { }
 
@@ -16,7 +16,7 @@ export class DefinitionModelToTypeMapper {
             id: definition._id,
             name: definition.name,
             projectId: definition.projectId.toString(),
-            configAsYaml: definition.configAsYaml,
+            recipeAsYaml: definition.recipeAsYaml,
             createdAt: this.dateConverter.convertDate(definition.createdAt),
             updatedAt: this.dateConverter.convertDate(definition.updatedAt),
         } as DefinitionTypeInterface;

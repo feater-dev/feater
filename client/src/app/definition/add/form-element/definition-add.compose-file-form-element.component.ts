@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {DefinitionSourceFormElement, DefinitionAddComposeFileFormElement} from '../../config-form/definition-config-form.model';
+import {DefinitionSourceFormElement, DefinitionAddComposeFileFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
 @Component({

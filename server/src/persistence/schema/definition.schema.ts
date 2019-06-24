@@ -6,7 +6,7 @@ export const DefinitionSchema = new Schema({
         ref: 'Project',
     },
     name: String,
-    configAsYaml: String,
+    recipeAsYaml: String,
     createdAt: Date,
     updatedAt: Date,
 });

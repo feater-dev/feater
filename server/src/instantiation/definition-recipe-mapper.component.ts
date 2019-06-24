@@ -1,59 +1,59 @@
 import {Injectable} from '@nestjs/common';
-import {ConfigTypeInterface} from '../api/type/nested/definition-config/config-type.interface';
-import {SourceTypeInterface} from '../api/type/nested/definition-config/source-type.interface';
-import {SourceReferenceTypeInterface} from '../api/type/nested/definition-config/source-reference-type.interface';
-import {ProxiedPortTypeInterface} from '../api/type/nested/definition-config/proxied-port-type.interface';
-import {SummaryItemTypeInterface} from '../api/type/nested/definition-config/summary-item-type.interface';
-import {ComposeFileTypeInterface} from '../api/type/nested/definition-config/compose-file-type.interface';
-import {EnvVariableTypeInterface} from '../api/type/nested/definition-config/env-variable-type.interface';
+import {RecipeTypeInterface} from '../api/type/nested/definition-recipe/recipe-type.interface';
+import {SourceTypeInterface} from '../api/type/nested/definition-recipe/source-type.interface';
+import {SourceReferenceTypeInterface} from '../api/type/nested/definition-recipe/source-reference-type.interface';
+import {ProxiedPortTypeInterface} from '../api/type/nested/definition-recipe/proxied-port-type.interface';
+import {SummaryItemTypeInterface} from '../api/type/nested/definition-recipe/summary-item-type.interface';
+import {ComposeFileTypeInterface} from '../api/type/nested/definition-recipe/compose-file-type.interface';
+import {EnvVariableTypeInterface} from '../api/type/nested/definition-recipe/env-variable-type.interface';
 import {
     BeforeBuildTaskTypeInterface,
     CopyBeforeBuildTaskTypeInterface,
     InterpolateBeforeBuildTaskTypeInterface,
-} from '../api/type/nested/definition-config/before-build-task-type.interface';
+} from '../api/type/nested/definition-recipe/before-build-task-type.interface';
 import {
     AfterBuildTaskTypeInterface,
     CopyAssetIntoContainerAfterBuildTaskTypeInterface,
     ExecuteServiceCommandAfterBuildTaskTypeInterface,
-} from '../api/type/nested/definition-config/after-build-task-type.interface';
-import {AssetVolumeTypeInterface} from '../api/type/nested/definition-config/asset-volume-type.interface';
-import {SourceVolumeTypeInterface} from '../api/type/nested/definition-config/source-volume-type.interface';
+} from '../api/type/nested/definition-recipe/after-build-task-type.interface';
+import {AssetVolumeTypeInterface} from '../api/type/nested/definition-recipe/asset-volume-type.interface';
+import {SourceVolumeTypeInterface} from '../api/type/nested/definition-recipe/source-volume-type.interface';
 import * as jsYaml from 'js-yaml';
 import * as camelCaseKeys from 'camelcase-keys';
 
 @Injectable()
-export class DefinitionConfigMapper {
+export class DefinitionRecipeMapper {
 
     protected readonly supportedSchemaVersions = [
         '0.1.0',
     ];
 
-    map(configAsYaml: string): ConfigTypeInterface {
-        const configAsJson: any = camelCaseKeys(jsYaml.safeLoad(configAsYaml), {deep: true});
-        if (-1 === this.supportedSchemaVersions.indexOf(configAsJson.schemaVersion)) {
-            throw new Error(`Unsupported schema version ${configAsJson.schemaVersion}.`);
+    map(recipeAsYaml: string): RecipeTypeInterface {
+        const recipeAsJson: any = camelCaseKeys(jsYaml.safeLoad(recipeAsYaml), {deep: true});
+        if (-1 === this.supportedSchemaVersions.indexOf(recipeAsJson.schemaVersion)) {
+            throw new Error(`Unsupported schema version ${recipeAsJson.schemaVersion}.`);
         }
 
         // TODO Some interface can be used once schema version is determined.
 
         const mappedSources: SourceTypeInterface[] = [];
-        for (const source of configAsJson.sources) {
+        for (const source of recipeAsJson.sources) {
             mappedSources.push(this.mapSource(source));
         }
 
         const mappedAssetVolumes: AssetVolumeTypeInterface[] = [];
-        for (const assetVolume of configAsJson.assetVolumes) {
+        for (const assetVolume of recipeAsJson.assetVolumes) {
             mappedAssetVolumes.push(this.mapAssetVolume(assetVolume));
         }
 
         const mappedSourceVolumes: AssetVolumeTypeInterface[] = [];
-        for (const sourceVolume of configAsJson.sourceVolumes) {
+        for (const sourceVolume of recipeAsJson.sourceVolumes) {
             mappedSourceVolumes.push(this.mapSourceVolume(sourceVolume));
         }
 
         const mappedEnvVariables: EnvVariableTypeInterface[] = [];
-        if (configAsJson.envVariables) {
-            for (const envVariable of configAsJson.envVariables) {
+        if (recipeAsJson.envVariables) {
+            for (const envVariable of recipeAsJson.envVariables) {
                 mappedEnvVariables.push(
                     this.mapEnvVariable(envVariable),
                 );
@@ -61,26 +61,26 @@ export class DefinitionConfigMapper {
         }
 
         const mappedComposeFiles: ComposeFileTypeInterface[] = [];
-        if (configAsJson.composeFiles) {
-            for (const composeFile of configAsJson.composeFiles) {
+        if (recipeAsJson.composeFiles) {
+            for (const composeFile of recipeAsJson.composeFiles) {
                 mappedComposeFiles.push(this.mapComposeFile(composeFile));
             }
         }
 
         const mappedProxiedPorts: ProxiedPortTypeInterface[] = [];
-        for (const proxiedPort of configAsJson.proxiedPorts) {
+        for (const proxiedPort of recipeAsJson.proxiedPorts) {
             mappedProxiedPorts.push(
                 this.mapProxiedPort(proxiedPort),
             );
         }
 
         const mappedAfterBuildTasks: AfterBuildTaskTypeInterface[] = [];
-        for (const afterBuildTask of configAsJson.afterBuildTasks) {
+        for (const afterBuildTask of recipeAsJson.afterBuildTasks) {
             mappedAfterBuildTasks.push(this.mapAfterBuildTask(afterBuildTask));
         }
 
         const mappedSummaryItems: SummaryItemTypeInterface[] = [];
-        for (const summaryItem of configAsJson.summaryItems) {
+        for (const summaryItem of recipeAsJson.summaryItems) {
             mappedSummaryItems.push(this.mapSummaryItem(summaryItem));
         }
 
@@ -93,7 +93,7 @@ export class DefinitionConfigMapper {
             composeFiles: mappedComposeFiles,
             afterBuildTasks: mappedAfterBuildTasks,
             summaryItems: mappedSummaryItems,
-        } as ConfigTypeInterface;
+        } as RecipeTypeInterface;
     }
 
     protected mapSource(source: any): SourceTypeInterface {

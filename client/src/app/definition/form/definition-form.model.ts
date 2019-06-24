@@ -1,6 +1,6 @@
-import {DefinitionConfigFormElement} from '../config-form/definition-config-form.model';
+import {DefinitionRecipeFormElement} from '../recipe-form/definition-recipe-form.model';
 
 export interface DefinitionFormModel {
     name: string;
-    config: DefinitionConfigFormElement;
+    recipe: DefinitionRecipeFormElement;
 }

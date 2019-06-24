@@ -29,7 +29,7 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
             commandLogger,
         } = command as ParseDockerComposeCommand;
 
-        // TODO Move to config and env variables.
+        // TODO Move to recipe and env variables.
         const hostDockerSocketPath = '/var/run/docker.sock';
 
         const composeConfigCommand = config.instantiation.dockerBinaryPath;
@@ -75,10 +75,10 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
 
         // TODO Add some error handling.
 
-        const combinedComposeConfiguration = dockerComposeConfigSpawnResult.stdout.toString();
-        commandLogger.info(`Combined compose configuration (some environmental variable values not available yet):\n${combinedComposeConfiguration}`);
+        const combinedComposeConfig = dockerComposeConfigSpawnResult.stdout.toString();
+        commandLogger.info(`Combined compose configuration (some environmental variable values not available yet):\n${combinedComposeConfig}`);
 
-        const compose = jsYaml.safeLoad(combinedComposeConfiguration);
+        const compose = jsYaml.safeLoad(combinedComposeConfig);
 
         const serviceIds = Object.keys(compose.services || {});
 

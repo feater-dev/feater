@@ -21,7 +21,7 @@ async function bootstrap() {
         stream: process.stdout,
     }));
 
-    // TODO Get port from config.
+    // TODO Get port from recipe.
     await app.listen(3000);
 }
 

@@ -1,11 +1,11 @@
-import {DefinitionConfigFormElement} from '../config-form/definition-config-form.model';
+import {DefinitionRecipeFormElement} from '../recipe-form/definition-recipe-form.model';
 import * as jsYaml from 'js-yaml';
 import * as camelCaseKeys from 'camelcase-keys';
 import {Injectable} from '@angular/core';
 
 
 @Injectable()
-export class DefinitionConfigYamlMapperService {
+export class DefinitionRecipeYamlMapperService {
 
     readonly defaultNginxConfigTemplate = `# Proxy domain for
 # port {{{port}}}
@@ -24,10 +24,10 @@ server {
     }
 }`;
 
-    map(configYaml: string): DefinitionConfigFormElement {
-        const camelCaseYamlConfig: any = camelCaseKeys(jsYaml.safeLoad(configYaml), {deep: true});
+    map(recipeYaml: string): DefinitionRecipeFormElement {
+        const camelCaseYamlRecipe: any = camelCaseKeys(jsYaml.safeLoad(recipeYaml), {deep: true});
 
-        const mappedYamlConfig = {
+        const mappedYamlRecipe = {
             sources: [],
             sourceVolumes: [],
             assetVolumes: [],
@@ -38,22 +38,22 @@ server {
             summaryItems: [],
         };
 
-        for (const source of camelCaseYamlConfig.sources) {
+        for (const source of camelCaseYamlRecipe.sources) {
             // TODO Move Yaml validation to server side to provide checks and defaults.
             source.useDeployKey = source.useDeployKey || false;
-            mappedYamlConfig.sources.push(source);
+            mappedYamlRecipe.sources.push(source);
         }
 
-        for (const sourceVolume of camelCaseYamlConfig.sourceVolumes) {
-            mappedYamlConfig.sourceVolumes.push(sourceVolume);
+        for (const sourceVolume of camelCaseYamlRecipe.sourceVolumes) {
+            mappedYamlRecipe.sourceVolumes.push(sourceVolume);
         }
 
-        for (const assetVolume of camelCaseYamlConfig.assetVolumes) {
-            mappedYamlConfig.assetVolumes.push(assetVolume);
+        for (const assetVolume of camelCaseYamlRecipe.assetVolumes) {
+            mappedYamlRecipe.assetVolumes.push(assetVolume);
         }
 
-        for (const proxiedPort of camelCaseYamlConfig.proxiedPorts) {
-            mappedYamlConfig.proxiedPorts.push({
+        for (const proxiedPort of camelCaseYamlRecipe.proxiedPorts) {
+            mappedYamlRecipe.proxiedPorts.push({
                 id: proxiedPort.id,
                 serviceId: proxiedPort.serviceId,
                 port: `${proxiedPort.port}`,
@@ -63,17 +63,17 @@ server {
             });
         }
 
-        for (const envVariable of camelCaseYamlConfig.envVariables) {
-            mappedYamlConfig.envVariables.push(envVariable);
+        for (const envVariable of camelCaseYamlRecipe.envVariables) {
+            mappedYamlRecipe.envVariables.push(envVariable);
         }
 
-        mappedYamlConfig.composeFile = {
-            sourceId: camelCaseYamlConfig.composeFiles[0].sourceId,
-            envDirRelativePath: camelCaseYamlConfig.composeFiles[0].envDirRelativePath,
-            composeFileRelativePaths: camelCaseYamlConfig.composeFiles[0].composeFileRelativePaths,
+        mappedYamlRecipe.composeFile = {
+            sourceId: camelCaseYamlRecipe.composeFiles[0].sourceId,
+            envDirRelativePath: camelCaseYamlRecipe.composeFiles[0].envDirRelativePath,
+            composeFileRelativePaths: camelCaseYamlRecipe.composeFiles[0].composeFileRelativePaths,
         };
 
-        for (const afterBuildTask of camelCaseYamlConfig.afterBuildTasks) {
+        for (const afterBuildTask of camelCaseYamlRecipe.afterBuildTasks) {
             const mappedAfterBuildTask = afterBuildTask;
 
             if (!afterBuildTask.id) {
@@ -84,13 +84,13 @@ server {
                 mappedAfterBuildTask.dependsOn = [];
             }
 
-            mappedYamlConfig.afterBuildTasks.push(mappedAfterBuildTask);
+            mappedYamlRecipe.afterBuildTasks.push(mappedAfterBuildTask);
         }
 
-        for (const summaryItem of camelCaseYamlConfig.summaryItems) {
-            mappedYamlConfig.summaryItems.push(summaryItem);
+        for (const summaryItem of camelCaseYamlRecipe.summaryItems) {
+            mappedYamlRecipe.summaryItems.push(summaryItem);
         }
 
-        return mappedYamlConfig;
+        return mappedYamlRecipe;
     }
 }

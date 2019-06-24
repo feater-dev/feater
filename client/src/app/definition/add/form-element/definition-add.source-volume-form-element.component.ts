@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {DefinitionSourceVolumeFormElement} from '../../config-form/definition-config-form.model';
+import {DefinitionSourceVolumeFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
 @Component({

@@ -4,8 +4,8 @@
             <li [ngClass]="{'active': activeTab === definitionTabs.summary}">
                 <a routerLink="/definition/{{ definitionId }}">Summary</a>
             </li>
-            <li [ngClass]="{'active': activeTab === definitionTabs.configuration}">
-                <a routerLink="/definition/{{ definitionId }}/configuration">Configuration</a>
+            <li [ngClass]="{'active': activeTab === definitionTabs.recipe}">
+                <a routerLink="/definition/{{ definitionId }}/recipe">Recipe</a>
             </li>
             <li [ngClass]="{'active': activeTab === definitionTabs.deployKeys}">
                 <a routerLink="/definition/{{ definitionId }}/deploy-keys">Deploy keys</a>

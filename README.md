@@ -13,7 +13,7 @@
 # License
 
 Feater is released under MIT License. You can view license information at
-https://raw.githubusercontent.com/feater-dev/feater/master/LICENSE
+https://raw.githubusercontent.com/boldare/feater/master/LICENSE
 
 # Core concepts
 
@@ -64,7 +64,7 @@ And here is and example of the corresponding section in YAML recipe:
 ```yaml
 sources:
 - id: symfony_example
-  clone_url: "https://github.com/feater-dev/symfony-example.git"
+  clone_url: "https://github.com/boldare/feater-symfony-example.git"
   use_deploy_key: false
   reference:
     type: branch
@@ -83,7 +83,7 @@ sources:
 Following properties need to be defined for each source:
 
 - **ID** - it will be used to reference given source later; it will also become a part of related environmental and substitution variable names as well as some internal paths;
-- **clone URL** - specifies where given repository is located; both HTTPS and SSH links can be used (e.g. `https://github.com/feater-dev/symfony-example.git`, `git@github.com:feater-dev/symfony-example.git`); if HTTPS protocol is used then SSH deploy key cannot be utilized hence repository needs to be public; as no vendor-specific API is used neither for cloning nor for retrieving additional information about sources, they can be stored on GitHub/GitLab/BitBucket or any other Git server;
+- **clone URL** - specifies where given repository is located; both HTTPS and SSH links can be used (e.g. `https://github.com/boldare/feater-symfony-example.git`, `git@github.com:boldare/feater-symfony-example.git`); if HTTPS protocol is used then SSH deploy key cannot be utilized hence repository needs to be public; as no vendor-specific API is used neither for cloning nor for retrieving additional information about sources, they can be stored on GitHub/GitLab/BitBucket or any other Git server;
 - **use deploy key** - specifies if deploy key should be generated and used for cloning repository; for each repository (identified by clone URL) only one deploy key will be generated; before building an instance all deploy keys listed for given definition should be added for respective repositories on Git server;
 - **reference type** and **reference name** - specifies which revision of source should be checked out; in most cases you will use branch reference, but tag or commit are also available; depending on reference type value the meaning of reference name will change;
   - for `branch` type a branch name needs to be provided;
@@ -639,7 +639,7 @@ If `dev` environment is selected then Nodemon will be used instead of PM2 to run
 
 # Example project
 
-Example project is available at https://github.com/feater-dev/symfony-example. It provides a simple Symfony 3.4 based application along with MySQL, Elasticsearch and MailCatcher services.
+Example project is available at https://github.com/boldare/feater-symfony-example. It provides a simple Symfony 3.4 based application along with MySQL, Elasticsearch and MailCatcher services.
 
 # Technologies used
 

@@ -7,7 +7,7 @@ import {SourceVolumeTypeInterface} from './source-volume-type.interface';
 import {AssetVolumeTypeInterface} from './asset-volume-type.interface';
 import {AfterBuildTaskTypeInterface} from './after-build-task-type.interface';
 
-export interface ConfigTypeInterface { // TODO Preserve, although not needed for API anymore. Move to instantiation module.
+export interface RecipeTypeInterface { // TODO Preserve, although not needed for API anymore. Move to instantiation module.
     readonly sources: SourceTypeInterface[];
     readonly sourceVolumes: SourceVolumeTypeInterface[];
     readonly assetVolumes: AssetVolumeTypeInterface[];

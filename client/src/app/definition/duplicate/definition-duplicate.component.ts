@@ -2,17 +2,17 @@ import {Component, OnInit} from '@angular/core';
 import {Params} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
 import {
-    getDefinitionConfigQueryGql,
-    GetDefinitionConfigQueryInterface,
-    GetDefinitionConfigQueryDefinitionFieldInterface,
-} from './get-definition-config.query';
+    getDefinitionRecipeQueryGql,
+    GetDefinitionRecipeQueryInterface,
+    GetDefinitionRecipeQueryDefinitionFieldInterface,
+} from './get-definition-recipe.query';
 import {DefinitionAddComponent} from '../add/definition-add.component';
-import {DefinitionConfigFormElement} from '../config-form/definition-config-form.model';
+import {DefinitionRecipeFormElement} from '../recipe-form/definition-recipe-form.model';
 
 
 interface DefinitionDuplicateForm {
     name: string;
-    config: DefinitionConfigFormElement;
+    recipe: DefinitionRecipeFormElement;
 }
 
 @Component({
@@ -40,8 +40,8 @@ export class DefinitionDuplicateComponent extends DefinitionAddComponent impleme
             switchMap(
                 (params: Params) => {
                     return this.apollo
-                        .watchQuery<GetDefinitionConfigQueryInterface>({
-                            query: getDefinitionConfigQueryGql,
+                        .watchQuery<GetDefinitionRecipeQueryInterface>({
+                            query: getDefinitionRecipeQueryGql,
                             variables: {
                                 id: params['id'],
                             },
@@ -55,13 +55,13 @@ export class DefinitionDuplicateComponent extends DefinitionAddComponent impleme
                 }
             ))
             .subscribe(
-                (definition: GetDefinitionConfigQueryDefinitionFieldInterface) => {
+                (definition: GetDefinitionRecipeQueryDefinitionFieldInterface) => {
                     this.project = definition.project;
                     this.sourceDefinition = {
                         name: definition.name,
                     };
                     this.definition.name = `${definition.name} - copy`;
-                    this.definition.config = this.definitionConfigYamlMapperComponent.map(definition.configAsYaml);
+                    this.definition.recipe = this.definitionRecipeYamlMapperComponent.map(definition.recipeAsYaml);
                     this.spinner.hide();
                 }
             );

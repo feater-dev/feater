@@ -7,7 +7,7 @@ type Definition {
         offset: Int
         sortKey: String
     ): [Instance!]!
-    configAsYaml: String!
+    recipeAsYaml: String!
     deployKeys: [DeployKey!]!
     predictedEnvVariables: [DefinitionPredictedEnvVariable]!
     predictedFeaterVariables: [DefinitionPredictedFeaterVariable]!

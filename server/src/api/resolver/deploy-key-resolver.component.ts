@@ -5,14 +5,14 @@ import {ResolverDeployKeyFilterArgumentsInterface} from '../filter-argument/reso
 import {RegenerateDeployKeyInputTypeInterface} from '../input-type/regenerate-deploy-key-input-type.interface';
 import {RemoveDeployKeyInputTypeInterface} from '../input-type/remove-deploy-key-input-type.interface';
 import {DefinitionRepository} from '../../persistence/repository/definition.repository';
-import {SourceTypeInterface} from '../type/nested/definition-config/source-type.interface';
+import {SourceTypeInterface} from '../type/nested/definition-recipe/source-type.interface';
 import {DeployKeyHelperComponent} from '../../helper/deploy-key-helper.component';
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {DeployKeyLister} from '../lister/deploy-key-lister.component';
 import {DeployKeyModelToTypeMapper} from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
 import {unlinkSync} from 'fs';
 import * as _ from 'lodash';
-import {DefinitionConfigMapper} from '../../instantiation/definition-config-mapper.component';
+import {DefinitionRecipeMapper} from '../../instantiation/definition-recipe-mapper.component';
 
 @Resolver('DeployKey')
 export class DeployKeyResolver {
@@ -22,7 +22,7 @@ export class DeployKeyResolver {
         private readonly deployKeyHelper: DeployKeyHelperComponent,
         private readonly deployKeyLister: DeployKeyLister,
         private readonly deployKeyModelToTypeMapper: DeployKeyModelToTypeMapper,
-        private readonly definitionConfigMapper: DefinitionConfigMapper,
+        private readonly definitionRecipeMapper: DefinitionRecipeMapper,
     ) { }
 
     @Query('deployKeys')
@@ -63,8 +63,8 @@ export class DeployKeyResolver {
         const definitions = await this.definitionRepository.find({}, 0, 99999);
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
-            for (const source of definitionConfig.sources) {
+            const definitionRecipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
+            for (const source of definitionRecipe.sources) {
                 const cloneUrl = (source as SourceTypeInterface).cloneUrl;
                 if ((source as SourceTypeInterface).useDeployKey) {
                     referencedCloneUrls.push(cloneUrl);
@@ -102,8 +102,8 @@ export class DeployKeyResolver {
 
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
-            for (const source of definitionConfig.sources) {
+            const definitionRecipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
+            for (const source of definitionRecipe.sources) {
                 const cloneUrl = (source as SourceTypeInterface).cloneUrl;
                 if ((source as SourceTypeInterface).useDeployKey) {
                     referencedCloneUrls.push(cloneUrl);

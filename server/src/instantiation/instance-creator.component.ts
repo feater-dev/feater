@@ -43,7 +43,7 @@ import {CreateSourceVolumeCommand} from './command/create-source-volume/command'
 import {RemoveVolumeCommand} from './command/remove-source-volume/command';
 import {RemoveSourceCommand} from './command/remove-source/command';
 import {CreateSourceVolumeCommandResultInterface} from './command/create-source-volume/command-result.interface';
-import {DefinitionConfigMapper} from './definition-config-mapper.component';
+import {DefinitionRecipeMapper} from './definition-recipe-mapper.component';
 
 @Injectable()
 export class InstanceCreatorComponent {
@@ -60,7 +60,7 @@ export class InstanceCreatorComponent {
         protected readonly interpolateFileCommandFactoryComponent: InterpolateFileCommandFactoryComponent,
         protected readonly copyAssetIntoContainerCommandFactoryComponent: CopyAssetIntoContainerCommandFactoryComponent,
         protected readonly executeServiceCmdCommandFactoryComponent: ExecuteServiceCmdCommandFactoryComponent,
-        protected readonly definitionConfigMapper: DefinitionConfigMapper,
+        protected readonly definitionRecipeMapper: DefinitionRecipeMapper,
     ) {
         this.beforeBuildTaskCommandFactoryComponents = [
             copyFileCommandFactoryComponent,
@@ -78,10 +78,10 @@ export class InstanceCreatorComponent {
         hash: string,
         definition: DefinitionInterface,
     ): Promise<any> {
-        const definitionConfig = this.definitionConfigMapper.map(definition.configAsYaml);
+        const definitionRecipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
         const id = instance.id;
         const taskId = 'instance_creation';
-        const instanceContext = this.instanceContextFactory.create(id, hash, definitionConfig);
+        const instanceContext = this.instanceContextFactory.create(id, hash, definitionRecipe);
 
         const createInstanceCommand = new CommandsList([], false);
 

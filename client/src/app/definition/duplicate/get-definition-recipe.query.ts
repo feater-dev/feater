@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 
-export const getDefinitionConfigQueryGql = gql`
+export const getDefinitionRecipeQueryGql = gql`
     query ($id: String!) {
         definition(id: $id) {
             id
@@ -10,21 +10,21 @@ export const getDefinitionConfigQueryGql = gql`
                 name
             }
             name
-            configAsYaml
+            recipeAsYaml
         }
     }
 `;
 
-export interface GetDefinitionConfigQueryDefinitionFieldInterface {
+export interface GetDefinitionRecipeQueryDefinitionFieldInterface {
     id: string;
     project: {
         id: string;
         name: string;
     };
     name: string;
-    configAsYaml: string;
+    recipeAsYaml: string;
 }
 
-export interface GetDefinitionConfigQueryInterface {
-    definition: GetDefinitionConfigQueryDefinitionFieldInterface;
+export interface GetDefinitionRecipeQueryInterface {
+    definition: GetDefinitionRecipeQueryDefinitionFieldInterface;
 }

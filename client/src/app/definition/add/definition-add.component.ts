@@ -4,10 +4,10 @@ import {map, switchMap} from 'rxjs/operators';
 import {Apollo} from 'apollo-angular';
 import {jsonToGraphQLQuery} from 'json-to-graphql-query';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {DefinitionConfigFormElement, ExecuteServiceCommandTaskFormElement} from '../config-form/definition-config-form.model';
+import {DefinitionRecipeFormElement, ExecuteServiceCommandTaskFormElement} from '../recipe-form/definition-recipe-form.model';
 import {getProjectQueryGql, GetProjectQueryInterface, GetProjectQueryProjectFieldInterface} from './get-project.query';
 import {ToastrService} from 'ngx-toastr';
-import {DefinitionConfigYamlMapperService} from '../import-yaml/definition-config-yaml-mapper.service';
+import {DefinitionRecipeYamlMapperService} from '../import-yaml/definition-recipe-yaml-mapper.service';
 import gql from 'graphql-tag';
 import _ from 'lodash';
 import * as jsYaml from 'js-yaml';
@@ -16,7 +16,7 @@ import * as snakeCaseKeys from 'snakecase-keys';
 
 interface DefinitionAddForm {
     name: string;
-    config: DefinitionConfigFormElement;
+    recipe: DefinitionRecipeFormElement;
 }
 
 @Component({
@@ -33,7 +33,7 @@ export class DefinitionAddComponent implements OnInit {
     static readonly modeForm = 'form';
 
     // TODO Change to enum.
-    static readonly modeYamlImport = 'configYaml';
+    static readonly modeYamlImport = 'recipeYaml';
 
     definition: DefinitionAddForm;
 
@@ -49,11 +49,11 @@ export class DefinitionAddComponent implements OnInit {
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected toastr: ToastrService,
-        protected definitionConfigYamlMapperComponent: DefinitionConfigYamlMapperService,
+        protected definitionRecipeYamlMapperComponent: DefinitionRecipeYamlMapperService,
     ) {
         this.definition = {
             name: '',
-            config: {
+            recipe: {
                 sources: [],
                 sourceVolumes: [],
                 assetVolumes: [],
@@ -111,24 +111,24 @@ export class DefinitionAddComponent implements OnInit {
         return DefinitionAddComponent.modeYamlImport === this.mode;
     }
 
-    importYamlConfig(config: DefinitionConfigFormElement): void {
-        this.definition.config = config;
+    importRecipeYaml(recipe: DefinitionRecipeFormElement): void {
+        this.definition.recipe = recipe;
         this.switchMode(DefinitionAddComponent.modeForm);
     }
 
     protected mapDefinitionToDto(): any {
-        for (const afterBuildTask of this.definition.config.afterBuildTasks) {
+        for (const afterBuildTask of this.definition.recipe.afterBuildTasks) {
             if ('execute_service_command' === afterBuildTask.type) {
                 this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteServiceCommandTaskFormElement);
             }
         }
 
-        const config = {
+        const recipe = {
             schemaVersion: '0.1.0',
-            sources: this.definition.config.sources,
-            sourceVolumes: this.definition.config.sourceVolumes,
-            assetVolumes: this.definition.config.assetVolumes,
-            proxiedPorts: this.definition.config.proxiedPorts.map(proxiedPort => {
+            sources: this.definition.recipe.sources,
+            sourceVolumes: this.definition.recipe.sourceVolumes,
+            assetVolumes: this.definition.recipe.assetVolumes,
+            proxiedPorts: this.definition.recipe.proxiedPorts.map(proxiedPort => {
                 const mappedProxiedPort: any = {
                     id: proxiedPort.id,
                     serviceId: proxiedPort.serviceId,
@@ -142,27 +142,27 @@ export class DefinitionAddComponent implements OnInit {
 
                 return mappedProxiedPort;
             }),
-            envVariables: this.definition.config.envVariables,
+            envVariables: this.definition.recipe.envVariables,
             composeFiles: [
-                this.definition.config.composeFile,
+                this.definition.recipe.composeFile,
             ],
-            afterBuildTasks: _.cloneDeep(this.definition.config.afterBuildTasks),
-            summaryItems: this.definition.config.summaryItems,
+            afterBuildTasks: _.cloneDeep(this.definition.recipe.afterBuildTasks),
+            summaryItems: this.definition.recipe.summaryItems,
         };
 
-        for (const sourceVolume of config.sourceVolumes) {
+        for (const sourceVolume of recipe.sourceVolumes) {
             if ('' === sourceVolume.relativePath) {
                 delete sourceVolume.relativePath;
             }
         }
 
-        for (const assetVolume of config.assetVolumes) {
+        for (const assetVolume of recipe.assetVolumes) {
             if ('' === assetVolume.assetId) {
                 delete assetVolume.assetId;
             }
         }
 
-        for (const afterBuildTask of config.afterBuildTasks) {
+        for (const afterBuildTask of recipe.afterBuildTasks) {
             if ('' === afterBuildTask.id) {
                 delete afterBuildTask.id;
             }
@@ -174,8 +174,8 @@ export class DefinitionAddComponent implements OnInit {
         const dto = {
             projectId: this.project.id,
             name: this.definition.name,
-            configAsYaml: jsYaml.safeDump(
-                snakeCaseKeys(config, {deep: true}),
+            recipeAsYaml: jsYaml.safeDump(
+                snakeCaseKeys(recipe, {deep: true}),
                 {indent: 4, flowLevel: -1},
             ),
         };

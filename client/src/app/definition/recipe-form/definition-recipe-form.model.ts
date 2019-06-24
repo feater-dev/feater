@@ -1,15 +1,4 @@
-// export interface DefinitionDuplicateForm {
-//     name: string;
-//     config: DefinitionConfigFormElement;
-// }
-
-// export interface DefinitionEditForm {
-//     id: string;
-//     name: string;
-//     config: DefinitionConfigFormElement;
-// }
-
-export interface DefinitionConfigFormElement {
+export interface DefinitionRecipeFormElement {
     sources: DefinitionSourceFormElement[];
     sourceVolumes: DefinitionSourceVolumeFormElement[];
     assetVolumes: DefinitionAssetVolumeFormElement[];

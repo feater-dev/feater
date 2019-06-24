@@ -4,7 +4,7 @@ import {InstantiationModule} from '../instantiation/instantiation.module';
 import {AssetController} from './controller/asset-controller';
 import {DockerLogsController} from './controller/docker-logs-controller';
 import {HelperModule} from '../helper/helper.module';
-import {DefinitionConfigMapper} from '../instantiation/definition-config-mapper.component';
+import {DefinitionRecipeMapper} from '../instantiation/definition-recipe-mapper.component';
 import {ResolverPaginationArgumentsHelper} from './pagination-argument/resolver-pagination-arguments-helper.component';
 import {ProjectsResolver} from './resolver/projects-resolver.component';
 import {DefinitionResolver} from './resolver/definition-resolver.component';

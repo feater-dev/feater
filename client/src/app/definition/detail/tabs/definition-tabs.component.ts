@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 
 export enum DefinitionTabs {
     summary,
-    configuration,
+    recipe,
     deployKeys,
     predictedEnvironment,
     predictedSubstitutions,

@@ -3,22 +3,22 @@ import {ActivatedRoute} from '@angular/router';
 import {Apollo} from 'apollo-angular';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
-    GetDefinitionConfigurationQueryDefinitionFieldInterface,
-    GetDefinitionConfigurationQueryInterface,
-    getDefinitionConfigurationQueryGql,
-} from './get-definition-configuration.query';
+    GetDefinitionRecipeQueryDefinitionFieldInterface,
+    GetDefinitionRecipeQueryInterface,
+    getDefinitionRecipeQueryGql,
+} from './get-definition-recipe.query';
 import {DefinitionTabs} from '../tabs/definition-tabs.component';
 
 @Component({
-    selector: 'app-definition-configuration',
-    templateUrl: './definition-configuration.component.html',
+    selector: 'app-definition-recipe',
+    templateUrl: './definition-recipe.component.html',
     styles: []
 })
-export class DefinitionConfigurationComponent implements OnInit {
+export class DefinitionRecipeComponent implements OnInit {
 
     readonly definitionTabs = DefinitionTabs;
 
-    definition: GetDefinitionConfigurationQueryDefinitionFieldInterface;
+    definition: GetDefinitionRecipeQueryDefinitionFieldInterface;
 
     constructor(
         protected route: ActivatedRoute,
@@ -33,15 +33,15 @@ export class DefinitionConfigurationComponent implements OnInit {
     protected getDefinition() {
         this.spinner.show();
         this.apollo
-            .watchQuery<GetDefinitionConfigurationQueryInterface>({
-                query: getDefinitionConfigurationQueryGql,
+            .watchQuery<GetDefinitionRecipeQueryInterface>({
+                query: getDefinitionRecipeQueryGql,
                 variables: {
                     id: this.route.snapshot.params['id'],
                 },
             })
             .valueChanges
             .subscribe(result => {
-                const resultData: GetDefinitionConfigurationQueryInterface = result.data;
+                const resultData: GetDefinitionRecipeQueryInterface = result.data;
                 this.definition = resultData.definition;
                 this.spinner.hide();
             });

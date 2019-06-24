@@ -3,21 +3,21 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 
-import {ImportDefinitionConfigYamlComponent} from './import-definition-config-yaml.component';
+import {ImportDefinitionRecipeYamlComponent} from './import-definition-recipe-yaml.component';
 
-describe('ImportDefinitionConfigYamlComponent', () => {
-    let component: ImportDefinitionConfigYamlComponent;
-    let fixture: ComponentFixture<ImportDefinitionConfigYamlComponent>;
+describe('ImportDefinitionRecipeYamlComponent', () => {
+    let component: ImportDefinitionRecipeYamlComponent;
+    let fixture: ComponentFixture<ImportDefinitionRecipeYamlComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ ImportDefinitionConfigYamlComponent ]
+            declarations: [ ImportDefinitionRecipeYamlComponent ]
         })
         .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ImportDefinitionConfigYamlComponent);
+        fixture = TestBed.createComponent(ImportDefinitionRecipeYamlComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

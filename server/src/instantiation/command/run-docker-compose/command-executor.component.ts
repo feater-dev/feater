@@ -28,7 +28,7 @@ export class RunDockerComposeCommandExecutorComponent implements SimpleCommandEx
             commandLogger,
         } = command as RunDockerComposeCommand;
 
-        // TODO Move to config and env variables.
+        // TODO Move to recipe and env variables.
         const hostDockerSocketPath = '/var/run/docker.sock';
 
         const composeUpCommand = config.instantiation.dockerBinaryPath;

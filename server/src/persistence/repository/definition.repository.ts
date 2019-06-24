@@ -3,7 +3,7 @@ import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {DefinitionInterface} from '../interface/definition.interface';
 import {DeployKeyRepository} from './deploy-key.repository';
-import {DefinitionConfigMapper} from '../../instantiation/definition-config-mapper.component';
+import {DefinitionRecipeMapper} from '../../instantiation/definition-recipe-mapper.component';
 
 @Injectable()
 export class DefinitionRepository {
@@ -40,13 +40,13 @@ export class DefinitionRepository {
     async create(
         projectId: string,
         name: string,
-        configAsYaml: string,
+        recipeAsYaml: string,
     ): Promise<DefinitionInterface> {
         const createdDefinition = new this.definitionModel({
             projectId,
             name,
         });
-        createdDefinition.configAsYaml = configAsYaml;
+        createdDefinition.recipeAsYaml = recipeAsYaml;
         createdDefinition.createdAt = new Date();
         createdDefinition.updatedAt = new Date();
         await createdDefinition.save();
@@ -57,14 +57,14 @@ export class DefinitionRepository {
     async update(
         id: string,
         name: string,
-        configAsYaml: string,
+        recipeAsYaml: string,
     ): Promise<DefinitionInterface> {
         const updatedDefinition = await this.findById(id);
         if (null === updatedDefinition) {
             throw new Error(`Definition document with id ${id} not found.`);
         }
         updatedDefinition.name = name;
-        updatedDefinition.configAsYaml = configAsYaml;
+        updatedDefinition.recipeAsYaml = recipeAsYaml;
         updatedDefinition.updatedAt = new Date();
         await updatedDefinition.save();
 

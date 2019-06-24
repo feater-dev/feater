@@ -22,19 +22,19 @@
             <div class="row">
                 <div class="col-md-12">
                     <a class="btn btn-primary btn-sm" (click)="toggleMode()">
-                        {{ isModeYamlImport() ? 'Back to config-form': 'Import from Yaml' }}
+                        {{ isModeYamlImport() ? 'Back to recipe-form': 'Import from Yaml' }}
                     </a>
                 </div>
             </div>
 
-            <!-- Config config-form -->
+            <!-- Recipe form -->
             <div *ngIf="isModeForm()">
-                <app-definition-config-form [config]="definition.config"></app-definition-config-form>
+                <app-definition-recipe-form [recipe]="definition.recipe"></app-definition-recipe-form>
             </div>
 
-            <!-- Import from Yaml -->
+            <!-- Import recipe from Yaml -->
             <div *ngIf="isModeYamlImport()">
-                <app-import-definition-config-yaml (importConfigYaml)="importYamlConfig($event)"></app-import-definition-config-yaml>
+                <app-import-definition-recipe-yaml (importRecipeYaml)="importRecipeYaml($event)"></app-import-definition-recipe-yaml>
             </div>
 
             <!-- Buttons -->

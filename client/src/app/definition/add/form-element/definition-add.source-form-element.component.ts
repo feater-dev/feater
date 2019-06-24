@@ -4,7 +4,7 @@ import {
     BeforeBuildTaskFormElement,
     TaskFormElement,
     InterpolateTaskFormElement,
-} from '../../config-form/definition-config-form.model';
+} from '../../recipe-form/definition-recipe-form.model';
 
 
 @Component({

@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 if (process.env.FEATER_ENV_FILE) {
-    const dotenvResult = dotenv.config({path: process.env.FEATER_ENV_FILE});
+    const dotenvResult = dotenv.recipe({path: process.env.FEATER_ENV_FILE});
 
     if (dotenvResult.error) {
         throw dotenvResult.error;
@@ -41,4 +41,4 @@ export const config: ConfigInterface = {
     },
 };
 
-// TODO Validate config.
+// TODO Validate recipe.

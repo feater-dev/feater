@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {DefinitionProxiedPortFormElement} from '../../config-form/definition-config-form.model';
+import {DefinitionProxiedPortFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
 @Component({

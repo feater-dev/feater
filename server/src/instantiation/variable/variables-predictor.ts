@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 @Injectable()
 export class VariablesPredictor {
 
-    predictEnvVariables(definitionConfig: any): PredictedEnvVariableInterface[] {
+    predictEnvVariables(definitionRecipe: any): PredictedEnvVariableInterface[] {
         const envVariables: any = [];
 
         envVariables.push([
@@ -26,7 +26,7 @@ export class VariablesPredictor {
             },
         ]);
 
-        const proxiedPortIds = _.filter(_.map(definitionConfig.proxiedPorts, 'id'));
+        const proxiedPortIds = _.filter(_.map(definitionRecipe.proxiedPorts, 'id'));
         envVariables.push(
             proxiedPortIds.map(
                 (proxiedPortId: string): PredictedEnvVariableInterface => {
@@ -38,7 +38,7 @@ export class VariablesPredictor {
             ),
         );
 
-        const sourceIds = _.filter(_.map(definitionConfig.sources, 'id'));
+        const sourceIds = _.filter(_.map(definitionRecipe.sources, 'id'));
         envVariables.push(
             sourceIds.map(
                 (sourceId: string): PredictedEnvVariableInterface[] => {
@@ -52,7 +52,7 @@ export class VariablesPredictor {
             ),
         );
 
-        const volumeIds = _.filter(_.map(definitionConfig.assetVolumes, 'id'));
+        const volumeIds = _.filter(_.map(definitionRecipe.assetVolumes, 'id'));
         envVariables.push(
             volumeIds.map(
                 (volumeId: string): PredictedEnvVariableInterface => {
@@ -71,7 +71,7 @@ export class VariablesPredictor {
         return _.flattenDeep(envVariables);
     }
 
-    predictFeaterVariables(definitionConfig: any): PredictedFeaterVariableInterface[] {
+    predictFeaterVariables(definitionRecipe: any): PredictedFeaterVariableInterface[] {
         const featerVariables: any = [];
 
         featerVariables.push([
@@ -90,7 +90,7 @@ export class VariablesPredictor {
         ]);
 
         featerVariables.push(
-            definitionConfig.envVariables.map(
+            definitionRecipe.envVariables.map(
                 (envVariable: {name: string, value: string}): PredictedFeaterVariableInterface => {
                     return {
                         name: `env__${envVariable.name.toLowerCase()}`,
@@ -100,7 +100,7 @@ export class VariablesPredictor {
             ),
         );
 
-        const proxiedPortIds = _.filter(_.map(definitionConfig.proxiedPorts, 'id'));
+        const proxiedPortIds = _.filter(_.map(definitionRecipe.proxiedPorts, 'id'));
         featerVariables.push(
             proxiedPortIds.map(
                 (proxiedPortId: string): PredictedFeaterVariableInterface => {
@@ -112,7 +112,7 @@ export class VariablesPredictor {
             ),
         );
 
-        const sourceIds = _.filter(_.map(definitionConfig.sources, 'id'));
+        const sourceIds = _.filter(_.map(definitionRecipe.sources, 'id'));
         featerVariables.push(
             sourceIds.map(
                 (sourceId: string): PredictedFeaterVariableInterface[] => {
@@ -126,7 +126,7 @@ export class VariablesPredictor {
             ),
         );
 
-        const volumeIds = _.filter(_.map(definitionConfig.assetVolumes, 'id'));
+        const volumeIds = _.filter(_.map(definitionRecipe.assetVolumes, 'id'));
         featerVariables.push(
             volumeIds.map(
                 (volumeId: string): PredictedFeaterVariableInterface => {

@@ -39,7 +39,7 @@ import {IpAddressCheckerComponent} from './ip-address-checker.component';
 import {DockerVolumeHelperComponent} from './docker/docker-volume-helper.component';
 import {RemoveSourceCommandExecutorComponent} from './command/remove-source/command-executor.component';
 import {HelperModule} from '../helper/helper.module';
-import {DefinitionConfigMapper} from './definition-config-mapper.component';
+import {DefinitionRecipeMapper} from './definition-recipe-mapper.component';
 import {DefintionRecipeZeroOneZeroValidator} from './validation/defintion-recipe-zero-one-zero-validator.component';
 
 @Module({
@@ -87,7 +87,7 @@ import {DefintionRecipeZeroOneZeroValidator} from './validation/defintion-recipe
         CompositeSimpleCommandExecutorComponent,
         VariablesPredictor,
         DockerVolumeHelperComponent,
-        DefinitionConfigMapper,
+        DefinitionRecipeMapper,
         DefintionRecipeZeroOneZeroValidator,
     ],
     exports: [
@@ -95,7 +95,7 @@ import {DefintionRecipeZeroOneZeroValidator} from './validation/defintion-recipe
         ContainerStateCheckerComponent,
         IpAddressCheckerComponent,
         VariablesPredictor,
-        DefinitionConfigMapper,
+        DefinitionRecipeMapper,
         DefintionRecipeZeroOneZeroValidator,
     ],
 })

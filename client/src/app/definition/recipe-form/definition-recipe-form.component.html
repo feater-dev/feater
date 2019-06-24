@@ -7,14 +7,14 @@
         </div>
     </div>
 
-    <div *ngIf="!config.sources.length" class="row">
+    <div *ngIf="!recipe.sources.length" class="row">
         <div class="col-md-12">
             <p>No sources defined.</p>
         </div>
     </div>
 
-    <div *ngIf="config.sources.length">
-        <div *ngFor="let source of config.sources">
+    <div *ngIf="recipe.sources.length">
+        <div *ngFor="let source of recipe.sources">
             <app-definition-add-source-form-element
                 [source]="source"
                 (deleteSource)="deleteSource($event)"
@@ -42,14 +42,14 @@
         </div>
     </div>
 
-    <div *ngIf="!config.sourceVolumes.length" class="row">
+    <div *ngIf="!recipe.sourceVolumes.length" class="row">
         <div class="col-md-12">
             <p>No source volumes defined.</p>
         </div>
     </div>
 
-    <div *ngIf="config.sourceVolumes.length">
-        <div *ngFor="let sourceVolume of config.sourceVolumes">
+    <div *ngIf="recipe.sourceVolumes.length">
+        <div *ngFor="let sourceVolume of recipe.sourceVolumes">
             <app-definition-add-source-volume-form-element
                     [sourceVolume]="sourceVolume"
                 (deleteItem)="deleteSourceVolume($event)"
@@ -77,14 +77,14 @@
         </div>
     </div>
 
-    <div *ngIf="!config.assetVolumes.length" class="row">
+    <div *ngIf="!recipe.assetVolumes.length" class="row">
         <div class="col-md-12">
             <p>No asset volumes defined.</p>
         </div>
     </div>
 
-    <div *ngIf="config.assetVolumes.length">
-        <div *ngFor="let assetVolume of config.assetVolumes">
+    <div *ngIf="recipe.assetVolumes.length">
+        <div *ngFor="let assetVolume of recipe.assetVolumes">
             <app-definition-add-asset-volume-form-element
                     [assetVolume]="assetVolume"
                 (deleteItem)="deleteAssetVolume($event)"
@@ -112,14 +112,14 @@
         </div>
     </div>
 
-    <div *ngIf="!config.proxiedPorts.length" class="row">
+    <div *ngIf="!recipe.proxiedPorts.length" class="row">
         <div class="col-md-12">
             <p>No proxied ports defined.</p>
         </div>
     </div>
 
-    <div *ngIf="config.proxiedPorts.length">
-        <div *ngFor="let proxiedPort of config.proxiedPorts">
+    <div *ngIf="recipe.proxiedPorts.length">
+        <div *ngFor="let proxiedPort of recipe.proxiedPorts">
             <app-definition-add-proxied-port-form-element
                 [proxiedPort]="proxiedPort"
                 (deleteProxiedPort)="deleteProxiedPort($event)"
@@ -147,14 +147,14 @@
         </div>
     </div>
 
-    <div *ngIf="!config.envVariables.length" class="row">
+    <div *ngIf="!recipe.envVariables.length" class="row">
         <div class="col-md-12">
             <p>No environmental variables defined.</p>
         </div>
     </div>
 
-    <div *ngIf="config.envVariables.length">
-        <div *ngFor="let envVariable of config.envVariables">
+    <div *ngIf="recipe.envVariables.length">
+        <div *ngFor="let envVariable of recipe.envVariables">
             <app-definition-add-environmental-variable-form-element
                 [envVariable]="envVariable"
                 (deleteEnvVariable)="deleteEnvVariable($event)"
@@ -183,8 +183,8 @@
     </div>
 
     <app-definition-add-compose-file-form-element
-        [composeFile]="this.config.composeFile"
-        [sources]="this.config.sources"
+        [composeFile]="this.recipe.composeFile"
+        [sources]="this.recipe.sources"
     ></app-definition-add-compose-file-form-element>
 </div>
 
@@ -199,11 +199,11 @@
 
     <div class="row">
         <div class="col-md-12">
-            <p *ngIf="!config.afterBuildTasks.length">
+            <p *ngIf="!recipe.afterBuildTasks.length">
                 No after build tasks defined.
             </p>
-            <div *ngIf="config.afterBuildTasks.length">
-                <div *ngFor="let afterBuildTask of config.afterBuildTasks">
+            <div *ngIf="recipe.afterBuildTasks.length">
+                <div *ngFor="let afterBuildTask of recipe.afterBuildTasks">
 
                     <app-execute-service-command-task-form-element
                             *ngIf="isAfterBuildTaskExecuteServiceCommand(afterBuildTask)"
@@ -252,14 +252,14 @@
         </div>
     </div>
 
-    <div *ngIf="!config.summaryItems.length" class="row">
+    <div *ngIf="!recipe.summaryItems.length" class="row">
         <div class="col-md-12">
             <p>No summary items defined.</p>
         </div>
     </div>
 
-    <div *ngIf="config.summaryItems.length">
-        <div *ngFor="let summaryItem of config.summaryItems">
+    <div *ngIf="recipe.summaryItems.length">
+        <div *ngFor="let summaryItem of recipe.summaryItems">
             <app-definition-add-summary-item-form-element [summaryItem]="summaryItem"
                                                           (deleteSummaryItem)="deleteSummaryItem($event)"
             ></app-definition-add-summary-item-form-element>

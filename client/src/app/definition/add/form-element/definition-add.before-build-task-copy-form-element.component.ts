@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {TaskFormElement} from '../../config-form/definition-config-form.model';
+import {TaskFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
 @Component({

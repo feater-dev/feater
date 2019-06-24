@@ -4,7 +4,7 @@ import {ProxiedPortInputTypeInterface} from './proxied-port-input-type.interface
 import {SourceInputTypeInterface} from './source-type.interface';
 import {EnvVariableInputTypeInterface} from './env-variable-input-type.interface';
 
-export interface ConfigInputTypeInterface {
+export interface RecipeInputTypeInterface {
     sources: SourceInputTypeInterface[];
     proxiedPorts: ProxiedPortInputTypeInterface[];
     summaryItems: SummaryItemInputTypeInterface[];

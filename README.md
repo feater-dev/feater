@@ -52,7 +52,7 @@
 # License
 
 Feater is released under MIT License. You can view license information at
-https://raw.githubusercontent.com/boldare/feater/master/LICENSE
+https://raw.githubusercontent.com/feater-dev/feater/master/LICENSE
 
 # Core concepts
 
@@ -96,14 +96,14 @@ This section allows you to define a list of repositories containing sources requ
 
 Here is the UI view of sources section with a single source specified:
 
-![Sources section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--sources.png)
+![Sources section of recipe form](https://github.com/feater-dev/feater/raw/master/docs/ui/recipe-form--sources.png)
 
 And here is and example of the corresponding section in YAML recipe:
 
 ```yaml
 sources:
 - id: symfony_example
-  clone_url: "https://github.com/boldare/feater-symfony-example.git"
+  clone_url: "https://github.com/feater-dev/symfony-example.git"
   use_deploy_key: false
   reference:
     type: branch
@@ -122,7 +122,7 @@ sources:
 Following properties need to be defined for each source:
 
 - **ID** - it will be used to reference given source later; it will also become a part of related environmental and substitution variable names as well as some internal paths;
-- **clone URL** - specifies where given repository is located; both HTTPS and SSH links can be used (e.g. `https://github.com/boldare/feater-symfony-example.git`, `git@github.com:boldare/feater-symfony-example.git`); if HTTPS protocol is used then SSH deploy key cannot be utilized hence repository needs to be public; as no vendor-specific API is used neither for cloning nor for retrieving additional information about sources, they can be stored on GitHub/GitLab/BitBucket or any other Git server;
+- **clone URL** - specifies where given repository is located; both HTTPS and SSH links can be used (e.g. `https://github.com/feater-dev/symfony-example.git`, `git@github.com:feater-dev/symfony-example.git`); if HTTPS protocol is used then SSH deploy key cannot be utilized hence repository needs to be public; as no vendor-specific API is used neither for cloning nor for retrieving additional information about sources, they can be stored on GitHub/GitLab/BitBucket or any other Git server;
 - **use deploy key** - specifies if deploy key should be generated and used for cloning repository; for each repository (identified by clone URL) only one deploy key will be generated; before building an instance all deploy keys listed for given definition should be added for respective repositories on Git server;
 - **reference type** and **reference name** - specifies which revision of source should be checked out; in most cases you will use branch reference, but tag or commit are also available; depending on reference type value the meaning of reference name will change;
   - for `branch` type a branch name needs to be provided;
@@ -168,7 +168,7 @@ This section allows you to define a list of Docker volumes that will be created 
 
 Here is the UI view of source volumes section with two source volumes specified:
 
-![Source volumes section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--source-volumes.png)
+![Source volumes section of recipe form](https://github.com/feater-dev/feater/raw/master/docs/ui/recipe-form--source-volumes.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -215,7 +215,7 @@ This section allows you to define a list of Docker volumes that will be prepopul
 
 Here is the UI view of asset volumes section with a single asset volume specified:
 
-![Asset volumes section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--asset-volumes.png)
+![Asset volumes section of recipe form](https://github.com/feater-dev/feater/raw/master/docs/ui/recipe-form--asset-volumes.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -261,7 +261,7 @@ This sections specifies environmental variables that are used instead of `.env` 
 
 Here is the UI view of environmental variables section with three environmental variables specified:
 
-![Environmental variables section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--environmental-variables.png)
+![Environmental variables section of recipe form](https://github.com/feater-dev/feater/raw/master/docs/ui/recipe-form--environmental-variables.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -287,7 +287,7 @@ This section specifies in which source Docker Compose configuration is located a
 
 Here is the UI view of compose files section:
 
-![Compose files section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--compose-files.png)
+![Compose files section of recipe form](https://github.com/feater-dev/feater/raw/master/docs/ui/recipe-form--compose-files.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -314,7 +314,7 @@ This section lists the tasks that should be performed after Docker Compose setup
 
 Here is the UI view of after build tasks section with few tasks specified:
 
-![After build tasks section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--after-build-tasks.png)
+![After build tasks section of recipe form](https://github.com/feater-dev/feater/raw/master/docs/ui/recipe-form--after-build-tasks.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -385,7 +385,7 @@ Note that currently only HTTP protocol (on port 80) is proxied.
 
 Here is the UI view of proxied ports section with two proxied ports specified:
 
-![Proxied ports section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--proxied-ports.png)
+![Proxied ports section of recipe form](https://github.com/feater-dev/feater/raw/master/docs/ui/recipe-form--proxied-ports.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -425,7 +425,7 @@ This section specifies items to be shown in build summary, typically for display
 
 Here is the UI view of summary items section with two summary items specified:
 
-![Summary items section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--summary-items.png)
+![Summary items section of recipe form](https://github.com/feater-dev/feater/raw/master/docs/ui/recipe-form--summary-items.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -672,7 +672,7 @@ Following environmental variables can be provided when executing `docker run`.
 
 # Running using source
 
-For developing Feater it is better to buid image from source and run server and client components in watch mode, where source changes will result in recompiling and restarting them. This is possible using [.docker/run.sh](https://github.com/boldare/feater/blob/develop/.docker/run.sh) script.
+For developing Feater it is better to buid image from source and run server and client components in watch mode, where source changes will result in recompiling and restarting them. This is possible using [.docker/run.sh](https://github.com/feater-dev/feater/blob/develop/.docker/run.sh) script.
 
 This script allows to use the same environmental variables as the image described before plus an extra `FEATER_ENV` variable that can be set to either `dev` or `prod`.
 
@@ -682,7 +682,7 @@ If `dev` environment is selected then Nodemon will be used instead of PM2 to run
 
 # Example project
 
-Example project is available at https://github.com/boldare/feater-symfony-example. It provides a simple Symfony 3.4 based application along with MySQL, Elasticsearch and MailCatcher services.
+Example project is available at https://github.com/feater-dev/symfony-example. It provides a simple Symfony 3.4 based application along with MySQL, Elasticsearch and MailCatcher services.
 
 # Technologies used
 

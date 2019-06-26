@@ -16,11 +16,11 @@
                 </div>
                 <div *ngFor="let inheritedEnvVar of inheritedEnvVars" class="row">
                     <div class="col-md-6">
-                        <input type="text" trim class="form-control" [(ngModel)]="inheritedEnvVar.name">
+                        <input type="text" class="form-control" [(ngModel)]="inheritedEnvVar.name">
                     </div>
                     <div class="col-md-6">
                         <div style="position: relative; padding-right: 40px;">
-                            <input type="text" trim class="form-control" [(ngModel)]="inheritedEnvVar.alias">
+                            <input type="text" class="form-control" [(ngModel)]="inheritedEnvVar.alias">
                             <a class="btn btn-danger btn-sm"
                                (click)="deleteInheritedEnvVar(i)"
                                style="position: absolute; top: 5px; right: 0;"

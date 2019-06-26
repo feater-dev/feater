@@ -83,7 +83,6 @@ import {DefinitionRecipeFormComponent} from './definition/recipe-form/definition
 import {ImportDefinitionRecipeYamlComponent} from './definition/import-yaml/import-definition-recipe-yaml.component';
 import {DefinitionRecipeYamlMapperService} from './definition/import-yaml/definition-recipe-yaml-mapper.service';
 import {DefinitionAddSourceVolumeFormElementComponent} from './definition/add/form-element/definition-add.source-volume-form-element.component';
-import {NgxTrimDirectiveModule} from 'ngx-trim-directive';
 
 const appRoutes: Routes = [
     { path: 'projects', component: ProjectListComponent },
@@ -192,7 +191,6 @@ const appRoutes: Routes = [
             enableHtml: true,
             positionClass: 'toast-bottom-right',
         }),
-        NgxTrimDirectiveModule,
     ],
     entryComponents: [
         ConfirmComponent,

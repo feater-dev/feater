@@ -1,3 +1,42 @@
+# Table of contents
+
+- [Introduction](#introduction)
+- [License](#license)
+- [Core concepts](#core-concepts)
+  * [Project](#project)
+  * [Definition](#definition)
+    + [Schema version](#schema-version)
+    + [Sources](#sources)
+      - [Copy task](#copy-task)
+      - [Interpolate task](#interpolate-task)
+    + [Source volumes](#source-volumes)
+    + [Asset volumes](#asset-volumes)
+    + [Environmental variables](#environmental-variables)
+    + [Compose files](#compose-files)
+    + [After build tasks](#after-build-tasks)
+      - [Execute service command task](#execute-service-command-task)
+      - [Copy asset into container task](#copy-asset-into-container-task)
+    + [Proxied ports](#proxied-ports)
+    + [Summary items](#summary-items)
+  * [Instance](#instance)
+  * [Asset](#asset)
+    + [Preparing asset for asset volume](#preparing-asset-for-asset-volume)
+  * [Deploy key](#deploy-key)
+- [Running using Docker image](#running-using-docker-image)
+  * [Prerequisites](#prerequisites)
+  * [Basic usage](#basic-usage)
+  * [Usage with persistent data](#usage-with-persistent-data)
+  * [Environment variables](#environment-variables)
+    + [Controlling Docker Compose version](#controlling-docker-compose-version)
+    + [Using external MongoDB instance](#using-external-mongodb-instance)
+    + [Controlling location of persistent data](#controlling-location-of-persistent-data)
+    + [Controlling instantiation](#controlling-instantiation)
+    + [Controlling log level](#controlling-log-level)
+- [Running using source](#running-using-source)
+- [Example project](#example-project)
+- [Technologies used](#technologies-used)
+- [Recommendations](#recommendations)
+
 # Introduction
 
 **Feater** is a tool for **rapid deployment of selected features** of your web application **to isolated testing or demo environments**.
@@ -57,7 +96,7 @@ This section allows you to define a list of repositories containing sources requ
 
 Here is the UI view of sources section with a single source specified:
 
-**TODO UI**
+![Sources section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--sources.png)
 
 And here is and example of the corresponding section in YAML recipe:
 
@@ -127,7 +166,9 @@ To give an example, if you want to provide to your application a proxy domain ge
 
 This section allows you to define a list of Docker volumes that will be created to mount source code to services/containers run when instance is created (as Feater doesn't allow host paths to be mounted).
 
-**TODO UI**
+Here is the UI view of source volumes section with two source volumes specified:
+
+![Source volumes section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--source-volumes.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -172,9 +213,9 @@ volumes:
 
 This section allows you to define a list of Docker volumes that will be prepopulated with data from specified assets and will be mounted to selected services defined in Docker Compose configuration.
 
-Here is the UI view of asset volumes section with a single source volume specified:
+Here is the UI view of asset volumes section with a single asset volume specified:
 
-**TODO UI**
+![Asset volumes section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--asset-volumes.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -220,7 +261,7 @@ This sections specifies environmental variables that are used instead of `.env` 
 
 Here is the UI view of environmental variables section with three environmental variables specified:
 
-**TODO UI**
+![Environmental variables section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--environmental-variables.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -246,7 +287,7 @@ This section specifies in which source Docker Compose configuration is located a
 
 Here is the UI view of compose files section:
 
-**TODO UI**
+![Compose files section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--compose-files.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -271,7 +312,9 @@ Following properties need to be defined for the single entry in this section:
 
 This section lists the tasks that should be performed after Docker Compose setup for given instance is run. There are few types of tasks available.
 
-**TODO UI**
+Here is the UI view of after build tasks section with few tasks specified:
+
+![After build tasks section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--after-build-tasks.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -300,7 +343,7 @@ after_build_tasks:
 - type: copy_asset_into_container
   service_id: symfony_app
   asset_id: sample_photos
-  destination_path: /var/www/html/web/uploads/photos```
+  destination_path: /var/www/html/web/uploads/photos
 ```
 
 Regardless of after build task type it is possible to control the order of executing them by providing these optional properties for some of them:
@@ -340,7 +383,9 @@ When preparing Docker Compose setup to be used by Feater it’s not possible to 
 
 Note that currently only HTTP protocol (on port 80) is proxied.
 
-**TODO UI**
+Here is the UI view of proxied ports section with two proxied ports specified:
+
+![Proxied ports section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--proxied-ports.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -378,7 +423,9 @@ For a port of specified service/container to be proxied it's required to provide
 
 This section specifies items to be shown in build summary, typically for displaying links to specific services based on proxied domains, database DSNs etc.
 
-**TODO UI**
+Here is the UI view of summary items section with two summary items specified:
+
+![Summary items section of recipe form](https://github.com/boldare/feater/raw/master/docs/ui/recipe-form--summary-items.png)
 
 And here is an example of the corresponding section in YAML recipe:
 
@@ -410,13 +457,9 @@ When instance is created following details about it are available in UI:
 - in **Proxy domains** tab - a list of proxied ports and domains generated for them;
 - in **Build logs** tab - logs of each stage of instance creation is available to allow troubleshooting.
 
-**TODO UI**
-
 ## Asset
 
 Asset is a file uploaded to Feater that can be used either to create asset volumes (if it is a `.tag.gz` archive) or can be copied into service/container user after build task (regardless of its MIME type).
-
-**TODO UI**
 
 ### Preparing asset for asset volume
 
@@ -479,8 +522,8 @@ Our definition recipe YAML file would now have to include following section:
 
 ```yaml
 asset_volumes:
-  - id: test_db
-    asset_id: test_db_asset
+- id: test_db
+  asset_id: test_db_asset
 ```
 
 Corresponding Docker Compose setup may look like this to allow to provide an external volume and to map its name provided via `FEATER__ASSET_VOLUME__TEST_DB` environmental variable to `test_db_data` that is used internally:

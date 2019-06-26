@@ -16,11 +16,11 @@
                 </div>
                 <div *ngFor="let customEnvVar of customEnvVars" class="row">
                     <div class="col-md-6">
-                        <input type="text" trim class="form-control" [(ngModel)]="customEnvVar.name">
+                        <input type="text" class="form-control" [(ngModel)]="customEnvVar.name">
                     </div>
                     <div class="col-md-6">
                         <div style="position: relative; padding-right: 40px;">
-                            <input type="text" trim class="form-control" [(ngModel)]="customEnvVar.value">
+                            <input type="text" class="form-control" [(ngModel)]="customEnvVar.value">
                             <a class="btn btn-danger btn-sm"
                                (click)="deleteCustomEnvVar(i)"
                                style="position: absolute; top: 5px; right: 0;"

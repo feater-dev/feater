@@ -24,7 +24,7 @@
                         <span class="glyphicon glyphicon-question-sign"></span>
                     </span>
                 </label>
-                <input type="text" trim class="form-control" [(ngModel)]="task.id">
+                <input type="text" class="form-control" [(ngModel)]="task.id">
             </div>
         </div>
 
@@ -38,7 +38,7 @@
                     <div *ngFor="let dependsOnItem of task.dependsOn; trackBy: trackByIndex; let i = index"
                          style="position: relative; padding-right: 40px;"
                     >
-                        <input type="text" trim class="form-control" [(ngModel)]="task.dependsOn[i]">
+                        <input type="text" class="form-control" [(ngModel)]="task.dependsOn[i]">
                         <a class="btn btn-danger btn-sm"
                            (click)="deleteDependsOn(i)"
                            style="position: absolute; top: 5px; right: 0;"
@@ -72,14 +72,14 @@
                         <span class="glyphicon glyphicon-question-sign"></span>
                     </span>
                 </label>
-                <input type="text" trim class="form-control" [(ngModel)]="task.serviceId">
+                <input type="text" class="form-control" [(ngModel)]="task.serviceId">
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Command</label>
-                <input type="text" trim class="form-control" [(ngModel)]="task.command[0]">
+                <input type="text" class="form-control" [(ngModel)]="task.command[0]">
             </div>
         </div>
 
@@ -94,7 +94,7 @@
                          style="position: relative; padding-right: 40px;"
                     >
                         <div *ngIf="i > 0">
-                            <input type="text" trim class="form-control"[(ngModel)]="task.command[i]">
+                            <input type="text" class="form-control"[(ngModel)]="task.command[i]">
                             <a class="btn btn-danger btn-sm"
                                (click)="deleteArgument(i)"
                                style="position: absolute; top: 5px; right: 0;"

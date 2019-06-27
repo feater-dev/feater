@@ -575,7 +575,7 @@ $ docker --version
 Docker version 18.06.0-ce, build 0ffa825
 ```
 
-In this case image `feater:*-docker-18.06.3` should be used.
+In this case image `feater/feater:*-docker-18.06.3` should be used.
 
 You also need to create Docker network that will be used to expose some of the instantiated services:
 
@@ -604,7 +604,7 @@ $ docker run \
     -e FEATER_PROXY_NETWORK_NAME=feater_proxy \
     -d \
     --name feater \
-    feater:latest-docker-18.06.3
+    feater/feater:latest-docker-18.06.3
 ```
 
 You can now access Feater's UI at `http://localhost:9010`.
@@ -635,7 +635,7 @@ $ docker run \
     -e FEATER_PROXY_NETWORK_NAME=feater_proxy \
     -d \
     --name feater \
-    feater:latest-docker-18.06.3
+    feater/feater:latest-docker-18.06.3
 ```
 
 You can also include `--restart unless-stopped` option if you want Feater to run continuously and to be started automatically.

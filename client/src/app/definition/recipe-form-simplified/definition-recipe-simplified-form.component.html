@@ -1,0 +1,24 @@
+<!-- Simplified sources-->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Sources</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.sources.length" class="row">
+        <div class="col-md-12">
+            <p>No sources defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.sources.length">
+        <div *ngFor="let source of recipe.sources">
+            <app-definition-add-source-simplified-form-element
+                    [source]="source"
+            ></app-definition-add-source-simplified-form-element>
+        </div>
+    </div>
+
+</div>

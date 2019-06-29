@@ -11,7 +11,6 @@ import gql from 'graphql-tag';
 import {jsonToGraphQLQuery} from 'json-to-graphql-query';
 import {DefinitionRecipeFormElement} from '../recipe-form/definition-recipe-form.model';
 
-
 interface DefinitionEditForm {
     id: string;
     name: string;

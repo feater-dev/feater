@@ -1,10 +1,5 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {
-    DefinitionSourceFormElement,
-    BeforeBuildTaskFormElement,
-    TaskFormElement,
-    InterpolateTaskFormElement,
-} from '../../recipe-form/definition-recipe-form.model';
+import {Component, Input} from '@angular/core';
+import {DefinitionSourceFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
 @Component({
@@ -12,9 +7,8 @@ import {
     templateUrl: './definition-add.source-simplified-form-element.component.html',
     styles: []
 })
-export class DefinitionAddSourceSimplifiedFormElementComponent implements OnInit {
+export class DefinitionAddSourceSimplifiedFormElementComponent {
 
     @Input() source: DefinitionSourceFormElement;
 
-    ngOnInit() {}
 }

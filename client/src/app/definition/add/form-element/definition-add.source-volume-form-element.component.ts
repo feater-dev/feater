@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {DefinitionSourceVolumeFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
@@ -7,16 +7,14 @@ import {DefinitionSourceVolumeFormElement} from '../../recipe-form/definition-re
     templateUrl: './definition-add.source-volume-form-element.component.html',
     styles: []
 })
-export class DefinitionAddSourceVolumeFormElementComponent implements OnInit {
+export class DefinitionAddSourceVolumeFormElementComponent {
 
     @Input() sourceVolume: DefinitionSourceVolumeFormElement;
 
     @Output() deleteItem: EventEmitter<DefinitionSourceVolumeFormElement> =
         new EventEmitter<DefinitionSourceVolumeFormElement>();
 
-    ngOnInit() {}
-
-    delete() {
+    delete(): void {
         this.deleteItem.emit(this.sourceVolume);
     }
 

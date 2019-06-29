@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {DefinitionAssetVolumeFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
@@ -7,16 +7,14 @@ import {DefinitionAssetVolumeFormElement} from '../../recipe-form/definition-rec
     templateUrl: './definition-add.asset-volume-form-element.component.html',
     styles: []
 })
-export class DefinitionAddAssetVolumeFormElementComponent implements OnInit {
+export class DefinitionAddAssetVolumeFormElementComponent {
 
     @Input() assetVolume: DefinitionAssetVolumeFormElement;
 
     @Output() deleteItem: EventEmitter<DefinitionAssetVolumeFormElement> =
         new EventEmitter<DefinitionAssetVolumeFormElement>();
 
-    ngOnInit() {}
-
-    delete() {
+    delete(): void {
         this.deleteItem.emit(this.assetVolume);
     }
 

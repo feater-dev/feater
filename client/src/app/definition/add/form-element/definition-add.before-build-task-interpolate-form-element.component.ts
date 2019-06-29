@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {InterpolateTaskFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
@@ -7,16 +7,14 @@ import {InterpolateTaskFormElement} from '../../recipe-form/definition-recipe-fo
     templateUrl: './definition-add.before-build-task-interpolate-form-element.component.html',
     styles: []
 })
-export class DefinitionAddBeforeBuildTaskInterpolateFormElementComponent implements OnInit {
+export class DefinitionAddBeforeBuildTaskInterpolateFormElementComponent {
 
     @Input() task: InterpolateTaskFormElement;
 
     @Output() deleteTask: EventEmitter<InterpolateTaskFormElement> =
         new EventEmitter<InterpolateTaskFormElement>();
 
-    ngOnInit() {}
-
-    delete() {
+    delete(): void {
         this.deleteTask.emit(this.task);
     }
 

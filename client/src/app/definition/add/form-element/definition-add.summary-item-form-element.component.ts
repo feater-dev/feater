@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {DefinitionSummaryItemFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
@@ -7,16 +7,14 @@ import {DefinitionSummaryItemFormElement} from '../../recipe-form/definition-rec
     templateUrl: './definition-add.summary-item-form-element.component.html',
     styles: []
 })
-export class DefinitionAddSummaryItemFormElementComponent implements OnInit {
+export class DefinitionAddSummaryItemFormElementComponent {
 
     @Input() summaryItem: DefinitionSummaryItemFormElement;
 
     @Output() deleteSummaryItem: EventEmitter<DefinitionSummaryItemFormElement> =
         new EventEmitter<DefinitionSummaryItemFormElement>();
 
-    ngOnInit() {}
-
-    delete() {
+    delete(): void {
         this.deleteSummaryItem.emit(this.summaryItem);
     }
 

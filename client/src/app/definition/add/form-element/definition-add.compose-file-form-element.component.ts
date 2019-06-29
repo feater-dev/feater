@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DefinitionSourceFormElement, DefinitionAddComposeFileFormElement} from '../../recipe-form/definition-recipe-form.model';
 
 
@@ -7,19 +7,17 @@ import {DefinitionSourceFormElement, DefinitionAddComposeFileFormElement} from '
     templateUrl: './definition-add.compose-file-form-element.component.html',
     styles: []
 })
-export class DefinitionAddComposeFileFormElementComponent implements OnInit {
+export class DefinitionAddComposeFileFormElementComponent {
 
     @Input() composeFile: DefinitionAddComposeFileFormElement;
 
     @Input() sources: DefinitionSourceFormElement[];
 
-    ngOnInit() {}
-
     addComposeFileRelativePath(): void {
         this.composeFile.composeFileRelativePaths.push('');
     }
 
-    deleteComposeFileRelativePath(index: number) {
+    deleteComposeFileRelativePath(index: number): void {
         this.composeFile.composeFileRelativePaths.splice(index, 1);
     }
 

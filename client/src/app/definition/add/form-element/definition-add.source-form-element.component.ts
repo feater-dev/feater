@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {
     DefinitionSourceFormElement,
     BeforeBuildTaskFormElement,
@@ -12,28 +12,26 @@ import {
     templateUrl: './definition-add.source-form-element.component.html',
     styles: []
 })
-export class DefinitionAddSourceFormElementComponent implements OnInit {
+export class DefinitionAddSourceFormElementComponent {
 
     @Input() source: DefinitionSourceFormElement;
 
     @Output() deleteSource: EventEmitter<DefinitionSourceFormElement> =
         new EventEmitter<DefinitionSourceFormElement>();
 
-    ngOnInit() {}
-
-    delete() {
+    delete(): void {
         this.deleteSource.emit(this.source);
     }
 
-    isBeforeBuildTaskCopy(beforeBuildTask: BeforeBuildTaskFormElement) {
+    isBeforeBuildTaskCopy(beforeBuildTask: BeforeBuildTaskFormElement): boolean {
         return ('copy' === beforeBuildTask.type);
     }
 
-    isBeforeBuildTaskInterpolate(beforeBuildTask: BeforeBuildTaskFormElement) {
+    isBeforeBuildTaskInterpolate(beforeBuildTask: BeforeBuildTaskFormElement): boolean {
         return ('interpolate' === beforeBuildTask.type);
     }
 
-    addBeforeBuildTaskCopy() {
+    addBeforeBuildTaskCopy(): void {
         this.source.beforeBuildTasks.push(<TaskFormElement>{
             type: 'copy',
             sourceRelativePath: '',
@@ -41,7 +39,7 @@ export class DefinitionAddSourceFormElementComponent implements OnInit {
         });
     }
 
-    addBeforeBuildTaskInterpolate() {
+    addBeforeBuildTaskInterpolate(): void {
         this.source.beforeBuildTasks.push(<InterpolateTaskFormElement>{
 
             type: 'interpolate',
@@ -49,7 +47,7 @@ export class DefinitionAddSourceFormElementComponent implements OnInit {
         });
     }
 
-    deleteBeforeBuildTask(beforeBuildTask: BeforeBuildTaskFormElement) {
+    deleteBeforeBuildTask(beforeBuildTask: BeforeBuildTaskFormElement): void {
         const index = this.source.beforeBuildTasks.indexOf(beforeBuildTask);
         if (-1 !== index) {
             this.source.beforeBuildTasks.splice(index, 1);

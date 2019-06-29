@@ -1,0 +1,39 @@
+<div class="well well-sm form-well">
+
+    <div class="row">
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="control-label">ID</label>
+                <input type="text" class="form-control" disabled="disabled" [(ngModel)]="source.id">
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Clone URL</label>
+                <input type="text" class="form-control" [(ngModel)]="source.cloneUrl">
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Source reference type</label>
+                <select class="form-control" [(ngModel)]="source.reference.type">
+                    <option value="branch" selected>Branch</option>
+                    <option value="tag">Tag</option>
+                    <option value="commit">Commit</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Source reference name</label>
+                <input type="text" class="form-control" [(ngModel)]="source.reference.name">
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -13,10 +13,15 @@ import _ from 'lodash';
 import * as jsYaml from 'js-yaml';
 import * as snakeCaseKeys from 'snakecase-keys';
 
-
 interface DefinitionAddForm {
     name: string;
     recipe: DefinitionRecipeFormElement;
+}
+
+export enum DefinitionRecipeInputModes {
+    fullForm,
+    simplifiedForm,
+    rawYaml,
 }
 
 @Component({
@@ -29,11 +34,7 @@ export class DefinitionAddComponent implements OnInit {
     // TODO Change to enum.
     static readonly actionAdd = 'add';
 
-    // TODO Change to enum.
-    static readonly modeForm = 'form';
-
-    // TODO Change to enum.
-    static readonly modeYamlImport = 'recipeYaml';
+    definitionRecipeInputModes = DefinitionRecipeInputModes;
 
     definition: DefinitionAddForm;
 
@@ -41,7 +42,7 @@ export class DefinitionAddComponent implements OnInit {
 
     action = DefinitionAddComponent.actionAdd;
 
-    mode = DefinitionAddComponent.modeForm;
+    recipeInputMode = DefinitionRecipeInputModes.fullForm;
 
     constructor(
         protected route: ActivatedRoute,
@@ -91,29 +92,25 @@ export class DefinitionAddComponent implements OnInit {
         );
     }
 
-    switchMode(mode: string): void {
-        this.mode = mode;
+    switchMode(mode: DefinitionRecipeInputModes): void {
+        this.recipeInputMode = mode;
     }
 
-    toggleMode(): void {
-        this.switchMode(
-            DefinitionAddComponent.modeYamlImport === this.mode
-                ? DefinitionAddComponent.modeForm
-                : DefinitionAddComponent.modeYamlImport,
-        );
+    isRecipeInputModeFullForm(): boolean {
+        return DefinitionRecipeInputModes.fullForm === this.recipeInputMode;
     }
 
-    isModeForm(): boolean {
-        return DefinitionAddComponent.modeForm === this.mode;
+    isRecipeInputModeSimplifiedForm(): boolean {
+        return DefinitionRecipeInputModes.simplifiedForm === this.recipeInputMode;
     }
 
-    isModeYamlImport(): boolean {
-        return DefinitionAddComponent.modeYamlImport === this.mode;
+    isRecipeInputModeRawYaml(): boolean {
+        return DefinitionRecipeInputModes.rawYaml === this.recipeInputMode;
     }
 
     importRecipeYaml(recipe: DefinitionRecipeFormElement): void {
         this.definition.recipe = recipe;
-        this.switchMode(DefinitionAddComponent.modeForm);
+        this.switchMode(this.definitionRecipeInputModes.fullForm);
     }
 
     protected mapDefinitionToDto(): any {

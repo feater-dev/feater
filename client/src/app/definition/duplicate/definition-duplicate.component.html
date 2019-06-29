@@ -21,19 +21,44 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <a class="btn btn-primary btn-sm" (click)="toggleMode()">
-                        {{ isModeYamlImport() ? 'Back to recipe-form': 'Import from Yaml' }}
-                    </a>
+                    <div class="btn-block">
+                        <a
+                                *ngIf="!isRecipeInputModeFullForm()"
+                                (click)="switchMode(definitionRecipeInputModes.fullForm)"
+                                class="btn btn-primary btn-sm"
+                        >
+                            Full recipe form
+                        </a>
+                        <a
+                                *ngIf="!isRecipeInputModeSimplifiedForm()"
+                                (click)="switchMode(definitionRecipeInputModes.simplifiedForm)"
+                                class="btn btn-primary btn-sm"
+                        >
+                            Simplified recipe form
+                        </a>
+                        <a
+                                *ngIf="!isRecipeInputModeRawYaml()"
+                                (click)="switchMode(definitionRecipeInputModes.rawYaml)"
+                                class="btn btn-primary btn-sm"
+                        >
+                            Recipe in YAML format
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <!-- Recipe form -->
-            <div *ngIf="isModeForm()">
+            <div *ngIf="isRecipeInputModeFullForm()">
                 <app-definition-recipe-form [recipe]="definition.recipe"></app-definition-recipe-form>
             </div>
 
+            <!-- Recipe form -->
+            <div *ngIf="isRecipeInputModeSimplifiedForm()">
+                <app-definition-recipe-simplified-form [recipe]="definition.recipe"></app-definition-recipe-simplified-form>
+            </div>
+
             <!-- Import recipe from Yaml -->
-            <div *ngIf="isModeYamlImport()">
+            <div *ngIf="isRecipeInputModeRawYaml()">
                 <app-import-definition-recipe-yaml (importRecipeYaml)="importRecipeYaml($event)"></app-import-definition-recipe-yaml>
             </div>
 

@@ -83,6 +83,8 @@ import {DefinitionRecipeFormComponent} from './definition/recipe-form/definition
 import {ImportDefinitionRecipeYamlComponent} from './definition/import-yaml/import-definition-recipe-yaml.component';
 import {DefinitionRecipeYamlMapperService} from './definition/import-yaml/definition-recipe-yaml-mapper.service';
 import {DefinitionAddSourceVolumeFormElementComponent} from './definition/add/form-element/definition-add.source-volume-form-element.component';
+import {DefinitionRecipeSimplifiedFormComponent} from './definition/recipe-form-simplified/definition-recipe-simplified-form.component';
+import {DefinitionAddSourceSimplifiedFormElementComponent} from './definition/add/form-element/definition-add.source-simplified-form-element.component';
 
 const appRoutes: Routes = [
     { path: 'projects', component: ProjectListComponent },
@@ -121,11 +123,13 @@ const appRoutes: Routes = [
         ProjectDetailComponent,
         ProjectListComponent,
         DefinitionRecipeFormComponent,
+        DefinitionRecipeSimplifiedFormComponent,
         ImportDefinitionRecipeYamlComponent,
         DefinitionAddComponent,
         DefinitionDuplicateComponent,
         DefinitionEditComponent,
         DefinitionAddSourceFormElementComponent,
+        DefinitionAddSourceSimplifiedFormElementComponent,
         DefinitionAddSourceVolumeFormElementComponent,
         DefinitionAddAssetVolumeFormElementComponent,
         DefinitionAddBeforeBuildTaskCopyFormElementComponent,

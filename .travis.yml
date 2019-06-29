@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - '10'
+before_install:
+  - '(cd server && yarn install --frozen-lockfile)'
+  - '(cd client && yarn install --frozen-lockfile && touch src/environments/environment.ts)'
+script:
+  - '(cd server && yarn run build)'
+  - '(cd client && yarn run ng build --prod)'

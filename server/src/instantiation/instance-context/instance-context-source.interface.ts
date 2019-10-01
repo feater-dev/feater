@@ -1,5 +1,5 @@
-import {SourcePathsInterface} from '../helper/source-paths.interface';
-import {InstanceContextBeforeBuildTaskInterface} from './before-build/instance-context-before-build-task.interface';
+import { SourcePathsInterface } from '../helper/source-paths.interface';
+import { InstanceContextBeforeBuildTaskInterface } from './before-build/instance-context-before-build-task.interface';
 
 export interface InstanceContextSourceInterface {
     id: string;

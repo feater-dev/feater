@@ -1,20 +1,18 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import gql from 'graphql-tag';
-import {Apollo} from 'apollo-angular';
-import {ProjectAddForm} from './project-add-form.model';
-import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {ToastrService} from 'ngx-toastr';
-import {NgxSpinnerService} from 'ngx-spinner';
-
+import { Apollo } from 'apollo-angular';
+import { ProjectAddForm } from './project-add-form.model';
+import { jsonToGraphQLQuery } from 'json-to-graphql-query';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-project-add',
     templateUrl: './project-add.component.html',
-    styles: []
+    styles: [],
 })
 export class ProjectAddComponent {
-
     project: ProjectAddForm;
 
     constructor(
@@ -24,7 +22,7 @@ export class ProjectAddComponent {
         protected toastr: ToastrService,
     ) {
         this.project = {
-            name: ''
+            name: '',
         };
     }
 
@@ -32,18 +30,24 @@ export class ProjectAddComponent {
         this.spinner.show();
         this.apollo
             .mutate({
-                mutation: gql`${this.getCreateProjectMutation()}`,
+                mutation: gql`
+                    ${this.getCreateProjectMutation()}
+                `,
             })
             .subscribe(
-                ({data}) => {
+                ({ data }) => {
                     this.spinner.hide();
-                    this.toastr.success(`Project <em>${data.createProject.name}</em> created.`);
+                    this.toastr.success(
+                        `Project <em>${data.createProject.name}</em> created.`,
+                    );
                     this.router.navigate(['/project', data.createProject.id]);
                 },
-                (error) => {
+                error => {
                     this.spinner.hide();
-                    this.toastr.error(`Failed to create project <em>${this.project.name}</em>.`);
-                }
+                    this.toastr.error(
+                        `Failed to create project <em>${this.project.name}</em>.`,
+                    );
+                },
             );
     }
 
@@ -56,8 +60,8 @@ export class ProjectAddComponent {
                     },
                     id: true,
                     name: true,
-                }
-            }
+                },
+            },
         };
 
         return jsonToGraphQLQuery(mutation);

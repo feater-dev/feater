@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     DefinitionSourceFormElement,
     DefinitionAssetVolumeFormElement,
@@ -11,19 +11,18 @@ import {
     DefinitionRecipeFormElement,
     ExecuteServiceCommandTaskFormElement,
     AfterBuildTaskFormElement,
-    CopyAssetIntoContainerTaskFormElement, DefinitionSourceVolumeFormElement,
+    CopyAssetIntoContainerTaskFormElement,
+    DefinitionSourceVolumeFormElement,
 } from './definition-recipe-form.model';
-import {ToastrService} from 'ngx-toastr';
-import {DefinitionRecipeYamlMapperService} from '../import-yaml/definition-recipe-yaml-mapper.service';
-
+import { ToastrService } from 'ngx-toastr';
+import { DefinitionRecipeYamlMapperService } from '../import-yaml/definition-recipe-yaml-mapper.service';
 
 @Component({
     selector: 'app-definition-recipe-form',
     templateUrl: './definition-recipe-form.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionRecipeFormComponent {
-
     @Input() recipe: DefinitionRecipeFormElement;
 
     constructor(
@@ -42,9 +41,9 @@ export class DefinitionRecipeFormComponent {
             useDeployKey: false,
             reference: {
                 type: 'branch',
-                name: ''
+                name: '',
             },
-            beforeBuildTasks: []
+            beforeBuildTasks: [],
         });
     }
 
@@ -91,7 +90,8 @@ export class DefinitionRecipeFormComponent {
             name: '',
             port: null,
             useDefaultNginxConfigTemplate: true,
-            nginxConfigTemplate: this.definitionRecipeYamlMapperService.defaultNginxConfigTemplate,
+            nginxConfigTemplate: this.definitionRecipeYamlMapperService
+                .defaultNginxConfigTemplate,
         });
     }
 
@@ -105,7 +105,7 @@ export class DefinitionRecipeFormComponent {
     addEnvVariable(): void {
         this.recipe.envVariables.push({
             name: '',
-            value: ''
+            value: '',
         });
     }
 
@@ -138,11 +138,15 @@ export class DefinitionRecipeFormComponent {
         } as CopyAssetIntoContainerTaskFormElement);
     }
 
-    isAfterBuildTaskExecuteServiceCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
+    isAfterBuildTaskExecuteServiceCommand(
+        afterBuildTask: AfterBuildTaskFormElement,
+    ): boolean {
         return 'execute_service_command' === afterBuildTask.type;
     }
 
-    isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: AfterBuildTaskFormElement): boolean {
+    isAfterBuildTaskCopyAssetIntoContainer(
+        afterBuildTask: AfterBuildTaskFormElement,
+    ): boolean {
         return 'copy_asset_into_container' === afterBuildTask.type;
     }
 
@@ -156,7 +160,7 @@ export class DefinitionRecipeFormComponent {
     addSummaryItem(): void {
         this.recipe.summaryItems.push({
             name: '',
-            value: ''
+            value: '',
         });
     }
 
@@ -174,10 +178,11 @@ export class DefinitionRecipeFormComponent {
         }
         availableEnvVariableNames.push('FEATER__INSTANCE_ID');
         for (const proxiedPort of this.recipe.proxiedPorts) {
-            availableEnvVariableNames.push(`FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
+            availableEnvVariableNames.push(
+                `FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`,
+            );
         }
 
         return availableEnvVariableNames;
     }
-
 }

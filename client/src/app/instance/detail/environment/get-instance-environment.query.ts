@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const getInstanceEnvironmentQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         instance(id: $id) {
             id
             name
@@ -16,12 +16,10 @@ export const getInstanceEnvironmentQueryGql = gql`
 export interface GetInstanceEnvironmentQueryInstanceFieldInterface {
     id: string;
     name: string;
-    envVariables: [
-        {
-            name: string;
-            value: string;
-        }
-    ];
+    envVariables: {
+        name: string;
+        value: string;
+    }[];
 }
 
 export interface GetInstanceEnvironmentQueryInterface {

@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const getInstanceServicesQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         instance(id: $id) {
             id
             name
@@ -19,15 +19,13 @@ export const getInstanceServicesQueryGql = gql`
 export interface GetInstanceServicesQueryInstanceFieldInterface {
     id: string;
     name: string;
-    services: [
-        {
-            id: string;
-            containerId: string;
-            containerNamePrefix: string;
-            ipAddress: string;
-            containerState: string;
-        }
-    ];
+    services: {
+        id: string;
+        containerId: string;
+        containerNamePrefix: string;
+        ipAddress: string;
+        containerState: string;
+    }[];
 }
 
 export interface GetInstanceServicesQueryInterface {

@@ -1,14 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Params} from '@angular/router';
-import {map, switchMap} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { Params } from '@angular/router';
+import { map, switchMap } from 'rxjs/operators';
 import {
     getDefinitionRecipeQueryGql,
     GetDefinitionRecipeQueryInterface,
     GetDefinitionRecipeQueryDefinitionFieldInterface,
 } from './get-definition-recipe.query';
-import {DefinitionAddComponent} from '../add/definition-add.component';
-import {DefinitionRecipeFormElement} from '../recipe-form/definition-recipe-form.model';
-
+import { DefinitionAddComponent } from '../add/definition-add.component';
+import { DefinitionRecipeFormElement } from '../recipe-form/definition-recipe-form.model';
 
 interface DefinitionDuplicateForm {
     name: string;
@@ -18,10 +17,10 @@ interface DefinitionDuplicateForm {
 @Component({
     selector: 'app-definition-duplicate',
     templateUrl: './definition-duplicate.component.html',
-    styles: []
+    styles: [],
 })
-export class DefinitionDuplicateComponent extends DefinitionAddComponent implements OnInit {
-
+export class DefinitionDuplicateComponent extends DefinitionAddComponent
+    implements OnInit {
     action = 'duplicate';
 
     definition: DefinitionDuplicateForm;
@@ -36,9 +35,9 @@ export class DefinitionDuplicateComponent extends DefinitionAddComponent impleme
 
     protected getSourceDefinition(): void {
         this.spinner.show();
-        this.route.params.pipe(
-            switchMap(
-                (params: Params) => {
+        this.route.params
+            .pipe(
+                switchMap((params: Params) => {
                     return this.apollo
                         .watchQuery<GetDefinitionRecipeQueryInterface>({
                             query: getDefinitionRecipeQueryGql,
@@ -46,25 +45,27 @@ export class DefinitionDuplicateComponent extends DefinitionAddComponent impleme
                                 id: params['id'],
                             },
                         })
-                        .valueChanges
-                        .pipe(
+                        .valueChanges.pipe(
                             map(result => {
                                 return result.data.definition;
-                            })
+                            }),
                         );
-                }
-            ))
+                }),
+            )
             .subscribe(
-                (definition: GetDefinitionRecipeQueryDefinitionFieldInterface) => {
+                (
+                    definition: GetDefinitionRecipeQueryDefinitionFieldInterface,
+                ) => {
                     this.project = definition.project;
                     this.sourceDefinition = {
                         name: definition.name,
                     };
                     this.definition.name = `${definition.name} - copy`;
-                    this.definition.recipe = this.definitionRecipeYamlMapperComponent.map(definition.recipeAsYaml);
+                    this.definition.recipe = this.definitionRecipeYamlMapperComponent.map(
+                        definition.recipeAsYaml,
+                    );
                     this.spinner.hide();
-                }
+                },
             );
     }
-
 }

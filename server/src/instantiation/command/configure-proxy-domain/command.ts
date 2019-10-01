@@ -1,7 +1,6 @@
-import {SimpleCommand} from '../../executor/simple-command';
+import { SimpleCommand } from '../../executor/simple-command';
 
 export class ConfigureProxyDomainCommand extends SimpleCommand {
-
     constructor(
         readonly serviceId: string,
         readonly ipAddress: string,
@@ -11,5 +10,4 @@ export class ConfigureProxyDomainCommand extends SimpleCommand {
     ) {
         super();
     }
-
 }

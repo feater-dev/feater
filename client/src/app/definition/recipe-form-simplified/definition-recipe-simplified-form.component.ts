@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     DefinitionSourceFormElement,
     DefinitionAssetVolumeFormElement,
@@ -14,17 +14,15 @@ import {
     CopyAssetIntoContainerTaskFormElement,
     DefinitionSourceVolumeFormElement,
 } from './../recipe-form/definition-recipe-form.model';
-import {ToastrService} from 'ngx-toastr';
-import {DefinitionRecipeYamlMapperService} from '../import-yaml/definition-recipe-yaml-mapper.service';
-
+import { ToastrService } from 'ngx-toastr';
+import { DefinitionRecipeYamlMapperService } from '../import-yaml/definition-recipe-yaml-mapper.service';
 
 @Component({
     selector: 'app-definition-recipe-simplified-form',
     templateUrl: './definition-recipe-simplified-form.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionRecipeSimplifiedFormComponent {
-
     @Input() recipe: DefinitionRecipeFormElement;
 
     constructor(
@@ -43,9 +41,9 @@ export class DefinitionRecipeSimplifiedFormComponent {
             useDeployKey: false,
             reference: {
                 type: 'branch',
-                name: ''
+                name: '',
             },
-            beforeBuildTasks: []
+            beforeBuildTasks: [],
         });
     }
 
@@ -92,7 +90,8 @@ export class DefinitionRecipeSimplifiedFormComponent {
             name: '',
             port: null,
             useDefaultNginxConfigTemplate: true,
-            nginxConfigTemplate: this.definitionRecipeYamlMapperService.defaultNginxConfigTemplate,
+            nginxConfigTemplate: this.definitionRecipeYamlMapperService
+                .defaultNginxConfigTemplate,
         });
     }
 
@@ -106,7 +105,7 @@ export class DefinitionRecipeSimplifiedFormComponent {
     addEnvVariable(): void {
         this.recipe.envVariables.push({
             name: '',
-            value: ''
+            value: '',
         });
     }
 
@@ -139,11 +138,15 @@ export class DefinitionRecipeSimplifiedFormComponent {
         } as CopyAssetIntoContainerTaskFormElement);
     }
 
-    isAfterBuildTaskExecuteServiceCommand(afterBuildTask: AfterBuildTaskFormElement): boolean {
+    isAfterBuildTaskExecuteServiceCommand(
+        afterBuildTask: AfterBuildTaskFormElement,
+    ): boolean {
         return 'execute_service_command' === afterBuildTask.type;
     }
 
-    isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask: AfterBuildTaskFormElement): boolean {
+    isAfterBuildTaskCopyAssetIntoContainer(
+        afterBuildTask: AfterBuildTaskFormElement,
+    ): boolean {
         return 'copy_asset_into_container' === afterBuildTask.type;
     }
 
@@ -157,7 +160,7 @@ export class DefinitionRecipeSimplifiedFormComponent {
     addSummaryItem(): void {
         this.recipe.summaryItems.push({
             name: '',
-            value: ''
+            value: '',
         });
     }
 
@@ -175,10 +178,11 @@ export class DefinitionRecipeSimplifiedFormComponent {
         }
         availableEnvVariableNames.push('FEATER__INSTANCE_ID');
         for (const proxiedPort of this.recipe.proxiedPorts) {
-            availableEnvVariableNames.push(`FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`);
+            availableEnvVariableNames.push(
+                `FEATER__PROXY_DOMIAN__${proxiedPort.id.toUpperCase()}`,
+            );
         }
 
         return availableEnvVariableNames;
     }
-
 }

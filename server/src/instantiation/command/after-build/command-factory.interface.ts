@@ -1,9 +1,8 @@
-import {InstanceContext} from '../../instance-context/instance-context';
-import {InstanceContextAfterBuildTaskInterface} from '../../instance-context/after-build/instance-context-after-build-task.interface';
-import {CommandType} from '../../executor/command.type';
+import { InstanceContext } from '../../instance-context/instance-context';
+import { InstanceContextAfterBuildTaskInterface } from '../../instance-context/after-build/instance-context-after-build-task.interface';
+import { CommandType } from '../../executor/command.type';
 
 export interface AfterBuildTaskCommandFactoryInterface {
-
     supportsType(type: string): boolean;
 
     createCommand(
@@ -13,5 +12,4 @@ export interface AfterBuildTaskCommandFactoryInterface {
         instanceContext: InstanceContext,
         updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType;
-
 }

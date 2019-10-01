@@ -1,16 +1,16 @@
-import {AfterBuildTaskCommandFactoryInterface} from '../command-factory.interface';
-import {ExecuteServiceCmdCommand} from './command';
-import {InstanceContextAfterBuildTaskInterface} from '../../../instance-context/after-build/instance-context-after-build-task.interface';
-import {InstanceContext} from '../../../instance-context/instance-context';
-import {InstanceContextExecuteServiceCmdInterface} from '../../../instance-context/after-build/instance-context-execute-service-cmd.Interface';
-import {ContextAwareCommand} from '../../../executor/context-aware-command.interface';
-import {EnvVariablesSet} from '../../../sets/env-variables-set';
-import {CommandType} from '../../../executor/command.type';
-import {Injectable} from '@nestjs/common';
+import { AfterBuildTaskCommandFactoryInterface } from '../command-factory.interface';
+import { ExecuteServiceCmdCommand } from './command';
+import { InstanceContextAfterBuildTaskInterface } from '../../../instance-context/after-build/instance-context-after-build-task.interface';
+import { InstanceContext } from '../../../instance-context/instance-context';
+import { InstanceContextExecuteServiceCmdInterface } from '../../../instance-context/after-build/instance-context-execute-service-cmd.Interface';
+import { ContextAwareCommand } from '../../../executor/context-aware-command.interface';
+import { EnvVariablesSet } from '../../../sets/env-variables-set';
+import { CommandType } from '../../../executor/command.type';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskCommandFactoryInterface {
-
+export class ExecuteServiceCmdCommandFactoryComponent
+    implements AfterBuildTaskCommandFactoryInterface {
     protected readonly TYPE = 'execute_service_command';
 
     supportsType(type: string): boolean {
@@ -34,11 +34,15 @@ export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskC
             instanceContext.id,
             `Running after build task${taskIdDescriptionPart} and executing service command for service \`${typedAfterBuildTask.serviceId}\``,
             () => {
-                const service = instanceContext.findService(typedAfterBuildTask.serviceId);
+                const service = instanceContext.findService(
+                    typedAfterBuildTask.serviceId,
+                );
 
                 return new ExecuteServiceCmdCommand(
                     instanceContext.envVariables,
-                    EnvVariablesSet.fromList(typedAfterBuildTask.customEnvVariables),
+                    EnvVariablesSet.fromList(
+                        typedAfterBuildTask.customEnvVariables,
+                    ),
                     typedAfterBuildTask.inheritedEnvVariables,
                     service.containerId,
                     typedAfterBuildTask.command,
@@ -47,5 +51,4 @@ export class ExecuteServiceCmdCommandFactoryComponent implements AfterBuildTaskC
             },
         );
     }
-
 }

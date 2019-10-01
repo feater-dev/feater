@@ -1,16 +1,13 @@
-import {Controller, Response, Next, Param, Get} from '@nestjs/common';
-import {InstanceRepository} from '../../persistence/repository/instance.repository';
-import {config} from '../../config/config';
-import {spawn, spawnSync} from 'child_process';
+import { Controller, Response, Next, Param, Get } from '@nestjs/common';
+import { InstanceRepository } from '../../persistence/repository/instance.repository';
+import { config } from '../../config/config';
+import { spawn, spawnSync } from 'child_process';
 import * as contentDisposition from 'content-disposition';
 import * as moment from 'moment';
 
 @Controller()
 export class DockerLogsController {
-
-    constructor(
-        private readonly instanceRepository: InstanceRepository,
-    ) {}
+    constructor(private readonly instanceRepository: InstanceRepository) {}
 
     @Get('download/docker-logs/:instanceId/:serviceId')
     public async download(
@@ -29,14 +26,14 @@ export class DockerLogsController {
                         ['logs', service.containerId],
                     );
 
-                    res
-                        .status(200)
-                        .set({
-                            'Content-Type': 'text/plain',
-                            'Content-Disposition': contentDisposition(
-                                `docker-logs-${instance.hash}-${serviceId}-${moment().format('YmdHis')}.log`,
-                            ),
-                        });
+                    res.status(200).set({
+                        'Content-Type': 'text/plain',
+                        'Content-Disposition': contentDisposition(
+                            `docker-logs-${
+                                instance.hash
+                            }-${serviceId}-${moment().format('YmdHis')}.log`,
+                        ),
+                    });
 
                     spawnedDockerLog.stdout.pipe(res);
                     spawnedDockerLog.stderr.pipe(res);
@@ -46,9 +43,6 @@ export class DockerLogsController {
             }
         }
 
-        res
-            .status(404)
-            .send();
+        res.status(404).send();
     }
-
 }

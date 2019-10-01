@@ -1,13 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute, Params} from '@angular/router';
-import {map, switchMap} from 'rxjs/operators';
-import {Apollo} from 'apollo-angular';
-import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {NgxSpinnerService} from 'ngx-spinner';
-import {DefinitionRecipeFormElement, ExecuteServiceCommandTaskFormElement} from '../recipe-form/definition-recipe-form.model';
-import {getProjectQueryGql, GetProjectQueryInterface, GetProjectQueryProjectFieldInterface} from './get-project.query';
-import {ToastrService} from 'ngx-toastr';
-import {DefinitionRecipeYamlMapperService} from '../import-yaml/definition-recipe-yaml-mapper.service';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { map, switchMap } from 'rxjs/operators';
+import { Apollo } from 'apollo-angular';
+import { jsonToGraphQLQuery } from 'json-to-graphql-query';
+import { NgxSpinnerService } from 'ngx-spinner';
+import {
+    DefinitionRecipeFormElement,
+    ExecuteServiceCommandTaskFormElement,
+} from '../recipe-form/definition-recipe-form.model';
+import {
+    getProjectQueryGql,
+    GetProjectQueryInterface,
+    GetProjectQueryProjectFieldInterface,
+} from './get-project.query';
+import { ToastrService } from 'ngx-toastr';
+import { DefinitionRecipeYamlMapperService } from '../import-yaml/definition-recipe-yaml-mapper.service';
 import gql from 'graphql-tag';
 import _ from 'lodash';
 import * as jsYaml from 'js-yaml';
@@ -27,10 +34,9 @@ export enum DefinitionRecipeInputModes {
 @Component({
     selector: 'app-definition-add',
     templateUrl: './definition-add.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionAddComponent implements OnInit {
-
     // TODO Change to enum.
     static readonly actionAdd = 'add';
 
@@ -77,19 +83,30 @@ export class DefinitionAddComponent implements OnInit {
 
     createDefinition(): void {
         this.spinner.show();
-        this.apollo.mutate({
-            mutation: gql`${this.getCreateDefinitionMutation()}`,
-        }).subscribe(
-            ({data}) => {
-                this.spinner.hide();
-                this.toastr.success(`Definition <em>${data.createDefinition.name}</em> created.`);
-                this.router.navigate(['/definition', data.createDefinition.id]);
-            },
-            () => {
-                this.spinner.hide();
-                this.toastr.error(`Failed to create definition <em>${this.definition.name}</em>.`);
-            }
-        );
+        this.apollo
+            .mutate({
+                mutation: gql`
+                    ${this.getCreateDefinitionMutation()}
+                `,
+            })
+            .subscribe(
+                ({ data }) => {
+                    this.spinner.hide();
+                    this.toastr.success(
+                        `Definition <em>${data.createDefinition.name}</em> created.`,
+                    );
+                    this.router.navigate([
+                        '/definition',
+                        data.createDefinition.id,
+                    ]);
+                },
+                () => {
+                    this.spinner.hide();
+                    this.toastr.error(
+                        `Failed to create definition <em>${this.definition.name}</em>.`,
+                    );
+                },
+            );
     }
 
     switchMode(mode: DefinitionRecipeInputModes): void {
@@ -101,7 +118,9 @@ export class DefinitionAddComponent implements OnInit {
     }
 
     isRecipeInputModeSimplifiedForm(): boolean {
-        return DefinitionRecipeInputModes.simplifiedForm === this.recipeInputMode;
+        return (
+            DefinitionRecipeInputModes.simplifiedForm === this.recipeInputMode
+        );
     }
 
     isRecipeInputModeRawYaml(): boolean {
@@ -116,7 +135,9 @@ export class DefinitionAddComponent implements OnInit {
     protected mapDefinitionToDto(): any {
         for (const afterBuildTask of this.definition.recipe.afterBuildTasks) {
             if ('execute_service_command' === afterBuildTask.type) {
-                this.filterAfterBuildExecuteCommandTask(afterBuildTask as ExecuteServiceCommandTaskFormElement);
+                this.filterAfterBuildExecuteCommandTask(
+                    afterBuildTask as ExecuteServiceCommandTaskFormElement,
+                );
             }
         }
 
@@ -125,25 +146,28 @@ export class DefinitionAddComponent implements OnInit {
             sources: this.definition.recipe.sources,
             sourceVolumes: this.definition.recipe.sourceVolumes,
             assetVolumes: this.definition.recipe.assetVolumes,
-            proxiedPorts: this.definition.recipe.proxiedPorts.map(proxiedPort => {
-                const mappedProxiedPort: any = {
-                    id: proxiedPort.id,
-                    serviceId: proxiedPort.serviceId,
-                    port: parseInt(proxiedPort.port, 10),
-                    name: proxiedPort.name,
-                };
+            proxiedPorts: this.definition.recipe.proxiedPorts.map(
+                proxiedPort => {
+                    const mappedProxiedPort: any = {
+                        id: proxiedPort.id,
+                        serviceId: proxiedPort.serviceId,
+                        port: parseInt(proxiedPort.port, 10),
+                        name: proxiedPort.name,
+                    };
 
-                if (!proxiedPort.useDefaultNginxConfigTemplate) {
-                    mappedProxiedPort.nginx_config_template = proxiedPort.nginxConfigTemplate;
-                }
+                    if (!proxiedPort.useDefaultNginxConfigTemplate) {
+                        mappedProxiedPort.nginx_config_template =
+                            proxiedPort.nginxConfigTemplate;
+                    }
 
-                return mappedProxiedPort;
-            }),
+                    return mappedProxiedPort;
+                },
+            ),
             envVariables: this.definition.recipe.envVariables,
-            composeFiles: [
-                this.definition.recipe.composeFile,
-            ],
-            afterBuildTasks: _.cloneDeep(this.definition.recipe.afterBuildTasks),
+            composeFiles: [this.definition.recipe.composeFile],
+            afterBuildTasks: _.cloneDeep(
+                this.definition.recipe.afterBuildTasks,
+            ),
             summaryItems: this.definition.recipe.summaryItems,
         };
 
@@ -172,16 +196,24 @@ export class DefinitionAddComponent implements OnInit {
             projectId: this.project.id,
             name: this.definition.name,
             recipeAsYaml: jsYaml.safeDump(
-                snakeCaseKeys(recipe, {deep: true}),
-                {indent: 4, flowLevel: -1},
+                snakeCaseKeys(recipe, { deep: true }),
+                {
+                    indent: 4,
+                    flowLevel: -1,
+                },
             ),
         };
 
         return dto;
     }
 
-    protected filterAfterBuildExecuteCommandTask(afterBuildTask: ExecuteServiceCommandTaskFormElement) {
-        afterBuildTask.command = _.filter(afterBuildTask.command, (commandPart) => !/^ *$/.test(commandPart));
+    protected filterAfterBuildExecuteCommandTask(
+        afterBuildTask: ExecuteServiceCommandTaskFormElement,
+    ) {
+        afterBuildTask.command = _.filter(
+            afterBuildTask.command,
+            commandPart => !/^ *$/.test(commandPart),
+        );
         for (const inheritedEnvVariable of afterBuildTask.inheritedEnvVariables) {
             if (/^ *$/.test(inheritedEnvVariable.alias)) {
                 inheritedEnvVariable.alias = null;
@@ -196,8 +228,8 @@ export class DefinitionAddComponent implements OnInit {
                     __args: this.mapDefinitionToDto(),
                     id: true,
                     name: true,
-                }
-            }
+                },
+            },
         };
 
         return jsonToGraphQLQuery(mutation);
@@ -205,9 +237,9 @@ export class DefinitionAddComponent implements OnInit {
 
     protected getProject(): void {
         this.spinner.show();
-        this.route.params.pipe(
-            switchMap(
-                (params: Params) => {
+        this.route.params
+            .pipe(
+                switchMap((params: Params) => {
                     return this.apollo
                         .watchQuery<GetProjectQueryInterface>({
                             query: getProjectQueryGql,
@@ -215,20 +247,16 @@ export class DefinitionAddComponent implements OnInit {
                                 id: params['id'],
                             },
                         })
-                        .valueChanges
-                        .pipe(
+                        .valueChanges.pipe(
                             map(result => {
                                 return result.data.project;
-                            })
+                            }),
                         );
-                }
-            ))
-            .subscribe(
-                (project: GetProjectQueryProjectFieldInterface) => {
-                    this.project = project;
-                    this.spinner.hide();
-                }
-            );
+                }),
+            )
+            .subscribe((project: GetProjectQueryProjectFieldInterface) => {
+                this.project = project;
+                this.spinner.hide();
+            });
     }
-
 }

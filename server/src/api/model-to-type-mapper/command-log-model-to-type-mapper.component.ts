@@ -1,13 +1,11 @@
-import {CommandLogTypeInterface} from '../type/command-log-type.interface';
-import {CommandLogInterface} from '../../persistence/interface/command-log.interface';
-import {DateConverter} from '../date-converter.component';
-import {Injectable} from '@nestjs/common';
+import { CommandLogTypeInterface } from '../type/command-log-type.interface';
+import { CommandLogInterface } from '../../persistence/interface/command-log.interface';
+import { DateConverter } from '../date-converter.component';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CommandLogModelToTypeMapper {
-    constructor(
-        private readonly dateConverter: DateConverter,
-    ) { }
+    constructor(private readonly dateConverter: DateConverter) {}
 
     mapOne(commandLog: CommandLogInterface): CommandLogTypeInterface {
         return {

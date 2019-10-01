@@ -1,7 +1,7 @@
 import * as split from 'split';
-import {Injectable} from '@nestjs/common';
-import {ExecuteCommandError} from './execute-command-error';
-import {CommandLogger} from '../logger/command-logger';
+import { Injectable } from '@nestjs/common';
+import { ExecuteCommandError } from './execute-command-error';
+import { CommandLogger } from '../logger/command-logger';
 
 interface SpawnHelperOptions {
     muteStdout?: boolean;
@@ -15,7 +15,6 @@ const defaultSpawnHelperOptions: SpawnHelperOptions = {
 
 @Injectable()
 export class SpawnHelper {
-
     handleSpawned(
         spawned,
         commandLogger: CommandLogger,
@@ -27,19 +26,15 @@ export class SpawnHelper {
         options: SpawnHelperOptions = defaultSpawnHelperOptions,
     ): void {
         if (!options.muteStdout) {
-            spawned.stdout
-                .pipe(split())
-                .on('data', (line: string) => {
-                    commandLogger.info(line);
-                });
+            spawned.stdout.pipe(split()).on('data', (line: string) => {
+                commandLogger.info(line);
+            });
         }
 
         if (!options.muteStderr) {
-            spawned.stderr
-                .pipe(split())
-                .on('data', (line: string) => {
-                    commandLogger.error(line.toString());
-                });
+            spawned.stderr.pipe(split()).on('data', (line: string) => {
+                commandLogger.error(line.toString());
+            });
         }
 
         spawned.on('error', error => {
@@ -78,8 +73,8 @@ export class SpawnHelper {
                 failedExitHandler,
                 errorHandler,
                 options,
-            )
-        })
+            );
+        });
     }
 
     promisifySpawnedWithHeader(
@@ -105,6 +100,4 @@ export class SpawnHelper {
             options,
         );
     }
-
-
 }

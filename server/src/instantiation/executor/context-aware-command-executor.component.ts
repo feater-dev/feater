@@ -1,15 +1,14 @@
-import {ContextAwareCommand} from './context-aware-command.interface';
-import {Injectable} from '@nestjs/common';
-import {CommandLogRepository} from '../../persistence/repository/command-log.repository';
-import {CommandLogger} from '../logger/command-logger';
-import {BaseLogger} from '../../logger/base-logger';
-import {CommandExecutorComponent} from './command-executor.component';
-import {CommandType} from './command.type';
-import {ExecuteCommandError} from '../helper/execute-command-error';
+import { ContextAwareCommand } from './context-aware-command.interface';
+import { Injectable } from '@nestjs/common';
+import { CommandLogRepository } from '../../persistence/repository/command-log.repository';
+import { CommandLogger } from '../logger/command-logger';
+import { BaseLogger } from '../../logger/base-logger';
+import { CommandExecutorComponent } from './command-executor.component';
+import { CommandType } from './command.type';
+import { ExecuteCommandError } from '../helper/execute-command-error';
 
 @Injectable()
 export class ContextAwareCommandExecutorComponent {
-
     private commandExecutorComponent: CommandExecutorComponent;
 
     constructor(
@@ -17,7 +16,9 @@ export class ContextAwareCommandExecutorComponent {
         private readonly baseLogger: BaseLogger,
     ) {}
 
-    setCommandExecutorComponent(commandExecutorComponent: CommandExecutorComponent): void {
+    setCommandExecutorComponent(
+        commandExecutorComponent: CommandExecutorComponent,
+    ): void {
         this.commandExecutorComponent = commandExecutorComponent;
     }
 
@@ -26,7 +27,9 @@ export class ContextAwareCommandExecutorComponent {
         const wrappedCommand = this.createCommand(command, commandLogger);
 
         try {
-            const result = await this.commandExecutorComponent.execute(wrappedCommand);
+            const result = await this.commandExecutorComponent.execute(
+                wrappedCommand,
+            );
             if (command.processResult) {
                 await command.processResult(result);
             }
@@ -37,9 +40,7 @@ export class ContextAwareCommandExecutorComponent {
 
             let messages: string[];
             if (error instanceof ExecuteCommandError) {
-                messages = [
-                    `Command execution failed.`,
-                ];
+                messages = [`Command execution failed.`];
             } else if (error instanceof Error) {
                 messages = [
                     `Command execution failed.`,
@@ -58,17 +59,23 @@ export class ContextAwareCommandExecutorComponent {
         }
     }
 
-    protected async createCommandLogger(command: ContextAwareCommand): Promise<CommandLogger> {
-        const commandLog = await command.createCommandLog(this.commandLogRepository);
+    protected async createCommandLogger(
+        command: ContextAwareCommand,
+    ): Promise<CommandLogger> {
+        const commandLog = await command.createCommandLog(
+            this.commandLogRepository,
+        );
 
         return new CommandLogger(commandLog, this.baseLogger);
     }
 
-    protected createCommand(command: ContextAwareCommand, commandLogger: CommandLogger): CommandType {
+    protected createCommand(
+        command: ContextAwareCommand,
+        commandLogger: CommandLogger,
+    ): CommandType {
         const wrappedCommand = command.createWrappedCommand();
         wrappedCommand.commandLogger = commandLogger;
 
         return wrappedCommand;
     }
-
 }

@@ -1,14 +1,12 @@
-import {Component, Input} from '@angular/core';
-import {GetDefinitionListQueryDefinitionsFieldItemInterface} from '../list/get-definition-list.query';
-
+import { Component, Input } from '@angular/core';
+import { GetDefinitionListQueryDefinitionsFieldItemInterface } from '../list/get-definition-list.query';
 
 @Component({
     selector: 'app-definition-table',
     templateUrl: './definition-table.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionTableComponent {
-
     @Input() definitions: GetDefinitionListQueryDefinitionsFieldItemInterface[];
 
     @Input() withProjects = true;
@@ -17,11 +15,7 @@ export class DefinitionTableComponent {
 
     getFilterCondition() {
         return {
-            $or: [
-                {name: this.search},
-                {project: {name: this.search}},
-            ],
+            $or: [{ name: this.search }, { project: { name: this.search } }],
         };
     }
-
 }

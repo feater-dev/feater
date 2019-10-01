@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import * as moment from 'moment';
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {Subscription, interval} from 'rxjs';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { Subscription, interval } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     getInstanceLogsQueryGql,
     GetInstanceLogsQueryInstanceFieldInterface,
@@ -14,15 +14,14 @@ import {
     updateInstanceLogsQueryGql,
     UpdateInstanceLogsQueryInterface,
 } from './update-instance-logs.query';
-import {InstanceTabs} from '../tabs/instance-tabs.component';
+import { InstanceTabs } from '../tabs/instance-tabs.component';
 
 @Component({
     selector: 'app-instance-logs',
     templateUrl: './instance-logs.component.html',
-    styles: []
+    styles: [],
 })
 export class InstanceLogsComponent implements OnInit, OnDestroy {
-
     readonly instanceTabs = InstanceTabs;
 
     instance: GetInstanceLogsQueryInstanceFieldInterface;
@@ -38,7 +37,7 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
 
     lastCommandLogEntryId: string = null;
 
-    expandToggles: {[commandLogId: string]: number} = {};
+    expandToggles: { [commandLogId: string]: number } = {};
 
     constructor(
         protected route: ActivatedRoute,
@@ -56,15 +55,25 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
 
     joinMessages(commandLogEntries) {
         const messages = _.map(commandLogEntries, 'message');
-        const formattedTimestamps = _.map(commandLogEntries, 'formattedTimestamp');
+        const formattedTimestamps = _.map(
+            commandLogEntries,
+            'formattedTimestamp',
+        );
 
         return _.zip(formattedTimestamps, messages)
             .map(([formattedTimestamp, message]) => {
                 const messageLines = message.split(/\r?\n/g);
                 const joinedMessages = [];
-                joinedMessages.push(`${formattedTimestamp} | ${messageLines[0]}`);
+                joinedMessages.push(
+                    `${formattedTimestamp} | ${messageLines[0]}`,
+                );
                 for (const messageLine of messageLines.slice(1)) {
-                    joinedMessages.push(`${_.repeat(' ', formattedTimestamp.length)} | ${messageLine}`);
+                    joinedMessages.push(
+                        `${_.repeat(
+                            ' ',
+                            formattedTimestamp.length,
+                        )} | ${messageLine}`,
+                    );
                 }
 
                 return joinedMessages.join('\n');
@@ -76,15 +85,15 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
         return obj.id;
     }
 
-    expand(commandLog: {id: string}): void {
+    expand(commandLog: { id: string }): void {
         this.expandToggles[commandLog.id] = this.commandLogExpanded;
     }
 
-    collapse(commandLog: {id: string}): void {
+    collapse(commandLog: { id: string }): void {
         this.expandToggles[commandLog.id] = this.commandLogCollapsed;
     }
 
-    isExpanded(commandLog: {id: string, completedAt?: string}): boolean {
+    isExpanded(commandLog: { id: string; completedAt?: string }): boolean {
         if (this.commandLogExpanded === this.expandToggles[commandLog.id]) {
             return true;
         }
@@ -108,8 +117,7 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
+            .valueChanges.subscribe(result => {
                 const resultData: GetInstanceLogsQueryInterface = result.data;
                 this.updateLastCommandLogEntryId(resultData);
                 this.instance = {
@@ -122,12 +130,11 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
                 }
 
                 if (!this.pollingSubscription) {
-                    this.pollingSubscription = interval(this.pollingInterval)
-                        .subscribe(
-                            () => {
-                                this.updateInstance();
-                            },
-                        );
+                    this.pollingSubscription = interval(
+                        this.pollingInterval,
+                    ).subscribe(() => {
+                        this.updateInstance();
+                    });
                 }
 
                 this.spinner.hide();
@@ -143,9 +150,9 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
                     lastCommandLogEntryId: this.lastCommandLogEntryId,
                 },
             })
-            .valueChanges
-            .subscribe(result => {
-                const resultData: UpdateInstanceLogsQueryInterface = result.data;
+            .valueChanges.subscribe(result => {
+                const resultData: UpdateInstanceLogsQueryInterface =
+                    result.data;
                 this.updateLastCommandLogEntryId(resultData);
                 for (const commandLogData of resultData.instance.commandLogs) {
                     const commandLog = this.findCommandLog(commandLogData.id);
@@ -159,17 +166,19 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
     }
 
     protected updateLastCommandLogEntryId(
-        resultData: GetInstanceLogsQueryInterface | UpdateInstanceLogsQueryInterface,
+        resultData:
+            | GetInstanceLogsQueryInterface
+            | UpdateInstanceLogsQueryInterface,
     ): void {
         const entryIds = _.map(
             _.flatten(
-                resultData.instance.commandLogs.map((commandLog) => {
+                resultData.instance.commandLogs.map(commandLog => {
                     return commandLog.entries.length > 0
                         ? commandLog.entries.slice(-1)
                         : [];
-                })
+                }),
             ),
-            'id'
+            'id',
         );
         if (0 !== entryIds.length) {
             this.lastCommandLogEntryId = _.max(entryIds);
@@ -177,7 +186,7 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
     }
 
     protected findCommandLog(commandLogId) {
-        return _.find(this.instance.commandLogs, {id: commandLogId});
+        return _.find(this.instance.commandLogs, { id: commandLogId });
     }
 
     protected addCommandLog(commandLogData) {
@@ -203,7 +212,9 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
     protected addCommandLogEntries(commandLog, commandLogEntriesData) {
         const commandLogEntries = _.cloneDeep(commandLogEntriesData);
         for (const commandLogEntry of commandLogEntries) {
-            commandLogEntry.formattedTimestamp = this.formatTimestamp(commandLogEntry.timestamp);
+            commandLogEntry.formattedTimestamp = this.formatTimestamp(
+                commandLogEntry.timestamp,
+            );
         }
         if (0 === commandLog.entries.length) {
             commandLog.entries = commandLogEntries;
@@ -213,12 +224,13 @@ export class InstanceLogsComponent implements OnInit, OnDestroy {
 
         const lastCommandLogEntryId = _.last(commandLog.entries).id;
         commandLog.entries = commandLog.entries.concat(
-            commandLogEntries.filter(commandLogEntry => commandLogEntry.id > lastCommandLogEntryId),
+            commandLogEntries.filter(
+                commandLogEntry => commandLogEntry.id > lastCommandLogEntryId,
+            ),
         );
     }
 
     protected formatTimestamp(timestamp: string): string {
         return moment(timestamp).format(this.dateFormat);
     }
-
 }

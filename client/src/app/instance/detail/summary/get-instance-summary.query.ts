@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const getInstanceSummaryQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         instance(id: $id) {
             id
             name
@@ -36,12 +36,10 @@ export interface GetInstanceSummaryQueryInstanceFieldInterface {
             name: string;
         };
     };
-    summaryItems: [
-        {
-            name: string;
-            value: string;
-        }
-    ];
+    summaryItems: {
+        name: string;
+        value: string;
+    }[];
     createdAt: string;
     updatedAt: string;
     completedAt: string;

@@ -1,9 +1,9 @@
-import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
-import {SimpleCommand} from '../../executor/simple-command';
-import {ConfigureProxyDomainCommand} from './command';
-import {InterpolationHelper} from '../../helper/interpolation-helper.component';
-import {FeaterVariablesSet} from '../../sets/feater-variables-set';
+import { Injectable } from '@nestjs/common';
+import { SimpleCommandExecutorComponentInterface } from '../../executor/simple-command-executor-component.interface';
+import { SimpleCommand } from '../../executor/simple-command';
+import { ConfigureProxyDomainCommand } from './command';
+import { InterpolationHelper } from '../../helper/interpolation-helper.component';
+import { FeaterVariablesSet } from '../../sets/feater-variables-set';
 
 const defaultNginxConfigTemplate = `# Proxy domain for
 # port {{{port}}}
@@ -23,14 +23,12 @@ server {
 }`;
 
 @Injectable()
-export class ConfigureProxyDomainCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
-
-    constructor(
-        private readonly interpolationHelper: InterpolationHelper,
-    ) {}
+export class ConfigureProxyDomainCommandExecutorComponent
+    implements SimpleCommandExecutorComponentInterface {
+    constructor(private readonly interpolationHelper: InterpolationHelper) {}
 
     supports(command: SimpleCommand): boolean {
-        return (command instanceof ConfigureProxyDomainCommand);
+        return command instanceof ConfigureProxyDomainCommand;
     }
 
     async execute(command: SimpleCommand): Promise<any> {
@@ -66,7 +64,6 @@ export class ConfigureProxyDomainCommandExecutorComponent implements SimpleComma
 
         commandLogger.info(`Nginx configuration:\n${nginxConfig}`);
 
-        return {nginxConfig};
+        return { nginxConfig };
     }
-
 }

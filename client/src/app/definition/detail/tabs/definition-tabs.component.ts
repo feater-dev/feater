@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 export enum DefinitionTabs {
     summary,
@@ -12,14 +12,12 @@ export enum DefinitionTabs {
 @Component({
     selector: 'app-definition-tabs',
     templateUrl: './definition-tabs.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionTabsComponent {
-
     readonly definitionTabs = DefinitionTabs;
 
     @Input() definitionId: string;
 
     @Input() activeTab: DefinitionTabs;
-
 }

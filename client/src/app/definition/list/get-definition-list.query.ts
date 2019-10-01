@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 
-
 export const getDefinitionListQueryGql = gql`
     query {
         definitions {
@@ -26,9 +25,9 @@ export interface GetDefinitionListQueryDefinitionsFieldItemInterface {
         id: string;
         name: string;
     };
-    instances: [{
+    instances: {
         id: string;
-    }];
+    }[];
     createdAt: string;
     updatedAt: string;
 }

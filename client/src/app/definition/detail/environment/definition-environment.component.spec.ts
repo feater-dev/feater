@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {DefinitionEnvironmentComponent} from './definition-environment.component';
+import { DefinitionEnvironmentComponent } from './definition-environment.component';
 
 describe('DefinitionEnvironmentComponent', () => {
     let component: DefinitionEnvironmentComponent;
@@ -11,9 +11,8 @@ describe('DefinitionEnvironmentComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DefinitionEnvironmentComponent ]
-        })
-        .compileComponents();
+            declarations: [DefinitionEnvironmentComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

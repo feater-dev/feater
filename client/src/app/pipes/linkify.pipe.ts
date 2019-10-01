@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import htmlLinkify from 'html-linkify';
 
 const options = {
@@ -7,7 +7,7 @@ const options = {
     },
 };
 
-@Pipe({name: 'linkify'})
+@Pipe({ name: 'linkify' })
 export class LinkifyPipe implements PipeTransform {
     transform(text: string): string {
         return text ? htmlLinkify(text, options) : text;

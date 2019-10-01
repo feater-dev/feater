@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {DeployKeyTableComponent} from './deploy-key-table.component';
+import { DeployKeyTableComponent } from './deploy-key-table.component';
 
 describe('DeployKeyTableComponent', () => {
     let component: DeployKeyTableComponent;
@@ -11,9 +11,8 @@ describe('DeployKeyTableComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DeployKeyTableComponent ]
-        })
-        .compileComponents();
+            declarations: [DeployKeyTableComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

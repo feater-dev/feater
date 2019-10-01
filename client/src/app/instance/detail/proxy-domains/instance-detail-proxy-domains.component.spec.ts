@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {InstanceProxyDomainsComponent} from './instance-proxy-domains.component';
+import { InstanceProxyDomainsComponent } from './instance-proxy-domains.component';
 
 describe('InstanceProxyDomainsComponent', () => {
     let component: InstanceProxyDomainsComponent;
@@ -11,9 +11,8 @@ describe('InstanceProxyDomainsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ InstanceProxyDomainsComponent ]
-        })
-        .compileComponents();
+            declarations: [InstanceProxyDomainsComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

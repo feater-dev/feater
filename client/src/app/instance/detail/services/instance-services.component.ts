@@ -1,26 +1,25 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     getInstanceServicesQueryGql,
     GetInstanceServicesQueryInstanceFieldInterface,
     GetInstanceServicesQueryInterface,
 } from './get-instance-services.query';
 import gql from 'graphql-tag';
-import {Subscription, interval} from 'rxjs';
-import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {ToastrService} from 'ngx-toastr';
-import {InstanceTabs} from '../tabs/instance-tabs.component';
-import {environment} from '../../../../environments/environment';
+import { Subscription, interval } from 'rxjs';
+import { jsonToGraphQLQuery } from 'json-to-graphql-query';
+import { ToastrService } from 'ngx-toastr';
+import { InstanceTabs } from '../tabs/instance-tabs.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-instance-services',
     templateUrl: './instance-services.component.html',
-    styles: []
+    styles: [],
 })
 export class InstanceServicesComponent implements OnInit, OnDestroy {
-
     readonly instanceTabs = InstanceTabs;
 
     instance: GetInstanceServicesQueryInstanceFieldInterface;
@@ -41,9 +40,9 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.getInstance();
         const polling = interval(this.pollingInterval);
-        this.pollingSubscription = polling.subscribe(
-            () => { this.getInstance(false); },
-        );
+        this.pollingSubscription = polling.subscribe(() => {
+            this.getInstance(false);
+        });
     }
 
     ngOnDestroy() {
@@ -56,16 +55,23 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
                 this.toastr.info(`Starting service <em>${service.id}</em>.`);
                 this.apollo
                     .mutate({
-                        mutation: gql`${this.getServiceMutation('startService', service)}`,
-                    }).subscribe(
+                        mutation: gql`
+                            ${this.getServiceMutation('startService', service)}
+                        `,
+                    })
+                    .subscribe(
                         () => {
-                            this.toastr.success(`Service <em>${service.id}</em> started.`);
+                            this.toastr.success(
+                                `Service <em>${service.id}</em> started.`,
+                            );
                             this.getInstance(false);
                         },
                         () => {
-                            this.toastr.error(`Failed to start service <em>${service.id}</em>.`);
+                            this.toastr.error(
+                                `Failed to start service <em>${service.id}</em>.`,
+                            );
                             this.getInstance(false);
-                        }
+                        },
                     );
                 break;
 
@@ -73,16 +79,26 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
                 this.toastr.info(`Unpausing service <em>${service.id}</em>.`);
                 this.apollo
                     .mutate({
-                        mutation: gql`${this.getServiceMutation('unpauseService', service)}`,
-                    }).subscribe(
+                        mutation: gql`
+                            ${this.getServiceMutation(
+                                'unpauseService',
+                                service,
+                            )}
+                        `,
+                    })
+                    .subscribe(
                         () => {
-                            this.toastr.success(`Service <em>${service.id}</em> unpaused.`);
+                            this.toastr.success(
+                                `Service <em>${service.id}</em> unpaused.`,
+                            );
                             this.getInstance(false);
                         },
                         () => {
-                            this.toastr.error(`Failed to unpause service <em>${service.id}</em>.`);
+                            this.toastr.error(
+                                `Failed to unpause service <em>${service.id}</em>.`,
+                            );
                             this.getInstance(false);
-                        }
+                        },
                     );
                 break;
         }
@@ -97,16 +113,23 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
 
         this.apollo
             .mutate({
-                mutation: gql`${this.getServiceMutation('pauseService', service)}`,
-            }).subscribe(
+                mutation: gql`
+                    ${this.getServiceMutation('pauseService', service)}
+                `,
+            })
+            .subscribe(
                 () => {
-                    this.toastr.success(`Service <em>${service.id}</em> paused.`);
+                    this.toastr.success(
+                        `Service <em>${service.id}</em> paused.`,
+                    );
                     this.getInstance(false);
                 },
                 () => {
-                    this.toastr.error(`Failed to pause service <em>${service.id}</em>.`);
+                    this.toastr.error(
+                        `Failed to pause service <em>${service.id}</em>.`,
+                    );
                     this.getInstance(false);
-                }
+                },
             );
     }
 
@@ -118,16 +141,23 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
         this.toastr.info(`Stopping service <em>${service.id}</em>.`);
         this.apollo
             .mutate({
-                mutation: gql`${this.getServiceMutation('stopService', service)}`,
-            }).subscribe(
+                mutation: gql`
+                    ${this.getServiceMutation('stopService', service)}
+                `,
+            })
+            .subscribe(
                 () => {
-                    this.toastr.success(`Service <em>${service.id}</em> stopped.`);
+                    this.toastr.success(
+                        `Service <em>${service.id}</em> stopped.`,
+                    );
                     this.getInstance();
                 },
                 () => {
-                    this.toastr.error(`Failed to stop service <em>${service.id}</em>.`);
+                    this.toastr.error(
+                        `Failed to stop service <em>${service.id}</em>.`,
+                    );
                     this.getInstance();
-                }
+                },
             );
     }
 
@@ -146,9 +176,9 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
-                const resultData: GetInstanceServicesQueryInterface = result.data;
+            .valueChanges.subscribe(result => {
+                const resultData: GetInstanceServicesQueryInterface =
+                    result.data;
                 this.instance = resultData.instance;
                 this.baseDownloadLogsUrl = `${environment.serverBaseUrl}/download/docker-logs/${this.instance.id}`;
                 if (spinner) {
@@ -158,7 +188,7 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
     }
 
     protected getServiceMutation(mutationName: string, service): string {
-        const queryJson = {mutation: {}};
+        const queryJson = { mutation: {} };
         queryJson.mutation[mutationName] = {
             __args: {
                 instanceId: this.instance.id,
@@ -169,5 +199,4 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
 
         return jsonToGraphQLQuery(queryJson);
     }
-
 }

@@ -1,8 +1,7 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ResolverPaginationArgumentsHelper {
-
     protected readonly defaultLimit = 99999;
     protected readonly maximalLimit = 99999;
 
@@ -24,5 +23,4 @@ export class ResolverPaginationArgumentsHelper {
 
         return sortMap[sortKey];
     }
-
 }

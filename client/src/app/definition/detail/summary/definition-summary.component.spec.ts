@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {DefinitionSummaryComponent} from './definition-summary.component';
+import { DefinitionSummaryComponent } from './definition-summary.component';
 
 describe('DefinitionSummaryComponent', () => {
     let component: DefinitionSummaryComponent;
@@ -11,9 +11,8 @@ describe('DefinitionSummaryComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DefinitionSummaryComponent ]
-        })
-        .compileComponents();
+            declarations: [DefinitionSummaryComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

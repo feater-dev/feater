@@ -1,13 +1,11 @@
-import {Injectable} from '@nestjs/common';
-import {AssetInterface} from '../../persistence/interface/asset.interface';
-import {AssetTypeInterface} from '../type/asset-type.interface';
-import {DateConverter} from '../date-converter.component';
+import { Injectable } from '@nestjs/common';
+import { AssetInterface } from '../../persistence/interface/asset.interface';
+import { AssetTypeInterface } from '../type/asset-type.interface';
+import { DateConverter } from '../date-converter.component';
 
 @Injectable()
 export class AssetModelToTypeMapper {
-    constructor(
-        private readonly dateConverter: DateConverter,
-    ) { }
+    constructor(private readonly dateConverter: DateConverter) {}
 
     mapOne(asset: AssetInterface): AssetTypeInterface {
         return {

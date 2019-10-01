@@ -3,13 +3,19 @@ import * as path from 'path';
 import * as mkdirRecursive from 'mkdir-recursive';
 import * as Busboy from 'busboy';
 
-import {Controller, Post, Request, Response, Next, Param} from '@nestjs/common';
-import {AssetRepository} from '../../persistence/repository/asset.repository';
-import {AssetHelper} from '../../persistence/helper/asset-helper.component';
+import {
+    Controller,
+    Post,
+    Request,
+    Response,
+    Next,
+    Param,
+} from '@nestjs/common';
+import { AssetRepository } from '../../persistence/repository/asset.repository';
+import { AssetHelper } from '../../persistence/helper/asset-helper.component';
 
 @Controller()
 export class AssetController {
-
     constructor(
         private readonly assetRepository: AssetRepository,
         private readonly assetHelper: AssetHelper,
@@ -53,7 +59,6 @@ export class AssetController {
                 return;
             }
 
-
             assetFilePromise = new Promise((resolve, reject) => {
                 const uploadPaths = this.assetHelper.getUploadPaths(asset);
 
@@ -83,5 +88,4 @@ export class AssetController {
 
         req.pipe(busboy);
     }
-
 }

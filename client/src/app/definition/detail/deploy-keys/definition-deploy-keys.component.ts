@@ -1,21 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     GetDefinitionDeployKeysQueryDefinitionFieldInterface,
     GetDefinitionDeployKeysQueryInterface,
     getDefinitionDeployKeysQueryGql,
 } from './get-definition-deploy-keys.query';
-import {DefinitionTabs} from '../tabs/definition-tabs.component';
+import { DefinitionTabs } from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-deploy-keys',
     templateUrl: './definition-deploy-keys.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionDeployKeysComponent implements OnInit {
-
     readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionDeployKeysQueryDefinitionFieldInterface;
@@ -39,9 +38,9 @@ export class DefinitionDeployKeysComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
-                const resultData: GetDefinitionDeployKeysQueryInterface = result.data;
+            .valueChanges.subscribe(result => {
+                const resultData: GetDefinitionDeployKeysQueryInterface =
+                    result.data;
                 this.definition = resultData.definition;
                 this.spinner.hide();
             });

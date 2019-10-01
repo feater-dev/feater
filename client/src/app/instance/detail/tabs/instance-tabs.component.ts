@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 export enum InstanceTabs {
     summary,
@@ -11,14 +11,12 @@ export enum InstanceTabs {
 @Component({
     selector: 'app-instance-tabs',
     templateUrl: './instance-tabs.component.html',
-    styles: []
+    styles: [],
 })
 export class InstanceTabsComponent {
-
     readonly instanceTabs = InstanceTabs;
 
     @Input() instanceId: string;
 
     @Input() activeTab: InstanceTabs;
-
 }

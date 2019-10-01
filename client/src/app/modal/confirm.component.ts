@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
 
-
 export interface ConfirmModel {
     title: string;
     message: string;
@@ -9,13 +8,12 @@ export interface ConfirmModel {
     cancel: string;
 }
 
-
 @Component({
     selector: 'app-confirm',
     templateUrl: './confirm.component.html',
 })
-export class ConfirmComponent extends DialogComponent<ConfirmModel, boolean> implements ConfirmModel {
-
+export class ConfirmComponent extends DialogComponent<ConfirmModel, boolean>
+    implements ConfirmModel {
     title: string;
 
     message: string;
@@ -32,5 +30,4 @@ export class ConfirmComponent extends DialogComponent<ConfirmModel, boolean> imp
         this.result = true;
         this.close();
     }
-
 }

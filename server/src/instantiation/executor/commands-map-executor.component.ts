@@ -1,17 +1,18 @@
 import * as _ from 'lodash';
-import {Injectable} from '@nestjs/common';
-import {CommandsMap} from './commands-map';
-import {SimpleCommand} from './simple-command';
-import {CommandsMapItem} from './commands-map-item';
-import {CommandExecutorComponent} from './command-executor.component';
-import {CommandType} from './command.type';
+import { Injectable } from '@nestjs/common';
+import { CommandsMap } from './commands-map';
+import { SimpleCommand } from './simple-command';
+import { CommandsMapItem } from './commands-map-item';
+import { CommandExecutorComponent } from './command-executor.component';
+import { CommandType } from './command.type';
 
 @Injectable()
 export class CommandsMapExecutorComponent {
-
     private commandExecutorComponent: CommandExecutorComponent;
 
-    setCommandExecutorComponent(commandExecutorComponent: CommandExecutorComponent): void {
+    setCommandExecutorComponent(
+        commandExecutorComponent: CommandExecutorComponent,
+    ): void {
         this.commandExecutorComponent = commandExecutorComponent;
     }
 
@@ -48,8 +49,10 @@ export class CommandsMapExecutorComponent {
         executingCommandSymbols: symbol[],
         pendingCommandSymbols: symbol[],
     ) {
-
-        if (0 === pendingCommandSymbols.length && 0 === executingCommandSymbols.length) {
+        if (
+            0 === pendingCommandSymbols.length &&
+            0 === executingCommandSymbols.length
+        ) {
             resolve();
 
             return;
@@ -59,9 +62,10 @@ export class CommandsMapExecutorComponent {
 
         for (const commandMapItem of commandsMapItems) {
             if (
-                -1 === pendingCommandSymbols.indexOf(commandMapItem.symbol)
-                || -1 !== executingCommandSymbols.indexOf(commandMapItem.symbol)
-                || _.difference(commandMapItem.dependsOn, completedCommandIds).length !== 0
+                -1 === pendingCommandSymbols.indexOf(commandMapItem.symbol) ||
+                -1 !== executingCommandSymbols.indexOf(commandMapItem.symbol) ||
+                _.difference(commandMapItem.dependsOn, completedCommandIds)
+                    .length !== 0
             ) {
                 continue;
             }
@@ -89,19 +93,18 @@ export class CommandsMapExecutorComponent {
                             );
                         });
                     },
-                    (error) => {
+                    error => {
                         reject(error);
                     },
                 );
         }
 
         if (
-            !anythingExecuted
-            && 0 === pendingCommandSymbols.length
-            && 0 === executingCommandSymbols.length
+            !anythingExecuted &&
+            0 === pendingCommandSymbols.length &&
+            0 === executingCommandSymbols.length
         ) {
             throw new Error('Inconsistent command dependencies.');
         }
     }
-
 }

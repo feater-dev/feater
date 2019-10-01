@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common';
-import {ResolverPaginationArgumentsHelper} from '../pagination-argument/resolver-pagination-arguments-helper.component';
-import {InstanceRepository} from '../../persistence/repository/instance.repository';
-import {InstanceInterface} from '../../persistence/interface/instance.interface';
-import {ResolverPaginationArgumentsInterface} from '../pagination-argument/resolver-pagination-arguments.interface';
+import { Injectable } from '@nestjs/common';
+import { ResolverPaginationArgumentsHelper } from '../pagination-argument/resolver-pagination-arguments-helper.component';
+import { InstanceRepository } from '../../persistence/repository/instance.repository';
+import { InstanceInterface } from '../../persistence/interface/instance.interface';
+import { ResolverPaginationArgumentsInterface } from '../pagination-argument/resolver-pagination-arguments.interface';
 
 @Injectable()
 export class InstanceLister {
@@ -32,7 +32,7 @@ export class InstanceLister {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
         private readonly instanceRepository: InstanceRepository,
-    ) { }
+    ) {}
 
     async getList(
         criteria: any,
@@ -42,7 +42,11 @@ export class InstanceLister {
             criteria,
             this.resolveListOptionsHelper.getOffset(pagination.offset),
             this.resolveListOptionsHelper.getLimit(pagination.limit),
-            this.resolveListOptionsHelper.getSort(this.defaultSortKey, this.sortMap, pagination.sortKey),
+            this.resolveListOptionsHelper.getSort(
+                this.defaultSortKey,
+                this.sortMap,
+                pagination.sortKey,
+            ),
         );
     }
 }

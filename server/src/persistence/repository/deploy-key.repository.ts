@@ -1,21 +1,26 @@
 import * as easyKeygen from 'easy-keygen';
-import {writeFileSync} from 'fs';
+import { writeFileSync } from 'fs';
 import * as uuidVersion4 from 'uuid/v4';
-import {Model} from 'mongoose';
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {DeployKeyInterface} from '../interface/deploy-key.interface';
-import {DeployKeyHelperComponent} from '../../helper/deploy-key-helper.component';
+import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { DeployKeyInterface } from '../interface/deploy-key.interface';
+import { DeployKeyHelperComponent } from '../../helper/deploy-key-helper.component';
 
 @Injectable()
 export class DeployKeyRepository {
-
     constructor(
-        @InjectModel('DeployKey') private readonly deployKeyModel: Model<DeployKeyInterface>,
+        @InjectModel('DeployKey')
+        private readonly deployKeyModel: Model<DeployKeyInterface>,
         private readonly deployKeyHelper: DeployKeyHelperComponent,
     ) {}
 
-    find(criteria: object, offset: number, limit: number, sort?: object): Promise<DeployKeyInterface[]> {
+    find(
+        criteria: object,
+        offset: number,
+        limit: number,
+        sort?: object,
+    ): Promise<DeployKeyInterface[]> {
         const query = this.deployKeyModel.find(criteria);
         query.skip(offset).limit(limit);
         if (sort) {
@@ -38,40 +43,45 @@ export class DeployKeyRepository {
     }
 
     async findByCloneUrl(cloneUrl: string): Promise<DeployKeyInterface[]> {
-        return await this.find({cloneUrl}, 0, 2);
+        return await this.find({ cloneUrl }, 0, 2);
     }
 
     async findOneByCloneUrl(cloneUrl: string): Promise<DeployKeyInterface> {
-        return await this.findOne({cloneUrl});
+        return await this.findOne({ cloneUrl });
     }
 
     async findOneById(id: string): Promise<DeployKeyInterface> {
-        return await this.findOne({_id: id});
+        return await this.findOne({ _id: id });
     }
 
     async existsForCloneUrl(cloneUrl: string): Promise<boolean> {
-        const deployKeys = await this.find({cloneUrl}, 0, 2);
+        const deployKeys = await this.find({ cloneUrl }, 0, 2);
         if (1 < deployKeys.length) {
             throw new Error();
         }
 
-        return (1 === deployKeys.length);
+        return 1 === deployKeys.length;
     }
 
-    async create(cloneUrl: string, overwrite: boolean = false): Promise<DeployKeyInterface> {
-        const oldModels = await this.find({cloneUrl}, 0, 2);
+    async create(
+        cloneUrl: string,
+        overwrite: boolean = false,
+    ): Promise<DeployKeyInterface> {
+        const oldModels = await this.find({ cloneUrl }, 0, 2);
         if (1 < oldModels.length) {
             throw new Error('More than one deploy key found.');
         }
 
         const passphrase = uuidVersion4().replace(/-/g, '');
 
-        const {publicKey, privateKey} = await easyKeygen(null, {passphrase});
+        const { publicKey, privateKey } = await easyKeygen(null, {
+            passphrase,
+        });
 
         writeFileSync(
             this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(cloneUrl),
             privateKey,
-            {mode: 0o400},
+            { mode: 0o400 },
         );
 
         let model;
@@ -99,14 +109,13 @@ export class DeployKeyRepository {
 
     async remove(cloneUrl: string): Promise<void> {
         return new Promise<void>(resolve => {
-            this.deployKeyModel
-                .deleteOne({cloneUrl}, (err) => {
-                    if (err) {
-                        throw err;
-                    }
+            this.deployKeyModel.deleteOne({ cloneUrl }, err => {
+                if (err) {
+                    throw err;
+                }
 
-                    resolve();
-                });
+                resolve();
+            });
         });
     }
 }

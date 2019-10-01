@@ -1,14 +1,12 @@
-import {Component, Input} from '@angular/core';
-import {GetAssetListQueryAssetsFieldItemInterface} from '../list/get-asset-list.query';
-
+import { Component, Input } from '@angular/core';
+import { GetAssetListQueryAssetsFieldItemInterface } from '../list/get-asset-list.query';
 
 @Component({
     selector: 'app-asset-table',
     templateUrl: './asset-table.component.html',
-    styles: []
+    styles: [],
 })
 export class AssetTableComponent {
-
     @Input() assets: GetAssetListQueryAssetsFieldItemInterface[];
 
     @Input() withProjects = true;
@@ -17,11 +15,7 @@ export class AssetTableComponent {
 
     getFilterCondition() {
         return {
-            $or: [
-                {id: this.search},
-                {project: {name: this.search}},
-            ],
+            $or: [{ id: this.search }, { project: { name: this.search } }],
         };
     }
-
 }

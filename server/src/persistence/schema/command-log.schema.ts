@@ -1,10 +1,11 @@
-import {Schema} from 'mongoose';
+import { Schema } from 'mongoose';
 
 const CommandLogDetailItemSchema = new Schema(
     {
         name: String,
         value: Schema.Types.Mixed,
-    }, {
+    },
+    {
         _id: false,
     },
 );

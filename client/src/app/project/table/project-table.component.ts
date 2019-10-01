@@ -1,20 +1,17 @@
-import {Component, Input} from '@angular/core';
-import {GetProjectListQueryProjectsFieldItemInterface} from '../list/get-project-list.query';
-
+import { Component, Input } from '@angular/core';
+import { GetProjectListQueryProjectsFieldItemInterface } from '../list/get-project-list.query';
 
 @Component({
     selector: 'app-project-table',
     templateUrl: './project-table.component.html',
-    styles: []
+    styles: [],
 })
 export class ProjectTableComponent {
-
     @Input() projects: GetProjectListQueryProjectsFieldItemInterface[];
 
     search: string;
 
     getFilterCondition() {
-        return {name: this.search};
+        return { name: this.search };
     }
-
 }

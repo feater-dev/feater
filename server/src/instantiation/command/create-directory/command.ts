@@ -1,11 +1,7 @@
-import {SimpleCommand} from '../../executor/simple-command';
+import { SimpleCommand } from '../../executor/simple-command';
 
 export class CreateDirectoryCommand extends SimpleCommand {
-
-    constructor(
-        readonly absoluteGuestDirPath: string,
-    ) {
+    constructor(readonly absoluteGuestDirPath: string) {
         super();
     }
-
 }

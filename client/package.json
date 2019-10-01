@@ -10,12 +10,14 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "lint": "tslint src/**/*.ts",
-    "lint:fix": "tslint --fix src/**/*.ts",
-    "start": "ng serve",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor",
-    "start:dev:watch": "ng serve --host 0.0.0.0 --port 4200"
+    "start": "ng serve",
+    "start:dev:watch": "ng serve --host 0.0.0.0 --port 4200",
+    "lint:check": "tslint src/**/*.ts",
+    "lint:fix": "tslint --fix src/**/*.ts",
+    "prettier:check": "prettier --check \"src/**/*.ts\"",
+    "prettier:fix": "prettier --write \"src/**/*.ts\""
   },
   "private": true,
   "dependencies": {
@@ -63,6 +65,7 @@
     "@types/jasmine": "^2.5.38",
     "@types/node": "^6.0.42",
     "codelyzer": "^5.0.1",
+    "prettier": "1.18.2",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0"
   }

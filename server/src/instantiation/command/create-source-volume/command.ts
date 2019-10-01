@@ -1,7 +1,6 @@
-import {SimpleCommand} from '../../executor/simple-command';
+import { SimpleCommand } from '../../executor/simple-command';
 
 export class CreateSourceVolumeCommand extends SimpleCommand {
-
     constructor(
         readonly sourceDockerVolumeName: string,
         readonly sourceId: string,
@@ -12,5 +11,4 @@ export class CreateSourceVolumeCommand extends SimpleCommand {
     ) {
         super();
     }
-
 }

@@ -1,5 +1,4 @@
 export interface LoggerInterface {
-
     emerg(message: string, meta: object);
 
     alert(message: string, meta: object);
@@ -15,5 +14,4 @@ export interface LoggerInterface {
     info(message: string, meta: object);
 
     debug(message: string, meta: object);
-
 }

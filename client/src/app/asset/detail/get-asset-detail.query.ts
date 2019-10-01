@@ -1,12 +1,8 @@
 import gql from 'graphql-tag';
 
-
 export const getAssetDetailQueryGql = gql`
-    query ($id: String!, $projectId: String!) {
-        asset(
-            projectId: $projectId
-            id: $id
-        ) {
+    query($id: String!, $projectId: String!) {
+        asset(projectId: $projectId, id: $id) {
             id
             project {
                 id

@@ -1,27 +1,25 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import gql from 'graphql-tag';
-import {Apollo} from 'apollo-angular';
-import {AssetAddForm} from './asset-add-form.model';
+import { Apollo } from 'apollo-angular';
+import { AssetAddForm } from './asset-add-form.model';
 import {
     getProjectQueryGql,
     GetProjectQueryInterface,
-    GetProjectQueryProjectFieldInterface
+    GetProjectQueryProjectFieldInterface,
 } from './get-project.query';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {NgxSpinnerService} from 'ngx-spinner';
-import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {ToastrService} from 'ngx-toastr';
-
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { jsonToGraphQLQuery } from 'json-to-graphql-query';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-asset-add',
     templateUrl: './asset-add.component.html',
-    styles: []
+    styles: [],
 })
 export class AssetAddComponent implements OnInit {
-
     asset: AssetAddForm;
 
     project: GetProjectQueryProjectFieldInterface;
@@ -49,12 +47,16 @@ export class AssetAddComponent implements OnInit {
         this.spinner.show();
         this.apollo
             .mutate({
-                mutation: gql`${this.getCreateAssetMutation()}`,
+                mutation: gql`
+                    ${this.getCreateAssetMutation()}
+                `,
             })
             .subscribe(
-                ({data}) => {
+                ({ data }) => {
                     this.spinner.show();
-                    this.toastr.info(`Uploading file for asset <em>${data.createAsset.id}</em>.`);
+                    this.toastr.info(
+                        `Uploading file for asset <em>${data.createAsset.id}</em>.`,
+                    );
                     const uploadData = new FormData();
                     uploadData.set('asset', this.asset.file);
                     this.httpClient
@@ -64,28 +66,41 @@ export class AssetAddComponent implements OnInit {
                                 'upload',
                                 'asset',
                                 data.createAsset.project.id,
-                                data.createAsset.id
+                                data.createAsset.id,
                             ].join('/'),
-                            uploadData
+                            uploadData,
                         )
                         .subscribe(
                             () => {
                                 this.spinner.hide();
-                                this.toastr.success(`Upload completed, asset <em>${data.createAsset.id}</em> created.`);
-                                this.router.navigate(['/asset', this.project.id, data.createAsset.id]);
+                                this.toastr.success(
+                                    `Upload completed, asset <em>${data.createAsset.id}</em> created.`,
+                                );
+                                this.router.navigate([
+                                    '/asset',
+                                    this.project.id,
+                                    data.createAsset.id,
+                                ]);
                             },
-                            (error) => {
+                            error => {
                                 this.spinner.hide();
-                                this.toastr.error(`Failed to upload file and create asset <em>${this.asset.id}</em>.`);
-                                this.router.navigate(['/asset', this.project.id]);
-                            }
+                                this.toastr.error(
+                                    `Failed to upload file and create asset <em>${this.asset.id}</em>.`,
+                                );
+                                this.router.navigate([
+                                    '/asset',
+                                    this.project.id,
+                                ]);
+                            },
                         );
                 },
-                (error) => {
+                error => {
                     this.spinner.hide();
-                    this.toastr.error(`Failed to create asset <em>${this.asset.id}</em>.`);
+                    this.toastr.error(
+                        `Failed to create asset <em>${this.asset.id}</em>.`,
+                    );
                     this.router.navigate(['/asset', this.project.id]);
-                }
+                },
             );
     }
 
@@ -104,8 +119,7 @@ export class AssetAddComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
+            .valueChanges.subscribe(result => {
                 const resultData: GetProjectQueryInterface = result.data;
                 this.project = resultData.project;
                 this.spinner.hide();
@@ -131,5 +145,4 @@ export class AssetAddComponent implements OnInit {
 
         return jsonToGraphQLQuery(mutation);
     }
-
 }

@@ -1,19 +1,17 @@
-import {Injectable} from '@nestjs/common';
-import {InterpolationHelper} from '../../../helper/interpolation-helper.component';
-import {SimpleCommandExecutorComponentInterface} from '../../../executor/simple-command-executor-component.interface';
-import {SimpleCommand} from '../../../executor/simple-command';
-import {InterpolateFileCommand} from './command';
-import {InterpolateFileCommandResultInterface} from './command-result.interface';
+import { Injectable } from '@nestjs/common';
+import { InterpolationHelper } from '../../../helper/interpolation-helper.component';
+import { SimpleCommandExecutorComponentInterface } from '../../../executor/simple-command-executor-component.interface';
+import { SimpleCommand } from '../../../executor/simple-command';
+import { InterpolateFileCommand } from './command';
+import { InterpolateFileCommandResultInterface } from './command-result.interface';
 
 @Injectable()
-export class InterpolateFileCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
-
-    constructor(
-        private readonly interpolationHelper: InterpolationHelper,
-    ) {}
+export class InterpolateFileCommandExecutorComponent
+    implements SimpleCommandExecutorComponentInterface {
+    constructor(private readonly interpolationHelper: InterpolationHelper) {}
 
     supports(command: SimpleCommand): boolean {
-        return (command instanceof InterpolateFileCommand);
+        return command instanceof InterpolateFileCommand;
     }
 
     async execute(command: SimpleCommand): Promise<any> {
@@ -30,7 +28,6 @@ export class InterpolateFileCommandExecutorComponent implements SimpleCommandExe
 
         commandLogger.info(`Interpolated text:\n${interpolatedText}`);
 
-        return {interpolatedText} as InterpolateFileCommandResultInterface;
+        return { interpolatedText } as InterpolateFileCommandResultInterface;
     }
-
 }

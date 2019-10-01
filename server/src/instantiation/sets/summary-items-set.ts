@@ -1,14 +1,8 @@
 class SummaryItemsSetItem {
-
-    constructor(
-        readonly name: string,
-        readonly value: string,
-    ) {}
-
+    constructor(readonly name: string, readonly value: string) {}
 }
 
 export class SummaryItemsSet {
-
     private readonly items: SummaryItemsSetItem[];
 
     constructor() {
@@ -26,9 +20,9 @@ export class SummaryItemsSet {
         return merged;
     }
 
-    static fromList(list: {name: string, value: string}[]): SummaryItemsSet {
+    static fromList(list: { name: string; value: string }[]): SummaryItemsSet {
         const set = new SummaryItemsSet();
-        for (const {name, value} of list) {
+        for (const { name, value } of list) {
             set.add(name, value);
         }
 
@@ -43,7 +37,7 @@ export class SummaryItemsSet {
         return this.items.slice();
     }
 
-    toMap(): {[name: string]: string} {
+    toMap(): { [name: string]: string } {
         const map = {};
         for (const item of this.items) {
             map[item.name] = item.value;
@@ -55,5 +49,4 @@ export class SummaryItemsSet {
     merge(...sets: SummaryItemsSet[]): SummaryItemsSet {
         return SummaryItemsSet.merge(...[this, ...sets]);
     }
-
 }

@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {
     DefinitionSourceFormElement,
     BeforeBuildTaskFormElement,
@@ -6,44 +6,46 @@ import {
     InterpolateTaskFormElement,
 } from '../../recipe-form/definition-recipe-form.model';
 
-
 @Component({
     selector: 'app-definition-add-source-form-element',
     templateUrl: './definition-add.source-form-element.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionAddSourceFormElementComponent {
-
     @Input() source: DefinitionSourceFormElement;
 
-    @Output() deleteSource: EventEmitter<DefinitionSourceFormElement> =
-        new EventEmitter<DefinitionSourceFormElement>();
+    @Output() deleteSource: EventEmitter<
+        DefinitionSourceFormElement
+    > = new EventEmitter<DefinitionSourceFormElement>();
 
     delete(): void {
         this.deleteSource.emit(this.source);
     }
 
-    isBeforeBuildTaskCopy(beforeBuildTask: BeforeBuildTaskFormElement): boolean {
-        return ('copy' === beforeBuildTask.type);
+    isBeforeBuildTaskCopy(
+        beforeBuildTask: BeforeBuildTaskFormElement,
+    ): boolean {
+        return 'copy' === beforeBuildTask.type;
     }
 
-    isBeforeBuildTaskInterpolate(beforeBuildTask: BeforeBuildTaskFormElement): boolean {
-        return ('interpolate' === beforeBuildTask.type);
+    isBeforeBuildTaskInterpolate(
+        beforeBuildTask: BeforeBuildTaskFormElement,
+    ): boolean {
+        return 'interpolate' === beforeBuildTask.type;
     }
 
     addBeforeBuildTaskCopy(): void {
         this.source.beforeBuildTasks.push(<TaskFormElement>{
             type: 'copy',
             sourceRelativePath: '',
-            destinationRelativePath: ''
+            destinationRelativePath: '',
         });
     }
 
     addBeforeBuildTaskInterpolate(): void {
         this.source.beforeBuildTasks.push(<InterpolateTaskFormElement>{
-
             type: 'interpolate',
-            relativePath: ''
+            relativePath: '',
         });
     }
 

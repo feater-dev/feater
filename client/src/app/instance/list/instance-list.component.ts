@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     getInstanceListQueryGql,
     GetInstanceListQueryInstanceFieldItemInterface,
@@ -11,10 +11,9 @@ import {
 @Component({
     selector: 'app-instance-list',
     templateUrl: './instance-list.component.html',
-    styles: []
+    styles: [],
 })
 export class InstanceListComponent implements OnInit {
-
     instances: GetInstanceListQueryInstanceFieldItemInterface[];
 
     constructor(
@@ -33,13 +32,14 @@ export class InstanceListComponent implements OnInit {
             .watchQuery<GetInstanceListQueryInterface>({
                 query: getInstanceListQueryGql,
                 variables: {
-                    definitionId: this.route.snapshot.queryParams['definitionId'],
+                    definitionId: this.route.snapshot.queryParams[
+                        'definitionId'
+                    ],
                     limit: this.route.snapshot.queryParams['limit'],
                     offset: this.route.snapshot.queryParams['offset'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
+            .valueChanges.subscribe(result => {
                 const resultData: GetInstanceListQueryInterface = result.data;
                 this.instances = resultData.instances;
                 this.spinner.hide();

@@ -15,9 +15,9 @@ export interface DefinitionSourceFormElement {
     useDeployKey: boolean;
     reference: DefinitionComponentReferenceFormElement;
     beforeBuildTasks: Array<
-        BeforeBuildTaskFormElement|
-        TaskFormElement|
-        InterpolateTaskFormElement
+        | BeforeBuildTaskFormElement
+        | TaskFormElement
+        | InterpolateTaskFormElement
     >;
 }
 
@@ -68,7 +68,8 @@ export interface AfterBuildTaskFormElement {
     dependsOn?: string[];
 }
 
-export interface ExecuteCommandTaskFormElement extends AfterBuildTaskFormElement {
+export interface ExecuteCommandTaskFormElement
+    extends AfterBuildTaskFormElement {
     inheritedEnvVariables: {
         name: string;
         alias: string;
@@ -80,11 +81,13 @@ export interface ExecuteCommandTaskFormElement extends AfterBuildTaskFormElement
     command: string[];
 }
 
-export interface ExecuteServiceCommandTaskFormElement extends ExecuteCommandTaskFormElement {
+export interface ExecuteServiceCommandTaskFormElement
+    extends ExecuteCommandTaskFormElement {
     serviceId: string;
 }
 
-export interface CopyAssetIntoContainerTaskFormElement extends AfterBuildTaskFormElement {
+export interface CopyAssetIntoContainerTaskFormElement
+    extends AfterBuildTaskFormElement {
     serviceId: string;
     assetId: string;
     destinationPath: string;

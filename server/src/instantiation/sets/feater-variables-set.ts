@@ -1,23 +1,19 @@
 class FeaterVariablesSetItem {
-
-    constructor(
-        readonly name: string,
-        readonly value: string,
-    ) {}
-
+    constructor(readonly name: string, readonly value: string) {}
 }
 
 export class FeaterVariablesSet {
-
     private readonly items: FeaterVariablesSetItem[];
 
     constructor() {
         this.items = [];
     }
 
-    static fromList(list: {name: string, value: string}[]): FeaterVariablesSet {
+    static fromList(
+        list: { name: string; value: string }[],
+    ): FeaterVariablesSet {
         const set = new FeaterVariablesSet();
-        for (const {name, value} of list) {
+        for (const { name, value } of list) {
             set.add(name, value);
         }
 
@@ -47,7 +43,7 @@ export class FeaterVariablesSet {
         return this.items.slice();
     }
 
-    toMap(): {[name: string]: string} {
+    toMap(): { [name: string]: string } {
         const map = {};
         for (const item of this.items) {
             map[item.name] = item.value;
@@ -68,5 +64,4 @@ export class FeaterVariablesSet {
     merge(...sets: FeaterVariablesSet[]): FeaterVariablesSet {
         return FeaterVariablesSet.merge(...[this, ...sets]);
     }
-
 }

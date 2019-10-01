@@ -1,21 +1,24 @@
-import {Model} from 'mongoose';
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {ProjectInterface} from '../interface/project.interface';
-import {CreateProjectInputTypeInterface} from '../../api/input-type/create-project-input-type.interface';
+import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { ProjectInterface } from '../interface/project.interface';
+import { CreateProjectInputTypeInterface } from '../../api/input-type/create-project-input-type.interface';
 
 @Injectable()
 export class ProjectRepository {
-
     constructor(
-        @InjectModel('Project') private readonly projectModel: Model<ProjectInterface>,
+        @InjectModel('Project')
+        private readonly projectModel: Model<ProjectInterface>,
     ) {}
 
-    find(criteria: object, offset: number, limit: number, sort?: object): Promise<ProjectInterface[]> {
+    find(
+        criteria: object,
+        offset: number,
+        limit: number,
+        sort?: object,
+    ): Promise<ProjectInterface[]> {
         const query = this.projectModel.find(criteria);
-        query
-            .skip(offset)
-            .limit(limit);
+        query.skip(offset).limit(limit);
         if (sort) {
             query.sort(sort);
         }
@@ -36,7 +39,9 @@ export class ProjectRepository {
         return project;
     }
 
-    create(createProjectInputType: CreateProjectInputTypeInterface): Promise<ProjectInterface> {
+    create(
+        createProjectInputType: CreateProjectInputTypeInterface,
+    ): Promise<ProjectInterface> {
         const createdProject = new this.projectModel(createProjectInputType);
         createdProject.createdAt = new Date();
         createdProject.updatedAt = new Date();
@@ -46,5 +51,4 @@ export class ProjectRepository {
             resolve(createdProject);
         });
     }
-
 }

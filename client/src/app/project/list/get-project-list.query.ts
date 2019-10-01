@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 
-
 export const getProjectListQueryGql = gql`
     query {
         projects {

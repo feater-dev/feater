@@ -1,14 +1,15 @@
-import {Injectable} from '@nestjs/common';
-import {PredictedEnvVariableInterface} from './predicted-env-variable.interface';
-import {PredictedFeaterVariableInterface} from './predicted-feater-variable.interface';
-import {config} from '../../config/config';
+import { Injectable } from '@nestjs/common';
+import { PredictedEnvVariableInterface } from './predicted-env-variable.interface';
+import { PredictedFeaterVariableInterface } from './predicted-feater-variable.interface';
+import { config } from '../../config/config';
 import * as path from 'path';
 import * as _ from 'lodash';
 
 @Injectable()
 export class VariablesPredictor {
-
-    predictEnvVariables(definitionRecipe: any): PredictedEnvVariableInterface[] {
+    predictEnvVariables(
+        definitionRecipe: any,
+    ): PredictedEnvVariableInterface[] {
         const envVariables: any = [];
 
         envVariables.push([
@@ -26,13 +27,18 @@ export class VariablesPredictor {
             },
         ]);
 
-        const proxiedPortIds = _.filter(_.map(definitionRecipe.proxiedPorts, 'id'));
+        const proxiedPortIds = _.filter(
+            _.map(definitionRecipe.proxiedPorts, 'id'),
+        );
         envVariables.push(
             proxiedPortIds.map(
                 (proxiedPortId: string): PredictedEnvVariableInterface => {
                     return {
                         name: `FEATER__PROXY_DOMAIN__${proxiedPortId.toUpperCase()}`,
-                        pattern: config.instantiation.proxyDomainPattern.replace('{port_id}', proxiedPortId.toLowerCase()),
+                        pattern: config.instantiation.proxyDomainPattern.replace(
+                            '{port_id}',
+                            proxiedPortId.toLowerCase(),
+                        ),
                     };
                 },
             ),
@@ -45,7 +51,9 @@ export class VariablesPredictor {
                     return [
                         {
                             name: `FEATER__SOURCE_VOLUME__${sourceId.toUpperCase()}`,
-                            pattern: `${config.instantiation.containerNamePrefix}_{instance_hash}_source_volume_${sourceId.toLowerCase()}`,
+                            pattern: `${
+                                config.instantiation.containerNamePrefix
+                            }_{instance_hash}_source_volume_${sourceId.toLowerCase()}`,
                         },
                     ];
                 },
@@ -58,7 +66,9 @@ export class VariablesPredictor {
                 (volumeId: string): PredictedEnvVariableInterface => {
                     return {
                         name: `FEATER__ASSET_VOLUME__${volumeId.toUpperCase()}`,
-                        pattern: `${config.instantiation.containerNamePrefix}{instance_hash}_asset_volume_${volumeId.toLowerCase()}`,
+                        pattern: `${
+                            config.instantiation.containerNamePrefix
+                        }{instance_hash}_asset_volume_${volumeId.toLowerCase()}`,
                     };
                 },
             ),
@@ -71,7 +81,9 @@ export class VariablesPredictor {
         return _.flattenDeep(envVariables);
     }
 
-    predictFeaterVariables(definitionRecipe: any): PredictedFeaterVariableInterface[] {
+    predictFeaterVariables(
+        definitionRecipe: any,
+    ): PredictedFeaterVariableInterface[] {
         const featerVariables: any = [];
 
         featerVariables.push([
@@ -91,7 +103,10 @@ export class VariablesPredictor {
 
         featerVariables.push(
             definitionRecipe.envVariables.map(
-                (envVariable: {name: string, value: string}): PredictedFeaterVariableInterface => {
+                (envVariable: {
+                    name: string;
+                    value: string;
+                }): PredictedFeaterVariableInterface => {
                     return {
                         name: `env__${envVariable.name.toLowerCase()}`,
                         value: envVariable.value,
@@ -100,13 +115,18 @@ export class VariablesPredictor {
             ),
         );
 
-        const proxiedPortIds = _.filter(_.map(definitionRecipe.proxiedPorts, 'id'));
+        const proxiedPortIds = _.filter(
+            _.map(definitionRecipe.proxiedPorts, 'id'),
+        );
         featerVariables.push(
             proxiedPortIds.map(
                 (proxiedPortId: string): PredictedFeaterVariableInterface => {
                     return {
                         name: `proxy_domain__${proxiedPortId.toLowerCase()}`,
-                        pattern: config.instantiation.proxyDomainPattern.replace('{port_id}', proxiedPortId.toLowerCase()),
+                        pattern: config.instantiation.proxyDomainPattern.replace(
+                            '{port_id}',
+                            proxiedPortId.toLowerCase(),
+                        ),
                     };
                 },
             ),
@@ -119,7 +139,9 @@ export class VariablesPredictor {
                     return [
                         {
                             name: `source_volume__${sourceId.toLowerCase()}`,
-                            pattern: `${config.instantiation.containerNamePrefix}_{instance_hash}_source_volume_${sourceId.toLowerCase()}`,
+                            pattern: `${
+                                config.instantiation.containerNamePrefix
+                            }_{instance_hash}_source_volume_${sourceId.toLowerCase()}`,
                         },
                     ];
                 },
@@ -132,7 +154,9 @@ export class VariablesPredictor {
                 (volumeId: string): PredictedFeaterVariableInterface => {
                     return {
                         name: `asset_volume__${volumeId.toLowerCase()}`,
-                        pattern: `${config.instantiation.containerNamePrefix}{instance_hash}_asset_volume_${volumeId.toLowerCase()}`,
+                        pattern: `${
+                            config.instantiation.containerNamePrefix
+                        }{instance_hash}_asset_volume_${volumeId.toLowerCase()}`,
                     };
                 },
             ),

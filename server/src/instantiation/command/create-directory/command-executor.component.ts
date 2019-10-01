@@ -1,15 +1,15 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
-import {SimpleCommand} from '../../executor/simple-command';
-import {CreateDirectoryCommand} from './command';
+import { Injectable } from '@nestjs/common';
+import { SimpleCommandExecutorComponentInterface } from '../../executor/simple-command-executor-component.interface';
+import { SimpleCommand } from '../../executor/simple-command';
+import { CreateDirectoryCommand } from './command';
 
 @Injectable()
-export class CreateDirectoryCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
-
+export class CreateDirectoryCommandExecutorComponent
+    implements SimpleCommandExecutorComponentInterface {
     supports(command: SimpleCommand): boolean {
-        return (command instanceof CreateDirectoryCommand);
+        return command instanceof CreateDirectoryCommand;
     }
 
     async execute(command: SimpleCommand): Promise<any> {
@@ -24,5 +24,4 @@ export class CreateDirectoryCommandExecutorComponent implements SimpleCommandExe
 
         return {};
     }
-
 }

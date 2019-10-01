@@ -1,14 +1,15 @@
-import {Component, Input} from '@angular/core';
-import {DefinitionSourceFormElement, DefinitionAddComposeFileFormElement} from '../../recipe-form/definition-recipe-form.model';
-
+import { Component, Input } from '@angular/core';
+import {
+    DefinitionSourceFormElement,
+    DefinitionAddComposeFileFormElement,
+} from '../../recipe-form/definition-recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-compose-file-form-element',
     templateUrl: './definition-add.compose-file-form-element.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionAddComposeFileFormElementComponent {
-
     @Input() composeFile: DefinitionAddComposeFileFormElement;
 
     @Input() sources: DefinitionSourceFormElement[];

@@ -1,21 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     GetDefinitionEnvironmentQueryDefinitionFieldInterface,
     GetDefinitionEnvironmentQueryInterface,
     getDefinitionEnvironmentQueryGql,
 } from './get-definition-environment.query';
-import {DefinitionTabs} from '../tabs/definition-tabs.component';
+import { DefinitionTabs } from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-environment',
     templateUrl: './definition-environment.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionEnvironmentComponent implements OnInit {
-
     readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionEnvironmentQueryDefinitionFieldInterface;
@@ -39,9 +38,9 @@ export class DefinitionEnvironmentComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
-                const resultData: GetDefinitionEnvironmentQueryInterface = result.data;
+            .valueChanges.subscribe(result => {
+                const resultData: GetDefinitionEnvironmentQueryInterface =
+                    result.data;
                 this.definition = resultData.definition;
                 this.spinner.hide();
             });

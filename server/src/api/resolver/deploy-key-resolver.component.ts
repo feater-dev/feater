@@ -1,18 +1,18 @@
-import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
-import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
-import {ResolverPaginationArgumentsInterface} from '../pagination-argument/resolver-pagination-arguments.interface';
-import {ResolverDeployKeyFilterArgumentsInterface} from '../filter-argument/resolver-deploy-key-filter-arguments.interface';
-import {RegenerateDeployKeyInputTypeInterface} from '../input-type/regenerate-deploy-key-input-type.interface';
-import {RemoveDeployKeyInputTypeInterface} from '../input-type/remove-deploy-key-input-type.interface';
-import {DefinitionRepository} from '../../persistence/repository/definition.repository';
-import {SourceTypeInterface} from '../type/nested/definition-recipe/source-type.interface';
-import {DeployKeyHelperComponent} from '../../helper/deploy-key-helper.component';
-import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
-import {DeployKeyLister} from '../lister/deploy-key-lister.component';
-import {DeployKeyModelToTypeMapper} from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
-import {unlinkSync} from 'fs';
+import { DeployKeyTypeInterface } from '../type/deploy-key-type.interface';
+import { DeployKeyRepository } from '../../persistence/repository/deploy-key.repository';
+import { ResolverPaginationArgumentsInterface } from '../pagination-argument/resolver-pagination-arguments.interface';
+import { ResolverDeployKeyFilterArgumentsInterface } from '../filter-argument/resolver-deploy-key-filter-arguments.interface';
+import { RegenerateDeployKeyInputTypeInterface } from '../input-type/regenerate-deploy-key-input-type.interface';
+import { RemoveDeployKeyInputTypeInterface } from '../input-type/remove-deploy-key-input-type.interface';
+import { DefinitionRepository } from '../../persistence/repository/definition.repository';
+import { SourceTypeInterface } from '../type/nested/definition-recipe/source-type.interface';
+import { DeployKeyHelperComponent } from '../../helper/deploy-key-helper.component';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { DeployKeyLister } from '../lister/deploy-key-lister.component';
+import { DeployKeyModelToTypeMapper } from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
+import { unlinkSync } from 'fs';
 import * as _ from 'lodash';
-import {DefinitionRecipeMapper} from '../../instantiation/definition-recipe-mapper.component';
+import { DefinitionRecipeMapper } from '../../instantiation/definition-recipe-mapper.component';
 
 @Resolver('DeployKey')
 export class DeployKeyResolver {
@@ -23,23 +23,25 @@ export class DeployKeyResolver {
         private readonly deployKeyLister: DeployKeyLister,
         private readonly deployKeyModelToTypeMapper: DeployKeyModelToTypeMapper,
         private readonly definitionRecipeMapper: DefinitionRecipeMapper,
-    ) { }
+    ) {}
 
     @Query('deployKeys')
-    async getAll(
-        @Args() args: any,
-    ): Promise<DeployKeyTypeInterface[]> {
+    async getAll(@Args() args: any): Promise<DeployKeyTypeInterface[]> {
         const resolverListOptions = args as ResolverPaginationArgumentsInterface;
-        const criteria = this.applyFilterArgumentToCriteria({}, args as ResolverDeployKeyFilterArgumentsInterface);
-        const deployKeys = await this.deployKeyLister.getList(criteria, args as ResolverPaginationArgumentsInterface);
+        const criteria = this.applyFilterArgumentToCriteria(
+            {},
+            args as ResolverDeployKeyFilterArgumentsInterface,
+        );
+        const deployKeys = await this.deployKeyLister.getList(
+            criteria,
+            args as ResolverPaginationArgumentsInterface,
+        );
 
         return this.deployKeyModelToTypeMapper.mapMany(deployKeys);
     }
 
     @Query('deployKey')
-    async getOne(
-        @Args('id') id: string,
-    ): Promise<DeployKeyTypeInterface> {
+    async getOne(@Args('id') id: string): Promise<DeployKeyTypeInterface> {
         const deployKey = await this.deployKeyRepository.findOneById(id);
 
         return this.deployKeyModelToTypeMapper.mapOne(deployKey);
@@ -51,7 +53,10 @@ export class DeployKeyResolver {
     ): Promise<DeployKeyTypeInterface> {
         // TODO Extract somewhere else.
 
-        const deployKey = await this.deployKeyRepository.create(regenerateDeployKeyInput.cloneUrl, true);
+        const deployKey = await this.deployKeyRepository.create(
+            regenerateDeployKeyInput.cloneUrl,
+            true,
+        );
 
         return this.deployKeyModelToTypeMapper.mapOne(deployKey);
     }
@@ -63,7 +68,9 @@ export class DeployKeyResolver {
         const definitions = await this.definitionRepository.find({}, 0, 99999);
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            const definitionRecipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
+            const definitionRecipe = this.definitionRecipeMapper.map(
+                definition.recipeAsYaml,
+            );
             for (const source of definitionRecipe.sources) {
                 const cloneUrl = (source as SourceTypeInterface).cloneUrl;
                 if ((source as SourceTypeInterface).useDeployKey) {
@@ -78,14 +85,19 @@ export class DeployKeyResolver {
             existingDeployKeyCloneUrls.push(deployKey.cloneUrl);
         }
 
-        const missingReferencedCloneUrls = _.difference(_.uniq(referencedCloneUrls), existingDeployKeyCloneUrls);
+        const missingReferencedCloneUrls = _.difference(
+            _.uniq(referencedCloneUrls),
+            existingDeployKeyCloneUrls,
+        );
         const createPromises = [];
         for (const missingReferencedCloneUrl of missingReferencedCloneUrls) {
-            createPromises.push(this.deployKeyRepository.create(missingReferencedCloneUrl));
+            createPromises.push(
+                this.deployKeyRepository.create(missingReferencedCloneUrl),
+            );
         }
         await Promise.all(createPromises);
 
-        return {generated: true};
+        return { generated: true };
     }
 
     @Mutation('removeUnusedDeployKeys')
@@ -102,7 +114,9 @@ export class DeployKeyResolver {
 
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            const definitionRecipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
+            const definitionRecipe = this.definitionRecipeMapper.map(
+                definition.recipeAsYaml,
+            );
             for (const source of definitionRecipe.sources) {
                 const cloneUrl = (source as SourceTypeInterface).cloneUrl;
                 if ((source as SourceTypeInterface).useDeployKey) {
@@ -111,15 +125,24 @@ export class DeployKeyResolver {
             }
         }
 
-        const unreferencedCloneUrls = _.difference(cloneUrls, referencedCloneUrls);
+        const unreferencedCloneUrls = _.difference(
+            cloneUrls,
+            referencedCloneUrls,
+        );
         const removePromises = [];
         for (const unreferencedCloneUrl of unreferencedCloneUrls) {
-            removePromises.push(this.deployKeyRepository.remove(unreferencedCloneUrl));
-            unlinkSync(this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(unreferencedCloneUrl));
+            removePromises.push(
+                this.deployKeyRepository.remove(unreferencedCloneUrl),
+            );
+            unlinkSync(
+                this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(
+                    unreferencedCloneUrl,
+                ),
+            );
         }
         await Promise.all(removePromises);
 
-        return {removed: true};
+        return { removed: true };
     }
 
     @Mutation('removeDeployKey')
@@ -127,9 +150,13 @@ export class DeployKeyResolver {
         @Args() removeDeployKeyInput: RemoveDeployKeyInputTypeInterface,
     ): Promise<object> {
         await this.deployKeyRepository.remove(removeDeployKeyInput.cloneUrl);
-        unlinkSync(this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(removeDeployKeyInput.cloneUrl));
+        unlinkSync(
+            this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(
+                removeDeployKeyInput.cloneUrl,
+            ),
+        );
 
-        return {removed: true};
+        return { removed: true };
     }
 
     // TODO Move somewhere else.

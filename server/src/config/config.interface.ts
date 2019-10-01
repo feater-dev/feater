@@ -24,6 +24,6 @@ export interface ConfigInterface {
         };
         readonly mongoDb: {
             readonly logLevel: string;
-        }
+        };
     };
 }

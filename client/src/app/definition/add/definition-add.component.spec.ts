@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {DefinitionAddComponent} from './definition-add.component';
+import { DefinitionAddComponent } from './definition-add.component';
 
 describe('DefinitionDuplicateComponent', () => {
     let component: DefinitionAddComponent;
@@ -11,9 +11,8 @@ describe('DefinitionDuplicateComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DefinitionAddComponent ]
-        })
-        .compileComponents();
+            declarations: [DefinitionAddComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

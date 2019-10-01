@@ -1,20 +1,18 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, Inject, OnInit } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     GetDefinitionListQueryDefinitionsFieldItemInterface,
     GetDefinitionListQueryInterface,
     getDefinitionListQueryGql,
 } from './get-definition-list.query';
 
-
 @Component({
     selector: 'app-definition-list',
     templateUrl: './definition-list.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionListComponent implements OnInit {
-
     definitions: GetDefinitionListQueryDefinitionsFieldItemInterface[];
 
     constructor(
@@ -30,11 +28,10 @@ export class DefinitionListComponent implements OnInit {
         this.spinner.show();
         this.apollo
             .watchQuery<GetDefinitionListQueryInterface>({
-                query: getDefinitionListQueryGql
+                query: getDefinitionListQueryGql,
             })
-            .valueChanges
-            .subscribe(result => {
-                const resultData: GetDefinitionListQueryInterface= result.data;
+            .valueChanges.subscribe(result => {
+                const resultData: GetDefinitionListQueryInterface = result.data;
                 this.definitions = resultData.definitions;
                 this.spinner.hide();
             });

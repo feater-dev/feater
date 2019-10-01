@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {DefinitionSubstitutionsComponent} from './definition-substitutions.component';
+import { DefinitionSubstitutionsComponent } from './definition-substitutions.component';
 
 describe('DefinitionSubstitutionsComponent', () => {
     let component: DefinitionSubstitutionsComponent;
@@ -11,9 +11,8 @@ describe('DefinitionSubstitutionsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DefinitionSubstitutionsComponent ]
-        })
-        .compileComponents();
+            declarations: [DefinitionSubstitutionsComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

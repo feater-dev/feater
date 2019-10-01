@@ -1,24 +1,26 @@
 import * as path from 'path';
 import * as jsYaml from 'js-yaml';
-import {spawnSync} from 'child_process';
-import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
-import {ParseDockerComposeCommand} from './command';
+import { spawnSync } from 'child_process';
+import { Injectable } from '@nestjs/common';
+import { SimpleCommandExecutorComponentInterface } from '../../executor/simple-command-executor-component.interface';
+import { ParseDockerComposeCommand } from './command';
 import {
     ParseDockerComposeCommandResultInterface,
     ParseDockerComposeCommandResultServiceInterface,
 } from './command-result.interface';
-import {SimpleCommand} from '../../executor/simple-command';
-import {config} from '../../../config/config';
+import { SimpleCommand } from '../../executor/simple-command';
+import { config } from '../../../config/config';
 
 @Injectable()
-export class ParseDockerComposeCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
-
+export class ParseDockerComposeCommandExecutorComponent
+    implements SimpleCommandExecutorComponentInterface {
     supports(command: SimpleCommand): boolean {
-        return (command instanceof ParseDockerComposeCommand);
+        return command instanceof ParseDockerComposeCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<ParseDockerComposeCommandResultInterface> {
+    async execute(
+        command: SimpleCommand,
+    ): Promise<ParseDockerComposeCommandResultInterface> {
         const {
             sourceDockerVolumeName,
             envDirRelativePath,
@@ -38,19 +40,24 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
         composeConfigArguments.push(
             'run',
             '--rm',
-            '-e', `COMPOSE_HTTP_TIMEOUT=${config.instantiation.dockerComposeHttpTimeout}`,
+            '-e',
+            `COMPOSE_HTTP_TIMEOUT=${config.instantiation.dockerComposeHttpTimeout}`,
         );
 
         for (const envVariable of envVariables.toList()) {
             composeConfigArguments.push(
-                '-e', `${envVariable.name}=${envVariable.value}`,
+                '-e',
+                `${envVariable.name}=${envVariable.value}`,
             );
         }
 
         composeConfigArguments.push(
-            '-w', path.join('/source', envDirRelativePath),
-            '-v', `${sourceDockerVolumeName}:/source`,
-            '-v', `${hostDockerSocketPath}:/var/run/docker.sock`,
+            '-w',
+            path.join('/source', envDirRelativePath),
+            '-v',
+            `${sourceDockerVolumeName}:/source`,
+            '-v',
+            `${hostDockerSocketPath}:/var/run/docker.sock`,
             `docker/compose:${config.instantiation.dockerComposeVersion}`,
         );
 
@@ -65,18 +72,22 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
 
         commandLogger.info(`Source volume name: ${sourceDockerVolumeName}`);
         commandLogger.info(`Command: ${composeConfigCommand}`);
-        commandLogger.info(`Arguments: ${JSON.stringify(composeConfigArguments)}`);
+        commandLogger.info(
+            `Arguments: ${JSON.stringify(composeConfigArguments)}`,
+        );
 
         const dockerComposeConfigSpawnResult = spawnSync(
             composeConfigCommand,
             composeConfigArguments,
-            {cwd: workingDirectory},
+            { cwd: workingDirectory },
         );
 
         // TODO Add some error handling.
 
         const combinedComposeConfig = dockerComposeConfigSpawnResult.stdout.toString();
-        commandLogger.info(`Combined compose configuration (some environmental variable values not available yet):\n${combinedComposeConfig}`);
+        commandLogger.info(
+            `Combined compose configuration (some environmental variable values not available yet):\n${combinedComposeConfig}`,
+        );
 
         const compose = jsYaml.safeLoad(combinedComposeConfig);
 
@@ -94,10 +105,11 @@ export class ParseDockerComposeCommandExecutorComponent implements SimpleCommand
                 id: serviceId,
                 containerNamePrefix,
             });
-            commandLogger.info(`Container name prefix for service ${serviceId}: ${containerNamePrefix}`);
+            commandLogger.info(
+                `Container name prefix for service ${serviceId}: ${containerNamePrefix}`,
+            );
         }
 
-        return {services} as ParseDockerComposeCommandResultInterface;
+        return { services } as ParseDockerComposeCommandResultInterface;
     }
-
 }

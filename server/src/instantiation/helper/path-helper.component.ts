@@ -1,11 +1,10 @@
 import * as path from 'path';
-import {config} from '../../config/config';
-import {Injectable} from '@nestjs/common';
-import {SourcePathsInterface} from './source-paths.interface';
+import { config } from '../../config/config';
+import { Injectable } from '@nestjs/common';
+import { SourcePathsInterface } from './source-paths.interface';
 
 @Injectable()
 export class PathHelper {
-
     getInstancePaths(instanceHash: string): SourcePathsInterface {
         const relative = path.join(instanceHash);
 
@@ -16,7 +15,10 @@ export class PathHelper {
         };
     }
 
-    getSourcePaths(instanceHash: string, sourceId: string): SourcePathsInterface {
+    getSourcePaths(
+        instanceHash: string,
+        sourceId: string,
+    ): SourcePathsInterface {
         const instancePaths = this.getInstancePaths(instanceHash);
         const relative = path.join('source', sourceId);
 
@@ -26,5 +28,4 @@ export class PathHelper {
             },
         };
     }
-
 }

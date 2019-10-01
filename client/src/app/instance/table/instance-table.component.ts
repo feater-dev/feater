@@ -1,13 +1,12 @@
-import {Component, Input} from '@angular/core';
-import {GetInstanceListQueryInstanceFieldItemInterface} from '../list/get-instance-list.query';
+import { Component, Input } from '@angular/core';
+import { GetInstanceListQueryInstanceFieldItemInterface } from '../list/get-instance-list.query';
 
 @Component({
     selector: 'app-instance-table',
     templateUrl: './instance-table.component.html',
-    styles: []
+    styles: [],
 })
 export class InstanceTableComponent {
-
     @Input() instances: GetInstanceListQueryInstanceFieldItemInterface[];
 
     @Input() withProjects = true;
@@ -15,19 +14,19 @@ export class InstanceTableComponent {
 
     search: string;
 
-    getRunningServicesCount(services: {containerState: string}[]): number {
-        return services.filter(service => 'running' === service.containerState).length;
+    getRunningServicesCount(services: { containerState: string }[]): number {
+        return services.filter(service => 'running' === service.containerState)
+            .length;
     }
 
     getFilterCondition() {
         return {
             $or: [
-                {name: this.search},
-                {hash: this.search},
-                {definition: {name: this.search}},
-                {definition: {project: {name: this.search}}},
+                { name: this.search },
+                { hash: this.search },
+                { definition: { name: this.search } },
+                { definition: { project: { name: this.search } } },
             ],
         };
     }
-
 }

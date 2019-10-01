@@ -1,20 +1,19 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {ExecuteServiceCommandTaskFormElement} from '../../../recipe-form/definition-recipe-form.model';
-
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ExecuteServiceCommandTaskFormElement } from '../../../recipe-form/definition-recipe-form.model';
 
 @Component({
     selector: 'app-execute-service-command-task-form-element',
     templateUrl: './execute-service-command-task-form-element.component.html',
-    styles: []
+    styles: [],
 })
 export class ExecuteServiceCommandTaskFormElementComponent {
-
     @Input() task: ExecuteServiceCommandTaskFormElement;
 
     @Input() availableEnvVariableNames: string[];
 
-    @Output() deleteTask: EventEmitter<ExecuteServiceCommandTaskFormElement> =
-        new EventEmitter<ExecuteServiceCommandTaskFormElement>();
+    @Output() deleteTask: EventEmitter<
+        ExecuteServiceCommandTaskFormElement
+    > = new EventEmitter<ExecuteServiceCommandTaskFormElement>();
 
     delete(): void {
         this.deleteTask.emit(this.task);
@@ -39,5 +38,4 @@ export class ExecuteServiceCommandTaskFormElementComponent {
     trackByIndex(index: number, obj: any): any {
         return index;
     }
-
 }

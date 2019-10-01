@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const updateInstanceLogsQueryGql = gql`
-    query ($id: String!, $lastCommandLogEntryId: String) {
+    query($id: String!, $lastCommandLogEntryId: String) {
         instance(id: $id) {
             id
             commandLogs {

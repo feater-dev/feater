@@ -1,17 +1,17 @@
-import {Injectable} from '@nestjs/common';
-import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
-import {config} from '../../../config/config';
-import {SimpleCommand} from '../../executor/simple-command';
-import {EnvVariablesSet} from '../../sets/env-variables-set';
-import {FeaterVariablesSet} from '../../sets/feater-variables-set';
-import {PrepareProxyDomainCommand} from './command';
-import {PrepareProxyDomainCommandResultInterface} from './command-result.interface';
+import { Injectable } from '@nestjs/common';
+import { SimpleCommandExecutorComponentInterface } from '../../executor/simple-command-executor-component.interface';
+import { config } from '../../../config/config';
+import { SimpleCommand } from '../../executor/simple-command';
+import { EnvVariablesSet } from '../../sets/env-variables-set';
+import { FeaterVariablesSet } from '../../sets/feater-variables-set';
+import { PrepareProxyDomainCommand } from './command';
+import { PrepareProxyDomainCommandResultInterface } from './command-result.interface';
 
 @Injectable()
-export class PrepareProxyDomainCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
-
+export class PrepareProxyDomainCommandExecutorComponent
+    implements SimpleCommandExecutorComponentInterface {
     supports(command: SimpleCommand): boolean {
-        return (command instanceof PrepareProxyDomainCommand);
+        return command instanceof PrepareProxyDomainCommand;
     }
 
     async execute(command: SimpleCommand): Promise<any> {
@@ -27,7 +27,10 @@ export class PrepareProxyDomainCommandExecutorComponent implements SimpleCommand
         commandLogger.info(`Proxy domain: ${proxyDomain}`);
 
         const envVariables = new EnvVariablesSet();
-        envVariables.add(`FEATER__PROXY_DOMAIN__${portId.toUpperCase()}`, proxyDomain);
+        envVariables.add(
+            `FEATER__PROXY_DOMAIN__${portId.toUpperCase()}`,
+            proxyDomain,
+        );
         commandLogger.infoWithEnvVariables(envVariables);
 
         const featerVariables = new FeaterVariablesSet();

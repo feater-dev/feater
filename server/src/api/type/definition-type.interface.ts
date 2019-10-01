@@ -1,4 +1,4 @@
-import {RecipeTypeInterface} from './nested/definition-recipe/recipe-type.interface';
+import { RecipeTypeInterface } from './nested/definition-recipe/recipe-type.interface';
 
 export interface DefinitionTypeInterface {
     readonly id: string;

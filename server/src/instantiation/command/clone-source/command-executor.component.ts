@@ -1,19 +1,19 @@
 import * as sshFingerprint from 'ssh-fingerprint';
-import {mkdirSync} from 'fs';
-import {spawnSync, spawn, SpawnOptions} from 'child_process';
-import {Injectable} from '@nestjs/common';
-import {config} from '../../../config/config';
-import {SimpleCommandExecutorComponentInterface} from '../../executor/simple-command-executor-component.interface';
-import {DeployKeyRepository} from '../../../persistence/repository/deploy-key.repository';
-import {CloneSourceCommand} from './command';
-import {SimpleCommand} from '../../executor/simple-command';
-import {CommandLogger} from '../../logger/command-logger';
-import {SpawnHelper} from '../../helper/spawn-helper.component';
-import {DeployKeyHelperComponent} from '../../../helper/deploy-key-helper.component';
+import { mkdirSync } from 'fs';
+import { spawnSync, spawn, SpawnOptions } from 'child_process';
+import { Injectable } from '@nestjs/common';
+import { config } from '../../../config/config';
+import { SimpleCommandExecutorComponentInterface } from '../../executor/simple-command-executor-component.interface';
+import { DeployKeyRepository } from '../../../persistence/repository/deploy-key.repository';
+import { CloneSourceCommand } from './command';
+import { SimpleCommand } from '../../executor/simple-command';
+import { CommandLogger } from '../../logger/command-logger';
+import { SpawnHelper } from '../../helper/spawn-helper.component';
+import { DeployKeyHelperComponent } from '../../../helper/deploy-key-helper.component';
 
 @Injectable()
-export class CloneSourceCommandExecutorComponent implements SimpleCommandExecutorComponentInterface {
-
+export class CloneSourceCommandExecutorComponent
+    implements SimpleCommandExecutorComponentInterface {
     constructor(
         private readonly deployKeyRepository: DeployKeyRepository,
         private readonly deployKeyHelper: DeployKeyHelperComponent,
@@ -21,7 +21,7 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
     ) {}
 
     supports(command: SimpleCommand): boolean {
-        return (command instanceof CloneSourceCommand);
+        return command instanceof CloneSourceCommand;
     }
 
     async execute(command: SimpleCommand): Promise<any> {
@@ -39,10 +39,21 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         mkdirSync(sourceAbsoluteGuestPath);
 
         commandLogger.info(`Cloning repository.`);
-        await this.cloneRepository(cloneUrl, useDeployKey, sourceAbsoluteGuestPath, workingDirectory, commandLogger);
+        await this.cloneRepository(
+            cloneUrl,
+            useDeployKey,
+            sourceAbsoluteGuestPath,
+            workingDirectory,
+            commandLogger,
+        );
 
         commandLogger.info(`Checking out reference.`);
-        this.checkoutReference(referenceType, referenceName, sourceAbsoluteGuestPath, commandLogger);
+        this.checkoutReference(
+            referenceType,
+            referenceName,
+            sourceAbsoluteGuestPath,
+            commandLogger,
+        );
 
         return {};
     }
@@ -55,20 +66,35 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         commandLogger: CommandLogger,
     ): Promise<void> {
         let deployKey;
-        const spawnedGitCloneOptions: SpawnOptions = {cwd: workingDirectory};
+        const spawnedGitCloneOptions: SpawnOptions = { cwd: workingDirectory };
 
         commandLogger.info(`Clone URL: ${cloneUrl}`);
         if (useDeployKey) {
             commandLogger.info(`Using deploy key to clone.`);
-            deployKey = await this.deployKeyRepository.findOneByCloneUrl(cloneUrl);
-            commandLogger.info(`Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`);
+            deployKey = await this.deployKeyRepository.findOneByCloneUrl(
+                cloneUrl,
+            );
+            commandLogger.info(
+                `Deploy key fingerprint: ${sshFingerprint(
+                    deployKey.publicKey,
+                )}`,
+            );
 
-            const identityFileAbsoluteGuestPath = this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(cloneUrl);
+            const identityFileAbsoluteGuestPath = this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(
+                cloneUrl,
+            );
 
             spawnedGitCloneOptions.env = {
                 GIT_SSH_COMMAND: [
-                    `sshpass`, `-e`, `-P`, `"Enter passphrase for key '${identityFileAbsoluteGuestPath}': "`,
-                    `ssh`, `-o`, `StrictHostKeyChecking=no`, `-i`, identityFileAbsoluteGuestPath,
+                    `sshpass`,
+                    `-e`,
+                    `-P`,
+                    `"Enter passphrase for key '${identityFileAbsoluteGuestPath}': "`,
+                    `ssh`,
+                    `-o`,
+                    `StrictHostKeyChecking=no`,
+                    `-i`,
+                    identityFileAbsoluteGuestPath,
                 ].join(' '),
                 SSHPASS: deployKey.passphrase,
             };
@@ -108,12 +134,11 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         if ('branch' === referenceType) {
             commandLogger.info(`Finding branch ${referenceName}.`);
             const showReferencesOutput = spawnSync(
-                    config.instantiation.gitBinaryPath,
-                    ['show-ref'],
-                    {cwd: sourceAbsoluteGuestPath},
-                )
-                .stdout
-                .toString()
+                config.instantiation.gitBinaryPath,
+                ['show-ref'],
+                { cwd: sourceAbsoluteGuestPath },
+            )
+                .stdout.toString()
                 .replace(/\n$/, '')
                 .split('\n');
 
@@ -124,17 +149,14 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
                     break;
                 }
             }
-        }
-
-        else if ('tag' === referenceType) {
+        } else if ('tag' === referenceType) {
             commandLogger.info(`Finding tag ${referenceName}.`);
             const showReferencesOutput = spawnSync(
-                    config.instantiation.gitBinaryPath,
-                    ['show-ref', '--tags'],
-                    {cwd: sourceAbsoluteGuestPath},
-                )
-                .stdout
-                .toString()
+                config.instantiation.gitBinaryPath,
+                ['show-ref', '--tags'],
+                { cwd: sourceAbsoluteGuestPath },
+            )
+                .stdout.toString()
                 .replace(/\n$/, '')
                 .split('\n');
 
@@ -145,14 +167,10 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
                     break;
                 }
             }
-        }
-
-        else if ('commit' === referenceType) {
+        } else if ('commit' === referenceType) {
             commandLogger.info(`Finding commit ${referenceName}.`);
             matchedCommitHash = referenceName;
-        }
-
-        else {
+        } else {
             throw new Error(`Unknown reference type ${referenceType}.`);
         }
 
@@ -161,12 +179,18 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         }
 
         const gitLogLines = spawnSync(
-                config.instantiation.gitBinaryPath,
-                ['log', '--oneline', '-1',  '--no-decorate', '--no-color', matchedCommitHash],
-                {cwd: sourceAbsoluteGuestPath},
-            )
-            .stdout
-            .toString()
+            config.instantiation.gitBinaryPath,
+            [
+                'log',
+                '--oneline',
+                '-1',
+                '--no-decorate',
+                '--no-color',
+                matchedCommitHash,
+            ],
+            { cwd: sourceAbsoluteGuestPath },
+        )
+            .stdout.toString()
             .replace(/\n$/, '')
             .split('\n');
 
@@ -179,16 +203,22 @@ export class CloneSourceCommandExecutorComponent implements SimpleCommandExecuto
         }
 
         const gitLogLineSeparatorIndex = gitLogLines[0].indexOf(' ');
-        const matchedCommitShortHash = gitLogLines[0].substr(0, gitLogLineSeparatorIndex);
-        const matchedCommitMessage = gitLogLines[0].substr(gitLogLineSeparatorIndex + 1);
+        const matchedCommitShortHash = gitLogLines[0].substr(
+            0,
+            gitLogLineSeparatorIndex,
+        );
+        const matchedCommitMessage = gitLogLines[0].substr(
+            gitLogLineSeparatorIndex + 1,
+        );
 
-        commandLogger.info(`Checking out commit ${matchedCommitShortHash} with message '${matchedCommitMessage}'`);
+        commandLogger.info(
+            `Checking out commit ${matchedCommitShortHash} with message '${matchedCommitMessage}'`,
+        );
 
         spawnSync(
             config.instantiation.gitBinaryPath,
             ['checkout', matchedCommitShortHash],
-            {cwd: sourceAbsoluteGuestPath},
+            { cwd: sourceAbsoluteGuestPath },
         );
     }
-
 }

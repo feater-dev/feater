@@ -1,21 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     GetDefinitionInstancesQueryDefinitionFieldInterface,
     GetDefinitionInstancesQueryInterface,
     getDefinitionInstancesQueryGql,
 } from './get-definition-instances.query';
-import {DefinitionTabs} from '../tabs/definition-tabs.component';
+import { DefinitionTabs } from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-instances',
     templateUrl: './definition-instances.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionInstancesComponent implements OnInit {
-
     readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionInstancesQueryDefinitionFieldInterface;
@@ -39,9 +38,9 @@ export class DefinitionInstancesComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
-                const resultData: GetDefinitionInstancesQueryInterface = result.data;
+            .valueChanges.subscribe(result => {
+                const resultData: GetDefinitionInstancesQueryInterface =
+                    result.data;
                 this.definition = resultData.definition;
                 this.spinner.hide();
             });

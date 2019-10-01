@@ -1,14 +1,12 @@
-import {Component, Input} from '@angular/core';
-import {CustomEnvVarFormElement} from './custom-env-var-form-element';
-
+import { Component, Input } from '@angular/core';
+import { CustomEnvVarFormElement } from './custom-env-var-form-element';
 
 @Component({
     selector: 'app-custom-env-vars-form-element',
     templateUrl: './custom-env-vars-form-element.component.html',
-    styles: []
+    styles: [],
 })
 export class CustomEnvVarsFormElementComponent {
-
     @Input() customEnvVars: CustomEnvVarFormElement[];
 
     addCustomEnvVar() {
@@ -25,5 +23,4 @@ export class CustomEnvVarsFormElementComponent {
     trackByIndex(index: number, obj: any): any {
         return index;
     }
-
 }

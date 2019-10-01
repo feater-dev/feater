@@ -1,26 +1,24 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     getAssetDetailQueryGql,
     GetAssetDetailQueryInterface,
     GetAssetDetailQueryAssetFieldInterface,
 } from './get-asset-detail.query';
 import gql from 'graphql-tag';
-import {ConfirmComponent} from '../../modal/confirm.component';
-import {DialogService} from 'ng2-bootstrap-modal';
-import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {ToastrService} from 'ngx-toastr';
-
+import { ConfirmComponent } from '../../modal/confirm.component';
+import { DialogService } from 'ng2-bootstrap-modal';
+import { jsonToGraphQLQuery } from 'json-to-graphql-query';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-asset-detail',
     templateUrl: './asset-detail.component.html',
-    styles: []
+    styles: [],
 })
 export class AssetDetailComponent implements OnInit {
-
     asset: GetAssetDetailQueryAssetFieldInterface;
 
     constructor(
@@ -38,38 +36,43 @@ export class AssetDetailComponent implements OnInit {
 
     removeAsset() {
         this.dialogService
-            .addDialog(
-                ConfirmComponent,
-                {
-                    title: 'Confirm',
-                    message: 'Are you sure you wish to remove this asset? This operation cannot be reversed.',
-                    ok: 'Confirm removal',
-                    cancel: 'Cancel',
+            .addDialog(ConfirmComponent, {
+                title: 'Confirm',
+                message:
+                    'Are you sure you wish to remove this asset? This operation cannot be reversed.',
+                ok: 'Confirm removal',
+                cancel: 'Cancel',
+            })
+            .subscribe(isConfirmed => {
+                if (!isConfirmed) {
+                    return;
                 }
-            )
-            .subscribe(
-                (isConfirmed) => {
-                    if (!isConfirmed) {
-                        return;
-                    }
 
-                    this.spinner.show();
-                    this.apollo
-                        .mutate({
-                            mutation: gql`${this.getRemoveAssetMutation()}`,
-                        }).subscribe(
-                            () => {
-                                this.spinner.hide();
-                                this.toastr.success(`Asset <em>${this.asset.id}</em> removed.`);
-                                this.router.navigateByUrl(`/project/${this.asset.project.id}`);
-                            },
-                            () => {
-                                this.spinner.hide();
-                                this.toastr.error(`Failed to remove asset <em>${this.asset.id}</em>.`);
-                            },
-                        );
-                }
-            );
+                this.spinner.show();
+                this.apollo
+                    .mutate({
+                        mutation: gql`
+                            ${this.getRemoveAssetMutation()}
+                        `,
+                    })
+                    .subscribe(
+                        () => {
+                            this.spinner.hide();
+                            this.toastr.success(
+                                `Asset <em>${this.asset.id}</em> removed.`,
+                            );
+                            this.router.navigateByUrl(
+                                `/project/${this.asset.project.id}`,
+                            );
+                        },
+                        () => {
+                            this.spinner.hide();
+                            this.toastr.error(
+                                `Failed to remove asset <em>${this.asset.id}</em>.`,
+                            );
+                        },
+                    );
+            });
     }
 
     protected getAsset() {
@@ -83,8 +86,7 @@ export class AssetDetailComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
+            .valueChanges.subscribe(result => {
                 const resultData: GetAssetDetailQueryInterface = result.data;
                 this.asset = resultData.asset;
                 this.spinner.hide();

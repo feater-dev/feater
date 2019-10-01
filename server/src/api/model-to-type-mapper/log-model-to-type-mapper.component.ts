@@ -1,13 +1,11 @@
-import {DateConverter} from '../date-converter.component';
-import {Injectable} from '@nestjs/common';
-import {LogInterface} from '../../persistence/interface/log.interface';
-import {LogTypeInterface} from '../type/log-type.interface';
+import { DateConverter } from '../date-converter.component';
+import { Injectable } from '@nestjs/common';
+import { LogInterface } from '../../persistence/interface/log.interface';
+import { LogTypeInterface } from '../type/log-type.interface';
 
 @Injectable()
 export class LogModelToTypeMapper {
-    constructor(
-        private readonly dateConverter: DateConverter,
-    ) { }
+    constructor(private readonly dateConverter: DateConverter) {}
 
     mapOne(log: LogInterface): LogTypeInterface {
         return {

@@ -1,4 +1,4 @@
-import {Schema} from 'mongoose';
+import { Schema } from 'mongoose';
 
 export const LogSchema = new Schema({
     level: String,
@@ -7,4 +7,4 @@ export const LogSchema = new Schema({
     timestamp: Date,
 });
 
-LogSchema.index({'meta.commandLogId': 1});
+LogSchema.index({ 'meta.commandLogId': 1 });

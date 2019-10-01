@@ -1,7 +1,7 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
 
-@Pipe({name: 'absoluteDate'})
+@Pipe({ name: 'absoluteDate' })
 export class AbsoluteDatePipe implements PipeTransform {
     transform(dateString: string): string {
         if (!dateString) {

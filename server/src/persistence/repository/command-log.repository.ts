@@ -1,20 +1,23 @@
-import {Model} from 'mongoose';
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {CommandLogInterface} from '../interface/command-log.interface';
+import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { CommandLogInterface } from '../interface/command-log.interface';
 
 @Injectable()
 export class CommandLogRepository {
-
     constructor(
-        @InjectModel('CommandLog') private readonly commandLogModel: Model<CommandLogInterface>,
+        @InjectModel('CommandLog')
+        private readonly commandLogModel: Model<CommandLogInterface>,
     ) {}
 
-    find(criteria: object, offset: number, limit: number, sort?: object): Promise<CommandLogInterface[]> {
+    find(
+        criteria: object,
+        offset: number,
+        limit: number,
+        sort?: object,
+    ): Promise<CommandLogInterface[]> {
         const query = this.commandLogModel.find(criteria);
-        query
-            .skip(offset)
-            .limit(limit);
+        query.skip(offset).limit(limit);
         if (sort) {
             query.sort(sort);
         }

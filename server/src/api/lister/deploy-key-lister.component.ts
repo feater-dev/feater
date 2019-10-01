@@ -1,10 +1,10 @@
-import {Injectable} from '@nestjs/common';
-import {DeployKeyRepository} from '../../persistence/repository/deploy-key.repository';
-import {ResolverPaginationArgumentsInterface} from '../pagination-argument/resolver-pagination-arguments.interface';
-import {ResolverPaginationArgumentsHelper} from '../pagination-argument/resolver-pagination-arguments-helper.component';
-import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
-import {DefinitionRepository} from '../../persistence/repository/definition.repository';
-import {DeployKeyHelperComponent} from '../../helper/deploy-key-helper.component';
+import { Injectable } from '@nestjs/common';
+import { DeployKeyRepository } from '../../persistence/repository/deploy-key.repository';
+import { ResolverPaginationArgumentsInterface } from '../pagination-argument/resolver-pagination-arguments.interface';
+import { ResolverPaginationArgumentsHelper } from '../pagination-argument/resolver-pagination-arguments-helper.component';
+import { DeployKeyInterface } from '../../persistence/interface/deploy-key.interface';
+import { DefinitionRepository } from '../../persistence/repository/definition.repository';
+import { DeployKeyHelperComponent } from '../../helper/deploy-key-helper.component';
 
 @Injectable()
 export class DeployKeyLister {
@@ -26,7 +26,7 @@ export class DeployKeyLister {
         private readonly deployKeyRepository: DeployKeyRepository,
         private readonly definitionRepository: DefinitionRepository,
         private readonly deployKeyHelper: DeployKeyHelperComponent,
-    ) { }
+    ) {}
 
     async getList(
         criteria: any,
@@ -36,7 +36,11 @@ export class DeployKeyLister {
             criteria,
             this.resolveListOptionsHelper.getOffset(pagination.offset),
             this.resolveListOptionsHelper.getLimit(pagination.limit),
-            this.resolveListOptionsHelper.getSort(this.defaultSortKey, this.sortMap, pagination.sortKey),
+            this.resolveListOptionsHelper.getSort(
+                this.defaultSortKey,
+                this.sortMap,
+                pagination.sortKey,
+            ),
         );
     }
 }

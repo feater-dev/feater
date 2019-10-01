@@ -1,7 +1,6 @@
-import {SimpleCommand} from '../../../executor/simple-command';
+import { SimpleCommand } from '../../../executor/simple-command';
 
 export class CopyAssetIntoContainerCommand extends SimpleCommand {
-
     constructor(
         readonly serviceId: string,
         readonly assetId: string,
@@ -11,5 +10,4 @@ export class CopyAssetIntoContainerCommand extends SimpleCommand {
     ) {
         super();
     }
-
 }

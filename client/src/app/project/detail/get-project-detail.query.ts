@@ -1,8 +1,7 @@
 import gql from 'graphql-tag';
 
-
 export const getProjectDetailQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         project(id: $id) {
             id
             name
@@ -38,35 +37,29 @@ export const getProjectDetailQueryGql = gql`
 export interface GetProjectDetailQueryProjectFieldInterface {
     id: string;
     name: string;
-    definitions: [
-        {
+    definitions: {
+        id: string;
+        name: string;
+        project: {
             id: string;
             name: string;
-            project: {
-                id: string;
-                name: string;
-            }
-            instances: [
-                {
-                    id: string;
-                }
-            ]
-            createdAt: string;
-            updatedAt: string;
-        }
-    ];
-    assets: [
-        {
+        };
+        instances: {
             id: string;
-            description: string;
-            project: {
-                id: string;
-                name: string;
-            }
-            createdAt: string;
-            updatedAt: string;
-        }
-    ];
+        }[];
+        createdAt: string;
+        updatedAt: string;
+    }[];
+    assets: {
+        id: string;
+        description: string;
+        project: {
+            id: string;
+            name: string;
+        };
+        createdAt: string;
+        updatedAt: string;
+    }[];
     createdAt: string;
     updatedAt: string;
 }

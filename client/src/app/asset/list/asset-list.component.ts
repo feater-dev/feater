@@ -1,21 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     getAssetListQueryGql,
     GetAssetListQueryInterface,
     GetAssetListQueryAssetsFieldItemInterface,
 } from './get-asset-list.query';
 
-
 @Component({
     selector: 'app-asset-list',
     templateUrl: './asset-list.component.html',
-    styles: []
+    styles: [],
 })
 export class AssetListComponent implements OnInit {
-
     assets: GetAssetListQueryAssetsFieldItemInterface[];
 
     constructor(
@@ -34,8 +32,7 @@ export class AssetListComponent implements OnInit {
             .watchQuery<GetAssetListQueryInterface>({
                 query: getAssetListQueryGql,
             })
-            .valueChanges
-            .subscribe(result => {
+            .valueChanges.subscribe(result => {
                 const resultData: GetAssetListQueryInterface = result.data;
                 this.assets = resultData.assets;
                 this.spinner.hide();

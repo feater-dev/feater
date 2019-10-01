@@ -1,31 +1,30 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     GetDefinitionSummaryQueryDefinitionFieldInterface,
     GetDefinitionSummaryQueryInterface,
     getDefinitionSummaryQueryGql,
 } from './get-definition-summary.query';
 import gql from 'graphql-tag';
-import {DialogService} from 'ng2-bootstrap-modal';
-import {ConfirmComponent} from '../../../modal/confirm.component';
-import {ToastrService} from 'ngx-toastr';
-import {DefinitionTabs} from '../tabs/definition-tabs.component';
+import { DialogService } from 'ng2-bootstrap-modal';
+import { ConfirmComponent } from '../../../modal/confirm.component';
+import { ToastrService } from 'ngx-toastr';
+import { DefinitionTabs } from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-summary',
     templateUrl: './definition-summary.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionSummaryComponent implements OnInit {
-
     readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionSummaryQueryDefinitionFieldInterface;
 
     protected readonly removeDefinitionMutation = gql`
-        mutation ($id: String!) {
+        mutation($id: String!) {
             removeDefinition(id: $id)
         }
     `;
@@ -49,36 +48,40 @@ export class DefinitionSummaryComponent implements OnInit {
         }
 
         this.dialogService
-            .addDialog(
-                ConfirmComponent,
-                {
-                    title: 'Confirm',
-                    message: 'Are you sure you wish to remove this defintion? This operation cannot be reversed.',
-                    ok: 'Confirm removal',
-                    cancel: 'Cancel',
+            .addDialog(ConfirmComponent, {
+                title: 'Confirm',
+                message:
+                    'Are you sure you wish to remove this defintion? This operation cannot be reversed.',
+                ok: 'Confirm removal',
+                cancel: 'Cancel',
+            })
+            .subscribe(isConfirmed => {
+                if (!isConfirmed) {
+                    return;
                 }
-            )
-            .subscribe(
-                (isConfirmed) => {
-                    if (!isConfirmed) {
-                        return;
-                    }
-                    this.apollo.mutate({
+                this.apollo
+                    .mutate({
                         mutation: this.removeDefinitionMutation,
                         variables: {
                             id: this.definition.id,
                         },
-                    }).subscribe(
+                    })
+                    .subscribe(
                         () => {
-                            this.toastr.success(`Definition <em>${this.definition.name}</em> removed.`);
-                            this.router.navigateByUrl(`/project/${this.definition.project.id}`);
+                            this.toastr.success(
+                                `Definition <em>${this.definition.name}</em> removed.`,
+                            );
+                            this.router.navigateByUrl(
+                                `/project/${this.definition.project.id}`,
+                            );
                         },
                         error => {
-                            this.toastr.error(`Failed to remove definition <em>${this.definition.name}</em>.`);
-                        }
+                            this.toastr.error(
+                                `Failed to remove definition <em>${this.definition.name}</em>.`,
+                            );
+                        },
                     );
-                }
-            )
+            });
     }
 
     protected getDefinition() {
@@ -90,13 +93,11 @@ export class DefinitionSummaryComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(
-                result => {
-                    const resultData: GetDefinitionSummaryQueryInterface = result.data;
-                    this.definition = resultData.definition;
-                    this.spinner.hide();
-                },
-            );
+            .valueChanges.subscribe(result => {
+                const resultData: GetDefinitionSummaryQueryInterface =
+                    result.data;
+                this.definition = resultData.definition;
+                this.spinner.hide();
+            });
     }
 }

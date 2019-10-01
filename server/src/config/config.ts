@@ -1,10 +1,10 @@
-import {ConfigInterface} from './config.interface';
+import { ConfigInterface } from './config.interface';
 import * as process from 'process';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 if (process.env.FEATER_ENV_FILE) {
-    const dotenvResult = dotenv.recipe({path: process.env.FEATER_ENV_FILE});
+    const dotenvResult = dotenv.recipe({ path: process.env.FEATER_ENV_FILE });
 
     if (dotenvResult.error) {
         throw dotenvResult.error;
@@ -25,7 +25,9 @@ export const config: ConfigInterface = {
     instantiation: {
         gitBinaryPath: process.env.FEATER_GIT_BINARY_PATH,
         dockerBinaryPath: process.env.FEATER_DOCKER_BINARY_PATH,
-        dockerComposeHttpTimeout: Number(process.env.FEATER_DOCKER_COMPOSE_HTTP_TIMEOUT),
+        dockerComposeHttpTimeout: Number(
+            process.env.FEATER_DOCKER_COMPOSE_HTTP_TIMEOUT,
+        ),
         containerNamePrefix: process.env.FEATER_CONTAINER_NAME_PREFIX,
         proxyDomainPattern: process.env.FEATER_PROXY_DOMAIN_PATTERN,
         proxyNetworkName: process.env.FEATER_PROXY_NETWORK_NAME,

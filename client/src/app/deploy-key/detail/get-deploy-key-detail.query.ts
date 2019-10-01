@@ -1,8 +1,7 @@
 import gql from 'graphql-tag';
 
-
 export const getDeployKeyDetailQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         deployKey(id: $id) {
             id
             cloneUrl

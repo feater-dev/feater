@@ -1,13 +1,11 @@
-import {Injectable} from '@nestjs/common';
-import {InstanceInterface} from '../../persistence/interface/instance.interface';
-import {InstanceTypeInterface} from '../type/instance-type.interface';
-import {DateConverter} from '../date-converter.component';
+import { Injectable } from '@nestjs/common';
+import { InstanceInterface } from '../../persistence/interface/instance.interface';
+import { InstanceTypeInterface } from '../type/instance-type.interface';
+import { DateConverter } from '../date-converter.component';
 
 @Injectable()
 export class InstanceModelToTypeMapper {
-    constructor(
-        private readonly dateConverter: DateConverter,
-    ) {}
+    constructor(private readonly dateConverter: DateConverter) {}
 
     mapOne(instance: InstanceInterface): InstanceTypeInterface {
         return {

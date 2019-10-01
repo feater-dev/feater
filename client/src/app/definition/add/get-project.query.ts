@@ -1,8 +1,7 @@
 import gql from 'graphql-tag';
 
-
 export const getProjectQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         project(id: $id) {
             id
             name

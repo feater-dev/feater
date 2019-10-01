@@ -1,28 +1,31 @@
-import {Model} from 'mongoose';
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {InstanceInterface} from '../interface/instance.interface';
-import {CreateInstanceInputTypeInterface} from '../../api/input-type/create-instance-input-type.interface';
-import {InstanceContext} from '../../instantiation/instance-context/instance-context';
+import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { InstanceInterface } from '../interface/instance.interface';
+import { CreateInstanceInputTypeInterface } from '../../api/input-type/create-instance-input-type.interface';
+import { InstanceContext } from '../../instantiation/instance-context/instance-context';
 
 @Injectable()
 export class InstanceRepository {
-
     protected saveInSequencePromise: Promise<void>;
 
     constructor(
-        @InjectModel('Instance') private readonly instanceModel: Model<InstanceInterface>,
+        @InjectModel('Instance')
+        private readonly instanceModel: Model<InstanceInterface>,
     ) {
-        this.saveInSequencePromise = new Promise<void>((resolve) => {
+        this.saveInSequencePromise = new Promise<void>(resolve => {
             resolve();
         });
     }
 
-    find(criteria: object, offset: number, limit: number, sort?: object): Promise<InstanceInterface[]> {
+    find(
+        criteria: object,
+        offset: number,
+        limit: number,
+        sort?: object,
+    ): Promise<InstanceInterface[]> {
         const query = this.instanceModel.find(criteria);
-        query
-            .skip(offset)
-            .limit(limit);
+        query.skip(offset).limit(limit);
         if (sort) {
             query.sort(sort);
         }
@@ -43,7 +46,9 @@ export class InstanceRepository {
         return instance;
     }
 
-    async create(createInstanceInputType: CreateInstanceInputTypeInterface): Promise<InstanceInterface> {
+    async create(
+        createInstanceInputType: CreateInstanceInputTypeInterface,
+    ): Promise<InstanceInterface> {
         const instance = new this.instanceModel(createInstanceInputType);
         instance.createdAt = new Date();
         instance.updatedAt = new Date();
@@ -61,13 +66,15 @@ export class InstanceRepository {
     save(instance: InstanceInterface): Promise<InstanceInterface> {
         instance.updatedAt = new Date();
 
-        return new Promise<InstanceInterface>((resolve) => {
-            this.saveInSequencePromise = this.saveInSequencePromise.then(async () => {
-                await instance.save();
-                resolve(instance);
+        return new Promise<InstanceInterface>(resolve => {
+            this.saveInSequencePromise = this.saveInSequencePromise.then(
+                async () => {
+                    await instance.save();
+                    resolve(instance);
 
-                return;
-            });
+                    return;
+                },
+            );
         });
     }
 }

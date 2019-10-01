@@ -1,10 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {DefinitionTableComponent} from './definition-table.component';
-
+import { DefinitionTableComponent } from './definition-table.component';
 
 describe('DefinitionTableComponent', () => {
     let component: DefinitionTableComponent;
@@ -12,9 +11,8 @@ describe('DefinitionTableComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DefinitionTableComponent ]
-        })
-        .compileComponents();
+            declarations: [DefinitionTableComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

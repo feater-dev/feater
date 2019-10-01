@@ -1,21 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     GetDefinitionSubstitutionsQueryDefinitionFieldInterface,
     GetDefinitionSubstitutionsQueryInterface,
     getDefinitionSubstitutionsQueryGql,
 } from './get-definition-substitutions.query';
-import {DefinitionTabs} from '../tabs/definition-tabs.component';
+import { DefinitionTabs } from '../tabs/definition-tabs.component';
 
 @Component({
     selector: 'app-definition-substitutions',
     templateUrl: './definition-substitutions.component.html',
-    styles: []
+    styles: [],
 })
 export class DefinitionSubstitutionsComponent implements OnInit {
-
     readonly definitionTabs = DefinitionTabs;
 
     definition: GetDefinitionSubstitutionsQueryDefinitionFieldInterface;
@@ -39,9 +38,9 @@ export class DefinitionSubstitutionsComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
-                const resultData: GetDefinitionSubstitutionsQueryInterface = result.data;
+            .valueChanges.subscribe(result => {
+                const resultData: GetDefinitionSubstitutionsQueryInterface =
+                    result.data;
                 this.definition = resultData.definition;
                 this.spinner.hide();
             });

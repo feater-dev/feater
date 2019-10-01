@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {ImportDefinitionRecipeYamlComponent} from './import-definition-recipe-yaml.component';
+import { ImportDefinitionRecipeYamlComponent } from './import-definition-recipe-yaml.component';
 
 describe('ImportDefinitionRecipeYamlComponent', () => {
     let component: ImportDefinitionRecipeYamlComponent;
@@ -11,9 +11,8 @@ describe('ImportDefinitionRecipeYamlComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ ImportDefinitionRecipeYamlComponent ]
-        })
-        .compileComponents();
+            declarations: [ImportDefinitionRecipeYamlComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

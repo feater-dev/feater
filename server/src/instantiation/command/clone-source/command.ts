@@ -1,7 +1,6 @@
-import {SimpleCommand} from '../../executor/simple-command';
+import { SimpleCommand } from '../../executor/simple-command';
 
 export class CloneSourceCommand extends SimpleCommand {
-
     constructor(
         readonly cloneUrl: string,
         readonly useDeployKey: boolean,
@@ -12,5 +11,4 @@ export class CloneSourceCommand extends SimpleCommand {
     ) {
         super();
     }
-
 }

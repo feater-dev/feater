@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {ProjectTableComponent} from './project-table.component';
+import { ProjectTableComponent } from './project-table.component';
 
 describe('ProjectTableComponent', () => {
     let component: ProjectTableComponent;
@@ -11,9 +11,8 @@ describe('ProjectTableComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ ProjectTableComponent ]
-        })
-        .compileComponents();
+            declarations: [ProjectTableComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

@@ -1,10 +1,9 @@
-import {InstanceContextBeforeBuildTaskInterface} from '../../instance-context/before-build/instance-context-before-build-task.interface';
-import {InstanceContext} from '../../instance-context/instance-context';
-import {InstanceContextSourceInterface} from '../../instance-context/instance-context-source.interface';
-import {CommandType} from '../../executor/command.type';
+import { InstanceContextBeforeBuildTaskInterface } from '../../instance-context/before-build/instance-context-before-build-task.interface';
+import { InstanceContext } from '../../instance-context/instance-context';
+import { InstanceContextSourceInterface } from '../../instance-context/instance-context-source.interface';
+import { CommandType } from '../../executor/command.type';
 
 export interface BeforeBuildTaskCommandFactoryInterface {
-
     supportsType(type: string): boolean;
 
     createCommand(
@@ -15,5 +14,4 @@ export interface BeforeBuildTaskCommandFactoryInterface {
         instance: InstanceContext,
         updateInstanceFromInstanceContext: () => Promise<void>,
     ): CommandType;
-
 }

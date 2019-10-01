@@ -1,8 +1,7 @@
 import gql from 'graphql-tag';
 
-
 export const getDefinitionInstancesQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         definition(id: $id) {
             id
             name
@@ -43,8 +42,8 @@ export interface GetDefinitionInstancesQueryDefinitionFieldInterface {
             project: {
                 id: string;
                 name: string;
-            }
-        }
+            };
+        };
         createdAt: string;
         updatedAt: string;
         completedAt: string;

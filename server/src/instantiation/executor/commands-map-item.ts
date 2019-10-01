@@ -1,7 +1,6 @@
-import {CommandType} from './command.type';
+import { CommandType } from './command.type';
 
 export class CommandsMapItem {
-
     readonly symbol: symbol;
 
     constructor(

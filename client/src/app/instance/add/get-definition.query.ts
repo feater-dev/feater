@@ -1,8 +1,7 @@
 import gql from 'graphql-tag';
 
-
 export const getDefinitionQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         definition(id: $id) {
             id
             name

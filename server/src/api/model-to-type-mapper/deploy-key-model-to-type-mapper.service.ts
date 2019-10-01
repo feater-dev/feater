@@ -1,16 +1,14 @@
 import * as sshFingerprint from 'ssh-fingerprint';
-import {Injectable} from '@nestjs/common';
-import {DeployKeyTypeInterface} from '../type/deploy-key-type.interface';
-import {DeployKeyInterface} from '../../persistence/interface/deploy-key.interface';
-import {DateConverter} from '../date-converter.component';
-import {ProjectInterface} from '../../persistence/interface/project.interface';
-import {ProjectTypeInterface} from '../type/project-type.interface';
+import { Injectable } from '@nestjs/common';
+import { DeployKeyTypeInterface } from '../type/deploy-key-type.interface';
+import { DeployKeyInterface } from '../../persistence/interface/deploy-key.interface';
+import { DateConverter } from '../date-converter.component';
+import { ProjectInterface } from '../../persistence/interface/project.interface';
+import { ProjectTypeInterface } from '../type/project-type.interface';
 
 @Injectable()
 export class DeployKeyModelToTypeMapper {
-    constructor(
-        private readonly dateConverter: DateConverter,
-    ) { }
+    constructor(private readonly dateConverter: DateConverter) {}
 
     mapOne(deployKey: DeployKeyInterface): DeployKeyTypeInterface {
         return {

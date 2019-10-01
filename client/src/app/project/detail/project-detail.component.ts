@@ -1,21 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     getProjectDetailQueryGql,
     GetProjectDetailQueryInterface,
     GetProjectDetailQueryProjectFieldInterface,
 } from './get-project-detail.query';
 
-
 @Component({
     selector: 'app-project-detail',
     templateUrl: './project-detail.component.html',
-    styles: []
+    styles: [],
 })
 export class ProjectDetailComponent implements OnInit {
-
     project: GetProjectDetailQueryProjectFieldInterface;
 
     constructor(
@@ -39,8 +37,7 @@ export class ProjectDetailComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
+            .valueChanges.subscribe(result => {
                 const resultData: GetProjectDetailQueryInterface = result.data;
                 this.spinner.hide();
                 if (null === resultData) {

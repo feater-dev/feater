@@ -1,4 +1,4 @@
-import {Schema} from 'mongoose';
+import { Schema } from 'mongoose';
 
 const InstanceServiceSchema = new Schema(
     {
@@ -6,7 +6,8 @@ const InstanceServiceSchema = new Schema(
         containerNamePrefix: String,
         containerId: String,
         ipAddress: String,
-    }, {
+    },
+    {
         _id: false,
     },
 );
@@ -15,7 +16,8 @@ const InstanceAssetVolumeSchema = new Schema(
     {
         id: String,
         dockerVolumeName: String,
-    }, {
+    },
+    {
         _id: false,
     },
 );
@@ -24,7 +26,8 @@ const InstanceSourceVolumeSchema = new Schema(
     {
         id: String,
         dockerVolumeName: String,
-    }, {
+    },
+    {
         _id: false,
     },
 );
@@ -33,7 +36,8 @@ const InstanceEnvVariableSchema = new Schema(
     {
         name: String,
         value: String,
-    }, {
+    },
+    {
         _id: false,
     },
 );
@@ -42,7 +46,8 @@ const InstanceFeaterVariableSchema = new Schema(
     {
         name: String,
         value: String,
-    }, {
+    },
+    {
         _id: false,
     },
 );
@@ -55,7 +60,8 @@ const InstanceProxiedPortSchema = new Schema(
         port: Number,
         domain: String,
         nginxConfig: String,
-    }, {
+    },
+    {
         _id: false,
     },
 );
@@ -64,7 +70,8 @@ const InstanceSummaryItemSchema = new Schema(
     {
         name: String,
         value: String,
-    }, {
+    },
+    {
         _id: false,
     },
 );

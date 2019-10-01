@@ -1,15 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {Params} from '@angular/router';
-import {map, switchMap} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { Params } from '@angular/router';
+import { map, switchMap } from 'rxjs/operators';
 import {
     getDefinitionRecipeQueryGql,
     GetDefinitionRecipeQueryInterface,
     GetDefinitionRecipeQueryDefinitionFieldInterface,
 } from '../duplicate/get-definition-recipe.query';
-import {DefinitionAddComponent} from '../add/definition-add.component';
+import { DefinitionAddComponent } from '../add/definition-add.component';
 import gql from 'graphql-tag';
-import {jsonToGraphQLQuery} from 'json-to-graphql-query';
-import {DefinitionRecipeFormElement} from '../recipe-form/definition-recipe-form.model';
+import { jsonToGraphQLQuery } from 'json-to-graphql-query';
+import { DefinitionRecipeFormElement } from '../recipe-form/definition-recipe-form.model';
 
 interface DefinitionEditForm {
     id: string;
@@ -20,10 +20,10 @@ interface DefinitionEditForm {
 @Component({
     selector: 'app-definition-edit',
     templateUrl: './definition-edit.component.html',
-    styles: []
+    styles: [],
 })
-export class DefinitionEditComponent extends DefinitionAddComponent implements OnInit {
-
+export class DefinitionEditComponent extends DefinitionAddComponent
+    implements OnInit {
     static readonly actionEdit = 'edit';
 
     definition: DefinitionEditForm;
@@ -40,9 +40,9 @@ export class DefinitionEditComponent extends DefinitionAddComponent implements O
 
     protected getSourceDefinition(): void {
         this.spinner.show();
-        this.route.params.pipe(
-            switchMap(
-                (params: Params) => {
+        this.route.params
+            .pipe(
+                switchMap((params: Params) => {
                     return this.apollo
                         .watchQuery<GetDefinitionRecipeQueryInterface>({
                             query: getDefinitionRecipeQueryGql,
@@ -50,43 +50,57 @@ export class DefinitionEditComponent extends DefinitionAddComponent implements O
                                 id: params['id'],
                             },
                         })
-                        .valueChanges
-                        .pipe(
+                        .valueChanges.pipe(
                             map(result => {
                                 return result.data.definition;
-                            })
+                            }),
                         );
-                }
-            ))
+                }),
+            )
             .subscribe(
-                (definition: GetDefinitionRecipeQueryDefinitionFieldInterface) => {
+                (
+                    definition: GetDefinitionRecipeQueryDefinitionFieldInterface,
+                ) => {
                     this.project = definition.project;
                     this.sourceDefinition = {
                         name: definition.name,
                     };
                     this.definition.id = definition.id;
                     this.definition.name = definition.name;
-                    this.definition.recipe = this.definitionRecipeYamlMapperComponent.map(definition.recipeAsYaml);
+                    this.definition.recipe = this.definitionRecipeYamlMapperComponent.map(
+                        definition.recipeAsYaml,
+                    );
                     this.spinner.hide();
-                }
+                },
             );
     }
 
     createDefinition(): void {
         this.spinner.show();
-        this.apollo.mutate({
-            mutation: gql`${this.getUpdateDefinitionMutation()}`,
-        }).subscribe(
-            ({data}) => {
-                this.spinner.hide();
-                this.toastr.success(`Definition <em>${data.updateDefinition.name}</em> updated.`);
-                this.router.navigate(['/definition', data.updateDefinition.id]);
-            },
-            () => {
-                this.spinner.hide();
-                this.toastr.error(`Failed to update definition <em>${this.definition.name}</em>.`);
-            }
-        );
+        this.apollo
+            .mutate({
+                mutation: gql`
+                    ${this.getUpdateDefinitionMutation()}
+                `,
+            })
+            .subscribe(
+                ({ data }) => {
+                    this.spinner.hide();
+                    this.toastr.success(
+                        `Definition <em>${data.updateDefinition.name}</em> updated.`,
+                    );
+                    this.router.navigate([
+                        '/definition',
+                        data.updateDefinition.id,
+                    ]);
+                },
+                () => {
+                    this.spinner.hide();
+                    this.toastr.error(
+                        `Failed to update definition <em>${this.definition.name}</em>.`,
+                    );
+                },
+            );
     }
 
     protected mapDefinitionToDto(): any {
@@ -104,8 +118,8 @@ export class DefinitionEditComponent extends DefinitionAddComponent implements O
                     __args: this.mapDefinitionToDto(),
                     id: true,
                     name: true,
-                }
-            }
+                },
+            },
         };
 
         return jsonToGraphQLQuery(mutation);

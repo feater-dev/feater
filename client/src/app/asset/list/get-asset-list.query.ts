@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 
-
 export const getAssetListQueryGql = gql`
     query {
         assets {
@@ -22,7 +21,7 @@ export interface GetAssetListQueryAssetsFieldItemInterface {
     project: {
         id: string;
         name: string;
-    }
+    };
 }
 
 export interface GetAssetListQueryInterface {

@@ -1,13 +1,11 @@
-import {Injectable} from '@nestjs/common';
-import {ProjectInterface} from '../../persistence/interface/project.interface';
-import {ProjectTypeInterface} from '../type/project-type.interface';
-import {DateConverter} from '../date-converter.component';
+import { Injectable } from '@nestjs/common';
+import { ProjectInterface } from '../../persistence/interface/project.interface';
+import { ProjectTypeInterface } from '../type/project-type.interface';
+import { DateConverter } from '../date-converter.component';
 
 @Injectable()
 export class ProjectModelToTypeMapper {
-    constructor(
-        private readonly dateConverter: DateConverter,
-    ) {}
+    constructor(private readonly dateConverter: DateConverter) {}
 
     mapOne(project: ProjectInterface): ProjectTypeInterface {
         return {

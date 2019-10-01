@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common';
-import {ResolverPaginationArgumentsHelper} from '../pagination-argument/resolver-pagination-arguments-helper.component';
-import {AssetRepository} from '../../persistence/repository/asset.repository';
-import {AssetInterface} from '../../persistence/interface/asset.interface';
-import {ResolverPaginationArgumentsInterface} from '../pagination-argument/resolver-pagination-arguments.interface';
+import { Injectable } from '@nestjs/common';
+import { ResolverPaginationArgumentsHelper } from '../pagination-argument/resolver-pagination-arguments-helper.component';
+import { AssetRepository } from '../../persistence/repository/asset.repository';
+import { AssetInterface } from '../../persistence/interface/asset.interface';
+import { ResolverPaginationArgumentsInterface } from '../pagination-argument/resolver-pagination-arguments.interface';
 
 @Injectable()
 export class AssetLister {
@@ -34,7 +34,7 @@ export class AssetLister {
     constructor(
         private readonly resolveListOptionsHelper: ResolverPaginationArgumentsHelper,
         private readonly assetRepository: AssetRepository,
-    ) { }
+    ) {}
 
     async getList(
         criteria: any,
@@ -44,7 +44,11 @@ export class AssetLister {
             criteria,
             this.resolveListOptionsHelper.getOffset(pagination.offset),
             this.resolveListOptionsHelper.getLimit(pagination.limit),
-            this.resolveListOptionsHelper.getSort(this.defaultSortKey, this.sortMap, pagination.sortKey),
+            this.resolveListOptionsHelper.getSort(
+                this.defaultSortKey,
+                this.sortMap,
+                pagination.sortKey,
+            ),
         );
     }
 }

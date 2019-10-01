@@ -1,22 +1,21 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     getInstanceProxyDomainsQueryGql,
     GetInstanceProxyDomainsQueryInstanceFieldInterface,
     GetInstanceProxyDomainsQueryInterface,
 } from './get-instance-proxy-domains.query';
-import {Subscription, interval} from 'rxjs';
-import {InstanceTabs} from '../tabs/instance-tabs.component';
+import { Subscription, interval } from 'rxjs';
+import { InstanceTabs } from '../tabs/instance-tabs.component';
 
 @Component({
     selector: 'app-instance-proxy-domains',
     templateUrl: './instance-proxy-domains.component.html',
-    styles: []
+    styles: [],
 })
 export class InstanceProxyDomainsComponent implements OnInit, OnDestroy {
-
     readonly instanceTabs = InstanceTabs;
 
     instance: GetInstanceProxyDomainsQueryInstanceFieldInterface;
@@ -34,9 +33,9 @@ export class InstanceProxyDomainsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.getInstance();
         const polling = interval(this.pollingInterval);
-        this.pollingSubscription = polling.subscribe(
-            () => { this.getInstance(false); },
-        );
+        this.pollingSubscription = polling.subscribe(() => {
+            this.getInstance(false);
+        });
     }
 
     ngOnDestroy() {
@@ -66,9 +65,9 @@ export class InstanceProxyDomainsComponent implements OnInit, OnDestroy {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
-                const resultData: GetInstanceProxyDomainsQueryInterface = result.data;
+            .valueChanges.subscribe(result => {
+                const resultData: GetInstanceProxyDomainsQueryInterface =
+                    result.data;
                 this.instance = resultData.instance;
                 if (spinner) {
                     this.spinner.hide();

@@ -1,25 +1,18 @@
-import {Injectable} from '@nestjs/common';
-import {PathHelper} from './helper/path-helper.component';
-import {config} from '../config/config';
-import {InstanceContextBeforeBuildTaskInterface} from './instance-context/before-build/instance-context-before-build-task.interface';
-import {AfterBuildTaskTypeInterface} from '../api/type/nested/definition-recipe/after-build-task-type.interface';
-import {FeaterVariablesSet} from './sets/feater-variables-set';
-import {InstanceContext} from './instance-context/instance-context';
-import {EnvVariablesSet} from './sets/env-variables-set';
-import {SummaryItemsSet} from './sets/summary-items-set';
+import { Injectable } from '@nestjs/common';
+import { PathHelper } from './helper/path-helper.component';
+import { config } from '../config/config';
+import { InstanceContextBeforeBuildTaskInterface } from './instance-context/before-build/instance-context-before-build-task.interface';
+import { AfterBuildTaskTypeInterface } from '../api/type/nested/definition-recipe/after-build-task-type.interface';
+import { FeaterVariablesSet } from './sets/feater-variables-set';
+import { InstanceContext } from './instance-context/instance-context';
+import { EnvVariablesSet } from './sets/env-variables-set';
+import { SummaryItemsSet } from './sets/summary-items-set';
 
 @Injectable()
 export class InstanceContextFactory {
+    constructor(protected readonly pathHelper: PathHelper) {}
 
-    constructor(
-        protected readonly pathHelper: PathHelper,
-    ) {}
-
-    create(
-        id: string,
-        hash: string,
-        definitionRecipe: any,
-    ): InstanceContext {
+    create(id: string, hash: string, definitionRecipe: any): InstanceContext {
         const instanceContext = new InstanceContext(id, hash);
 
         instanceContext.composeProjectName = `${config.instantiation.containerNamePrefix}${instanceContext.hash}`;
@@ -38,16 +31,21 @@ export class InstanceContextFactory {
                     name: sourceRecipe.reference.name,
                 },
                 paths: this.pathHelper.getSourcePaths(hash, sourceRecipe.id),
-                dockerVolumeName: `${instanceContext.composeProjectName}_source_volume_${sourceRecipe.id.toLowerCase()}`,
+                dockerVolumeName: `${
+                    instanceContext.composeProjectName
+                }_source_volume_${sourceRecipe.id.toLowerCase()}`,
                 beforeBuildTasks: sourceRecipe.beforeBuildTasks.map(
-                    (beforeBuildTaskRecipe) => beforeBuildTaskRecipe as InstanceContextBeforeBuildTaskInterface,
+                    beforeBuildTaskRecipe =>
+                        beforeBuildTaskRecipe as InstanceContextBeforeBuildTaskInterface,
                 ),
             });
         }
 
         instanceContext.sourceVolumes = [];
         for (const sourceVolumeRecipe of definitionRecipe.sourceVolumes) {
-            const sourceDockerVolumeName = `${instanceContext.composeProjectName}_source_volume_${sourceVolumeRecipe.id.toLowerCase()}`;
+            const sourceDockerVolumeName = `${
+                instanceContext.composeProjectName
+            }_source_volume_${sourceVolumeRecipe.id.toLowerCase()}`;
             instanceContext.sourceVolumes.push({
                 id: sourceVolumeRecipe.id,
                 sourceId: sourceVolumeRecipe.sourceId,
@@ -58,7 +56,9 @@ export class InstanceContextFactory {
 
         instanceContext.assetVolumes = [];
         for (const assetVolumeRecipe of definitionRecipe.assetVolumes) {
-            const assetDockerVolumeName = `${instanceContext.composeProjectName}_asset_volume_${assetVolumeRecipe.id.toLowerCase()}`;
+            const assetDockerVolumeName = `${
+                instanceContext.composeProjectName
+            }_asset_volume_${assetVolumeRecipe.id.toLowerCase()}`;
             instanceContext.assetVolumes.push({
                 id: assetVolumeRecipe.id,
                 assetId: assetVolumeRecipe.assetId,
@@ -81,10 +81,14 @@ export class InstanceContextFactory {
 
         instanceContext.afterBuildTasks = [];
         for (const afterBuildTask of definitionRecipe.afterBuildTasks) {
-            instanceContext.afterBuildTasks.push(afterBuildTask as AfterBuildTaskTypeInterface);
+            instanceContext.afterBuildTasks.push(
+                afterBuildTask as AfterBuildTaskTypeInterface,
+            );
         }
 
-        instanceContext.nonInterpolatedSummaryItems = SummaryItemsSet.fromList(definitionRecipe.summaryItems);
+        instanceContext.nonInterpolatedSummaryItems = SummaryItemsSet.fromList(
+            definitionRecipe.summaryItems,
+        );
 
         instanceContext.composeFiles = [];
         const composeFileRecipe = definitionRecipe.composeFiles[0];
@@ -94,12 +98,17 @@ export class InstanceContextFactory {
             dockerVolumeName: composeFileVolumeName,
         });
 
-        const envVariables = EnvVariablesSet.fromList(definitionRecipe.envVariables);
+        const envVariables = EnvVariablesSet.fromList(
+            definitionRecipe.envVariables,
+        );
         const featerVariables = new FeaterVariablesSet();
 
         // Add Feater variables for env variables provided in definition.
         for (const envVariable of envVariables.toList()) {
-            featerVariables.add(`env__${envVariable.name.toLowerCase()}`, envVariable.value);
+            featerVariables.add(
+                `env__${envVariable.name.toLowerCase()}`,
+                envVariable.value,
+            );
         }
 
         // Add some basic Feater variables and env variables.
@@ -108,13 +117,18 @@ export class InstanceContextFactory {
         envVariables.add('FEATER__INSTANCE_HASH', instanceContext.hash);
         featerVariables.add('instance_hash', instanceContext.hash);
 
-        envVariables.add('COMPOSE_PROJECT_NAME', instanceContext.composeProjectName);
-        featerVariables.add('compose_project_name', instanceContext.composeProjectName);
+        envVariables.add(
+            'COMPOSE_PROJECT_NAME',
+            instanceContext.composeProjectName,
+        );
+        featerVariables.add(
+            'compose_project_name',
+            instanceContext.composeProjectName,
+        );
 
         instanceContext.mergeEnvVariablesSet(envVariables);
         instanceContext.mergeFeaterVariablesSet(featerVariables);
 
         return instanceContext;
     }
-
 }

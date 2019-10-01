@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 
-
 export const getDeployKeyListQueryGql = gql`
     query {
         deployKeys {

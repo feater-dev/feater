@@ -1,17 +1,8 @@
 import gql from 'graphql-tag';
 
-
 export const getInstanceListQueryGql = gql`
-    query (
-        $limit: Int
-        $offset: Int
-        $definitionId: String
-    ) {
-        instances (
-            limit: $limit
-            offset: $offset
-            definitionId: $definitionId
-        ) {
+    query($limit: Int, $offset: Int, $definitionId: String) {
+        instances(limit: $limit, offset: $offset, definitionId: $definitionId) {
             id
             hash
             name
@@ -30,7 +21,6 @@ export const getInstanceListQueryGql = gql`
             services {
                 containerState
             }
-
         }
     }
 `;

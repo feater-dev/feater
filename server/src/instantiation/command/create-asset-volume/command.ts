@@ -1,7 +1,6 @@
-import {SimpleCommand} from '../../executor/simple-command';
+import { SimpleCommand } from '../../executor/simple-command';
 
 export class CreateAssetVolumeCommand extends SimpleCommand {
-
     constructor(
         readonly assetVolumeId: string,
         readonly assetDockerVolumeName: string,
@@ -10,5 +9,4 @@ export class CreateAssetVolumeCommand extends SimpleCommand {
     ) {
         super();
     }
-
 }

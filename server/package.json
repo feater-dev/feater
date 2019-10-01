@@ -9,10 +9,14 @@
   },
   "main": "index.js",
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json --skipLibCheck && copyfiles -f src/**/*.graphql dist/api/schema",
+    "start:prod": "node dist/main.js",
     "start:dev": "NODE_ENV=development node index.js",
     "start:dev:watch": "NODE_ENV=development nodemon",
-    "build": "rm -rf dist && tsc -p tsconfig.json --skipLibCheck && copyfiles -f src/**/*.graphql dist/api/schema",
-    "start:prod": "node dist/main.js"
+    "lint:check": "tslint src/**/*.ts",
+    "lint:fix": "tslint --fix src/**/*.ts",
+    "prettier:check": "prettier --check \"src/**/*.ts\"",
+    "prettier:fix": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
     "@hapi/joi": "^15.0.3",
@@ -66,6 +70,7 @@
     "@types/node": "^10.12.26",
     "eslint": "^5.16.0",
     "nodemon": "^1.17.2",
+    "prettier": "1.18.2",
     "ts-node": "^5.0.1",
     "tslint": "^5.16.0",
     "typescript": "^3.5.2"

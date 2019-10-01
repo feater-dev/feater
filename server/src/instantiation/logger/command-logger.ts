@@ -1,10 +1,9 @@
-import {CommandLogInterface} from '../../persistence/interface/command-log.interface';
-import {BaseLogger} from '../../logger/base-logger';
-import {EnvVariablesSet} from '../sets/env-variables-set';
-import {FeaterVariablesSet} from '../sets/feater-variables-set';
+import { CommandLogInterface } from '../../persistence/interface/command-log.interface';
+import { BaseLogger } from '../../logger/base-logger';
+import { EnvVariablesSet } from '../sets/env-variables-set';
+import { FeaterVariablesSet } from '../sets/feater-variables-set';
 
 export class CommandLogger {
-
     constructor(
         private readonly commandLog: CommandLogInterface,
         private readonly logger: BaseLogger,
@@ -45,7 +44,7 @@ export class CommandLogger {
     infoWithEnvVariables(
         envVariables: EnvVariablesSet,
         header: string = 'Added environmental variables',
-        meta: object = {}
+        meta: object = {},
     ): void {
         if (envVariables.isEmpty()) {
             this.info(`${header}: none`, meta);
@@ -58,7 +57,7 @@ export class CommandLogger {
     infoWithFeaterVariables(
         featerVariables: FeaterVariablesSet,
         header: string = 'Added Feater variables',
-        meta: object = {}
+        meta: object = {},
     ): void {
         if (featerVariables.isEmpty()) {
             this.info(`${header}: none`, meta);
@@ -85,7 +84,6 @@ export class CommandLogger {
     }
 
     private getMeta(): object {
-        return {commandLogId: this.commandLog.id.toString()};
+        return { commandLogId: this.commandLog.id.toString() };
     }
-
 }

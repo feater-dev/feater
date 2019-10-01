@@ -1,21 +1,22 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import {
     getProjectListQueryGql,
     GetProjectListQueryInterface,
     GetProjectListQueryProjectsFieldItemInterface,
 } from './get-project-list.query';
-import {ActionButtonInterface, ActionButtonType} from '../../title/title.component';
-
+import {
+    ActionButtonInterface,
+    ActionButtonType,
+} from '../../title/title.component';
 
 @Component({
     selector: 'app-project-list',
     templateUrl: './project-list.component.html',
-    styles: []
+    styles: [],
 })
 export class ProjectListComponent implements OnInit {
-
     projects: GetProjectListQueryProjectsFieldItemInterface[];
 
     actions: ActionButtonInterface[];
@@ -46,8 +47,7 @@ export class ProjectListComponent implements OnInit {
             .watchQuery<GetProjectListQueryInterface>({
                 query: getProjectListQueryGql,
             })
-            .valueChanges
-            .subscribe(result => {
+            .valueChanges.subscribe(result => {
                 const resultData: GetProjectListQueryInterface = result.data;
                 this.projects = resultData.projects;
                 this.spinner.hide();

@@ -1,10 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import {DefinitionListComponent} from './definition-list.component';
-
+import { DefinitionListComponent } from './definition-list.component';
 
 describe('DefinitionListComponent', () => {
     let component: DefinitionListComponent;
@@ -12,9 +11,8 @@ describe('DefinitionListComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DefinitionListComponent ]
-        })
-        .compileComponents();
+            declarations: [DefinitionListComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

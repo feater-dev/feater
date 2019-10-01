@@ -1,4 +1,4 @@
-import {InstanceServiceTypeInterface} from './instance-service-type.interface';
+import { InstanceServiceTypeInterface } from './instance-service-type.interface';
 
 export interface InstanceTypeInterface {
     readonly id: string;

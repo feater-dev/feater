@@ -1,12 +1,10 @@
-import {DefinitionRecipeFormElement} from '../recipe-form/definition-recipe-form.model';
+import { DefinitionRecipeFormElement } from '../recipe-form/definition-recipe-form.model';
 import * as jsYaml from 'js-yaml';
 import * as camelCaseKeys from 'camelcase-keys';
-import {Injectable} from '@angular/core';
-
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DefinitionRecipeYamlMapperService {
-
     readonly defaultNginxConfigTemplate = `# Proxy domain for
 # port {{{port}}}
 # of {{{service_id}}}
@@ -25,7 +23,10 @@ server {
 }`;
 
     map(recipeYaml: string): DefinitionRecipeFormElement {
-        const camelCaseYamlRecipe: any = camelCaseKeys(jsYaml.safeLoad(recipeYaml), {deep: true});
+        const camelCaseYamlRecipe: any = camelCaseKeys(
+            jsYaml.safeLoad(recipeYaml),
+            { deep: true },
+        );
 
         const mappedYamlRecipe = {
             sources: [],
@@ -59,7 +60,9 @@ server {
                 port: `${proxiedPort.port}`,
                 name: proxiedPort.name,
                 useDefaultNginxConfigTemplate: !proxiedPort.nginxConfigTemplate,
-                nginxConfigTemplate: proxiedPort.nginxConfigTemplate || this.defaultNginxConfigTemplate
+                nginxConfigTemplate:
+                    proxiedPort.nginxConfigTemplate ||
+                    this.defaultNginxConfigTemplate,
             });
         }
 
@@ -69,8 +72,10 @@ server {
 
         mappedYamlRecipe.composeFile = {
             sourceId: camelCaseYamlRecipe.composeFiles[0].sourceId,
-            envDirRelativePath: camelCaseYamlRecipe.composeFiles[0].envDirRelativePath,
-            composeFileRelativePaths: camelCaseYamlRecipe.composeFiles[0].composeFileRelativePaths,
+            envDirRelativePath:
+                camelCaseYamlRecipe.composeFiles[0].envDirRelativePath,
+            composeFileRelativePaths:
+                camelCaseYamlRecipe.composeFiles[0].composeFileRelativePaths,
         };
 
         for (const afterBuildTask of camelCaseYamlRecipe.afterBuildTasks) {

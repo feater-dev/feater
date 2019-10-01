@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common';
-import {AssetInterface} from '../interface/asset.interface';
+import { Injectable } from '@nestjs/common';
+import { AssetInterface } from '../interface/asset.interface';
 import * as path from 'path';
-import {config} from '../../config/config';
-import {AssetRepository} from '../repository/asset.repository';
+import { config } from '../../config/config';
+import { AssetRepository } from '../repository/asset.repository';
 
 export interface AssetUploadPathsInterface {
     readonly relativeToAssetDirectory: string;
@@ -11,16 +11,20 @@ export interface AssetUploadPathsInterface {
 
 @Injectable()
 export class AssetHelper {
-
     constructor() {}
 
     getUploadPaths(asset: AssetInterface): AssetUploadPathsInterface {
-        const relativeToAssetDirectory = path.join(asset.projectId.toString(), asset.id);
+        const relativeToAssetDirectory = path.join(
+            asset.projectId.toString(),
+            asset.id,
+        );
 
         return {
             relativeToAssetDirectory,
-            absolute: path.join(config.guestPaths.asset, relativeToAssetDirectory),
+            absolute: path.join(
+                config.guestPaths.asset,
+                relativeToAssetDirectory,
+            ),
         };
     }
-
 }

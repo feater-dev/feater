@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input} from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
 
 export enum ActionButtonType {
     success,
@@ -6,10 +6,10 @@ export enum ActionButtonType {
 }
 
 export interface ActionButtonInterface {
-    type: ActionButtonType,
-    label: string,
-    routerLink?: string,
-    eventEmitter?: EventEmitter<void>,
+    type: ActionButtonType;
+    label: string;
+    routerLink?: string;
+    eventEmitter?: EventEmitter<void>;
 }
 
 @Component({
@@ -18,7 +18,6 @@ export interface ActionButtonInterface {
     styles: [],
 })
 export class TitleComponent {
-
     @Input() title: string;
 
     @Input() context: string;

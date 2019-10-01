@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const getInstanceProxyDomainsQueryGql = gql`
-    query ($id: String!) {
+    query($id: String!) {
         instance(id: $id) {
             id
             name

@@ -1,24 +1,19 @@
-import {Component, Input} from '@angular/core';
-import {GetDeployKeyListQueryDeployKeysFieldItemInterface} from '../list/get-deploy-key-list.query';
+import { Component, Input } from '@angular/core';
+import { GetDeployKeyListQueryDeployKeysFieldItemInterface } from '../list/get-deploy-key-list.query';
 
 @Component({
     selector: 'app-deploy-key-table',
     templateUrl: './deploy-key-table.component.html',
-    styles: []
+    styles: [],
 })
 export class DeployKeyTableComponent {
-
     @Input() deployKeys: GetDeployKeyListQueryDeployKeysFieldItemInterface[];
 
     search: string;
 
     getFilterCondition() {
         return {
-            $or: [
-                {cloneUrl: this.search},
-                {fingerprint: this.search},
-            ],
+            $or: [{ cloneUrl: this.search }, { fingerprint: this.search }],
         };
     }
-
 }

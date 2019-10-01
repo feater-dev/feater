@@ -1,24 +1,23 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import gql from 'graphql-tag';
-import {Apollo} from 'apollo-angular';
-import {NgxSpinnerService} from 'ngx-spinner';
-import {InstanceAddForm} from './instance-add-form.model';
+import { Apollo } from 'apollo-angular';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { InstanceAddForm } from './instance-add-form.model';
 import {
     GetDefinitionQueryDefinitionFieldInterface,
     GetDefinitionQueryInterface,
     getDefinitionQueryGql,
 } from './get-definition.query';
-import {ToastrService} from 'ngx-toastr';
-import {jsonToGraphQLQuery} from 'json-to-graphql-query';
+import { ToastrService } from 'ngx-toastr';
+import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 
 @Component({
     selector: 'app-instance-add',
     templateUrl: './instance-add.component.html',
-    styles: []
+    styles: [],
 })
 export class InstanceAddComponent implements OnInit {
-
     instance: InstanceAddForm;
 
     definition: GetDefinitionQueryDefinitionFieldInterface;
@@ -31,7 +30,7 @@ export class InstanceAddComponent implements OnInit {
         protected toastr: ToastrService,
     ) {
         this.instance = {
-            name: ''
+            name: '',
         };
     }
 
@@ -43,17 +42,24 @@ export class InstanceAddComponent implements OnInit {
         this.spinner.show();
         this.apollo
             .mutate({
-                mutation: gql`${this.getCreateInstanceMutation()}`,
-            }).subscribe(
-                ({data}) => {
+                mutation: gql`
+                    ${this.getCreateInstanceMutation()}
+                `,
+            })
+            .subscribe(
+                ({ data }) => {
                     this.spinner.hide();
-                    this.toastr.success(`Instance <em>${data.createInstance.name}</em> created, build started.`);
+                    this.toastr.success(
+                        `Instance <em>${data.createInstance.name}</em> created, build started.`,
+                    );
                     this.router.navigate(['/instance', data.createInstance.id]);
                 },
                 () => {
-                    this.toastr.error(`Failed to create <em>${this.instance.name}</em>.`);
+                    this.toastr.error(
+                        `Failed to create <em>${this.instance.name}</em>.`,
+                    );
                     this.spinner.hide();
-                }
+                },
             );
     }
 
@@ -66,8 +72,7 @@ export class InstanceAddComponent implements OnInit {
                     id: this.route.snapshot.params['id'],
                 },
             })
-            .valueChanges
-            .subscribe(result => {
+            .valueChanges.subscribe(result => {
                 const resultData: GetDefinitionQueryInterface = result.data;
                 this.definition = resultData.definition;
                 this.spinner.hide();
@@ -90,5 +95,4 @@ export class InstanceAddComponent implements OnInit {
 
         return jsonToGraphQLQuery(jsonQuery);
     }
-
 }

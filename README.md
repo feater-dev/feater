@@ -150,7 +150,7 @@ For this type of task you need to set `type` property to `interpolate` and speci
 
 In the example given above substitution variables are interpolated in file `app/config/parameters.yml` which was previously copied.
 
-Predicted substitution variables (either their exact names and values or their name patterns if exact values cannot be determined without creating an instance) can be seen in *Predicted substitutions* tab on defintion details page. They include:
+Predicted substitution variables (either their exact names and values or their name patterns if exact values cannot be determined without creating an instance) can be seen in *Predicted substitutions* tab on definition details page. They include:
 
 - instance ID and hash,
 - proxy domains (using names prefixed with `proxy_domain__`),
@@ -184,7 +184,7 @@ Following properties need to be defined for each source volume:
 
 - **ID** - will be used to reference referenced source volume and generate names for related environmental variable;
 - **source ID** - references source that should be copied to given source volume;
-- **relative path** - can be provided to copy a subdirectory of source instead of its root directory; for each source many independent source volumes can be created if needed and this setting should be useful when monorepository pattern is used for organizing source code.
+- **relative path** - can be provided to copy a subdirectory of source instead of its root directory; for each source many independent source volumes can be created if needed and this setting should be useful when mono-repository pattern is used for organizing source code.
 
 Note that the volume ID provided here is not the volume ID used by Docker. The latter is generated automatically and prefixed for each instance to avoid conflicts. It is then made available via:
 
@@ -211,7 +211,7 @@ volumes:
 
 #### Asset volumes
 
-This section allows you to define a list of Docker volumes that will be prepopulated with data from specified assets and will be mounted to selected services defined in Docker Compose configuration.
+This section allows you to define a list of Docker volumes that will be pre-populated with data from specified assets and will be mounted to selected services defined in Docker Compose configuration.
 
 Here is the UI view of asset volumes section with a single asset volume specified:
 
@@ -228,7 +228,7 @@ asset_volumes:
 Following properties need to be defined for each asset volume:
 
 - **ID** - will be used to reference referenced asset volume and generate names for related environmental variable;
-- **asset ID** - references the asset that should be used to prepopulate volume with data; if omitted then an empty volume will be created.
+- **asset ID** - references the asset that should be used to pre-populate volume with data; if omitted then an empty volume will be created.
 
 Referenced asset needs to be `.tar.gz` archive. It will be decompressed to populate the asset volume with data. In example above we assume that asset with ID `test_db_volume` is available and it is a `tar.gz` archive.
 
@@ -465,7 +465,7 @@ Asset is a file uploaded to Feater that can be used either to create asset volum
 
 #### Preparing asset for asset volume
 
-A popular use case for using asset volume would be prepopulating databases.
+A popular use case for using asset volume would be pre-populating databases.
 
 One approach would be to just copy asset (which in this case would be a database dump) into container and importing it during after build task. However this solutions results in database not being available immediately when container starts. Also more time will be required to complete instance creation as imported file needs to be processed by database server.
 
@@ -559,7 +559,7 @@ For each repository that is referenced in sources section of definition recipes 
 
 The full list of deploy keys is available from the side menu, and also each definition details contain _Deploy keys_ tab that lists only these items that are relevant for given recipe.
 
-It is possible to remove all unneeded SSH deploy keys (i.e. these that are no longer referenced by any defintion recipe). It is also possible to remove individual deploy keys, as well as generate them again for any repository that is marked as requiring them for cloning.
+It is possible to remove all unneeded SSH deploy keys (i.e. these that are no longer referenced by any definition recipe). It is also possible to remove individual deploy keys, as well as generate them again for any repository that is marked as requiring them for cloning.
 
 Public parts of SSH deploy keys are stored in MongoDB, while private parts are stored on data volume as this form is required by `sshpass` that is passed to `git clone` command via `GIT_SSH_COMMAND` environmental variable.
 
@@ -669,12 +669,12 @@ Following environmental variables can be provided when executing `docker run`.
 
 #### Controlling log level
 
-- `FEATER_LOG_LEVEL_CONSOLE` - specifies log level that will be outputed to console; defaults to `info`;
+- `FEATER_LOG_LEVEL_CONSOLE` - specifies log level that will be outputted to console; defaults to `info`;
 - `FEATER_LOG_LEVEL_MONGO` - specifies log level that will be persisted in MongoDB; defaults to `info`.
 
 ## Running using source
 
-For developing Feater it is better to buid image from source and run server and client components in watch mode, where source changes will result in recompiling and restarting them. This is possible using [.docker/run.sh](https://github.com/feater-dev/feater/blob/develop/.docker/run.sh) script.
+For developing Feater it is better to build image from source and run server and client components in watch mode, where source changes will result in recompiling and restarting them. This is possible using [.docker/run.sh](https://github.com/feater-dev/feater/blob/develop/.docker/run.sh) script.
 
 This script allows to use the same environmental variables as the image described before plus an extra `FEATER_ENV` variable that can be set to either `dev` or `prod`.
 

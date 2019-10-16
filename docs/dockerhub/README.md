@@ -4,15 +4,15 @@
   latest-docker-18.09.2,
   latest-docker-18.06.3
 
-# Quick reference
+## Quick reference
 
 * Source code and where to file issues:
-  http://github.com/feater-dev/feater
+  [Github Repo](http://github.com/feater-dev/feater)
 
 * Example project that can be easily run with Feater:
-  https://github.com/feater-dev/symfony-example
+  [Example Project](https://github.com/feater-dev/symfony-example)
 
-# Introduction
+## Introduction
 
 **Feater** is a tool for **rapid deployment of selected features** of your web
 application **to isolated testing or demo environments**.
@@ -34,14 +34,13 @@ much more to run it with Feater.
 It runs in Docker containers and you can use it on your local machine or set up
 a dedicated server for it.
 
-# License
+## License
 
-Feater is released under MIT License. You can view license information at
-https://raw.githubusercontent.com/feater-dev/feater/master/LICENSE
+Feater is released under MIT License. You can view license information at [License](https://raw.githubusercontent.com/feater-dev/feater/master/LICENSE)
 
-# How to use this image
+## How to use this image
 
-## Prerequisites
+### Prerequisites
 
 The only requirement for using Feater is that Docker is installed on your
 machine. Before running Feater you should check Docker version installed on your
@@ -59,9 +58,10 @@ instantiated services:
 
 ```bash
 $ docker network create feater_proxy
+56fe08e1c62030daa5992566e8595bbd58c2fa4acf3d4a262d2dbb62050a7290
 ```
 
-## Basic usage
+### Basic usage
 
 If you want to try out Feater you can run it without mounting any volumes for
 persisting data. Be aware that in this case after removing its container all
@@ -100,7 +100,7 @@ port 9011 of the Feater container, which is now mapped to `localhost`'s port 80.
 In this case you should be able to access them in your web browser without any
 additional configuration.
 
-## Usage with persistent data
+### Usage with persistent data
 
 Inside Feater container data are persisted in following directories:
 
@@ -137,22 +137,22 @@ $ docker run \
 You can also include `--restart unless-stopped` option if you want Feater to run
 continuously and to be started automatically.
 
-## Environment variables
+### Environment variables
 
 Following environmental variables can be provided when executing `docker run`.
 
-### Controlling Docker Compose version
+#### Controlling Docker Compose version
 
 * `FEATER_DOCKER_COMPOSE_VERSION` - defaults to `1.23.2`.
 
-### Using external MongoDB instance
+#### Using external MongoDB instance
 
 * `FEATER_MONGO_DSN` - DSN of MongoDB database to be used for persisting
   projects, definitions, assets, instances, deploy keys and logs; can be
   provided if external instance of MongoDB should be used; defaults to
   `mongodb://localhost:27017/feater`.
 
-### Controlling location of persistent data
+#### Controlling location of persistent data
 
 * `FEATER_GUEST_PATH_ASSET` - defaults to `/data/asset`;
 
@@ -162,7 +162,7 @@ Following environmental variables can be provided when executing `docker run`.
 
 * `FEATER_GUEST_PATH_PROXY` - defaults to `/data/proxy`.
 
-### Controlling instantiation
+#### Controlling instantiation
 
 * `FEATER_CONTAINER_NAME_PREFIX` - the prefix that will be used for generating
   `COMPOSE_PROJECT_NAME` for instantiated services; note that some versions of
@@ -179,15 +179,15 @@ Following environmental variables can be provided when executing `docker run`.
   proxied instantiated services are connected after being run; defaults to
   `feater_proxy`.
 
-### Controlling log level
+#### Controlling log level
 
-* `FEATER_LOG_LEVEL_CONSOLE` - specifies log level that will be outputed to
+* `FEATER_LOG_LEVEL_CONSOLE` - specifies log level that will be outputted to
   console; defaults to `info`;
 
 * `FEATER_LOG_LEVEL_MONGO` - specifies log level that will be persisted in
   MongoDB; defaults to `info`.
 
-# Recommendations
+## Recommendations
 
 For inspecting containers run with Feater you can use
 [Portainer](https://www.portainer.io/).

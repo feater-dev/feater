@@ -1,22 +1,24 @@
 # Feater API component
 
 ## Requirements
+
 - Yarn
 - NodeJS v8.10
 - Docker CE v17.12.1
 - Docker Compose v1.19.0
 
 ## Installation
+
 - `yarn install`
 
 ## Run
+
 - `yarn start:dev` - to serve development version
 - `yarn start:dev:watch` - to serve development version and watch for changes
 
+## How to
 
-# How to
-
-## Creating volumes from assets
+### Creating volumes from assets
 
 It's possible to create named volumes from `.tar.gz` assets added to a project.
 
@@ -32,7 +34,7 @@ asset_volumes:
                           # which can be used to determine it's full name.
     asset_id: lipsum      # This has to correspond with asset id.```
 
-This will result in named volume being created, which name is prefixed to be unique accross all provided instances.
+This will result in named volume being created, which name is prefixed to be unique across all provided instances.
 
 To mount this volume to `/lipsum` path in our service container we need to change our `docker-compose` configuration like this:
 
@@ -58,5 +60,4 @@ Asset volumes need to be specified in `volumes` section of `docker-compose.yml` 
 
 Using `lipsum_docs_internal` as an internal volume name is completely arbitrary here and any other name could be used instead. Also the asset id, the external volume id and the internal volume id could all have the same value - different values are used here only to show how they are related to each other.
 
-## Creating MySQL volumes from assets
-
+### Creating MySQL volumes from assets

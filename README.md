@@ -3,41 +3,41 @@
 - [Introduction](#introduction)
 - [License](#license)
 - [Core concepts](#core-concepts)
-  * [Project](#project)
-  * [Definition](#definition)
-    + [Schema version](#schema-version)
-    + [Sources](#sources)
+  - [Project](#project)
+  - [Definition](#definition)
+    - [Schema version](#schema-version)
+    - [Sources](#sources)
       - [Copy task](#copy-task)
       - [Interpolate task](#interpolate-task)
-    + [Source volumes](#source-volumes)
-    + [Asset volumes](#asset-volumes)
-    + [Environmental variables](#environmental-variables)
-    + [Compose files](#compose-files)
-    + [After build tasks](#after-build-tasks)
+    - [Source volumes](#source-volumes)
+    - [Asset volumes](#asset-volumes)
+    - [Environmental variables](#environmental-variables)
+    - [Compose files](#compose-files)
+    - [After build tasks](#after-build-tasks)
       - [Execute service command task](#execute-service-command-task)
       - [Copy asset into container task](#copy-asset-into-container-task)
-    + [Proxied ports](#proxied-ports)
-    + [Summary items](#summary-items)
-  * [Instance](#instance)
-  * [Asset](#asset)
-    + [Preparing asset for asset volume](#preparing-asset-for-asset-volume)
-  * [Deploy key](#deploy-key)
+    - [Proxied ports](#proxied-ports)
+    - [Summary items](#summary-items)
+  - [Instance](#instance)
+  - [Asset](#asset)
+    - [Preparing asset for asset volume](#preparing-asset-for-asset-volume)
+  - [Deploy key](#deploy-key)
 - [Running using Docker image](#running-using-docker-image)
-  * [Prerequisites](#prerequisites)
-  * [Basic usage](#basic-usage)
-  * [Usage with persistent data](#usage-with-persistent-data)
-  * [Environment variables](#environment-variables)
-    + [Controlling Docker Compose version](#controlling-docker-compose-version)
-    + [Using external MongoDB instance](#using-external-mongodb-instance)
-    + [Controlling location of persistent data](#controlling-location-of-persistent-data)
-    + [Controlling instantiation](#controlling-instantiation)
-    + [Controlling log level](#controlling-log-level)
+  - [Prerequisites](#prerequisites)
+  - [Basic usage](#basic-usage)
+  - [Usage with persistent data](#usage-with-persistent-data)
+  - [Environment variables](#environment-variables)
+    - [Controlling Docker Compose version](#controlling-docker-compose-version)
+    - [Using external MongoDB instance](#using-external-mongodb-instance)
+    - [Controlling location of persistent data](#controlling-location-of-persistent-data)
+    - [Controlling instantiation](#controlling-instantiation)
+    - [Controlling log level](#controlling-log-level)
 - [Running using source](#running-using-source)
 - [Example project](#example-project)
 - [Technologies used](#technologies-used)
 - [Recommendations](#recommendations)
 
-# Introduction
+## Introduction
 
 **Feater** is a tool for **rapid deployment of selected features** of your web application **to isolated testing or demo environments**.
 
@@ -49,12 +49,11 @@
 
 **It’s easy to host.** It runs inside Docker container and you can use it on your local machine or set up a dedicated server for it.
 
-# License
+## License
 
-Feater is released under MIT License. You can view license information at
-https://raw.githubusercontent.com/feater-dev/feater/master/LICENSE
+Feater is released under MIT License. You can view license information [here](https://raw.githubusercontent.com/feater-dev/feater/master/LICENSE)
 
-# Core concepts
+## Core concepts
 
 There are few core concepts in Feater that need to be highlighted first. Starting from the bottom of their hierarchy:
 
@@ -66,13 +65,13 @@ There are few core concepts in Feater that need to be highlighted first. Startin
 
 These concepts will be discussed in more details in following sections, starting from the top ones this time.
 
-## Project
+### Project
 
 Project is used to group together definitions and assets they will be referencing. This allows Feater to be used to provide instances multiple applications by defining a separate project for each and hence creating a set of isolated scopes.
 
 The only property that needs to be provided for a project is its **name**.
 
-## Definition
+### Definition
 
 Definition provides a recipe for creating instances containing specific changes and features that need to be deployed using Feater. For each definition multiple independent instances can be provided. Depending on the way source references are defined and the time of their creation they will provide the most up-to-date versions of services that are to be tested or demoed.
 
@@ -80,7 +79,7 @@ The main part of each definition - apart of its **name** - is a recipe that prov
 
 Each section of the recipe will be now discussed in more detail.
 
-### Schema version
+#### Schema version
 
 First the schema version of the recipe needs to be defined if YAML format is to be used. Currently the only supported schema version is `0.1.0` and therefore each recipe needs to start with:
 
@@ -90,7 +89,7 @@ schema_version: "0.1.0"
 
 If recipe is defined using UI then provided settings will always be mapped to the latest schema version. On the server side all definition recipes are stored in YAML format.
 
-### Sources
+#### Sources
 
 This section allows you to define a list of repositories containing sources required for instance. They will be cloned and specified branches, tags or commits will be checked out for them.
 
@@ -130,7 +129,7 @@ Following properties need to be defined for each source:
   - for `commit` type commit hash needs to be provided.
 - **before build tasks** - a list of tasks that should be performed after source is cloned, but before Docker Compose setup is started; in most cases this will include preparing some config files (with Copy task) or replacing some values inside them using substitution variables (with Interpolate task); these tasks are executed for each in sequence, independently for each source.
 
-#### Copy task
+##### Copy task
 
 Copy task allows to copy one of files contained in the given source to a different path, also contained in the same source.
 
@@ -141,7 +140,7 @@ For this type of task you need to set `type` property to `copy` and specify foll
 
 In the example recipe given above  `app/config/parameters.yml.feater.dist` file is copied to `app/config/parameters.yml`.
 
-#### Interpolate task
+##### Interpolate task
 
 Interpolate task allows to modify in-place the contents of one of files contained in the given source by replacing substitution variables in it.
 
@@ -151,7 +150,7 @@ For this type of task you need to set `type` property to `interpolate` and speci
 
 In the example given above substitution variables are interpolated in file `app/config/parameters.yml` which was previously copied.
 
-Predicted substitution variables (either their exact names and values or their name patterns if exact values cannot be determined without creating an instance) can be seen in *Predicted substitutions* tab on defintion details page. They include:
+Predicted substitution variables (either their exact names and values or their name patterns if exact values cannot be determined without creating an instance) can be seen in *Predicted substitutions* tab on definition details page. They include:
 
 - instance ID and hash,
 - proxy domains (using names prefixed with `proxy_domain__`),
@@ -162,7 +161,7 @@ The delimiters for substitution tokens are `{{{` and `}}}`.
 
 To give an example, if you want to provide to your application a proxy domain generated for service port identified as `symfony_app` using some configuration file, your configuration file should include a token `{{{proxy_domain__symfony_app}}}`. This will be replaced with proxy domain generated by Feater for a specific instance upon its creation.
 
-### Source volumes
+#### Source volumes
 
 This section allows you to define a list of Docker volumes that will be created to mount source code to services/containers run when instance is created (as Feater doesn't allow host paths to be mounted).
 
@@ -185,10 +184,11 @@ Following properties need to be defined for each source volume:
 
 - **ID** - will be used to reference referenced source volume and generate names for related environmental variable;
 - **source ID** - references source that should be copied to given source volume;
-- **relative path** - can be provided to copy a subdirectory of source instead of its root directory; for each source many independent source volumes can be created if needed and this setting should be useful when monorepository pattern is used for organizing source code.
+- **relative path** - can be provided to copy a subdirectory of source instead of its root directory; for each source many independent source volumes can be created if needed and this setting should be useful when mono-repository pattern is used for organizing source code.
 
 Note that the volume ID provided here is not the volume ID used by Docker. The latter is generated automatically and prefixed for each instance to avoid conflicts. It is then made available via:
-- environmental variable named  `FEATER__SOURCE_VOLUME__{id}`, where  `{id}` part is replaced with an uppercase version of asset volume ID provided in recipe; this allows to add source volumes to Docker Compose configuration as external volumes and mount them to selected services;
+
+- environmental variable named `FEATER__SOURCE_VOLUME__{id}`, where `{id}` part is replaced with an uppercase version of asset volume ID provided in recipe; this allows to add source volumes to Docker Compose configuration as external volumes and mount them to selected services;
 - substitution variable named `source_volume__{id}`, where  `{id}` part is replaced with a lowercase version of asset volume ID provided in recipe.
 
 The example Docker Compose setup that would allow to use an external source volume created this way will look like this:
@@ -209,9 +209,9 @@ volumes:
       name: "$FEATER__SOURCE_VOLUME__SYMFONY_EXAMPLE"
 ```
 
-### Asset volumes
+#### Asset volumes
 
-This section allows you to define a list of Docker volumes that will be prepopulated with data from specified assets and will be mounted to selected services defined in Docker Compose configuration.
+This section allows you to define a list of Docker volumes that will be pre-populated with data from specified assets and will be mounted to selected services defined in Docker Compose configuration.
 
 Here is the UI view of asset volumes section with a single asset volume specified:
 
@@ -228,11 +228,12 @@ asset_volumes:
 Following properties need to be defined for each asset volume:
 
 - **ID** - will be used to reference referenced asset volume and generate names for related environmental variable;
-- **asset ID** - references the asset that should be used to prepopulate volume with data; if omitted then an empty volume will be created.
+- **asset ID** - references the asset that should be used to pre-populate volume with data; if omitted then an empty volume will be created.
 
 Referenced asset needs to be `.tar.gz` archive. It will be decompressed to populate the asset volume with data. In example above we assume that asset with ID `test_db_volume` is available and it is a `tar.gz` archive.
 
 Note that the volume ID provided here is not the volume ID used by Docker. The latter is generated automatically and prefixed for each instance to avoid conflicts. It is then made available via:
+
 - environmental variable named  `FEATER__ASSET_VOLUME__{id}`, where  `{id}` part is replaced with an uppercase version of asset volume ID provided in recipe; this allows to add asset volumes to Docker Compose configuration as external volumes and mount them to selected services;
 - substitution variable named `asset_volume__{id}`, where  `{id}` part is replaced with a lowercase version of asset volume ID provided in recipe.
 
@@ -255,7 +256,7 @@ volumes:
       name: "$FEATER__ASSET_VOLUME__TEST_DB"
 ```
 
-### Environmental variables
+#### Environmental variables
 
 This sections specifies environmental variables that are used instead of `.env` file when Docker Compose setup is run, along with some additional env variables provided automatically by Feater.
 
@@ -281,7 +282,7 @@ For each entry in this section a **name** and a **value** of given environmental
 
 Predicted environmental variables generated by Feater (either exact names and values or corresponding patterns if exact values cannot be determined before creating an instance) can be seen in *Predicted environment* tab on defintion details page. They include instance ID and hash, proxy domains and names of asset and source volumes. Their names are prefixed with `FEATER_`, except for `COMPOSE_PROJECT_NAME` used by Docker Compose.
 
-### Compose files
+#### Compose files
 
 This section specifies in which source Docker Compose configuration is located and which files should be used.
 
@@ -306,9 +307,9 @@ Following properties need to be defined for the single entry in this section:
 
 - **source ID** - references source in which Docker Compose setup is included; this source does not have to be mounted to any service/container, i.e. source volume doesn't have to be created for it;
 - **env directory relative path** - path to working directory where `docker-compose build` should be run relative to source root directory;
-- **Compose file relative paths** - one or more path to Docker Compose setup files relative to source root directory; if multiple files are referenced then the usual rules for merging or overwriting specific settings apply; for more details on this consult https://docs.docker.com/compose/extends/#multiple-compose-files.
+- **Compose file relative paths** - one or more path to Docker Compose setup files relative to source root directory; if multiple files are referenced then the usual rules for merging or overwriting specific settings apply; for more details on this consult [multiple-compose-files](https://docs.docker.com/compose/extends/#multiple-compose-files).
 
-### After build tasks
+#### After build tasks
 
 This section lists the tasks that should be performed after Docker Compose setup for given instance is run. There are few types of tasks available.
 
@@ -353,7 +354,7 @@ Regardless of after build task type it is possible to control the order of execu
 
 Other properties will depend on the type of given task.
 
-#### Execute service command task
+##### Execute service command task
 
 This type of task allows to execute commands on running service container. It will use `docker exec` internally and requires following properties need to be provided:
 
@@ -365,7 +366,7 @@ In case of this command it is possible also to define environmental variables th
 - either explicitly by using **custom environmental variables** section; in this case a list of name and value pairs needs to be provided;
 - or by inheriting some variables from environmental variables defined for definition or these generated automatically by Feater (e.g. proxy domains, volume names); it is possible to alter their names if required by providing aliases for them.
 
-#### Copy asset into container task
+##### Copy asset into container task
 
 This type of task allows to copy any asset from the current project to any service/container comprising an instance. This is different from copy file before build task, as the previous is run when containers are not started and is limited to handling files inside a single source.
 
@@ -375,7 +376,7 @@ Following properties need to be provided in this case:
 - **asset ID** - defines which asset should be copied,
 - **destination path** - defines absolute path where asset should be copied to.
 
-### Proxied ports
+#### Proxied ports
 
 This section specifies which service/container ports should be proxied to externally available domains.
 
@@ -413,13 +414,14 @@ proxied_ports:
 ```
 
 For a port of specified service/container to be proxied it's required to provide:
+
 - **ID** - it will be used as a part of generated domain; it should be unique for given recipe;
 - **name** - a human-readable name that will be presented in UI when listing proxied ports;
 - **service ID** - should reference one of services defined in Docker Compose setup; to reference service its key from Docker Compose setup should be used;
 - **proxied port** - the number of port to be proxied;
 - **Nginx configuration template** - can be provided optionally if there are some specific settings that given service requires; if not provided then a basic default template will be used.
 
-### Summary items
+#### Summary items
 
 This section specifies items to be shown in build summary, typically for displaying links to specific services based on proxied domains, database DSNs etc.
 
@@ -439,31 +441,31 @@ summary_items:
 
 For each entry in this section a **name** and a **value** of given summary item needs to be provided. The value will be interpolated using substitution variables in the same way as it is done for before build interpolate task.
 
-## Instance
+### Instance
 
 When instance is created following details about it are available in UI:
 
 - in **Summary** tab:
- - name of the instance;
- - definition and project;
- - build status and build time;
- - timestamps for build start and end;
- - list of summary items;
+  - name of the instance;
+  - definition and project;
+  - build status and build time;
+  - timestamps for build start and end;
+  - list of summary items;
 - in **Environment** tab - a list names and values of environmental variables provided in definition recipe or generated by Feater;
 - in **Services** tab:
   - a list of services/containers created for given instance with their container IDs, IP address, state;
-  - it is also possible to start/stop/pause/unpause individual containers here;
+  - it is also possible to start/stop/pause/resume individual containers here;
   - also logs that would be accessible with `docker logs` command can be downloaded here;
 - in **Proxy domains** tab - a list of proxied ports and domains generated for them;
 - in **Build logs** tab - logs of each stage of instance creation is available to allow troubleshooting.
 
-## Asset
+### Asset
 
 Asset is a file uploaded to Feater that can be used either to create asset volumes (if it is a `.tag.gz` archive) or can be copied into service/container user after build task (regardless of its MIME type).
 
-### Preparing asset for asset volume
+#### Preparing asset for asset volume
 
-A popular use case for using asset volume would be prepopulating databases.
+A popular use case for using asset volume would be pre-populating databases.
 
 One approach would be to just copy asset (which in this case would be a database dump) into container and importing it during after build task. However this solutions results in database not being available immediately when container starts. Also more time will be required to complete instance creation as imported file needs to be processed by database server.
 
@@ -551,22 +553,21 @@ volumes:
 
 Note that values of config variables related to MySQL credentials should remain the same, because they are also stored in the asset we've created.
 
+### Deploy key
 
-## Deploy key
-
-For each repository that is referenced in sources section of defintion recipes that is marked as requiring SSH deploy key for cloning, Feater will generate a deploy key that has to be added to repository settings on GitHub/GitLab/BitBucket before attempting instances creation. Repository is identified by its clone URL so even if it will be referenced in multiple recipes only one SSH deploy key will be generated.
+For each repository that is referenced in sources section of definition recipes that is marked as requiring SSH deploy key for cloning, Feater will generate a deploy key that has to be added to repository settings on GitHub/GitLab/BitBucket before attempting instances creation. Repository is identified by its clone URL so even if it will be referenced in multiple recipes only one SSH deploy key will be generated.
 
 The full list of deploy keys is available from the side menu, and also each definition details contain _Deploy keys_ tab that lists only these items that are relevant for given recipe.
 
-It is possible to remove all unneeded SSH deploy keys (i.e. these that are no longer referenced by any defintion recipe). It is also possible to remove individual deploy keys, as well as generate them again for any repository that is marked as requiring them for cloning.
+It is possible to remove all unneeded SSH deploy keys (i.e. these that are no longer referenced by any definition recipe). It is also possible to remove individual deploy keys, as well as generate them again for any repository that is marked as requiring them for cloning.
 
 Public parts of SSH deploy keys are stored in MongoDB, while private parts are stored on data volume as this form is required by `sshpass` that is passed to `git clone` command via `GIT_SSH_COMMAND` environmental variable.
 
-# Running using Docker image
+## Running using Docker image
 
-The easiest way to use Feater is to use one of images available at [https://hub.docker.com/r/feater/feater]. The only requirement for using Feater is that Docker is installed on your machine.
+The easiest way to use Feater is to use one of images available at [DockerHub](https://hub.docker.com/r/feater/feater). The only requirement for using Feater is that Docker is installed on your machine.
 
-## Prerequisites
+### Prerequisites
 
 Before running Feater you should check Docker version installed on your machine to use the image matching it:
 
@@ -581,9 +582,10 @@ You also need to create Docker network that will be used to expose some of the i
 
 ```bash
 $ docker network create feater_proxy
+56fe08e1c62030daa5992566e8595bbd58c2fa4acf3d4a262d2dbb62050a7290
 ```
 
-## Basic usage
+### Basic usage
 
 If you want to try out Feater you can run it without mounting any volumes for persisting data. Be aware that in this case after removing its container all data will be lost. See following sections to find out how data can be persisted independently of Feater container.
 
@@ -611,7 +613,7 @@ You can now access Feater's UI at `http://localhost:9010`.
 
 Instantiated services will be proxied using domain names following pattern `{instance_hash}-{port_id}.featerinstance.localhost` and balanced using Nginx on port 9011 of the Feater container, which is now mapped to `localhost`'s port 80. In this case you should be able to access them in your web browser without any additional configuration.
 
-## Usage with persistent data
+### Usage with persistent data
 
 Inside Feater container data are persisted in following directories:
 
@@ -640,53 +642,54 @@ $ docker run \
 
 You can also include `--restart unless-stopped` option if you want Feater to run continuously and to be started automatically.
 
-## Environment variables
+### Environment variables
 
 Following environmental variables can be provided when executing `docker run`.
 
-### Controlling Docker Compose version
+#### Controlling Docker Compose version
 
 - `FEATER_DOCKER_COMPOSE_VERSION` - defaults to `1.23.2`.
 
-### Using external MongoDB instance
+#### Using external MongoDB instance
 
 - `FEATER_MONGO_DSN` - DSN of MongoDB database to be used for persisting projects, definitions, assets, instances, deploy keys and logs; can be provided if external instance of MongoDB should be used; defaults to `mongodb://localhost:27017/feater`.
 
-### Controlling location of persistent data
+#### Controlling location of persistent data
 
 - `FEATER_GUEST_PATH_ASSET` - defaults to `/data/asset`;
 - `FEATER_GUEST_PATH_BUILD` - defaults to `/data/build`;
 - `FEATER_GUEST_PATH_IDENTITY` - defaults to `/data/identity`;
 - `FEATER_GUEST_PATH_PROXY` - defaults to `/data/proxy`.
 
-### Controlling instantiation
+#### Controlling instantiation
 
 - `FEATER_CONTAINER_NAME_PREFIX` - the prefix that will be used for generating `COMPOSE_PROJECT_NAME` for instantiated services; note that some versions of Docker will remove all characters other that letters and digits; if your version of Docker allows to use underscore it is convenient to append it to the end of this prefix; defaults to `featerinstance`;
 - `FEATER_PROXY_DOMAIN_PATTERN` - the pattern for proxy domains generated for instantiated services; tokens `{instance_hash}` and `{port_id}` will be replaced with values specific for given instance and proxied port; defaults to `{instance_hash}-{port_id}.featerinstance.localhost`;
 - `FEATER_PROXY_NETWORK_NAME` - the name of the Docker network to which all proxied instantiated services are connected after being run; defaults to `feater_proxy`.
 
-### Controlling log level
+#### Controlling log level
 
-- `FEATER_LOG_LEVEL_CONSOLE` - specifies log level that will be outputed to console; defaults to `info`;
+- `FEATER_LOG_LEVEL_CONSOLE` - specifies log level that will be outputted to console; defaults to `info`;
 - `FEATER_LOG_LEVEL_MONGO` - specifies log level that will be persisted in MongoDB; defaults to `info`.
 
-# Running using source
+## Running using source
 
-For developing Feater it is better to buid image from source and run server and client components in watch mode, where source changes will result in recompiling and restarting them. This is possible using [.docker/run.sh](https://github.com/feater-dev/feater/blob/develop/.docker/run.sh) script.
+For developing Feater it is better to build image from source and run server and client components in watch mode, where source changes will result in recompiling and restarting them. This is possible using [.docker/run.sh](https://github.com/feater-dev/feater/blob/develop/.docker/run.sh) script.
 
 This script allows to use the same environmental variables as the image described before plus an extra `FEATER_ENV` variable that can be set to either `dev` or `prod`.
 
-If `prod` envrionment is selected the production builds of server and client components will be built and the result will be simillar to using image from Docker Hub directly.
+If `prod` environment is selected the production builds of server and client components will be built and the result will be similar to using image from Docker Hub directly.
 
 If `dev` environment is selected then Nodemon will be used instead of PM2 to run the server component, and the client component will be served in watch mode. They both will be reloaded if some source code changes are made.
 
-# Example project
+## Example project
 
-Example project is available at https://github.com/feater-dev/symfony-example. It provides a simple Symfony 3.4 based application along with MySQL, Elasticsearch and MailCatcher services.
+Example project is available [here](https://github.com/feater-dev/symfony-example). It provides a simple Symfony 3.4 based application along with MySQL, Elasticsearch and MailCatcher services.
 
-# Technologies used
+## Technologies used
 
 Following technologies were used to create Feater:
+
 - [TypeScript](https://www.typescriptlang.org/)
 - [Node.js 10](https://nodejs.org/en/)
 - [Angular 7](https://angular.io/)
@@ -695,6 +698,6 @@ Following technologies were used to create Feater:
 - [MongoDB](https://www.mongodb.com/)
 - [Nginx](https://www.nginx.com/)
 
-# Recommendations
+## Recommendations
 
 For inspecting containers run with Feater you can use [Portainer](https://www.portainer.io/).

@@ -7,18 +7,18 @@ import { ProjectRepository } from './repository/project.repository';
 import { DefinitionRepository } from './repository/definition.repository';
 import { InstanceRepository } from './repository/instance.repository';
 import { config } from '../config/config';
-import { LogRepository } from './repository/log.repository';
 import { AssetSchema } from './schema/asset.schema';
 import { AssetRepository } from './repository/asset.repository';
 import { DeployKeySchema } from './schema/deploy-key.schema';
 import { DeployKeyRepository } from './repository/deploy-key.repository';
-import { LogSchema } from './schema/log.schema';
 import { CommandLogSchema } from './schema/command-log.schema';
 import { CommandLogRepository } from './repository/command-log.repository';
 import { AssetHelper } from './helper/asset-helper.component';
 import { HelperModule } from '../helper/helper.module';
 
 import * as mongoose from 'mongoose';
+import { ActionLogSchema } from './schema/action-log.schema';
+import { ActionLogRepository } from './repository/action-log.repository';
 mongoose.set('useCreateIndex', true);
 
 @Module({
@@ -56,14 +56,14 @@ mongoose.set('useCreateIndex', true);
         ]),
         MongooseModule.forFeature([
             {
-                name: 'CommandLog',
-                schema: CommandLogSchema,
+                name: 'ActionLog',
+                schema: ActionLogSchema,
             },
         ]),
         MongooseModule.forFeature([
             {
-                name: 'Log',
-                schema: LogSchema,
+                name: 'CommandLog',
+                schema: CommandLogSchema,
             },
         ]),
         HelperModule,
@@ -75,8 +75,8 @@ mongoose.set('useCreateIndex', true);
         InstanceRepository,
         AssetRepository,
         DeployKeyRepository,
+        ActionLogRepository,
         CommandLogRepository,
-        LogRepository,
         AssetHelper,
     ],
     exports: [
@@ -85,8 +85,8 @@ mongoose.set('useCreateIndex', true);
         InstanceRepository,
         AssetRepository,
         DeployKeyRepository,
+        ActionLogRepository,
         CommandLogRepository,
-        LogRepository,
         AssetHelper,
     ],
 })

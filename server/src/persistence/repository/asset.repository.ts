@@ -15,10 +15,10 @@ export class AssetRepository {
     ) {}
 
     async find(
-        criteria: object,
+        criteria: any,
         offset: number,
         limit: number,
-        sort?: object,
+        sort?: any,
     ): Promise<AssetInterface[]> {
         const query = this.assetModel.find(criteria);
         query.skip(offset).limit(limit);
@@ -29,7 +29,7 @@ export class AssetRepository {
         return query.exec();
     }
 
-    async findOneOrFail(criteria: object): Promise<AssetInterface> {
+    async findOneOrFail(criteria: any): Promise<AssetInterface> {
         const assets = await this.find(criteria, 0, 2);
         if (assets.length > 1) {
             throw new Error(`More than one asset document found.`);

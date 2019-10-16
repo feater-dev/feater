@@ -3,6 +3,19 @@ import { config } from '../../config/config';
 import { Injectable } from '@nestjs/common';
 import { SourcePathsInterface } from './source-paths.interface';
 
+export interface AbsolutePathsInterface {
+    readonly absolute: {
+        readonly guest: string;
+        readonly host: string;
+    };
+}
+
+export interface CommandLogPathsInterface {
+    readonly absolute: {
+        readonly guest: string;
+    };
+}
+
 @Injectable()
 export class PathHelper {
     getInstancePaths(instanceHash: string): SourcePathsInterface {
@@ -21,6 +34,20 @@ export class PathHelper {
     ): SourcePathsInterface {
         const instancePaths = this.getInstancePaths(instanceHash);
         const relative = path.join('source', sourceId);
+
+        return {
+            absolute: {
+                guest: path.join(instancePaths.absolute.guest, relative),
+            },
+        };
+    }
+
+    getCommandLogPaths(
+        instanceHash: string,
+        commandLogId: string,
+    ): CommandLogPathsInterface {
+        const instancePaths = this.getInstancePaths(instanceHash);
+        const relative = path.join('commandlog', commandLogId);
 
         return {
             absolute: {

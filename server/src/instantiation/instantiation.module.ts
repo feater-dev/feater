@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from '../logger/logger.module';
 import { PersistenceModule } from '../persistence/persistence.module';
-import { InstanceCreatorComponent } from './instance-creator.component';
 import { InterpolationHelper } from './helper/interpolation-helper.component';
 import { ContainerStateCheckerComponent } from './container-state-checker-component.service';
 import { ContainerInfoCheckerComponent } from './container-info-checker-component.service';
@@ -29,7 +28,7 @@ import { ExecuteServiceCmdCommandFactoryComponent } from './command/after-build/
 import { ContextAwareCommandExecutorComponent } from './executor/context-aware-command-executor.component';
 import { CompositeSimpleCommandExecutorComponent } from './executor/composite-simple-command-executor.component';
 import { PathHelper } from './helper/path-helper.component';
-import { InstanceContextFactory } from './instance-context-factory.component';
+import { ActionExecutionContextFactory } from './action-execution-context-factory.component';
 import { EnableProxyDomainsCommandExecutorComponent } from './command/enable-proxy-domains/command-executor.component';
 import { CommandsMapExecutorComponent } from './executor/commands-map-executor.component';
 import { CommandsListExecutorComponent } from './executor/commands-list-executor.component';
@@ -39,8 +38,11 @@ import { IpAddressCheckerComponent } from './ip-address-checker.component';
 import { DockerVolumeHelperComponent } from './docker/docker-volume-helper.component';
 import { RemoveSourceCommandExecutorComponent } from './command/remove-source/command-executor.component';
 import { HelperModule } from '../helper/helper.module';
-import { DefinitionRecipeMapper } from './definition-recipe-mapper.component';
-import { DefintionRecipeZeroOneZeroValidator } from './validation/defintion-recipe-zero-one-zero-validator.component';
+import { RecipeMapper } from '../api/recipe/schema-version/0-1/recipe-mapper';
+import { RecipeValidator } from '../api/recipe/schema-version/0-1/recipe-validator';
+import { RecipePartMapper } from '../api/recipe/schema-version/0-1/recipe-part-mapper';
+import { Modificator } from './modificator.service';
+import { Instantiator } from './instantiator.service';
 
 @Module({
     imports: [HelperModule, LoggerModule, PersistenceModule],
@@ -70,8 +72,7 @@ import { DefintionRecipeZeroOneZeroValidator } from './validation/defintion-reci
         InterpolationHelper,
         SpawnHelper,
         PathHelper,
-        InstanceCreatorComponent,
-        InstanceContextFactory,
+        ActionExecutionContextFactory,
         CopyFileCommandFactoryComponent,
         InterpolateFileCommandFactoryComponent,
         CopyAssetIntoContainerCommandFactoryComponent,
@@ -83,16 +84,21 @@ import { DefintionRecipeZeroOneZeroValidator } from './validation/defintion-reci
         CompositeSimpleCommandExecutorComponent,
         VariablesPredictor,
         DockerVolumeHelperComponent,
-        DefinitionRecipeMapper,
-        DefintionRecipeZeroOneZeroValidator,
+        RecipeMapper,
+        RecipePartMapper,
+        RecipeValidator,
+        Instantiator,
+        Modificator,
     ],
     exports: [
-        InstanceCreatorComponent,
         ContainerStateCheckerComponent,
         IpAddressCheckerComponent,
+        PathHelper,
         VariablesPredictor,
-        DefinitionRecipeMapper,
-        DefintionRecipeZeroOneZeroValidator,
+        RecipeMapper,
+        RecipeValidator,
+        Instantiator,
+        Modificator,
     ],
 })
 export class InstantiationModule {}

@@ -1,15 +1,17 @@
 type Instance {
     id: String!
-    hash: String
+    hash: String!
     name: String!
     definition: Definition!
     services: [InstanceService!]
     envVariables: [InstanceEnvVariable!]
     proxiedPorts: [InstanceProxiedPort!]
+    downloadables: [InstanceDownloadable!]
     summaryItems: [InstanceSummaryItem!]
-    createdAt: String
-    updatedAt: String
+    actionLogs: [InstanceActionLog!]!
+    createdAt: String!
+    updatedAt: String!
     completedAt: String
     failedAt: String
-    commandLogs: [InstanceCommandLog!]!
+    isModificationAllowed: Boolean!
 }

@@ -12,7 +12,7 @@ import { DeployKeyLister } from '../lister/deploy-key-lister.component';
 import { DeployKeyModelToTypeMapper } from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
 import { unlinkSync } from 'fs';
 import * as _ from 'lodash';
-import { DefinitionRecipeMapper } from '../../instantiation/definition-recipe-mapper.component';
+import { RecipeMapper } from '../recipe/schema-version/0-1/recipe-mapper';
 
 @Resolver('DeployKey')
 export class DeployKeyResolver {
@@ -22,7 +22,7 @@ export class DeployKeyResolver {
         private readonly deployKeyHelper: DeployKeyHelperComponent,
         private readonly deployKeyLister: DeployKeyLister,
         private readonly deployKeyModelToTypeMapper: DeployKeyModelToTypeMapper,
-        private readonly definitionRecipeMapper: DefinitionRecipeMapper,
+        private readonly recipeMapper: RecipeMapper,
     ) {}
 
     @Query('deployKeys')
@@ -68,7 +68,7 @@ export class DeployKeyResolver {
         const definitions = await this.definitionRepository.find({}, 0, 99999);
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            const definitionRecipe = this.definitionRecipeMapper.map(
+            const definitionRecipe = this.recipeMapper.map(
                 definition.recipeAsYaml,
             );
             for (const source of definitionRecipe.sources) {
@@ -114,7 +114,7 @@ export class DeployKeyResolver {
 
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            const definitionRecipe = this.definitionRecipeMapper.map(
+            const definitionRecipe = this.recipeMapper.map(
                 definition.recipeAsYaml,
             );
             for (const source of definitionRecipe.sources) {

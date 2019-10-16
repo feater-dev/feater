@@ -89,7 +89,7 @@ export class AssetResolver {
     protected applyAssetFilterArgumentToCriteria(
         criteria: any,
         args: ResolverAssetFilterArgumentsInterface,
-    ): object {
+    ): any {
         if (args.id) {
             criteria.id = new RegExp(escapeStringRegexp(args.id));
         }

@@ -1,0 +1,6 @@
+type InstanceDownloadable {
+    id: String!
+    name: String!
+    serviceId: String!
+    absolutePath: String!
+}

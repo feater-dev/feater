@@ -2,10 +2,10 @@ import * as path from 'path';
 import { BeforeBuildTaskCommandFactoryInterface } from '../command-factory.interface';
 import { CopyFileCommand } from './command';
 import { ContextAwareCommand } from '../../../executor/context-aware-command.interface';
-import { InstanceContextBeforeBuildTaskInterface } from '../../../instance-context/before-build/instance-context-before-build-task.interface';
-import { InstanceContextSourceInterface } from '../../../instance-context/instance-context-source.interface';
-import { InstanceContext } from '../../../instance-context/instance-context';
-import { InstanceContextCopyFileInterface } from '../../../instance-context/before-build/instance-context-copy-file.interface';
+import { ActionExecutionContextBeforeBuildTaskInterface } from '../../../action-execution-context/before-build/action-execution-context-before-build-task.interface';
+import { ActionExecutionContextSourceInterface } from '../../../action-execution-context/action-execution-context-source.interface';
+import { ActionExecutionContext } from '../../../action-execution-context/action-execution-context';
+import { ActionExecutionContextCopyFileInterface } from '../../../action-execution-context/before-build/action-execution-context-copy-file.interface';
 import { CommandType } from '../../../executor/command.type';
 import { Injectable } from '@nestjs/common';
 
@@ -20,17 +20,17 @@ export class CopyFileCommandFactoryComponent
 
     createCommand(
         type: string,
-        beforeBuildTask: InstanceContextBeforeBuildTaskInterface,
-        source: InstanceContextSourceInterface,
+        beforeBuildTask: ActionExecutionContextBeforeBuildTaskInterface,
+        source: ActionExecutionContextSourceInterface,
         taskId: string,
-        instance: InstanceContext,
-        updateInstanceFromInstanceContext: () => Promise<void>,
+        actionExecutionContext: ActionExecutionContext,
+        updateInstanceFromActionExecutionContext: () => Promise<void>,
     ): CommandType {
-        const typedBeforeBuildTask = beforeBuildTask as InstanceContextCopyFileInterface;
+        const typedBeforeBuildTask = beforeBuildTask as ActionExecutionContextCopyFileInterface;
 
         return new ContextAwareCommand(
             taskId,
-            instance.id,
+            actionExecutionContext.id,
             `Copy file for source \`${source.id}\``,
             () =>
                 new CopyFileCommand(

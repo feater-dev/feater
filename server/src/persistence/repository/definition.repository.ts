@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DefinitionInterface } from '../interface/definition.interface';
-import { DeployKeyRepository } from './deploy-key.repository';
-import { DefinitionRecipeMapper } from '../../instantiation/definition-recipe-mapper.component';
 
 @Injectable()
 export class DefinitionRepository {
@@ -13,10 +11,10 @@ export class DefinitionRepository {
     ) {}
 
     find(
-        criteria: object,
+        criteria: any,
         offset: number,
         limit: number,
-        sort?: object,
+        sort?: any,
     ): Promise<DefinitionInterface[]> {
         const query = this.definitionModel.find(criteria);
         query.skip(offset).limit(limit);

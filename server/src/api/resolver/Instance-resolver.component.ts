@@ -22,14 +22,16 @@ import { StartServiceInputTypeInterface } from '../input-type/start-service-inpu
 import { UnpauseServiceInputTypeInterface } from '../input-type/unpause-service-input-type.interface';
 import { RemoveInstanceInputTypeInterface } from '../input-type/remove-instance-input-type.interface';
 import { DefinitionRepository } from '../../persistence/repository/definition.repository';
-import { InstanceCreatorComponent } from '../../instantiation/instance-creator.component';
 import { DefinitionTypeInterface } from '../type/definition-type.interface';
-import { CommandLogTypeInterface } from '../type/command-log-type.interface';
 import { CommandLogRepository } from '../../persistence/repository/command-log.repository';
-import { CommandLogModelToTypeMapper } from '../model-to-type-mapper/command-log-model-to-type-mapper.component';
+import { ModifyInstanceInputTypeInterface } from '../input-type/modify-instance-input-type.interface';
+import { ActionLogTypeInterface } from '../type/action-log-type.interface';
+import { ActionLogRepository } from '../../persistence/repository/action-log.repository';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import * as nanoidGenerate from 'nanoid/generate';
 import * as path from 'path';
+import { Instantiator } from '../../instantiation/instantiator.service';
+import { Modificator } from '../../instantiation/modificator.service';
 
 @Resolver('Instance')
 export class InstanceResolver {
@@ -38,31 +40,43 @@ export class InstanceResolver {
         private readonly instanceLister: InstanceLister,
         private readonly instanceModelToTypeMapper: InstanceModelToTypeMapper,
         private readonly definitionRepository: DefinitionRepository,
-        private readonly instantiator: InstanceCreatorComponent,
+        private readonly instantiator: Instantiator,
+        private readonly modificator: Modificator,
         private readonly definitionModelToTypeMapper: DefinitionModelToTypeMapper,
+        private readonly actionLogRepository: ActionLogRepository,
         private readonly commandLogRepository: CommandLogRepository,
-        private readonly commandLogModelToTypeMapper: CommandLogModelToTypeMapper,
     ) {}
 
     @Query('instances')
-    async getAll(@Args() args?: any): Promise<InstanceTypeInterface[]> {
-        const criteria = this.applyInstanceFilterArgumentToCriteria(
-            {},
-            args as ResolverInstanceFilterArgumentsInterface,
-        );
-        const instances = await this.instanceLister.getList(
-            criteria,
-            args as ResolverPaginationArgumentsInterface,
-        );
+    async getAll(
+        @Args()
+        args?: ResolverInstanceFilterArgumentsInterface &
+            ResolverPaginationArgumentsInterface,
+    ): Promise<InstanceTypeInterface[]> {
+        const criteria = this.applyInstanceFilterArgumentToCriteria({}, args);
+        const instances = await this.instanceLister.getList(criteria, args);
 
-        return this.instanceModelToTypeMapper.mapMany(instances);
+        const mappedInstances: InstanceTypeInterface[] = [];
+        for (const instance of instances) {
+            const definition = await this.definitionRepository.findByIdOrFail(
+                instance.definitionId,
+            );
+            mappedInstances.push(
+                this.instanceModelToTypeMapper.mapOne(instance, definition),
+            );
+        }
+
+        return mappedInstances;
     }
 
     @Query('instance')
     async getOne(@Args('id') id: string): Promise<InstanceTypeInterface> {
-        const instance = await this.instanceRepository.findById(id);
+        const instance = await this.instanceRepository.findByIdOrFail(id);
+        const definition = await this.definitionRepository.findByIdOrFail(
+            instance.definitionId,
+        );
 
-        return this.instanceModelToTypeMapper.mapOne(instance);
+        return this.instanceModelToTypeMapper.mapOne(instance, definition);
     }
 
     @ResolveProperty('definition')
@@ -76,49 +90,100 @@ export class InstanceResolver {
         return this.definitionModelToTypeMapper.mapOne(definition);
     }
 
-    @ResolveProperty('commandLogs')
-    async getCommandLogs(
+    @ResolveProperty('actionLogs')
+    async getActionLogs(
         @Parent() instance: InstanceTypeInterface,
-    ): Promise<CommandLogTypeInterface[]> {
-        const criteria = { instanceId: instance.id };
-        // TODO Introduce dedicated command log lister.
-        const commandLogs = await this.commandLogRepository.find(
-            criteria,
+    ): Promise<ActionLogTypeInterface[]> {
+        const actionLogs = await this.actionLogRepository.find(
+            { instanceId: instance.id },
             0,
             999999,
             { _id: 1 },
         );
 
-        return this.commandLogModelToTypeMapper.mapMany(commandLogs);
+        const mappedActionLogs: ActionLogTypeInterface[] = [];
+
+        for (const actionLog of actionLogs) {
+            mappedActionLogs.push({
+                id: actionLog._id.toString(),
+                actionId: actionLog.actionId,
+                actionType: actionLog.actionType,
+                actionName: actionLog.actionName,
+                createdAt: actionLog.createdAt,
+                completedAt: actionLog.completedAt,
+                failedAt: actionLog.failedAt,
+            });
+        }
+
+        return mappedActionLogs;
     }
 
     @Mutation('createInstance')
     async create(
         @Args() createInstanceInput: CreateInstanceInputTypeInterface,
     ): Promise<InstanceTypeInterface> {
-        // TODO Add validation.
+        const definition = await this.definitionRepository.findByIdOrFail(
+            createInstanceInput.definitionId,
+        );
+
         const instance = await this.instanceRepository.create(
             createInstanceInput,
         );
+
+        const instanceHash = nanoidGenerate(
+            '0123456789abcdefghijklmnopqrstuvwxyz',
+            8,
+        );
+
+        process.nextTick(() => {
+            this.instantiator.createInstance(
+                definition,
+                instanceHash,
+                createInstanceInput.instantiationActionId,
+                instance,
+            );
+        });
+
+        return this.instanceModelToTypeMapper.mapOne(instance, definition);
+    }
+
+    @Mutation('modifyInstance')
+    async modify(
+        @Args() modifyInstanceInput: ModifyInstanceInputTypeInterface,
+    ): Promise<InstanceTypeInterface> {
+        const instance = await this.instanceRepository.findByIdOrFail(
+            modifyInstanceInput.instanceId,
+        );
+
         const definition = await this.definitionRepository.findByIdOrFail(
             instance.definitionId,
         );
-        const hash = nanoidGenerate('0123456789abcdefghijklmnopqrstuvwxyz', 8);
+
+        if (definition.updatedAt > instance.createdAt) {
+            throw new Error(
+                'Cannot modify this instance as related definition was subsequently modified.',
+            );
+        }
 
         process.nextTick(() => {
-            this.instantiator.createInstance(instance, hash, definition);
+            this.modificator.modifyInstance(
+                definition,
+                modifyInstanceInput.modificationActionId,
+                instance,
+            );
         });
 
-        return this.instanceModelToTypeMapper.mapOne(instance);
+        return this.instanceModelToTypeMapper.mapOne(instance, definition);
     }
 
     @Mutation('removeInstance')
     async remove(
         @Args() removeInstanceInput: RemoveInstanceInputTypeInterface,
     ): Promise<boolean> {
-        const instance = await this.instanceRepository.findById(
+        const instance = await this.instanceRepository.findByIdOrFail(
             removeInstanceInput.id,
         );
+
         execSync('bash -c remove-instance.sh', {
             cwd: path.join(config.guestPaths.root, 'bin'),
             env: {
@@ -129,17 +194,28 @@ export class InstanceResolver {
             },
         });
 
-        return await this.instanceRepository.remove(removeInstanceInput.id);
+        await this.actionLogRepository.actionLogModel.deleteMany({
+            instanceId: instance._id.toString(),
+        });
+        await this.commandLogRepository.commandLogModel.deleteMany({
+            instanceId: instance._id.toString(),
+        });
+        await this.instanceRepository.remove(removeInstanceInput.id);
+
+        return true;
     }
 
     @Mutation('stopService')
     async stopService(
         @Args() stopServiceInput: StopServiceInputTypeInterface,
     ): Promise<InstanceTypeInterface> {
-        // TODO Add validation.
-        const instance = await this.instanceRepository.findById(
+        const instance = await this.instanceRepository.findByIdOrFail(
             stopServiceInput.instanceId,
         );
+        const definition = await this.definitionRepository.findByIdOrFail(
+            instance.definitionId,
+        );
+
         for (const service of instance.services) {
             if (stopServiceInput.serviceId === service.id) {
                 execSync(
@@ -150,17 +226,20 @@ export class InstanceResolver {
             }
         }
 
-        return this.instanceModelToTypeMapper.mapOne(instance);
+        return this.instanceModelToTypeMapper.mapOne(instance, definition);
     }
 
     @Mutation('pauseService')
     async pauseService(
         @Args() pauseServiceInput: PauseServiceInputTypeInterface,
     ): Promise<InstanceTypeInterface> {
-        // TODO Add validation.
-        const instance = await this.instanceRepository.findById(
+        const instance = await this.instanceRepository.findByIdOrFail(
             pauseServiceInput.instanceId,
         );
+        const definition = await this.definitionRepository.findByIdOrFail(
+            instance.definitionId,
+        );
+
         for (const service of instance.services) {
             if (pauseServiceInput.serviceId === service.id) {
                 execSync(
@@ -171,17 +250,20 @@ export class InstanceResolver {
             }
         }
 
-        return this.instanceModelToTypeMapper.mapOne(instance);
+        return this.instanceModelToTypeMapper.mapOne(instance, definition);
     }
 
     @Mutation('startService')
     async startService(
         @Args() startServiceInput: StartServiceInputTypeInterface,
     ): Promise<InstanceTypeInterface> {
-        // TODO Add validation.
-        const instance = await this.instanceRepository.findById(
+        const instance = await this.instanceRepository.findByIdOrFail(
             startServiceInput.instanceId,
         );
+        const definition = await this.definitionRepository.findByIdOrFail(
+            instance.definitionId,
+        );
+
         for (const service of instance.services) {
             if (startServiceInput.serviceId === service.id) {
                 execSync(
@@ -192,17 +274,20 @@ export class InstanceResolver {
             }
         }
 
-        return this.instanceModelToTypeMapper.mapOne(instance);
+        return this.instanceModelToTypeMapper.mapOne(instance, definition);
     }
 
     @Mutation('unpauseService')
     async unpauseService(
         @Args() unpauseServiceInput: UnpauseServiceInputTypeInterface,
     ): Promise<InstanceTypeInterface> {
-        // TODO Add validation.
-        const instance = await this.instanceRepository.findById(
+        const instance = await this.instanceRepository.findByIdOrFail(
             unpauseServiceInput.instanceId,
         );
+        const definition = await this.definitionRepository.findByIdOrFail(
+            instance.definitionId,
+        );
+
         for (const service of instance.services) {
             if (unpauseServiceInput.serviceId === service.id) {
                 execSync(
@@ -213,14 +298,14 @@ export class InstanceResolver {
             }
         }
 
-        return this.instanceModelToTypeMapper.mapOne(instance);
+        return this.instanceModelToTypeMapper.mapOne(instance, definition);
     }
 
     // TODO Move somewhere else.
     protected applyInstanceFilterArgumentToCriteria(
         criteria: any,
         args: ResolverInstanceFilterArgumentsInterface,
-    ): object {
+    ): any {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }

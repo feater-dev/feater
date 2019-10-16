@@ -1,6 +1,5 @@
 import { DefinitionTypeInterface } from '../type/definition-type.interface';
 import { DefinitionRepository } from '../../persistence/repository/definition.repository';
-import { DefinitionRecipeMapper } from '../../instantiation/definition-recipe-mapper.component';
 import { CreateDefinitionInputTypeInterface } from '../input-type/create-definition-input-type.interface';
 import { ResolverPaginationArgumentsInterface } from '../pagination-argument/resolver-pagination-arguments.interface';
 import { ResolverDefinitionFilterArgumentsInterface } from '../filter-argument/resolver-definition-filter-arguments.interface';
@@ -31,8 +30,9 @@ import { InstanceLister } from '../lister/instance-lister.component';
 import { InstanceModelToTypeMapper } from '../model-to-type-mapper/instance-model-to-type-mapper.component';
 import { InstanceTypeInterface } from '../type/instance-type.interface';
 import { DeployKeyModelToTypeMapper } from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
-import { DefintionRecipeZeroOneZeroValidator } from '../../instantiation/validation/defintion-recipe-zero-one-zero-validator.component';
 import * as escapeStringRegexp from 'escape-string-regexp';
+import { RecipeMapper } from '../recipe/schema-version/0-1/recipe-mapper';
+import { RecipeValidator } from '../recipe/schema-version/0-1/recipe-validator';
 
 @Resolver('Definition')
 export class DefinitionResolver {
@@ -41,7 +41,7 @@ export class DefinitionResolver {
         private readonly definitionRepository: DefinitionRepository,
         private readonly instanceRepository: InstanceRepository,
         private readonly deployKeyRepository: DeployKeyRepository,
-        private readonly definitionRecipeMapper: DefinitionRecipeMapper,
+        private readonly definitionRecipeMapper: RecipeMapper,
         private readonly variablePredictor: VariablesPredictor,
         private readonly definitionLister: DefinitionLister,
         private readonly definitionModelToTypeMapper: DefinitionModelToTypeMapper,
@@ -49,7 +49,7 @@ export class DefinitionResolver {
         private readonly instanceLister: InstanceLister,
         private readonly instanceModelToTypeMapper: InstanceModelToTypeMapper,
         private readonly deployKeyModelToTypeMapper: DeployKeyModelToTypeMapper,
-        private readonly defintionRecipeZeroOneZeroValidator: DefintionRecipeZeroOneZeroValidator,
+        private readonly recipeValidator: RecipeValidator,
     ) {}
 
     @Query('definitions')
@@ -77,7 +77,7 @@ export class DefinitionResolver {
     async getProject(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<ProjectTypeInterface> {
-        const project = await this.projectRepository.findById(
+        const project = await this.projectRepository.findByIdOrFail(
             definition.projectId,
         );
 
@@ -89,13 +89,22 @@ export class DefinitionResolver {
         @Parent() definition: DefinitionTypeInterface,
         @Args() args: any,
     ): Promise<InstanceTypeInterface[]> {
-        const criteria = { definitionId: definition.id };
         const instances = await this.instanceLister.getList(
-            criteria,
+            { definitionId: definition.id },
             args as ResolverPaginationArgumentsInterface,
         );
 
-        return this.instanceModelToTypeMapper.mapMany(instances);
+        const mappedInstances: InstanceTypeInterface[] = [];
+        for (const instance of instances) {
+            const definition = await this.definitionRepository.findByIdOrFail(
+                instance.definitionId,
+            );
+            mappedInstances.push(
+                this.instanceModelToTypeMapper.mapOne(instance, definition),
+            );
+        }
+
+        return mappedInstances;
     }
 
     @ResolveProperty('deployKeys')
@@ -108,7 +117,7 @@ export class DefinitionResolver {
         const deployKeys: DeployKeyInterface[] = [];
         for (const source of definitionRecipe.sources) {
             const sourceDeployKeys = await this.deployKeyRepository.findByCloneUrl(
-                (source as SourceTypeInterface).cloneUrl,
+                source.cloneUrl,
             );
             if (1 < sourceDeployKeys.length) {
                 throw new Error('More than one deploy key found.');
@@ -175,8 +184,12 @@ export class DefinitionResolver {
             createDefinitionInput.projectId,
         );
 
-        // TODO Add input validation. Handle validation result.
-        // this.defintionRecipeZeroOneZeroValidator.validateRecipe(recipeAsYaml);
+        const validationResult = this.recipeValidator.validateRecipe(
+            createDefinitionInput.recipeAsYaml,
+        );
+        if (validationResult.error) {
+            throw new Error('Invalid definition recipe.');
+        }
 
         const definition = await this.definitionRepository.create(
             createDefinitionInput.projectId,
@@ -204,14 +217,18 @@ export class DefinitionResolver {
     async update(
         @Args() updateDefinitionInput: UpdateDefinitionInputTypeInterface,
     ): Promise<DefinitionTypeInterface> {
-        // TODO Add input validation. Handle validation result.
-        // this.defintionRecipeZeroOneZeroValidator.validateRecipe(recipeAsYaml);
-
         const definition = await this.definitionRepository.update(
             updateDefinitionInput.id,
             updateDefinitionInput.name,
             updateDefinitionInput.recipeAsYaml,
         );
+
+        const validationResult = this.recipeValidator.validateRecipe(
+            updateDefinitionInput.recipeAsYaml,
+        );
+        if (validationResult.error) {
+            throw new Error('Invalid definition recipe.');
+        }
 
         const recipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
         for (const source of recipe.sources) {
@@ -252,7 +269,7 @@ export class DefinitionResolver {
     protected applyDefinitionFilterArgumentToCriteria(
         criteria: any,
         args: ResolverDefinitionFilterArgumentsInterface,
-    ): object {
+    ): any {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }

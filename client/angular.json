@@ -23,7 +23,7 @@
             "styles": [
               "src/assets/bootstrap/bootstrap-flatly.min.css",
               "node_modules/ngx-toastr/toastr.css",
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [
               "src/assets/jquery/jquery-1.10.2.min.js",
@@ -85,7 +85,7 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "css"
+      "styleext": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "app"

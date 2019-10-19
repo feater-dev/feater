@@ -24,7 +24,7 @@ export class CommandExecutorComponent {
         this.commandsMapExecutorComponent.setCommandExecutorComponent(this);
     }
 
-    execute(command: CommandType): Promise<any> {
+    execute(command: CommandType): Promise<unknown> {
         if (command instanceof SimpleCommand) {
             return this.compositeSimpleCommandExecutorComponent.execute(
                 command,

@@ -13,7 +13,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class InterpolateFileCommandFactoryComponent
     implements BeforeBuildTaskCommandFactoryInterface {
-    protected readonly TYPE = 'interpolate';
+    private readonly TYPE = 'interpolate';
 
     supportsType(type: string): boolean {
         return this.TYPE === type;
@@ -23,15 +23,16 @@ export class InterpolateFileCommandFactoryComponent
         type: string,
         beforeBuildTask: ActionExecutionContextBeforeBuildTaskInterface,
         source: ActionExecutionContextSourceInterface,
-        taskId: string,
+        actionLogId: string,
         actionExecutionContext: ActionExecutionContext,
         updateInstanceFromActionExecutionContext: () => Promise<void>,
     ): CommandType {
         const typedBeforeBuildTask = beforeBuildTask as ActionExecutionContextInterpolateFileInterface;
 
         return new ContextAwareCommand(
-            taskId,
+            actionLogId,
             actionExecutionContext.id,
+            actionExecutionContext.hash,
             `Interpolate file for source \`${source.id}\``,
             () =>
                 new InterpolateFileCommand(

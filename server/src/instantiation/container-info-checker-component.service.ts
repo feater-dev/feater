@@ -52,7 +52,9 @@ export class ContainerInfoChecker {
         });
     }
 
-    private parseContainerInfo(containerInfo: any): CachedContainerInfo | null {
+    private parseContainerInfo(
+        containerInfo: unknown,
+    ): CachedContainerInfo | null {
         const matches = containerInfo.Names[0].match(this.containerNameRegExp);
         if (null === matches) {
             return null;
@@ -72,7 +74,7 @@ export class ContainerInfoChecker {
         };
     }
 
-    private updateContainersInfo(response: any): void {
+    private updateContainersInfo(response: unknown): void {
         this.containerInfos.splice(0);
         for (const containerInfo of response.body) {
             this.containerInfos.push(this.parseContainerInfo(containerInfo));

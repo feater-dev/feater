@@ -66,11 +66,11 @@ export class CompositeSimpleCommandExecutorComponent {
         ];
     }
 
-    execute(job: SimpleCommand): Promise<any> {
+    execute(job: SimpleCommand): Promise<unknown> {
         return this.getSupportingExecutor(job).execute(job);
     }
 
-    protected getSupportingExecutor(
+    private getSupportingExecutor(
         command: SimpleCommand,
     ): SimpleCommandExecutorComponentInterface {
         const supportingExecutors = this.executors.filter(

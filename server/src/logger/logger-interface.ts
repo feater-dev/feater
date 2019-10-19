@@ -1,17 +1,17 @@
 export interface LoggerInterface {
-    emerg(message: string, meta: any);
+    emerg(message: string, meta: unknown);
 
-    alert(message: string, meta: any);
+    alert(message: string, meta: unknown);
 
-    crit(message: string, meta: any);
+    crit(message: string, meta: unknown);
 
-    error(message: string, meta: any);
+    error(message: string, meta: unknown);
 
-    warning(message: string, meta: any);
+    warning(message: string, meta: unknown);
 
-    notice(message: string, meta: any);
+    notice(message: string, meta: unknown);
 
-    info(message: string, meta: any);
+    info(message: string, meta: unknown);
 
-    debug(message: string, meta: any);
+    debug(message: string, meta: unknown);
 }

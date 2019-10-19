@@ -11,7 +11,7 @@ export class RemoveSourceCommandExecutorComponent
         return command instanceof RemoveSourceCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             sourceId,
             sourceAbsoluteGuestPath,

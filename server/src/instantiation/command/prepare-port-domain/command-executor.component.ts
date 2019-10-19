@@ -14,7 +14,7 @@ export class PrepareProxyDomainCommandExecutorComponent
         return command instanceof PrepareProxyDomainCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             instanceHash,
             portId,

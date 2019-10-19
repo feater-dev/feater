@@ -83,7 +83,7 @@ export class Instantiator {
         instanceHash: string,
         instantiationActionId: string,
         instance: InstanceInterface,
-    ): Promise<any> {
+    ): Promise<unknown> {
         const recipe = this.recipeMapper.map(definition.recipeAsYaml);
 
         const action = this.findAction(recipe, instantiationActionId);

@@ -12,7 +12,7 @@ export class CreateDirectoryCommandExecutorComponent
         return command instanceof CreateDirectoryCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             absoluteGuestDirPath,
             commandLogger,

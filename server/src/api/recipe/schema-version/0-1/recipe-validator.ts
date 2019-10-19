@@ -9,13 +9,13 @@ const referenceTypes = ['commit', 'branch'];
 export class RecipeValidator {
     private readonly supportedSchemaVersion = '0.1';
 
-    validateRecipe(recipeAsYaml: string): ValidationResult<any> {
+    validateRecipe(recipeAsYaml: string): ValidationResult<unknown> {
         const recipe = jsYaml.safeLoad(recipeAsYaml);
 
         return this.createSchema().validate(recipe, { abortEarly: false });
     }
 
-    protected createSchema(): joi.Schema {
+    private createSchema(): joi.Schema {
         return joi.object().keys({
             schema_version: joi
                 .string()
@@ -52,7 +52,7 @@ export class RecipeValidator {
         });
     }
 
-    protected createSourceSchema(): joi.Schema {
+    private createSourceSchema(): joi.Schema {
         return joi.object().keys({
             id: joi
                 .string()
@@ -118,7 +118,7 @@ export class RecipeValidator {
         });
     }
 
-    protected createSourceVolumeSchema(): joi.Schema {
+    private createSourceVolumeSchema(): joi.Schema {
         return joi.object().keys({
             id: joi
                 .string()
@@ -132,7 +132,7 @@ export class RecipeValidator {
         });
     }
 
-    protected createAssetVolumeSchema(): joi.Schema {
+    private createAssetVolumeSchema(): joi.Schema {
         return joi.object().keys({
             id: joi
                 .string()
@@ -142,7 +142,7 @@ export class RecipeValidator {
         });
     }
 
-    protected createProxiedPortSchema(): joi.Schema {
+    private createProxiedPortSchema(): joi.Schema {
         return joi.object().keys({
             id: joi
                 .string()
@@ -164,7 +164,7 @@ export class RecipeValidator {
         });
     }
 
-    protected createEnvVariableSchema(): joi.Schema {
+    private createEnvVariableSchema(): joi.Schema {
         return joi.object().keys({
             name: joi
                 .string()
@@ -174,7 +174,7 @@ export class RecipeValidator {
         });
     }
 
-    protected createSummaryItemSchema(): joi.Schema {
+    private createSummaryItemSchema(): joi.Schema {
         return joi.object().keys({
             name: joi
                 .string()

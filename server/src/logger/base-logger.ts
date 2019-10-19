@@ -28,35 +28,35 @@ export class BaseLogger implements LoggerInterface {
         });
     }
 
-    emerg(message: string, meta: any = {}) {
+    emerg(message: string, meta: unknown = {}) {
         this.logger.emerg(message, { meta });
     }
 
-    alert(message: string, meta: any = {}) {
+    alert(message: string, meta: unknown = {}) {
         this.logger.alert(message, { meta });
     }
 
-    crit(message: string, meta: any = {}) {
+    crit(message: string, meta: unknown = {}) {
         this.logger.crit(message, { meta });
     }
 
-    error(message: string, meta: any = {}) {
+    error(message: string, meta: unknown = {}) {
         this.logger.error(message, { meta });
     }
 
-    warning(message: string, meta: any = {}) {
+    warning(message: string, meta: unknown = {}) {
         this.logger.warning(message, { meta });
     }
 
-    notice(message: string, meta: any = {}) {
+    notice(message: string, meta: unknown = {}) {
         this.logger.notice(message, { meta });
     }
 
-    info(message: string, meta: any = {}) {
+    info(message: string, meta: unknown = {}) {
         this.logger.log({ level: 'info', message, meta });
     }
 
-    debug(message: string, meta: any = {}) {
+    debug(message: string, meta: unknown = {}) {
         this.logger.debug(message, { meta });
     }
 }

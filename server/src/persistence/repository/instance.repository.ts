@@ -6,7 +6,7 @@ import { CreateInstanceInputTypeInterface } from '../../api/input-type/create-in
 
 @Injectable()
 export class InstanceRepository {
-    protected saveInSequencePromise: Promise<void>;
+    private saveInSequencePromise: Promise<void>;
 
     constructor(
         @InjectModel('Instance')
@@ -18,10 +18,10 @@ export class InstanceRepository {
     }
 
     find(
-        criteria: any,
+        criteria: unknown,
         offset: number,
         limit: number,
-        sort?: any,
+        sort?: unknown,
     ): Promise<InstanceInterface[]> {
         const query = this.instanceModel.find(criteria);
         query.skip(offset).limit(limit);

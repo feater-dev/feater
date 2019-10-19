@@ -3,7 +3,6 @@ import { LoggerModule } from '../logger/logger.module';
 import { PersistenceModule } from '../persistence/persistence.module';
 import { InterpolationHelper } from './helper/interpolation-helper.component';
 import { ContainerStateCheckerComponent } from './container-state-checker-component.service';
-import { ContainerInfoCheckerComponent } from './container-info-checker-component.service';
 import { SpawnHelper } from './helper/spawn-helper.component';
 import { ConnectToNetworkCommandExecutorComponent } from './command/connect-containers-to-network/command-executor.component';
 import { CopyFileCommandExecutorComponent } from './command/before-build/copy-file/command-executor.component';
@@ -38,11 +37,13 @@ import { IpAddressCheckerComponent } from './ip-address-checker.component';
 import { DockerVolumeHelperComponent } from './docker/docker-volume-helper.component';
 import { RemoveSourceCommandExecutorComponent } from './command/remove-source/command-executor.component';
 import { HelperModule } from '../helper/helper.module';
-import { RecipeMapper } from '../api/recipe/schema-version/0-1/recipe-mapper';
-import { RecipeValidator } from '../api/recipe/schema-version/0-1/recipe-validator';
-import { RecipePartMapper } from '../api/recipe/schema-version/0-1/recipe-part-mapper';
 import { Modificator } from './modificator.service';
 import { Instantiator } from './instantiator.service';
+import { ContainerInfoChecker } from './container-info-checker-component.service';
+import { RecipeMapper } from '../api/recipe/schema-version/0-1/recipe-mapper'; // TODO Move from `api` module to `instantiation` module.
+import { RecipeValidator } from '../api/recipe/schema-version/0-1/recipe-validator'; // TODO Move from `api` module to `instantiation` module.
+import { RecipePartMapper } from '../api/recipe/schema-version/0-1/recipe-part-mapper'; // TODO Move from `api` module to `instantiation` module.
+import { RecipeSchemaVersionExtractor } from '../api/recipe/recipe-schema-version-extractor'; // TODO Move from `api` module to `instantiation` module.
 
 @Module({
     imports: [HelperModule, LoggerModule, PersistenceModule],
@@ -66,7 +67,7 @@ import { Instantiator } from './instantiator.service';
         CreateSourceVolumeCommandExecutorComponent,
         RemoveVolumeCommandExecutorComponent,
         EnableProxyDomainsCommandExecutorComponent,
-        ContainerInfoCheckerComponent,
+        ContainerInfoChecker,
         ContainerStateCheckerComponent,
         IpAddressCheckerComponent,
         InterpolationHelper,
@@ -89,6 +90,7 @@ import { Instantiator } from './instantiator.service';
         RecipeValidator,
         Instantiator,
         Modificator,
+        RecipeSchemaVersionExtractor,
     ],
     exports: [
         ContainerStateCheckerComponent,

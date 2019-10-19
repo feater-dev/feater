@@ -14,7 +14,7 @@ export class InterpolateFileCommandExecutorComponent
         return command instanceof InterpolateFileCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             featerVariables,
             absoluteGuestPath,

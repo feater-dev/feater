@@ -53,7 +53,7 @@ export class DefinitionResolver {
     ) {}
 
     @Query('definitions')
-    async getAll(@Args() args: any): Promise<DefinitionTypeInterface[]> {
+    async getAll(@Args() args: unknown): Promise<DefinitionTypeInterface[]> {
         const criteria = this.applyDefinitionFilterArgumentToCriteria(
             {},
             args as ResolverDefinitionFilterArgumentsInterface,
@@ -87,7 +87,7 @@ export class DefinitionResolver {
     @ResolveProperty('instances')
     async getInstances(
         @Parent() definition: DefinitionTypeInterface,
-        @Args() args: any,
+        @Args() args: unknown,
     ): Promise<InstanceTypeInterface[]> {
         const instances = await this.instanceLister.getList(
             { definitionId: definition.id },
@@ -266,10 +266,10 @@ export class DefinitionResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyDefinitionFilterArgumentToCriteria(
-        criteria: any,
+    private applyDefinitionFilterArgumentToCriteria(
+        criteria: unknown,
         args: ResolverDefinitionFilterArgumentsInterface,
-    ): any {
+    ): unknown {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }

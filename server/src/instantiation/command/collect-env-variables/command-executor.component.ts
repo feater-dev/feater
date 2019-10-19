@@ -12,7 +12,7 @@ export class CollectEnvVariablesCommandExecutorComponent
         return command instanceof CollectEnvVariablesCommand;
     }
 
-    execute(command: SimpleCommand): Promise<any> {
+    execute(command: SimpleCommand): Promise<unknown> {
         const {
             envVariables,
             envVariablesForFeaterVariables,
@@ -20,7 +20,7 @@ export class CollectEnvVariablesCommandExecutorComponent
             commandLogger,
         } = command as CollectEnvVariablesCommand;
 
-        return new Promise<any>(resolve => {
+        return new Promise<unknown>(resolve => {
             const envVariablesToCollect: EnvVariablesSet[] = [
                 envVariables,
             ].concat(envVariablesForFeaterVariables, ...envVariablesForSources);

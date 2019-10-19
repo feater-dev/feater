@@ -18,7 +18,7 @@ export class RemoveVolumeCommandExecutorComponent
         return command instanceof RemoveVolumeCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<void> {
         const {
             dockerVolumeName,
             workingDirectory,
@@ -35,7 +35,7 @@ export class RemoveVolumeCommandExecutorComponent
         );
     }
 
-    protected removeVolume(
+    private removeVolume(
         dockerVolumeName: string,
         workingDirectory: string,
         commandLogger: CommandLogger,

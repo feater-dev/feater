@@ -27,7 +27,7 @@ export class InterpolationHelper {
         return text;
     }
 
-    protected interpolateFeaterVariables(
+    private interpolateFeaterVariables(
         text: string,
         featerVariables: FeaterVariablesSet,
     ): string {

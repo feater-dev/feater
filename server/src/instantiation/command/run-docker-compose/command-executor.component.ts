@@ -16,7 +16,7 @@ export class RunDockerComposeCommandExecutorComponent
         return command instanceof RunDockerComposeCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             sourceDockerVolumeName,
             envDirRelativePath,

@@ -11,7 +11,7 @@ import { RecipeTypeInterface } from '../api/type/nested/definition-recipe/recipe
 
 @Injectable()
 export class ActionExecutionContextFactory {
-    constructor(protected readonly pathHelper: PathHelper) {}
+    constructor(private readonly pathHelper: PathHelper) {}
 
     create(
         id: string,

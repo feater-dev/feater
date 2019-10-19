@@ -18,8 +18,8 @@ export class SpawnHelper {
     handleSpawned(
         spawned,
         commandLogger: CommandLogger,
-        resolve: (payload?: any) => void,
-        reject: (error?: any) => void,
+        resolve: (payload?: unknown) => void,
+        reject: (error?: unknown) => void,
         successfulExitHandler: () => void,
         failedExitHandler: (exitCode: number) => void,
         errorHandler: (error: Error) => void,

@@ -8,9 +8,9 @@ import { DeployKeyHelperComponent } from '../../helper/deploy-key-helper.compone
 
 @Injectable()
 export class DeployKeyLister {
-    protected readonly defaultSortKey = 'created_at_asc';
+    private readonly defaultSortKey = 'created_at_asc';
 
-    protected readonly sortMap = {
+    private readonly sortMap = {
         created_at_asc: {
             createdAt: 'asc',
             _id: 'desc',
@@ -29,7 +29,7 @@ export class DeployKeyLister {
     ) {}
 
     async getList(
-        criteria: any,
+        criteria: unknown,
         pagination: ResolverPaginationArgumentsInterface,
     ): Promise<DeployKeyInterface[]> {
         return await this.deployKeyRepository.find(

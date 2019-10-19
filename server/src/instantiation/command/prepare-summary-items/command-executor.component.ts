@@ -15,7 +15,7 @@ export class PrepareSummaryItemsCommandExecutorComponent
         return command instanceof PrepareSummaryItemsCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             featerVariables,
             summaryItems,

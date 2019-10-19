@@ -99,10 +99,10 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyProjectFilterArgumentToCriteria(
-        criteria: any, // TODO Define interface.
+    private applyProjectFilterArgumentToCriteria(
+        criteria: unknown, // TODO Define interface.
         args: ResolverProjectFilterArgumentsInterface,
-    ): any {
+    ): unknown {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }
@@ -111,10 +111,10 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyDefinitionFilterArgumentToCriteria(
-        criteria: any, // TODO Define interface.
+    private applyDefinitionFilterArgumentToCriteria(
+        criteria: unknown, // TODO Define interface.
         args: ResolverDefinitionFilterArgumentsInterface,
-    ): any {
+    ): unknown {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }
@@ -126,10 +126,10 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyAssetFilterArgumentToCriteria(
-        criteria: any, // TODO Define interface.
+    private applyAssetFilterArgumentToCriteria(
+        criteria: unknown, // TODO Define interface.
         args: ResolverAssetFilterArgumentsInterface,
-    ): any {
+    ): unknown {
         if (args.id) {
             criteria.id = new RegExp(escapeStringRegexp(args.id));
         }

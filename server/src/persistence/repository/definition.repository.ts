@@ -11,10 +11,10 @@ export class DefinitionRepository {
     ) {}
 
     find(
-        criteria: any,
+        criteria: unknown,
         offset: number,
         limit: number,
-        sort?: any,
+        sort?: unknown,
     ): Promise<DefinitionInterface[]> {
         const query = this.definitionModel.find(criteria);
         query.skip(offset).limit(limit);

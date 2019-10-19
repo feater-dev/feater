@@ -24,7 +24,7 @@ export class CloneSourceCommandExecutorComponent
         return command instanceof CloneSourceCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             cloneUrl,
             useDeployKey,
@@ -58,7 +58,7 @@ export class CloneSourceCommandExecutorComponent
         return {};
     }
 
-    protected async cloneRepository(
+    private async cloneRepository(
         cloneUrl: string,
         useDeployKey: boolean,
         sourceAbsoluteGuestPath: string,
@@ -121,7 +121,7 @@ export class CloneSourceCommandExecutorComponent
         );
     }
 
-    protected checkoutReference(
+    private checkoutReference(
         referenceType: string,
         referenceName: string,
         sourceAbsoluteGuestPath: string,

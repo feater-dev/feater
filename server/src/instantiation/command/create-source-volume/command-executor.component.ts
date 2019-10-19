@@ -26,7 +26,7 @@ export class CreateSourceVolumeCommandExecutorComponent
         return command instanceof CreateSourceVolumeCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             sourceDockerVolumeName,
             sourceId,
@@ -82,7 +82,7 @@ export class CreateSourceVolumeCommandExecutorComponent
         } as CreateSourceVolumeCommandResultInterface;
     }
 
-    protected createVolume(
+    private createVolume(
         sourceDockerVolumeName: string,
         workingDirectory: string,
         commandLogger: CommandLogger,
@@ -97,7 +97,7 @@ export class CreateSourceVolumeCommandExecutorComponent
         );
     }
 
-    protected prepareVariables(
+    private prepareVariables(
         sourceId: string,
         sourceDockerVolumeName: string,
         envVariables: EnvVariablesSet,
@@ -113,7 +113,7 @@ export class CreateSourceVolumeCommandExecutorComponent
         );
     }
 
-    protected copyFromAbsoluteGuestPathToVolume(
+    private copyFromAbsoluteGuestPathToVolume(
         absoluteGuestPath: string,
         dockerVolumeName: string,
         workingDirectory: string,

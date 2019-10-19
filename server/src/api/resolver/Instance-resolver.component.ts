@@ -302,10 +302,10 @@ export class InstanceResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyInstanceFilterArgumentToCriteria(
-        criteria: any,
+    private applyInstanceFilterArgumentToCriteria(
+        criteria: unknown,
         args: ResolverInstanceFilterArgumentsInterface,
-    ): any {
+    ): unknown {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }

@@ -16,10 +16,10 @@ export class DeployKeyRepository {
     ) {}
 
     find(
-        criteria: any,
+        criteria: unknown,
         offset: number,
         limit: number,
-        sort?: any,
+        sort?: unknown,
     ): Promise<DeployKeyInterface[]> {
         const query = this.deployKeyModel.find(criteria);
         query.skip(offset).limit(limit);
@@ -30,7 +30,7 @@ export class DeployKeyRepository {
         return query.exec();
     }
 
-    async findOne(criteria: any): Promise<DeployKeyInterface> {
+    async findOne(criteria: unknown): Promise<DeployKeyInterface> {
         const deployKeys = await this.find(criteria, 0, 2);
         if (1 < deployKeys.length) {
             throw new Error('More than one deploy key found.');

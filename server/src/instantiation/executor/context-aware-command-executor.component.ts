@@ -59,7 +59,7 @@ export class ContextAwareCommandExecutorComponent {
         }
     }
 
-    protected async createCommandLogger(
+    private async createCommandLogger(
         command: ContextAwareCommand,
     ): Promise<CommandLogger> {
         const commandLog = await command.createCommandLog(
@@ -69,7 +69,7 @@ export class ContextAwareCommandExecutorComponent {
         return new CommandLogger(commandLog, this.baseLogger);
     }
 
-    protected createCommand(
+    private createCommand(
         command: ContextAwareCommand,
         commandLogger: CommandLogger,
     ): CommandType {

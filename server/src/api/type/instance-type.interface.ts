@@ -6,15 +6,15 @@ export interface InstanceTypeInterface {
     readonly name: string;
     readonly definitionId: string;
     readonly services: InstanceServiceTypeInterface[];
-    readonly envVariables: any;
-    readonly proxiedPorts: any;
+    readonly envVariables: unknown;
+    readonly proxiedPorts: unknown;
     readonly downloadables: {
         readonly id: string;
         readonly name: string;
         readonly serviceId: string;
         readonly absolutePath: string;
     }[];
-    readonly summaryItems: any;
+    readonly summaryItems: unknown;
     readonly createdAt: string;
     readonly updatedAt: string;
     readonly completedAt: string;

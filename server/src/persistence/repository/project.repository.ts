@@ -12,10 +12,10 @@ export class ProjectRepository {
     ) {}
 
     find(
-        criteria: any,
+        criteria: unknown,
         offset: number,
         limit: number,
-        sort?: any,
+        sort?: unknown,
     ): Promise<ProjectInterface[]> {
         const query = this.projectModel.find(criteria);
         query.skip(offset).limit(limit);

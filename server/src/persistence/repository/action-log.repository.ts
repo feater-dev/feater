@@ -11,10 +11,10 @@ export class ActionLogRepository {
     ) {}
 
     find(
-        criteria: any,
+        criteria: unknown,
         offset: number,
         limit: number,
-        sort?: any,
+        sort?: unknown,
     ): Promise<ActionLogInterface[]> {
         const query = this.actionLogModel.find(criteria);
         query.skip(offset).limit(limit);

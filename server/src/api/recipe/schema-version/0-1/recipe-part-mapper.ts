@@ -18,6 +18,7 @@ import {
 @Injectable()
 export class RecipePartMapper {
     public mapSource(source: any): SourceInterface {
+        // TODO Replace with `unknown`.
         const mappedBeforeBuildTasks: BeforeBuildTask[] = [];
 
         if (source.beforeBuildTasks) {
@@ -38,6 +39,7 @@ export class RecipePartMapper {
     }
 
     public mapAssetVolume(assetVolume: any): AssetVolumeInterface {
+        // TODO Replace with `unknown`.
         const mappedAssetVolume: AssetVolumeInterface = {
             id: assetVolume.id,
         };
@@ -50,6 +52,7 @@ export class RecipePartMapper {
     }
 
     public mapSourceVolume(sourceVolume: any): SourceVolumeInterface {
+        // TODO Replace with `unknown`.
         const mappedSourceVolume: SourceVolumeInterface = {
             id: sourceVolume.id,
             sourceId: sourceVolume.sourceId,
@@ -63,6 +66,7 @@ export class RecipePartMapper {
     }
 
     public mapBeforeBuildTask(beforeBuildTask: any): BeforeBuildTask {
+        // TODO Replace with `unknown`.
         switch (beforeBuildTask.type) {
             case 'copy':
                 return {
@@ -83,6 +87,7 @@ export class RecipePartMapper {
     }
 
     public mapAfterBuildTask(afterBuildTask: any): AfterBuildTask {
+        // TODO Replace with `unknown`.
         let mapped: AfterBuildTaskInterface;
 
         const commonMapped: AfterBuildTaskInterface = {
@@ -122,6 +127,7 @@ export class RecipePartMapper {
     }
 
     public mapSourceReference(reference: any): SourceReferenceInterface {
+        // TODO Replace with `unknown`.
         return {
             type: reference.type,
             name: reference.name,
@@ -129,6 +135,7 @@ export class RecipePartMapper {
     }
 
     public mapProxiedPort(proxiedPort: any): ProxiedPortInterface {
+        // TODO Replace with `unknown`.
         return {
             id: proxiedPort.id,
             serviceId: proxiedPort.serviceId,
@@ -139,6 +146,7 @@ export class RecipePartMapper {
     }
 
     public mapSummaryItem(summaryItem: any): SummaryItemInterface {
+        // TODO Replace with `unknown`.
         return {
             name: summaryItem.name,
             value: summaryItem.value,
@@ -146,6 +154,7 @@ export class RecipePartMapper {
     }
 
     public mapAction(action: any): ActionInterface {
+        // TODO Replace with `unknown`.
         const mappedAfterBuildTasks: AfterBuildTask[] = [];
         for (const afterBuildTask of action.afterBuildTasks) {
             mappedAfterBuildTasks.push(this.mapAfterBuildTask(afterBuildTask));
@@ -160,10 +169,12 @@ export class RecipePartMapper {
     }
 
     public mapDownloadable(downloadable: any): DownloadableInterface {
+        // TODO Replace with `unknown`.
         return {}; // TODO Forward port.
     }
 
     public mapEnvVariable(envVariable: any): EnvVariableInterface {
+        // TODO Replace with `unknown`.
         return {
             name: envVariable.name,
             value: envVariable.value,
@@ -171,6 +182,7 @@ export class RecipePartMapper {
     }
 
     public mapComposeFile(composeFile: any): ComposeFileInterface {
+        // TODO Replace with `unknown`.
         return {
             sourceId: composeFile.sourceId,
             envDirRelativePath: composeFile.envDirRelativePath,

@@ -26,7 +26,7 @@ export class DeployKeyResolver {
     ) {}
 
     @Query('deployKeys')
-    async getAll(@Args() args: any): Promise<DeployKeyTypeInterface[]> {
+    async getAll(@Args() args: unknown): Promise<DeployKeyTypeInterface[]> {
         const resolverListOptions = args as ResolverPaginationArgumentsInterface;
         const criteria = this.applyFilterArgumentToCriteria(
             {},
@@ -160,10 +160,10 @@ export class DeployKeyResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyFilterArgumentToCriteria(
-        criteria: any,
+    private applyFilterArgumentToCriteria(
+        criteria: unknown,
         args: ResolverDeployKeyFilterArgumentsInterface,
-    ): any {
+    ): unknown {
         return criteria;
     }
 }

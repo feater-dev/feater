@@ -31,15 +31,15 @@ import {
 
 @Injectable()
 export class Modificator {
-    protected readonly beforeBuildTaskCommandFactoryComponents: BeforeBuildTaskCommandFactoryInterface[];
-    protected readonly afterBuildTaskCommandFactoryComponents: AfterBuildTaskCommandFactoryInterface[];
+    private readonly beforeBuildTaskCommandFactoryComponents: BeforeBuildTaskCommandFactoryInterface[];
+    private readonly afterBuildTaskCommandFactoryComponents: AfterBuildTaskCommandFactoryInterface[];
 
     constructor(
-        protected readonly instanceRepository: InstanceRepository,
-        protected readonly actionLogRepository: ActionLogRepository,
-        protected readonly actionExecutionContextFactory: ActionExecutionContextFactory,
-        protected readonly logger: BaseLogger,
-        protected readonly commandExecutorComponent: CommandExecutorComponent,
+        private readonly instanceRepository: InstanceRepository,
+        private readonly actionLogRepository: ActionLogRepository,
+        private readonly actionExecutionContextFactory: ActionExecutionContextFactory,
+        private readonly logger: BaseLogger,
+        private readonly commandExecutorComponent: CommandExecutorComponent,
         private readonly recipeMapper: RecipeMapper,
         copyFileCommandFactoryComponent: CopyFileCommandFactoryComponent,
         interpolateFileCommandFactoryComponent: InterpolateFileCommandFactoryComponent,
@@ -61,7 +61,7 @@ export class Modificator {
         definition: DefinitionInterface,
         modificationActionId: string,
         instance: InstanceInterface,
-    ): Promise<any> {
+    ): Promise<unknown> {
         const recipe = this.recipeMapper.map(definition.recipeAsYaml);
 
         const action = this.findAction(recipe, modificationActionId);
@@ -135,7 +135,7 @@ export class Modificator {
             );
     }
 
-    protected addResetSource(
+    private addResetSource(
         createInstanceCommand: CommandsList,
         actionLogId: string,
         actionExecutionContext: ActionExecutionContext,
@@ -165,7 +165,7 @@ export class Modificator {
     }
 
     // TODO Extract to a separate service.
-    protected addBeforeBuildTasks(
+    private addBeforeBuildTasks(
         createInstanceCommand: CommandsList,
         actionLogId: string,
         actionExecutionContext: ActionExecutionContext,
@@ -194,7 +194,7 @@ export class Modificator {
     }
 
     // TODO Extract to a separate service.
-    protected addAfterBuildTasks(
+    private addAfterBuildTasks(
         createInstanceCommand: CommandsList,
         actionLogId: string,
         actionExecutionContext: ActionExecutionContext,
@@ -221,7 +221,7 @@ export class Modificator {
     }
 
     // TODO Extract to a separate service.
-    protected createBeforeBuildTaskCommand(
+    private createBeforeBuildTaskCommand(
         beforeBuildTask: ActionExecutionContextBeforeBuildTaskInterface,
         source: ActionExecutionContextSourceInterface,
         actionLogId: string,
@@ -247,7 +247,7 @@ export class Modificator {
     }
 
     // TODO Extract to a separate service.
-    protected createAfterBuildTaskCommand(
+    private createAfterBuildTaskCommand(
         afterBuildTask: ActionExecutionContextAfterBuildTaskInterface,
         actionLogId: string,
         actionExecutionContext: ActionExecutionContext,

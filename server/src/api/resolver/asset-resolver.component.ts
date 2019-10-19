@@ -30,7 +30,7 @@ export class AssetResolver {
     ) {}
 
     @Query('assets')
-    async getAll(@Args() args?: any): Promise<AssetTypeInterface[]> {
+    async getAll(@Args() args?: unknown): Promise<AssetTypeInterface[]> {
         const criteria = this.applyAssetFilterArgumentToCriteria(
             { uploaded: true },
             args as ResolverAssetFilterArgumentsInterface,
@@ -86,10 +86,10 @@ export class AssetResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyAssetFilterArgumentToCriteria(
-        criteria: any,
+    private applyAssetFilterArgumentToCriteria(
+        criteria: unknown,
         args: ResolverAssetFilterArgumentsInterface,
-    ): any {
+    ): unknown {
         if (args.id) {
             criteria.id = new RegExp(escapeStringRegexp(args.id));
         }

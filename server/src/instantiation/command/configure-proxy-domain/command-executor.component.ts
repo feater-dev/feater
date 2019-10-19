@@ -31,7 +31,7 @@ export class ConfigureProxyDomainCommandExecutorComponent
         return command instanceof ConfigureProxyDomainCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             serviceId,
             ipAddress,

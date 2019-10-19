@@ -8,9 +8,9 @@ import * as _ from 'lodash';
 @Injectable()
 export class VariablesPredictor {
     predictEnvVariables(
-        definitionRecipe: any,
+        definitionRecipe: unknown,
     ): PredictedEnvVariableInterface[] {
-        const envVariables: any = [];
+        const envVariables: unknown = [];
 
         envVariables.push([
             {
@@ -82,9 +82,9 @@ export class VariablesPredictor {
     }
 
     predictFeaterVariables(
-        definitionRecipe: any,
+        definitionRecipe: unknown,
     ): PredictedFeaterVariableInterface[] {
-        const featerVariables: any = [];
+        const featerVariables: unknown = [];
 
         featerVariables.push([
             {

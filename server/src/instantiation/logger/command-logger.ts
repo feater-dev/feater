@@ -9,42 +9,42 @@ export class CommandLogger {
         private readonly logger: BaseLogger,
     ) {}
 
-    emerg(message: string, meta: any = {}): void {
+    emerg(message: string, meta: unknown = {}): void {
         this.logger.emerg(message, this.getMeta());
     }
 
-    alert(message: string, meta: any = {}): void {
+    alert(message: string, meta: unknown = {}): void {
         this.logger.alert(message, this.getMeta());
     }
 
-    crit(message: string, meta: any = {}): void {
+    crit(message: string, meta: unknown = {}): void {
         this.logger.crit(message, this.getMeta());
     }
 
-    error(message: string, meta: any = {}): void {
+    error(message: string, meta: unknown = {}): void {
         this.logger.error(message, this.getMeta());
     }
 
-    warning(message: string, meta: any = {}): void {
+    warning(message: string, meta: unknown = {}): void {
         this.logger.warning(message, this.getMeta());
     }
 
-    notice(message: string, meta: any = {}): void {
+    notice(message: string, meta: unknown = {}): void {
         this.logger.notice(message, this.getMeta());
     }
 
-    info(message: string, meta: any = {}): void {
+    info(message: string, meta: unknown = {}): void {
         this.logger.info(message, this.getMeta());
     }
 
-    infoWithJsonData(data: any, header: string, meta: any = {}): void {
+    infoWithJsonData(data: unknown, header: string, meta: unknown = {}): void {
         this.info(`${header}:\n${JSON.stringify(data, null, 2)}`, meta);
     }
 
     infoWithEnvVariables(
         envVariables: EnvVariablesSet,
         header: string = 'Added environmental variables',
-        meta: any = {},
+        meta: unknown = {},
     ): void {
         if (envVariables.isEmpty()) {
             this.info(`${header}: none`, meta);
@@ -57,7 +57,7 @@ export class CommandLogger {
     infoWithFeaterVariables(
         featerVariables: FeaterVariablesSet,
         header: string = 'Added Feater variables',
-        meta: any = {},
+        meta: unknown = {},
     ): void {
         if (featerVariables.isEmpty()) {
             this.info(`${header}: none`, meta);
@@ -67,23 +67,23 @@ export class CommandLogger {
         this.infoWithJsonData(featerVariables.toMap(), header, meta);
     }
 
-    debug(message: string, meta: any = {}): void {
+    debug(message: string, meta: unknown = {}): void {
         this.logger.debug(message, this.getMeta());
     }
 
-    markAsCompleted(): Promise<any> {
+    markAsCompleted(): Promise<unknown> {
         this.commandLog.completedAt = new Date();
 
         return this.commandLog.save();
     }
 
-    markAsFailed(): Promise<any> {
+    markAsFailed(): Promise<unknown> {
         this.commandLog.failedAt = new Date();
 
         return this.commandLog.save();
     }
 
-    private getMeta(): any {
+    private getMeta(): unknown {
         return { commandLogId: this.commandLog.id.toString() };
     }
 }

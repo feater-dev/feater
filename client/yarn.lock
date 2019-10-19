@@ -639,18 +639,18 @@ apollo-angular-link-http-common@~1.8.0:
     tslib "^1.9.0"
 
 apollo-angular-link-http@^1.1.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/apollo-angular-link-http/-/apollo-angular-link-http-1.8.0.tgz#544423cf43b82cbb0bdca0a06a1bdee13bd98437"
-  integrity sha512-waby6cqjohVf5QV1ej3B1YqLvLflLqhDIsISQW583jPZ5/A1DIYmHJR5l+1KvFqEpwIRHRaXW6PyWABd8KzfSg==
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/apollo-angular-link-http/-/apollo-angular-link-http-1.9.0.tgz#1066cca6f36efe2bcbc79aa899ab97ee57daa980"
+  integrity sha512-wA6cLgZyA59RIZ28WKsty/4Gq+5DCxdfFruQmTBoMeol+R70R9fP99/A/HEV+fWPy4hWt9V2YeECx8HrSosd+g==
   dependencies:
     apollo-angular-link-http-common "~1.8.0"
     extract-files "5.0.1"
     tslib "^1.9.0"
 
 apollo-angular@^1.1.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/apollo-angular/-/apollo-angular-1.7.0.tgz#cda4060b2a821d7f472d5a25890cd50c35a110dd"
-  integrity sha512-V/I1w4L2LfC4pMT9GzoGpj64QCPBXXWuBdrPMAUxmKYe3Q7nvQzpwha3KE5THE0bjzcdMlybDVD43iZG+4i42w==
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/apollo-angular/-/apollo-angular-1.8.0.tgz#04bda7d5931cf98528aef63cbf979ce6a03486f8"
+  integrity sha512-DgVZiF3zoRzMB3ah5nhmlL06MOhs45bWX+C8ydw7ZkVOB9Dy8QYUxDgkthyO101C5cQN0Q8lZyTQHyd7QEDAzg==
   dependencies:
     semver "^6.0.0"
     tslib "^1.9.0"
@@ -1665,9 +1665,9 @@ core-js@^2.4.0:
   integrity sha512-klh/kDpwX8hryYL14M9w/xei6vrv6sE8gTHDG7/T/+SEovB/G4ejwcfE/CBzO6Edsu+OETZMZ3wcX/EjUkrl5A==
 
 core-js@^2.4.1:
-  version "2.6.9"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.9.tgz#6b4b214620c834152e179323727fc19741b084f2"
-  integrity sha512-HOpZf6eXmnl7la+cUdMnLvUxKNqLUzJvgIziQ0DiF3JwSImNphIqdGqzj6hIKyX04MmV0poclQ7+wjWvxQyR2A==
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.10.tgz#8a5b8391f8cc7013da703411ce5b585706300d7f"
+  integrity sha512-I39t74+4t+zau64EN1fE5v2W31Adtc/REhzWN+gWRRXg6WH5qAsZm62DHpQ1+Yhe4047T55jvzz7MUqF/dBBlA==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"

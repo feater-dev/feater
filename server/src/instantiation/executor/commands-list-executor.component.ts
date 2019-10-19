@@ -21,7 +21,7 @@ export class CommandsListExecutorComponent {
         }
     }
 
-    protected async executeCommandsInSequence(
+    private async executeCommandsInSequence(
         commands: CommandType[],
     ): Promise<void> {
         for (const command of commands) {
@@ -29,7 +29,7 @@ export class CommandsListExecutorComponent {
         }
     }
 
-    protected async executeCommandsInParallel(
+    private async executeCommandsInParallel(
         commands: CommandType[],
     ): Promise<void> {
         const promises = commands.map(

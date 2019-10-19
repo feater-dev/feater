@@ -11,10 +11,10 @@ export class CommandLogRepository {
     ) {}
 
     find(
-        criteria: any,
+        criteria: unknown,
         offset: number,
         limit: number,
-        sort?: any,
+        sort?: unknown,
     ): Promise<CommandLogInterface[]> {
         const query = this.commandLogModel.find(criteria);
         query.skip(offset).limit(limit);

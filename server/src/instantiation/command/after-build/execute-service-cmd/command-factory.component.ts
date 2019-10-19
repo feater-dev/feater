@@ -11,7 +11,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ExecuteServiceCmdCommandFactoryComponent
     implements AfterBuildTaskCommandFactoryInterface {
-    protected readonly TYPE = 'execute_service_command';
+    private readonly TYPE = 'execute_service_command';
 
     supportsType(type: string): boolean {
         return this.TYPE === type;
@@ -20,7 +20,7 @@ export class ExecuteServiceCmdCommandFactoryComponent
     createCommand(
         type: string,
         afterBuildTask: ActionExecutionContextAfterBuildTaskInterface,
-        taskId: string,
+        actionLogId: string,
         actionExecutionContext: ActionExecutionContext,
         updateInstanceFromActionExecutionContext: () => Promise<void>,
     ): CommandType {
@@ -30,8 +30,9 @@ export class ExecuteServiceCmdCommandFactoryComponent
             : '';
 
         return new ContextAwareCommand(
-            taskId,
+            actionLogId,
             actionExecutionContext.id,
+            actionExecutionContext.hash,
             `Running after build task${taskIdDescriptionPart} and executing service command for service \`${typedAfterBuildTask.serviceId}\``,
             () => {
                 const service = actionExecutionContext.findService(

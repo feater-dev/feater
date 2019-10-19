@@ -10,6 +10,9 @@ import { SimpleCommand } from '../../executor/simple-command';
 import { CommandLogger } from '../../logger/command-logger';
 import { SpawnHelper } from '../../helper/spawn-helper.component';
 import { DeployKeyHelperComponent } from '../../../helper/deploy-key-helper.component';
+import { CloneSourceCommandResultInterface } from './command-result.interface';
+import { EnvVariablesSet } from '../../sets/env-variables-set';
+import { FeaterVariablesSet } from '../../sets/feater-variables-set';
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent
@@ -26,11 +29,13 @@ export class CloneSourceCommandExecutorComponent
 
     async execute(command: SimpleCommand): Promise<unknown> {
         const {
+            sourceId,
             cloneUrl,
             useDeployKey,
             referenceType,
             referenceName,
             sourceAbsoluteGuestPath,
+            sourceAbsoluteHostPath,
             workingDirectory,
             commandLogger,
         } = command as CloneSourceCommand;
@@ -55,7 +60,22 @@ export class CloneSourceCommandExecutorComponent
             commandLogger,
         );
 
-        return {};
+        const envVariables = new EnvVariablesSet();
+        envVariables.add(
+            `FEATER__SOURCE_MOUNT__${sourceId}`,
+            sourceAbsoluteHostPath,
+        );
+
+        const featerVariables = new FeaterVariablesSet();
+        featerVariables.add(
+            `source_mount__${sourceId}`,
+            sourceAbsoluteHostPath,
+        );
+
+        return {
+            envVariables,
+            featerVariables,
+        } as CloneSourceCommandResultInterface;
     }
 
     private async cloneRepository(

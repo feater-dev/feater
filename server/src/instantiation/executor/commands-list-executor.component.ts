@@ -33,7 +33,7 @@ export class CommandsListExecutorComponent {
         commands: CommandType[],
     ): Promise<void> {
         const promises = commands.map(
-            (command: CommandType): Promise<void> => {
+            (command: CommandType): Promise<unknown> => {
                 return this.commandExecutorComponent.execute(command);
             },
         );

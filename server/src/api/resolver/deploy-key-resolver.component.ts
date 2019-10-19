@@ -5,7 +5,6 @@ import { ResolverDeployKeyFilterArgumentsInterface } from '../filter-argument/re
 import { RegenerateDeployKeyInputTypeInterface } from '../input-type/regenerate-deploy-key-input-type.interface';
 import { RemoveDeployKeyInputTypeInterface } from '../input-type/remove-deploy-key-input-type.interface';
 import { DefinitionRepository } from '../../persistence/repository/definition.repository';
-import { SourceTypeInterface } from '../type/nested/definition-recipe/source-type.interface';
 import { DeployKeyHelperComponent } from '../../helper/deploy-key-helper.component';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { DeployKeyLister } from '../lister/deploy-key-lister.component';
@@ -72,8 +71,8 @@ export class DeployKeyResolver {
                 definition.recipeAsYaml,
             );
             for (const source of definitionRecipe.sources) {
-                const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-                if ((source as SourceTypeInterface).useDeployKey) {
+                const cloneUrl = source.cloneUrl;
+                if (source.useDeployKey) {
                     referencedCloneUrls.push(cloneUrl);
                 }
             }
@@ -118,8 +117,8 @@ export class DeployKeyResolver {
                 definition.recipeAsYaml,
             );
             for (const source of definitionRecipe.sources) {
-                const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-                if ((source as SourceTypeInterface).useDeployKey) {
+                const cloneUrl = source.cloneUrl;
+                if (source.useDeployKey) {
                     referencedCloneUrls.push(cloneUrl);
                 }
             }
@@ -160,8 +159,9 @@ export class DeployKeyResolver {
     }
 
     // TODO Move somewhere else.
+    // TODO Replace `any` with more specific type.
     private applyFilterArgumentToCriteria(
-        criteria: unknown,
+        criteria: any,
         args: ResolverDeployKeyFilterArgumentsInterface,
     ): unknown {
         return criteria;

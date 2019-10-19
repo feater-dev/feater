@@ -25,10 +25,6 @@ export class RecipeValidator {
                 .array()
                 .items(this.createSourceSchema())
                 .required(),
-            source_volumes: joi
-                .array()
-                .items(this.createSourceVolumeSchema())
-                .required(),
             asset_volumes: joi
                 .array()
                 .items(this.createAssetVolumeSchema())
@@ -115,20 +111,6 @@ export class RecipeValidator {
                         }),
                     },
                 ),
-        });
-    }
-
-    private createSourceVolumeSchema(): joi.Schema {
-        return joi.object().keys({
-            id: joi
-                .string()
-                .regex(idRegex)
-                .required(),
-            source_id: joi
-                .string()
-                .regex(idRegex)
-                .required(),
-            relative_path: joi.string(),
         });
     }
 

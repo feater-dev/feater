@@ -8,7 +8,7 @@ export interface AfterBuildTaskCommandFactoryInterface {
     createCommand(
         type: string,
         afterBuildTask: ActionExecutionContextAfterBuildTaskInterface,
-        taskId: string,
+        actionLogId: string,
         actionExecutionContext: ActionExecutionContext,
         updateInstanceFromActionExecutionContext: () => Promise<void>,
     ): CommandType;

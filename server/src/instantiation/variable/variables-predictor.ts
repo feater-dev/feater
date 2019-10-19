@@ -4,13 +4,18 @@ import { PredictedFeaterVariableInterface } from './predicted-feater-variable.in
 import { config } from '../../config/config';
 import * as path from 'path';
 import * as _ from 'lodash';
+import { RecipeInterface } from '../../api/recipe/recipe.interface';
+
+interface UnflattenedArray<T> extends Array<T | UnflattenedArray<T>> {}
 
 @Injectable()
 export class VariablesPredictor {
     predictEnvVariables(
-        definitionRecipe: unknown,
+        recipe: RecipeInterface,
     ): PredictedEnvVariableInterface[] {
-        const envVariables: unknown = [];
+        const envVariables: UnflattenedArray<
+            PredictedEnvVariableInterface
+        > = [];
 
         envVariables.push([
             {
@@ -27,9 +32,7 @@ export class VariablesPredictor {
             },
         ]);
 
-        const proxiedPortIds = _.filter(
-            _.map(definitionRecipe.proxiedPorts, 'id'),
-        );
+        const proxiedPortIds = _.filter(_.map(recipe.proxiedPorts, 'id'));
         envVariables.push(
             proxiedPortIds.map(
                 (proxiedPortId: string): PredictedEnvVariableInterface => {
@@ -44,23 +47,21 @@ export class VariablesPredictor {
             ),
         );
 
-        const sourceIds = _.filter(_.map(definitionRecipe.sources, 'id'));
+        const sourceIds = _.filter(_.map(recipe.sources, 'id'));
         envVariables.push(
             sourceIds.map(
                 (sourceId: string): PredictedEnvVariableInterface[] => {
                     return [
                         {
-                            name: `FEATER__SOURCE_VOLUME__${sourceId.toUpperCase()}`,
-                            pattern: `${
-                                config.instantiation.containerNamePrefix
-                            }_{instance_hash}_source_volume_${sourceId.toLowerCase()}`,
+                            name: `FEATER__SOURCE_MOUNT__${sourceId.toUpperCase()}`,
+                            pattern: '',
                         },
                     ];
                 },
             ),
         );
 
-        const volumeIds = _.filter(_.map(definitionRecipe.assetVolumes, 'id'));
+        const volumeIds = _.filter(_.map(recipe.assetVolumes, 'id'));
         envVariables.push(
             volumeIds.map(
                 (volumeId: string): PredictedEnvVariableInterface => {
@@ -82,9 +83,11 @@ export class VariablesPredictor {
     }
 
     predictFeaterVariables(
-        definitionRecipe: unknown,
+        recipe: RecipeInterface,
     ): PredictedFeaterVariableInterface[] {
-        const featerVariables: unknown = [];
+        const featerVariables: UnflattenedArray<
+            PredictedFeaterVariableInterface
+        > = [];
 
         featerVariables.push([
             {
@@ -102,7 +105,7 @@ export class VariablesPredictor {
         ]);
 
         featerVariables.push(
-            definitionRecipe.envVariables.map(
+            recipe.envVariables.map(
                 (envVariable: {
                     name: string;
                     value: string;
@@ -115,9 +118,7 @@ export class VariablesPredictor {
             ),
         );
 
-        const proxiedPortIds = _.filter(
-            _.map(definitionRecipe.proxiedPorts, 'id'),
-        );
+        const proxiedPortIds = _.filter(_.map(recipe.proxiedPorts, 'id'));
         featerVariables.push(
             proxiedPortIds.map(
                 (proxiedPortId: string): PredictedFeaterVariableInterface => {
@@ -132,23 +133,21 @@ export class VariablesPredictor {
             ),
         );
 
-        const sourceIds = _.filter(_.map(definitionRecipe.sources, 'id'));
+        const sourceIds = _.filter(_.map(recipe.sources, 'id'));
         featerVariables.push(
             sourceIds.map(
                 (sourceId: string): PredictedFeaterVariableInterface[] => {
                     return [
                         {
-                            name: `source_volume__${sourceId.toLowerCase()}`,
-                            pattern: `${
-                                config.instantiation.containerNamePrefix
-                            }_{instance_hash}_source_volume_${sourceId.toLowerCase()}`,
+                            name: `source_mount__${sourceId.toLowerCase()}`,
+                            pattern: '',
                         },
                     ];
                 },
             ),
         );
 
-        const volumeIds = _.filter(_.map(definitionRecipe.assetVolumes, 'id'));
+        const volumeIds = _.filter(_.map(recipe.assetVolumes, 'id'));
         featerVariables.push(
             volumeIds.map(
                 (volumeId: string): PredictedFeaterVariableInterface => {

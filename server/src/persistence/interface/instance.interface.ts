@@ -20,10 +20,6 @@ export interface InstanceInterface extends Document {
     definitionId: string;
     name: string;
     services: InstanceServiceInterface[];
-    sourceVolumes: {
-        id: string;
-        dockerVolumeName: string;
-    }[];
     assetVolumes: {
         id: string;
         dockerVolumeName: string;

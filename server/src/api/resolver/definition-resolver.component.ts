@@ -4,7 +4,6 @@ import { CreateDefinitionInputTypeInterface } from '../input-type/create-definit
 import { ResolverPaginationArgumentsInterface } from '../pagination-argument/resolver-pagination-arguments.interface';
 import { ResolverDefinitionFilterArgumentsInterface } from '../filter-argument/resolver-definition-filter-arguments.interface';
 import { DeployKeyRepository } from '../../persistence/repository/deploy-key.repository';
-import { SourceTypeInterface } from '../type/nested/definition-recipe/source-type.interface';
 import { DeployKeyInterface } from '../../persistence/interface/deploy-key.interface';
 import { DeployKeyTypeInterface } from '../type/deploy-key-type.interface';
 import { PredictedEnvVariableTypeInterface } from '../type/predicted-env-variable-type.interface';
@@ -199,8 +198,8 @@ export class DefinitionResolver {
 
         const recipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
         for (const source of recipe.sources) {
-            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-            if ((source as SourceTypeInterface).useDeployKey) {
+            const cloneUrl = source.cloneUrl;
+            if (source.useDeployKey) {
                 const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(
                     cloneUrl,
                 );
@@ -232,8 +231,8 @@ export class DefinitionResolver {
 
         const recipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
         for (const source of recipe.sources) {
-            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-            if ((source as SourceTypeInterface).useDeployKey) {
+            const cloneUrl = source.cloneUrl;
+            if (source.useDeployKey) {
                 const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(
                     cloneUrl,
                 );
@@ -266,8 +265,9 @@ export class DefinitionResolver {
     }
 
     // TODO Move somewhere else.
+    // TODO Replace `any` with more specific type.
     private applyDefinitionFilterArgumentToCriteria(
-        criteria: unknown,
+        criteria: any,
         args: ResolverDefinitionFilterArgumentsInterface,
     ): unknown {
         if (args.name) {

@@ -52,9 +52,8 @@ export class ContainerInfoChecker {
         });
     }
 
-    private parseContainerInfo(
-        containerInfo: unknown,
-    ): CachedContainerInfo | null {
+    // TODO Replace `any` with more specific type.
+    private parseContainerInfo(containerInfo: any): CachedContainerInfo | null {
         const matches = containerInfo.Names[0].match(this.containerNameRegExp);
         if (null === matches) {
             return null;
@@ -74,7 +73,8 @@ export class ContainerInfoChecker {
         };
     }
 
-    private updateContainersInfo(response: unknown): void {
+    // TODO Replace `any` with more specific type.
+    private updateContainersInfo(response: any): void {
         this.containerInfos.splice(0);
         for (const containerInfo of response.body) {
             this.containerInfos.push(this.parseContainerInfo(containerInfo));

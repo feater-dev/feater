@@ -24,6 +24,7 @@ export class PathHelper {
         return {
             absolute: {
                 guest: path.join(config.guestPaths.build, relative),
+                host: 'TODO', // TODO Forward port.
             },
         };
     }
@@ -38,6 +39,7 @@ export class PathHelper {
         return {
             absolute: {
                 guest: path.join(instancePaths.absolute.guest, relative),
+                host: 'TODO', // TODO Forward port.
             },
         };
     }

@@ -22,7 +22,8 @@ export class ParseDockerComposeCommandExecutorComponent
         command: SimpleCommand,
     ): Promise<ParseDockerComposeCommandResultInterface> {
         const {
-            sourceDockerVolumeName,
+            sourceId,
+            sourceAbsoluteGuestPath,
             envDirRelativePath,
             composeFileRelativePaths,
             envVariables,
@@ -55,7 +56,7 @@ export class ParseDockerComposeCommandExecutorComponent
             '-w',
             path.join('/source', envDirRelativePath),
             '-v',
-            `${sourceDockerVolumeName}:/source`,
+            `${sourceAbsoluteGuestPath}:/source`,
             '-v',
             `${hostDockerSocketPath}:/var/run/docker.sock`,
             `docker/compose:${config.instantiation.dockerComposeVersion}`,
@@ -70,7 +71,10 @@ export class ParseDockerComposeCommandExecutorComponent
 
         composeConfigArguments.push('config');
 
-        commandLogger.info(`Source volume name: ${sourceDockerVolumeName}`);
+        commandLogger.info(`Source ID: ${sourceId}`);
+        commandLogger.info(
+            `Source absolute host path: ${sourceAbsoluteGuestPath}`,
+        );
         commandLogger.info(`Command: ${composeConfigCommand}`);
         commandLogger.info(
             `Arguments: ${JSON.stringify(composeConfigArguments)}`,

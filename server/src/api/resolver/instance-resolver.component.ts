@@ -302,8 +302,9 @@ export class InstanceResolver {
     }
 
     // TODO Move somewhere else.
+    // TODO Replace `any` with more specific type.
     private applyInstanceFilterArgumentToCriteria(
-        criteria: unknown,
+        criteria: any,
         args: ResolverInstanceFilterArgumentsInterface,
     ): unknown {
         if (args.name) {

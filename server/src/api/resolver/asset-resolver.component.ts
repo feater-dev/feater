@@ -86,8 +86,9 @@ export class AssetResolver {
     }
 
     // TODO Move somewhere else.
+    // TODO Replace `any` with more specific type.
     private applyAssetFilterArgumentToCriteria(
-        criteria: unknown,
+        criteria: any,
         args: ResolverAssetFilterArgumentsInterface,
     ): unknown {
         if (args.id) {

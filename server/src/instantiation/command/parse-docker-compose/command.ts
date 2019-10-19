@@ -3,7 +3,8 @@ import { EnvVariablesSet } from '../../sets/env-variables-set';
 
 export class ParseDockerComposeCommand extends SimpleCommand {
     constructor(
-        readonly sourceDockerVolumeName: string,
+        readonly sourceId: string,
+        readonly sourceAbsoluteGuestPath: string,
         readonly envDirRelativePath: string,
         readonly composeFileRelativePaths: string[],
         readonly envVariables: EnvVariablesSet,

@@ -40,14 +40,6 @@ export interface SourceInterface {
     readonly beforeBuildTasks: BeforeBuildTask[];
 }
 
-// Source volume.
-
-export interface SourceVolumeInterface {
-    id: string;
-    sourceId: string;
-    relativePath?: string;
-}
-
 // Env variables.
 
 export interface EnvVariableInterface {
@@ -137,7 +129,6 @@ export interface SummaryItemInterface {
 export interface RecipeInterface {
     readonly assetVolumes: AssetVolumeInterface[];
     readonly sources: SourceInterface[];
-    readonly sourceVolumes: SourceVolumeInterface[];
     readonly envVariables: EnvVariableInterface[];
     readonly proxiedPorts: ProxiedPortInterface[];
     readonly composeFiles: ComposeFileInterface[];

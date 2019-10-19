@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PathHelper } from './helper/path-helper.component';
 import { config } from '../config/config';
 import { ActionExecutionContextBeforeBuildTaskInterface } from './action-execution-context/before-build/action-execution-context-before-build-task.interface';
-import { AfterBuildTaskIn } from '../api/type/nested/definition-recipe/after-build-task-type.interface';
 import { FeaterVariablesSet } from './sets/feater-variables-set';
 import { ActionExecutionContext } from './action-execution-context/action-execution-context';
 import { EnvVariablesSet } from './sets/env-variables-set';
 import { SummaryItemsSet } from './sets/summary-items-set';
-import { RecipeTypeInterface } from '../api/type/nested/definition-recipe/recipe-type.interface';
+import {
+    ActionInterface,
+    AfterBuildTask,
+    RecipeInterface,
+} from '../api/recipe/recipe.interface';
 
 @Injectable()
 export class ActionExecutionContextFactory {
@@ -17,7 +20,7 @@ export class ActionExecutionContextFactory {
         id: string,
         hash: string,
         actionId: string,
-        definitionRecipe: RecipeTypeInterface,
+        recipe: RecipeInterface,
     ): ActionExecutionContext {
         const actionExecutionContext = new ActionExecutionContext(id, hash);
 
@@ -27,7 +30,7 @@ export class ActionExecutionContextFactory {
         };
 
         actionExecutionContext.sources = [];
-        for (const sourceRecipe of definitionRecipe.sources) {
+        for (const sourceRecipe of recipe.sources) {
             actionExecutionContext.sources.push({
                 id: sourceRecipe.id,
                 cloneUrl: sourceRecipe.cloneUrl,
@@ -47,21 +50,8 @@ export class ActionExecutionContextFactory {
             });
         }
 
-        actionExecutionContext.sourceVolumes = [];
-        for (const sourceVolumeRecipe of definitionRecipe.sourceVolumes) {
-            const sourceDockerVolumeName = `${
-                actionExecutionContext.composeProjectName
-            }_source_volume_${sourceVolumeRecipe.id.toLowerCase()}`;
-            actionExecutionContext.sourceVolumes.push({
-                id: sourceVolumeRecipe.id,
-                sourceId: sourceVolumeRecipe.sourceId,
-                relativePath: sourceVolumeRecipe.relativePath,
-                dockerVolumeName: sourceDockerVolumeName,
-            });
-        }
-
         actionExecutionContext.assetVolumes = [];
-        for (const assetVolumeRecipe of definitionRecipe.assetVolumes) {
+        for (const assetVolumeRecipe of recipe.assetVolumes) {
             const assetDockerVolumeName = `${
                 actionExecutionContext.composeProjectName
             }_asset_volume_${assetVolumeRecipe.id.toLowerCase()}`;
@@ -73,7 +63,7 @@ export class ActionExecutionContextFactory {
         }
 
         actionExecutionContext.proxiedPorts = [];
-        for (const proxiedPort of definitionRecipe.proxiedPorts) {
+        for (const proxiedPort of recipe.proxiedPorts) {
             actionExecutionContext.proxiedPorts.push({
                 id: proxiedPort.id,
                 serviceId: proxiedPort.serviceId,
@@ -86,27 +76,29 @@ export class ActionExecutionContextFactory {
         actionExecutionContext.services = [];
 
         actionExecutionContext.afterBuildTasks = [];
-        for (const afterBuildTask of definitionRecipe.afterBuildTasks) {
+        const action = recipe.actions.find(
+            (action: ActionInterface): boolean => action.id === actionId,
+        );
+        if (!action) {
+            throw new Error('Missing action.');
+        }
+        for (const afterBuildTask of action.afterBuildTasks) {
             actionExecutionContext.afterBuildTasks.push(
-                afterBuildTask as AfterBuildTaskIn,
+                afterBuildTask as AfterBuildTask,
             );
         }
 
         actionExecutionContext.nonInterpolatedSummaryItems = SummaryItemsSet.fromList(
-            definitionRecipe.summaryItems,
+            recipe.summaryItems,
         );
 
         actionExecutionContext.composeFiles = [];
-        const composeFileRecipe = definitionRecipe.composeFiles[0];
-        const composeFileVolumeName = `${actionExecutionContext.composeProjectName}_compose_file_volume`;
+        const composeFileRecipe = recipe.composeFiles[0];
         actionExecutionContext.composeFiles.push({
             ...composeFileRecipe,
-            dockerVolumeName: composeFileVolumeName,
         });
 
-        const envVariables = EnvVariablesSet.fromList(
-            definitionRecipe.envVariables,
-        );
+        const envVariables = EnvVariablesSet.fromList(recipe.envVariables);
         const featerVariables = new FeaterVariablesSet();
 
         // Add Feater variables for env variables provided in definition.

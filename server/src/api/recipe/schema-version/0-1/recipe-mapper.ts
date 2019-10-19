@@ -8,7 +8,6 @@ import {
     ProxiedPortInterface,
     RecipeInterface,
     SourceInterface,
-    SourceVolumeInterface,
     SummaryItemInterface,
 } from '../../recipe.interface';
 import { RecipePartMapper } from './recipe-part-mapper';
@@ -46,13 +45,6 @@ export class RecipeMapper {
         for (const assetVolume of rawRecipe.assetVolumes) {
             mappedAssetVolumes.push(
                 this.recipePartMapper.mapAssetVolume(assetVolume),
-            );
-        }
-
-        const mappedSourceVolumes: SourceVolumeInterface[] = [];
-        for (const sourceVolume of rawRecipe.sourceVolumes) {
-            mappedSourceVolumes.push(
-                this.recipePartMapper.mapSourceVolume(sourceVolume),
             );
         }
 
@@ -102,7 +94,6 @@ export class RecipeMapper {
 
         return {
             sources: mappedSources,
-            sourceVolumes: mappedSourceVolumes,
             assetVolumes: mappedAssetVolumes,
             proxiedPorts: mappedProxiedPorts,
             envVariables: mappedEnvVariables,
@@ -118,7 +109,6 @@ export class RecipeMapper {
     ): recipe is {
         sources: any;
         assetVolumes: any;
-        sourceVolumes: any;
         envVariables: any;
         composeFiles: any;
         proxiedPorts: any;

@@ -7,7 +7,7 @@ import { HelperModule } from '../helper/helper.module';
 import { ResolverPaginationArgumentsHelper } from './pagination-argument/resolver-pagination-arguments-helper.component';
 import { ProjectsResolver } from './resolver/projects-resolver.component';
 import { DefinitionResolver } from './resolver/definition-resolver.component';
-import { InstanceResolver } from './resolver/Instance-resolver.component';
+import { InstanceResolver } from './resolver/instance-resolver.component';
 import { InstanceServiceResolver } from './resolver/instance-service-resolver.component';
 import { AssetResolver } from './resolver/asset-resolver.component';
 import { DeployKeyResolver } from './resolver/deploy-key-resolver.component';

@@ -19,7 +19,7 @@ export class CopyAssetIntoContainerCommandFactoryComponent
     createCommand(
         type: string,
         afterBuildTask: ActionExecutionContextAfterBuildTaskInterface,
-        taskId: string,
+        actionLogId: string,
         actionExecutionContext: ActionExecutionContext,
         updateInstanceFromActionExecutionContext: () => Promise<void>,
     ): CommandType {
@@ -29,8 +29,9 @@ export class CopyAssetIntoContainerCommandFactoryComponent
             : '';
 
         return new ContextAwareCommand(
-            taskId,
+            actionLogId,
             actionExecutionContext.id,
+            actionExecutionContext.hash,
             `Running after build task${taskIdDescriptionPart} and copying asset \`${typedAfterBuildTask.assetId}\` for service \`${typedAfterBuildTask.serviceId}\``,
             () => {
                 const service = actionExecutionContext.findService(

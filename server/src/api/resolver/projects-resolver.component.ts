@@ -99,8 +99,9 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
+    // TODO Replace `any` with more specific type.
     private applyProjectFilterArgumentToCriteria(
-        criteria: unknown, // TODO Define interface.
+        criteria: any,
         args: ResolverProjectFilterArgumentsInterface,
     ): unknown {
         if (args.name) {
@@ -111,8 +112,9 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
+    // TODO Replace `any` with more specific type.
     private applyDefinitionFilterArgumentToCriteria(
-        criteria: unknown, // TODO Define interface.
+        criteria: any,
         args: ResolverDefinitionFilterArgumentsInterface,
     ): unknown {
         if (args.name) {
@@ -126,8 +128,9 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
+    // TODO Replace `any` with more specific type.
     private applyAssetFilterArgumentToCriteria(
-        criteria: unknown, // TODO Define interface.
+        criteria: any,
         args: ResolverAssetFilterArgumentsInterface,
     ): unknown {
         if (args.id) {

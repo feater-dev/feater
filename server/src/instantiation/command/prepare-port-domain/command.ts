@@ -1,7 +1,7 @@
 import { SimpleCommand } from '../../executor/simple-command';
 
 export class PrepareProxyDomainCommand extends SimpleCommand {
-    constructor(readonly instanceHash: unknown, readonly portId: string) {
+    constructor(readonly instanceHash: string, readonly portId: string) {
         super();
     }
 }

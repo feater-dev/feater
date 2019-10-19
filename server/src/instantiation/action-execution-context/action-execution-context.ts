@@ -8,7 +8,6 @@ import { ActionExecutionContextComposeFileInterface } from './action-execution-c
 import { EnvVariablesSet } from '../sets/env-variables-set';
 import { FeaterVariablesSet } from '../sets/feater-variables-set';
 import { SummaryItemsSet } from '../sets/summary-items-set';
-import { ActionExecutionContextSourceVolumeInterface } from './action-execution-context-source-volume.interface';
 import { ActionExecutionContextDownloadableInterface } from './action-execution-context-downloadable.interface';
 import * as _ from 'lodash';
 
@@ -16,7 +15,6 @@ export class ActionExecutionContext {
     paths: ActionExecutionContextPathsInterface;
     composeProjectName: string;
     sources: ActionExecutionContextSourceInterface[];
-    sourceVolumes: ActionExecutionContextSourceVolumeInterface[];
     assetVolumes: ActionExecutionContextAssetVolumeInterface[];
     services: ActionExecutionContextServiceInterface[];
     proxiedPorts: ActionExecutionContextProxiedPortInterface[];

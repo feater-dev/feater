@@ -11,6 +11,7 @@ type Definition {
     deployKeys: [DeployKey!]!
     predictedEnvVariables: [DefinitionPredictedEnvVariable]!
     predictedFeaterVariables: [DefinitionPredictedFeaterVariable]!
+    actions: [DefinitionAction]!
     createdAt: String!
     updatedAt: String!
 }

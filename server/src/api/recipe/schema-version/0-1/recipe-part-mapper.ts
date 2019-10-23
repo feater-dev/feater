@@ -146,8 +146,8 @@ export class RecipePartMapper {
         }
 
         return {
-            type: action.type,
             id: action.id,
+            type: action.type,
             name: action.name,
             afterBuildTasks: mappedAfterBuildTasks,
         };
@@ -155,7 +155,12 @@ export class RecipePartMapper {
 
     public mapDownloadable(downloadable: any): DownloadableInterface {
         // TODO Replace `any` with `unknown`.
-        return {}; // TODO Forward port.
+        return {
+            id: downloadable.id,
+            name: downloadable.name,
+            serviceId: downloadable.serviceId,
+            absolutePath: downloadable.absolutePath,
+        };
     }
 
     public mapEnvVariable(envVariable: any): EnvVariableInterface {

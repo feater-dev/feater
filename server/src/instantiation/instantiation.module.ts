@@ -40,10 +40,15 @@ import { HelperModule } from '../helper/helper.module';
 import { Modificator } from './modificator.service';
 import { Instantiator } from './instantiator.service';
 import { ContainerInfoChecker } from './container-info-checker-component.service';
-import { RecipeMapper } from '../api/recipe/schema-version/0-1/recipe-mapper'; // TODO Move from `api` module to `instantiation` module.
-import { RecipeValidator } from '../api/recipe/schema-version/0-1/recipe-validator'; // TODO Move from `api` module to `instantiation` module.
-import { RecipePartMapper } from '../api/recipe/schema-version/0-1/recipe-part-mapper'; // TODO Move from `api` module to `instantiation` module.
-import { RecipeSchemaVersionExtractor } from '../api/recipe/recipe-schema-version-extractor'; // TODO Move from `api` module to `instantiation` module.
+// TODO Move from `api` module to `instantiation` module.
+import { RecipeMapper } from '../api/recipe/schema-version/0-1/recipe-mapper';
+// TODO Move from `api` module to `instantiation` module.
+import { RecipeValidator } from '../api/recipe/schema-version/0-1/recipe-validator';
+// TODO Move from `api` module to `instantiation` module.
+import { RecipePartMapper } from '../api/recipe/schema-version/0-1/recipe-part-mapper';
+// TODO Move from `api` module to `instantiation` module.
+import { RecipeSchemaVersionExtractor } from '../api/recipe/recipe-schema-version-extractor';
+import { GitSshCommandEnvVariablesFactory } from './command/git-ssh-command-env-variables-factory';
 
 @Module({
     imports: [HelperModule, LoggerModule, PersistenceModule],
@@ -89,6 +94,7 @@ import { RecipeSchemaVersionExtractor } from '../api/recipe/recipe-schema-versio
         Instantiator,
         Modificator,
         RecipeSchemaVersionExtractor,
+        GitSshCommandEnvVariablesFactory,
     ],
     exports: [
         ContainerStateCheckerComponent,

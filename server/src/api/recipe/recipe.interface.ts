@@ -105,8 +105,8 @@ export type AfterBuildTask =
 // Actions.
 
 export interface ActionInterface {
-    readonly type: string;
     readonly id: string;
+    readonly type: string;
     readonly name: string;
     readonly afterBuildTasks: AfterBuildTask[];
 }
@@ -114,7 +114,10 @@ export interface ActionInterface {
 // Downloadables.
 
 export interface DownloadableInterface {
-    // TODO Forward port. Add missing properties.
+    readonly id: string;
+    readonly name: string;
+    readonly serviceId: string;
+    readonly absolutePath: string;
 }
 
 // Summary items.

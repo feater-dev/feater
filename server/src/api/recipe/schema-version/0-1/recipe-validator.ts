@@ -37,10 +37,10 @@ export class RecipeValidator {
                 .array()
                 .items(this.createEnvVariableSchema())
                 .required(),
-            compose_files: joi.array().items(joi.object()), // TODO
-            actions: joi.array().items(joi.object()), // TODO
-            after_build_tasks: joi.array().items(joi.object()), // TODO
-            downloadables: joi.array().items(joi.object()), // TODO
+            compose_files: joi.array().items(joi.object()), // TODO Improve schema.
+            actions: joi.array().items(joi.object()), // TODO Improve schema.
+            after_build_tasks: joi.array().items(joi.object()), // TODO Improve schema.
+            downloadables: joi.array().items(joi.object()), // TODO Improve schema.
             summary_items: joi
                 .array()
                 .items(this.createSummaryItemSchema())

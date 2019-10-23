@@ -6,6 +6,7 @@ show_help () {
 Required env variables:
   - FEATER_ENV
   - FEATER_CONTAINER_NAME
+  - FEATER_HOST_PATH_BUILD
 
 Optional env variables:
   - FEATER_PROXY_NETWORK_NAME
@@ -18,13 +19,18 @@ EndOfHelp
 }
 
 valid_arguments=true
+if [[ ! "${FEATER_ENV}" =~ ^(dev|prod)$ ]]; then
+    echo "You need to provide environment ('dev' or 'prod') in FEATER_ENV env variable."
+    valid_arguments=false
+fi
+
 if [[ -z "${FEATER_CONTAINER_NAME}" ]]; then
     echo "You need to provide container name in FEATER_CONTAINER_NAME env variable."
     valid_arguments=false
 fi
 
-if [[ ! "${FEATER_ENV}" =~ ^(dev|prod)$ ]]; then
-    echo "You need to provide environment ('dev' or 'prod') in FEATER_ENV env variable."
+if [[ -z "${FEATER_HOST_PATH_BUILD}" ]]; then
+    echo "You need to provide container name in FEATER_HOST_PATH_BUILD env variable."
     valid_arguments=false
 fi
 
@@ -78,9 +84,11 @@ docker run \
     -p ${FEATER_PORT_MANAGEMENT:-9010}:9010 \
     -p ${FEATER_PORT_PROXY:-9011}:9011 \
     -v /var/run/docker.sock:/var/run/docker.sock \
+    -v ${FEATER_HOST_PATH_BUILD}:/mountable-data/build \
     $([[ -n "${data_volume_name}" ]] && printf %s "-v ${data_volume_name}:/data") \
     $([[ "${env}" = "dev" ]] && printf %s "-v $(pwd)/../server:/app/server -v $(pwd)/../client:/app/client") \
     -e FEATER_PROXY_NETWORK_NAME=${proxy_network_name} \
+    -e FEATER_HOST_PATH_BUILD=${FEATER_HOST_PATH_BUILD} \
     -d \
     --name ${container_name} \
     ${image_tag}

@@ -75,9 +75,7 @@ export class VariablesPredictor {
             ),
         );
 
-        // TODO Add FEATER__CONTAINER_ID__{service_id}
-        //      It's not possible to establish without fetching `docker-compose` configuration and parsing it.
-        //      To be added when we have local clones of repositories available.
+        // TODO Add FEATER__CONTAINER_ID__{service_id} when possible.
 
         return _.flattenDeep(envVariables);
     }
@@ -161,9 +159,7 @@ export class VariablesPredictor {
             ),
         );
 
-        // TODO Add container_id__{service_id}
-        //      It's not possible to establish without fetching `docker-compose` configuration and parsing it.
-        //      To be added when we have local clones of repositories available.
+        // TODO Add container_id__{service_id} when possible.
 
         return _.flattenDeep(featerVariables);
     }

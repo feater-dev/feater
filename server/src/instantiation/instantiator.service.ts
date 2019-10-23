@@ -190,7 +190,7 @@ export class Instantiator {
                 `Create instance build directory`,
                 () =>
                     new CreateDirectoryCommand(
-                        actionExecutionContext.paths.dir.absolute.guest,
+                        actionExecutionContext.paths.absolute.guest,
                     ),
             ),
         );
@@ -213,7 +213,7 @@ export class Instantiator {
                         return new CreateAssetVolumeCommand(
                             assetVolume.id,
                             assetVolume.dockerVolumeName,
-                            actionExecutionContext.paths.dir.absolute.guest,
+                            actionExecutionContext.paths.absolute.guest,
                             assetVolume.assetId,
                         );
                     },
@@ -247,7 +247,7 @@ export class Instantiator {
                             source.reference.name,
                             source.paths.absolute.guest,
                             source.paths.absolute.host,
-                            actionExecutionContext.paths.dir.absolute.guest,
+                            actionExecutionContext.paths.absolute.guest,
                         );
                     },
                     async (
@@ -301,7 +301,7 @@ export class Instantiator {
                         composeFile.composeFileRelativePaths,
                         actionExecutionContext.envVariables,
                         actionExecutionContext.composeProjectName,
-                        actionExecutionContext.paths.dir.absolute.guest,
+                        actionExecutionContext.paths.absolute.guest,
                     );
                 },
                 async (
@@ -440,7 +440,7 @@ export class Instantiator {
                         composeFile.envDirRelativePath,
                         composeFile.composeFileRelativePaths,
                         actionExecutionContext.envVariables,
-                        actionExecutionContext.paths.dir.absolute.guest,
+                        actionExecutionContext.paths.absolute.guest,
                     );
                 },
             ),

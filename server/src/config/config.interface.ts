@@ -9,6 +9,9 @@ export interface ConfigInterface {
         readonly identity: string;
         readonly proxy: string;
     };
+    readonly hostPaths: {
+        readonly build: string;
+    };
     readonly instantiation: {
         readonly gitBinaryPath: string;
         readonly dockerBinaryPath: string;

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BaseLogger } from '../logger/base-logger';
 import { CommandsList } from './executor/commands-list';
 import { ContextAwareCommand } from './executor/context-aware-command.interface';
-import { ResetSourceCommand } from './command/reset-source/command'; // TODO Forward port.
+import { ResetSourceCommand } from './command/reset-source/command';
 import { CopyFileCommandFactoryComponent } from './command/before-build/copy-file/command-factory.component';
 import { InterpolateFileCommandFactoryComponent } from './command/before-build/interpolate-file/command-factory.component';
 import { BeforeBuildTaskCommandFactoryInterface } from './command/before-build/command-factory.interface';
@@ -153,9 +153,10 @@ export class Modificator {
                             () =>
                                 new ResetSourceCommand(
                                     source.cloneUrl,
+                                    source.useDeployKey,
                                     source.reference.type,
                                     source.reference.name,
-                                    source.paths.dir.absolute.guest, // TODO Forward port.
+                                    source.paths.absolute.guest,
                                 ),
                         ),
                 ),

@@ -32,6 +32,7 @@ import { DeployKeyModelToTypeMapper } from '../model-to-type-mapper/deploy-key-m
 import * as escapeStringRegexp from 'escape-string-regexp';
 import { RecipeMapper } from '../recipe/schema-version/0-1/recipe-mapper';
 import { RecipeValidator } from '../recipe/schema-version/0-1/recipe-validator';
+import { DefinitionActionTypeInterface } from '../type/definition-action-type.interface';
 
 @Resolver('Definition')
 export class DefinitionResolver {
@@ -40,7 +41,7 @@ export class DefinitionResolver {
         private readonly definitionRepository: DefinitionRepository,
         private readonly instanceRepository: InstanceRepository,
         private readonly deployKeyRepository: DeployKeyRepository,
-        private readonly definitionRecipeMapper: RecipeMapper,
+        private readonly recipeMapper: RecipeMapper,
         private readonly variablePredictor: VariablesPredictor,
         private readonly definitionLister: DefinitionLister,
         private readonly definitionModelToTypeMapper: DefinitionModelToTypeMapper,
@@ -110,11 +111,9 @@ export class DefinitionResolver {
     async getDeployKeys(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<DeployKeyTypeInterface[]> {
-        const definitionRecipe = this.definitionRecipeMapper.map(
-            definition.recipeAsYaml,
-        );
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         const deployKeys: DeployKeyInterface[] = [];
-        for (const source of definitionRecipe.sources) {
+        for (const source of recipe.sources) {
             const sourceDeployKeys = await this.deployKeyRepository.findByCloneUrl(
                 source.cloneUrl,
             );
@@ -133,11 +132,9 @@ export class DefinitionResolver {
     async getPredictedEnvVariables(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<PredictedEnvVariableTypeInterface[]> {
-        const definitionRecipe = this.definitionRecipeMapper.map(
-            definition.recipeAsYaml,
-        );
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         const predictedEnvVariables = this.variablePredictor.predictEnvVariables(
-            definitionRecipe,
+            recipe,
         );
         const mappedPredictedEnvVariables: PredictedEnvVariableTypeInterface[] = [];
 
@@ -156,11 +153,9 @@ export class DefinitionResolver {
     async getPredictedFeaterVariables(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<PredictedFeaterVariableTypeInterface[]> {
-        const definitionRecipe = this.definitionRecipeMapper.map(
-            definition.recipeAsYaml,
-        );
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         const predictedFeaterVariables = this.variablePredictor.predictFeaterVariables(
-            definitionRecipe,
+            recipe,
         );
         const mappedPredictedFeaterVariables: PredictedFeaterVariableTypeInterface[] = [];
 
@@ -173,6 +168,24 @@ export class DefinitionResolver {
         }
 
         return mappedPredictedFeaterVariables;
+    }
+
+    @ResolveProperty('actions')
+    async getActions(
+        @Parent() definition: DefinitionTypeInterface,
+    ): Promise<DefinitionActionTypeInterface[]> {
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
+        const mappedActions: DefinitionActionTypeInterface[] = [];
+
+        for (const action of recipe.actions) {
+            mappedActions.push({
+                id: action.id,
+                type: action.type,
+                name: action.name,
+            });
+        }
+
+        return mappedActions;
     }
 
     @Mutation('createDefinition')
@@ -196,7 +209,7 @@ export class DefinitionResolver {
             createDefinitionInput.recipeAsYaml,
         );
 
-        const recipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         for (const source of recipe.sources) {
             const cloneUrl = source.cloneUrl;
             if (source.useDeployKey) {
@@ -229,7 +242,7 @@ export class DefinitionResolver {
             throw new Error('Invalid definition recipe.');
         }
 
-        const recipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         for (const source of recipe.sources) {
             const cloneUrl = source.cloneUrl;
             if (source.useDeployKey) {

@@ -25,9 +25,7 @@ export class ActionExecutionContextFactory {
         const actionExecutionContext = new ActionExecutionContext(id, hash);
 
         actionExecutionContext.composeProjectName = `${config.instantiation.containerNamePrefix}${actionExecutionContext.hash}`;
-        actionExecutionContext.paths = {
-            dir: this.pathHelper.getInstancePaths(hash),
-        };
+        actionExecutionContext.paths = this.pathHelper.getInstancePaths(hash);
 
         actionExecutionContext.sources = [];
         for (const sourceRecipe of recipe.sources) {
@@ -94,9 +92,7 @@ export class ActionExecutionContextFactory {
 
         actionExecutionContext.composeFiles = [];
         const composeFileRecipe = recipe.composeFiles[0];
-        actionExecutionContext.composeFiles.push({
-            ...composeFileRecipe,
-        });
+        actionExecutionContext.composeFiles.push({ ...composeFileRecipe });
 
         const envVariables = EnvVariablesSet.fromList(recipe.envVariables);
         const featerVariables = new FeaterVariablesSet();

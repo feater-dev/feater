@@ -12,17 +12,13 @@ export class BaseLogger implements LoggerInterface {
         this.logger = winston.createLogger({
             exitOnError: false,
             transports: [
-                new winston.transports.Console({
-                    level: config.logger.console.logLevel,
-                }),
-                // @ts-ignore Was giving "Property 'MongoDB' does not exist on type 'Transports'."
+                // @ts-ignore
                 new winston.transports.MongoDB({
                     level: config.logger.mongoDb.logLevel,
                     db: config.mongo.dsn,
                     collection: 'logs',
                     tryReconnect: true,
                     decolorize: true,
-                    metaKey: 'meta',
                 }),
             ],
         });

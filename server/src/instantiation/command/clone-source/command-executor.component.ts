@@ -13,6 +13,8 @@ import { DeployKeyHelperComponent } from '../../../helper/deploy-key-helper.comp
 import { CloneSourceCommandResultInterface } from './command-result.interface';
 import { EnvVariablesSet } from '../../sets/env-variables-set';
 import { FeaterVariablesSet } from '../../sets/feater-variables-set';
+import { GitSshCommandEnvVariablesFactory } from '../git-ssh-command-env-variables-factory';
+import { DeployKeyInterface } from '../../../persistence/interface/deploy-key.interface';
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent
@@ -20,6 +22,7 @@ export class CloneSourceCommandExecutorComponent
     constructor(
         private readonly deployKeyRepository: DeployKeyRepository,
         private readonly deployKeyHelper: DeployKeyHelperComponent,
+        private readonly gitSshCommandEnvVariablesFactory: GitSshCommandEnvVariablesFactory,
         private readonly spawnHelper: SpawnHelper,
     ) {}
 
@@ -85,7 +88,7 @@ export class CloneSourceCommandExecutorComponent
         workingDirectory: string,
         commandLogger: CommandLogger,
     ): Promise<void> {
-        let deployKey;
+        let deployKey: DeployKeyInterface | null;
         const spawnedGitCloneOptions: SpawnOptions = { cwd: workingDirectory };
 
         commandLogger.info(`Clone URL: ${cloneUrl}`);
@@ -100,24 +103,9 @@ export class CloneSourceCommandExecutorComponent
                 )}`,
             );
 
-            const identityFileAbsoluteGuestPath = this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(
-                cloneUrl,
+            spawnedGitCloneOptions.env = await this.gitSshCommandEnvVariablesFactory.create(
+                deployKey,
             );
-
-            spawnedGitCloneOptions.env = {
-                GIT_SSH_COMMAND: [
-                    `sshpass`,
-                    `-e`,
-                    `-P`,
-                    `"Enter passphrase for key '${identityFileAbsoluteGuestPath}': "`,
-                    `ssh`,
-                    `-o`,
-                    `StrictHostKeyChecking=no`,
-                    `-i`,
-                    identityFileAbsoluteGuestPath,
-                ].join(' '),
-                SSHPASS: deployKey.passphrase,
-            };
         } else {
             deployKey = null;
             commandLogger.info(`Not using deploy key.`);

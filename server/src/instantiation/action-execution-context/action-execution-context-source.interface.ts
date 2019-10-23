@@ -1,5 +1,5 @@
-import { SourcePathsInterface } from '../helper/source-paths.interface';
 import { ActionExecutionContextBeforeBuildTaskInterface } from './before-build/action-execution-context-before-build-task.interface';
+import { SourcePathsInterface } from '../helper/path-helper.component';
 
 export interface ActionExecutionContextSourceInterface {
     id: string;

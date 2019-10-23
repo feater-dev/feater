@@ -10,10 +10,10 @@ WORKDIR /app
 
 ENV FEATER_MONGO_DSN mongodb://localhost:27017/feater
 ENV FEATER_GUEST_PATH_ASSET /data/asset
-ENV FEATER_GUEST_PATH_BUILD /data/build
 ENV FEATER_GUEST_PATH_IDENTITY /data/identity
 ENV FEATER_GUEST_PATH_PROXY /data/proxy
 ENV FEATER_GIT_BINARY_PATH /usr/bin/git
+ENV FEATER_GUEST_PATH_BUILD /mountable-data/build
 ENV FEATER_DOCKER_BINARY_PATH /usr/local/bin/docker
 ENV FEATER_DOCKER_COMPOSE_VERSION 1.23.2
 ENV FEATER_DOCKER_COMPOSE_HTTP_TIMEOUT 500
@@ -39,7 +39,8 @@ RUN \
     && mkdir -p /run/nginx \
     && (cd /etc/nginx/conf.d && ln -s /data/proxy) \
     && chmod +x /command.sh \
-    && (mkdir /data && cd /data && mkdir asset build identity mongo proxy)
+    && (mkdir /data && cd /data && mkdir asset identity mongo proxy) \
+    && (mkdir -p /mountable-data/build)
 
 EXPOSE 9010 9011 27017
 

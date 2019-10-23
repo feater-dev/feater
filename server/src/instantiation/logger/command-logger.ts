@@ -1,40 +1,53 @@
 import { CommandLogInterface } from '../../persistence/interface/command-log.interface';
-import { BaseLogger } from '../../logger/base-logger';
 import { EnvVariablesSet } from '../sets/env-variables-set';
 import { FeaterVariablesSet } from '../sets/feater-variables-set';
+import { config } from '../../config/config';
+import * as winston from 'winston';
 
 export class CommandLogger {
+    private readonly logger: winston.Logger;
+
     constructor(
         private readonly commandLog: CommandLogInterface,
-        private readonly logger: BaseLogger,
-    ) {}
+        absoluteGuestCommandLogPath: string,
+    ) {
+        this.logger = winston.createLogger({
+            exitOnError: false,
+            transports: [
+                new winston.transports.File({
+                    level: config.logger.mongoDb.logLevel,
+                    filename: absoluteGuestCommandLogPath,
+                }),
+            ],
+        });
+    }
 
     emerg(message: string, meta: unknown = {}): void {
-        this.logger.emerg(message, this.getMeta());
+        this.logger.emerg(message, meta);
     }
 
     alert(message: string, meta: unknown = {}): void {
-        this.logger.alert(message, this.getMeta());
+        this.logger.alert(message, meta);
     }
 
     crit(message: string, meta: unknown = {}): void {
-        this.logger.crit(message, this.getMeta());
+        this.logger.crit(message, meta);
     }
 
     error(message: string, meta: unknown = {}): void {
-        this.logger.error(message, this.getMeta());
+        this.logger.error(message, meta);
     }
 
     warning(message: string, meta: unknown = {}): void {
-        this.logger.warning(message, this.getMeta());
+        this.logger.warning(message, meta);
     }
 
     notice(message: string, meta: unknown = {}): void {
-        this.logger.notice(message, this.getMeta());
+        this.logger.notice(message, meta);
     }
 
     info(message: string, meta: unknown = {}): void {
-        this.logger.info(message, this.getMeta());
+        this.logger.info(message, meta);
     }
 
     infoWithJsonData(data: unknown, header: string, meta: unknown = {}): void {
@@ -68,22 +81,16 @@ export class CommandLogger {
     }
 
     debug(message: string, meta: unknown = {}): void {
-        this.logger.debug(message, this.getMeta());
+        this.logger.debug(message, meta);
     }
 
-    markAsCompleted(): Promise<unknown> {
+    async markAsCompleted(): Promise<void> {
         this.commandLog.completedAt = new Date();
-
-        return this.commandLog.save();
+        await this.commandLog.save();
     }
 
-    markAsFailed(): Promise<unknown> {
+    async markAsFailed(): Promise<void> {
         this.commandLog.failedAt = new Date();
-
-        return this.commandLog.save();
-    }
-
-    private getMeta(): unknown {
-        return { commandLogId: this.commandLog.id.toString() };
+        await this.commandLog.save();
     }
 }

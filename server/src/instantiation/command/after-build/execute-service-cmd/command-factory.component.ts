@@ -47,7 +47,7 @@ export class ExecuteServiceCmdCommandFactoryComponent
                     typedAfterBuildTask.inheritedEnvVariables,
                     service.containerId,
                     typedAfterBuildTask.command,
-                    actionExecutionContext.paths.dir.absolute.guest,
+                    actionExecutionContext.paths.absolute.guest,
                 );
             },
         );

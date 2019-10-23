@@ -1,4 +1,3 @@
-import { ActionExecutionContextPathsInterface } from './action-execution-context-paths.interface';
 import { ActionExecutionContextSourceInterface } from './action-execution-context-source.interface';
 import { ActionExecutionContextAssetVolumeInterface } from './action-execution-context-asset-volume.interface';
 import { ActionExecutionContextServiceInterface } from './action-execution-context-service.interface';
@@ -10,9 +9,10 @@ import { FeaterVariablesSet } from '../sets/feater-variables-set';
 import { SummaryItemsSet } from '../sets/summary-items-set';
 import { ActionExecutionContextDownloadableInterface } from './action-execution-context-downloadable.interface';
 import * as _ from 'lodash';
+import { InstancePathsInterface } from '../helper/path-helper.component';
 
 export class ActionExecutionContext {
-    paths: ActionExecutionContextPathsInterface;
+    paths: InstancePathsInterface;
     composeProjectName: string;
     sources: ActionExecutionContextSourceInterface[];
     assetVolumes: ActionExecutionContextAssetVolumeInterface[];

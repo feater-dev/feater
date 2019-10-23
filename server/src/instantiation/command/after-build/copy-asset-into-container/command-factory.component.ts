@@ -43,7 +43,7 @@ export class CopyAssetIntoContainerCommandFactoryComponent
                     typedAfterBuildTask.assetId,
                     typedAfterBuildTask.destinationPath,
                     service.containerId,
-                    actionExecutionContext.paths.dir.absolute.guest,
+                    actionExecutionContext.paths.absolute.guest,
                 );
             },
         );

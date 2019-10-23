@@ -5,19 +5,20 @@ import { ResetSourceCommand } from './command';
 import { DeployKeyInterface } from '../../../persistence/interface/deploy-key.interface';
 import { SimpleCommand } from '../../executor/simple-command';
 import { CommandLogger } from '../../logger/command-logger';
-import * as gitUrlParse from 'git-url-parse';
 import * as sshFingerprint from 'ssh-fingerprint';
-import { Checkout, Commit, FetchOptions, Repository, Reset } from 'nodegit';
-import * as nodegit from 'nodegit';
-
-// TODO Forward port.
-// TODO Don't rely on `nodegit`.
-// TODO Adjust to the new way of storing deploy keys.
+import { spawn, SpawnOptions, spawnSync } from 'child_process';
+import { config } from '../../../config/config';
+import { GitSshCommandEnvVariablesFactory } from '../git-ssh-command-env-variables-factory';
+import { SpawnHelper } from '../../helper/spawn-helper.component';
 
 @Injectable()
 export class ResetSourceCommandExecutorComponent
     implements SimpleCommandExecutorComponentInterface {
-    constructor(private readonly deployKeyRepository: DeployKeyRepository) {}
+    constructor(
+        private readonly deployKeyRepository: DeployKeyRepository,
+        private readonly gitSshCommandEnvVariablesFactory: GitSshCommandEnvVariablesFactory,
+        private readonly spawnHelper: SpawnHelper,
+    ) {}
 
     supports(command: SimpleCommand): boolean {
         return command instanceof ResetSourceCommand;
@@ -26,6 +27,7 @@ export class ResetSourceCommandExecutorComponent
     async execute(command: SimpleCommand): Promise<any> {
         const {
             cloneUrl,
+            useDeployKey,
             referenceType,
             referenceName,
             sourceAbsoluteGuestPath,
@@ -38,95 +40,119 @@ export class ResetSourceCommandExecutorComponent
             return {};
         }
 
-        commandLogger.info(`Finding deploy key.`);
-        const deployKey = await this.findDeployKey(cloneUrl, commandLogger);
-
-        commandLogger.info(`Opening repository.`);
-        const repository = await Repository.open(sourceAbsoluteGuestPath);
-
-        commandLogger.info(`Fetching remote.`);
-        await repository.fetch('origin', this.createFetchOptions(deployKey));
+        commandLogger.info(`Fetching changes from remote repository.`);
+        this.fetchRepository(
+            cloneUrl,
+            useDeployKey,
+            sourceAbsoluteGuestPath,
+            commandLogger,
+        );
 
         commandLogger.info(`Getting reference commit from remote branch.`);
-        const commit = await this.getReferenceCommit(
+        const commitHash = await this.getReferenceCommitHash(
             referenceType,
             referenceName,
-            repository,
+            sourceAbsoluteGuestPath,
             commandLogger,
         );
 
         commandLogger.info(`Resetting repository.`);
-        await Reset.reset(
-            repository,
-            // @ts-ignore: Argument of type 'Commit' is not assignable to parameter of type 'Object'.
-            commit,
-            Reset.TYPE.HARD,
-            { checkoutStrategy: Checkout.STRATEGY.FORCE }, // TODO Is this checkout option needed?
+        await this.resetRepository(
+            commitHash,
+            sourceAbsoluteGuestPath,
+            commandLogger,
         );
-        commandLogger.info(`Reset completed.`);
 
         return {};
     }
 
-    private async findDeployKey(
+    private async fetchRepository(
         cloneUrl: string,
-        logger: CommandLogger,
-    ): Promise<DeployKeyInterface | null> {
-        logger.info(`Clone URL: ${cloneUrl}`);
-
-        if ('ssh' !== gitUrlParse(cloneUrl).protocol) {
-            logger.info(`Not using deploy key.`);
-
-            return null;
-        }
-
-        logger.info(`Using deploy key to clone over SSH.`);
-        const deployKey = await this.deployKeyRepository.findOneByCloneUrl(
-            cloneUrl,
-        );
-        logger.info(
-            `Deploy key fingerprint: ${sshFingerprint(deployKey.publicKey)}`,
-        );
-
-        return deployKey;
-    }
-
-    private createFetchOptions(deployKey?: DeployKeyInterface): FetchOptions {
-        const fetchOptions: FetchOptions = {
-            callbacks: {},
+        useDeployKey: boolean,
+        sourceAbsoluteGuestPath: string,
+        commandLogger: CommandLogger,
+    ): Promise<void> {
+        const spawnedGitFetchOptions: SpawnOptions = {
+            cwd: sourceAbsoluteGuestPath,
         };
 
-        if (deployKey) {
-            fetchOptions.callbacks.credentials = (repoUrl, username) =>
-                nodegit.Cred.sshKeyMemoryNew(
-                    username,
+        let deployKey: DeployKeyInterface | null;
+        commandLogger.info(`Clone URL: ${cloneUrl}`);
+        if (useDeployKey) {
+            commandLogger.info(`Using deploy key to clone.`);
+            deployKey = await this.deployKeyRepository.findOneByCloneUrl(
+                cloneUrl,
+            );
+            commandLogger.info(
+                `Deploy key fingerprint: ${sshFingerprint(
                     deployKey.publicKey,
-                    deployKey.privateKey,
-                    deployKey.passphrase,
-                );
+                )}`,
+            );
+            spawnedGitFetchOptions.env = await this.gitSshCommandEnvVariablesFactory.create(
+                deployKey,
+            );
+        } else {
+            deployKey = null;
+            commandLogger.info(`Not using deploy key.`);
         }
 
-        return fetchOptions;
+        const spawnedGitFetch = spawn(
+            config.instantiation.gitBinaryPath,
+            ['fetch', '--prune', '--prune-tags', '--tags', 'origin'],
+            spawnedGitFetchOptions,
+        );
+
+        // TODO Show informative messages on error.
+        await this.spawnHelper.promisifySpawnedWithHeader(
+            spawnedGitFetch,
+            commandLogger,
+            'fetch source',
+            {
+                muteStdout: true,
+                muteStderr: true,
+            },
+        );
+
+        // TODO Handle when failed.
+        // TODO Log something.
     }
 
-    private async getReferenceCommit(
+    private getReferenceCommitHash(
         referenceType: string,
         referenceName: string,
-        repo: nodegit.Repository,
+        sourceAbsoluteGuestPath: string,
         commandLogger: CommandLogger,
-    ): Promise<Commit> {
+    ): string {
         if ('branch' !== referenceType) {
             throw new Error(
                 'Unsupported reference type, only branches are supported.',
             );
         }
 
-        const commit = await repo.getReferenceCommit(
-            `refs/remotes/origin/${referenceName}`,
+        const spawnedGitRevParse = spawnSync(
+            config.instantiation.gitBinaryPath,
+            ['rev-parse', `refs/remotes/origin/${referenceName}`],
+            { cwd: sourceAbsoluteGuestPath },
         );
-        commandLogger.info(`Referenced branch: ${referenceName}`);
-        commandLogger.info(`Commit hash: ${commit.sha()}`);
 
-        return commit;
+        // TODO Handle when failed.
+        // TODO Log something.
+
+        return spawnedGitRevParse.output[0];
+    }
+
+    private resetRepository(
+        commitHash: string,
+        sourceAbsoluteGuestPath: string,
+        commandLogger: CommandLogger,
+    ): void {
+        const spawnedGitReset = spawnSync(
+            config.instantiation.gitBinaryPath,
+            ['reset', '--hard', commitHash],
+            { cwd: sourceAbsoluteGuestPath },
+        );
+
+        // TODO Handle when failed.
+        // TODO Log something.
     }
 }

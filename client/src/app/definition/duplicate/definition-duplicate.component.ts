@@ -7,11 +7,11 @@ import {
     GetDefinitionRecipeQueryDefinitionFieldInterface,
 } from './get-definition-recipe.query';
 import { DefinitionAddComponent } from '../add/definition-add.component';
-import { DefinitionRecipeFormElement } from '../recipe-form/definition-recipe-form.model';
+import { RecipeFormElement } from '../recipe-form/recipe-form.model';
 
 interface DefinitionDuplicateForm {
     name: string;
-    recipe: DefinitionRecipeFormElement;
+    recipe: RecipeFormElement;
 }
 
 @Component({

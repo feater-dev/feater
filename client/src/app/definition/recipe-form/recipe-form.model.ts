@@ -1,15 +1,15 @@
-export interface DefinitionRecipeFormElement {
-    sources: DefinitionSourceFormElement[];
-    sourceVolumes: DefinitionSourceVolumeFormElement[];
-    assetVolumes: DefinitionAssetVolumeFormElement[];
-    proxiedPorts: DefinitionProxiedPortFormElement[];
-    envVariables: DefinitionEnvVariableFormElement[];
-    composeFile: DefinitionAddComposeFileFormElement;
-    afterBuildTasks: AfterBuildTaskFormElement[];
-    summaryItems: DefinitionSummaryItemFormElement[];
+export interface RecipeFormElement {
+    sources: SourceFormElement[];
+    assetVolumes: AssetVolumeFormElement[];
+    proxiedPorts: ProxiedPortFormElement[];
+    envVariables: EnvVariableFormElement[];
+    composeFile: ComposeFileFormElement;
+    actions: ActionFormElement[];
+    downloadables: DownloadableFormElement[];
+    summaryItems: SummaryItemFormElement[];
 }
 
-export interface DefinitionSourceFormElement {
+export interface SourceFormElement {
     id: string;
     cloneUrl: string;
     useDeployKey: boolean;
@@ -21,13 +21,7 @@ export interface DefinitionSourceFormElement {
     >;
 }
 
-export interface DefinitionSourceVolumeFormElement {
-    id: string;
-    sourceId: string;
-    relativePath: string;
-}
-
-export interface DefinitionAssetVolumeFormElement {
+export interface AssetVolumeFormElement {
     id: string;
     assetId?: string;
 }
@@ -37,7 +31,7 @@ export interface DefinitionComponentReferenceFormElement {
     name: string;
 }
 
-export interface DefinitionProxiedPortFormElement {
+export interface ProxiedPortFormElement {
     serviceId: string;
     id: string;
     name: string;
@@ -46,20 +40,34 @@ export interface DefinitionProxiedPortFormElement {
     nginxConfigTemplate?: string;
 }
 
-export interface DefinitionEnvVariableFormElement {
+export interface EnvVariableFormElement {
     name: string;
     value: string;
 }
 
-export interface DefinitionSummaryItemFormElement {
+export interface DownloadableFormElement {
+    id: string;
+    name: string;
+    serviceId: string;
+    absolutePath: string;
+}
+
+export interface SummaryItemFormElement {
     name: string;
     value: string;
 }
 
-export interface DefinitionAddComposeFileFormElement {
+export interface ComposeFileFormElement {
     sourceId: string;
     envDirRelativePath: string;
     composeFileRelativePaths: string[];
+}
+
+export interface ActionFormElement {
+    id: string;
+    type: string;
+    name: string;
+    afterBuildTasks: AfterBuildTaskFormElement[];
 }
 
 export interface AfterBuildTaskFormElement {

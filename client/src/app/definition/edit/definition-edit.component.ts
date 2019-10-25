@@ -9,12 +9,12 @@ import {
 import { DefinitionAddComponent } from '../add/definition-add.component';
 import gql from 'graphql-tag';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
-import { DefinitionRecipeFormElement } from '../recipe-form/definition-recipe-form.model';
+import { RecipeFormElement } from '../recipe-form/recipe-form.model';
 
 interface DefinitionEditForm {
     id: string;
     name: string;
-    recipe: DefinitionRecipeFormElement;
+    recipe: RecipeFormElement;
 }
 
 @Component({

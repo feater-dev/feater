@@ -16,14 +16,23 @@
                 </div>
                 <div *ngFor="let customEnvVar of customEnvVars" class="row">
                     <div class="col-md-6">
-                        <input type="text" class="form-control" [(ngModel)]="customEnvVar.name">
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="customEnvVar.name"
+                        />
                     </div>
                     <div class="col-md-6">
                         <div style="position: relative; padding-right: 40px;">
-                            <input type="text" class="form-control" [(ngModel)]="customEnvVar.value">
-                            <a class="btn btn-danger btn-sm"
-                               (click)="deleteCustomEnvVar(i)"
-                               style="position: absolute; top: 5px; right: 0;"
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="customEnvVar.value"
+                            />
+                            <a
+                                class="btn btn-danger btn-sm"
+                                (click)="deleteCustomEnvVar(i)"
+                                style="position: absolute; top: 5px; right: 0;"
                             >
                                 <span class="glyphicon glyphicon-remove"></span>
                             </a>
@@ -32,9 +41,7 @@
                 </div>
             </div>
             <div style="margin-top: 8px">
-                <a class="btn btn-success btn-sm"
-                   (click)="addCustomEnvVar()"
-                >
+                <a class="btn btn-success btn-sm" (click)="addCustomEnvVar()">
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
             </div>

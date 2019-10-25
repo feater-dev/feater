@@ -196,12 +196,13 @@ export class DefinitionResolver {
             createDefinitionInput.projectId,
         );
 
-        const validationResult = this.recipeValidator.validateRecipe(
-            createDefinitionInput.recipeAsYaml,
-        );
-        if (validationResult.error) {
-            throw new Error('Invalid definition recipe.');
-        }
+        // TODO Forward port.
+        // const validationResult = this.recipeValidator.validateRecipe(
+        //     createDefinitionInput.recipeAsYaml,
+        // );
+        // if (validationResult.error) {
+        //     throw new Error('Invalid definition recipe.');
+        // }
 
         const definition = await this.definitionRepository.create(
             createDefinitionInput.projectId,
@@ -235,12 +236,13 @@ export class DefinitionResolver {
             updateDefinitionInput.recipeAsYaml,
         );
 
-        const validationResult = this.recipeValidator.validateRecipe(
-            updateDefinitionInput.recipeAsYaml,
-        );
-        if (validationResult.error) {
-            throw new Error('Invalid definition recipe.');
-        }
+        // TODO Forward port.
+        // const validationResult = this.recipeValidator.validateRecipe(
+        //     updateDefinitionInput.recipeAsYaml,
+        // );
+        // if (validationResult.error) {
+        //     throw new Error('Invalid definition recipe.');
+        // }
 
         const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         for (const source of recipe.sources) {

@@ -5,26 +5,39 @@
                 <div class="content-header-buttons pull-right">
                     <span *ngFor="let action of actions">
                         <a
-                                *ngIf="action.eventEmitter"
-                                (click)="action.eventEmitter.emit()"
-                                [ngClass]="{'btn-success': action.type === actionButtonType.success, 'btn-danger': action.type === actionButtonType.danger}"
-                                class="btn btn-sm"
-                                style=""
+                            *ngIf="action.eventEmitter"
+                            (click)="action.eventEmitter.emit()"
+                            [ngClass]="{
+                                'btn-success':
+                                    action.type === actionButtonType.success,
+                                'btn-danger':
+                                    action.type === actionButtonType.danger
+                            }"
+                            class="btn btn-sm"
+                            style=""
                         >
                             {{ action.label }}
                         </a>
                         <a
-                                *ngIf="action.routerLink"
-                                [ngClass]="{'btn-success': action.type === actionButtonType.success, 'btn-danger': action.type === actionButtonType.danger}"
-                                class="btn btn-sm"
-                                routerLink="{{ action.routerLink}}"
-                                style="margin-left: 10px;"
+                            *ngIf="action.routerLink"
+                            [ngClass]="{
+                                'btn-success':
+                                    action.type === actionButtonType.success,
+                                'btn-danger':
+                                    action.type === actionButtonType.danger
+                            }"
+                            class="btn btn-sm"
+                            routerLink="{{ action.routerLink }}"
+                            style="margin-left: 10px;"
                         >
                             {{ action.label }}
                         </a>
                     </span>
                 </div>
-                <h2><small>{{ context }}</small><br>{{ title }}</h2>
+                <h2>
+                    <small>{{ context }}</small
+                    ><br />{{ title }}
+                </h2>
             </div>
         </div>
     </div>

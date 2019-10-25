@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ExecuteServiceCommandTaskFormElement } from '../../../recipe-form/definition-recipe-form.model';
+import { ExecuteServiceCommandTaskFormElement } from '../../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-execute-service-command-task-form-element',

@@ -14,16 +14,28 @@
                         <label>Alias</label>
                     </div>
                 </div>
-                <div *ngFor="let inheritedEnvVar of inheritedEnvVars" class="row">
+                <div
+                    *ngFor="let inheritedEnvVar of inheritedEnvVars"
+                    class="row"
+                >
                     <div class="col-md-6">
-                        <input type="text" class="form-control" [(ngModel)]="inheritedEnvVar.name">
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="inheritedEnvVar.name"
+                        />
                     </div>
                     <div class="col-md-6">
                         <div style="position: relative; padding-right: 40px;">
-                            <input type="text" class="form-control" [(ngModel)]="inheritedEnvVar.alias">
-                            <a class="btn btn-danger btn-sm"
-                               (click)="deleteInheritedEnvVar(i)"
-                               style="position: absolute; top: 5px; right: 0;"
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="inheritedEnvVar.alias"
+                            />
+                            <a
+                                class="btn btn-danger btn-sm"
+                                (click)="deleteInheritedEnvVar(i)"
+                                style="position: absolute; top: 5px; right: 0;"
                             >
                                 <span class="glyphicon glyphicon-remove"></span>
                             </a>
@@ -32,8 +44,9 @@
                 </div>
             </div>
             <div style="margin-top: 8px">
-                <a class="btn btn-success btn-sm"
-                   (click)="addInheritedEnvVar()"
+                <a
+                    class="btn btn-success btn-sm"
+                    (click)="addInheritedEnvVar()"
                 >
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>

@@ -1,24 +1,29 @@
 <div class="well well-sm form-well">
-
     <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
         <span class="glyphicon glyphicon-trash"></span>
     </a>
 
     <div class="row">
-
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Name</label>
-                <input type="text" class="form-control" [(ngModel)]="envVariable.name">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="envVariable.name"
+                />
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Value</label>
-                <input type="text" class="form-control" [(ngModel)]="envVariable.value">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="envVariable.value"
+                />
             </div>
         </div>
-
     </div>
 </div>

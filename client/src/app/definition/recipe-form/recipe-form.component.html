@@ -24,44 +24,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <a class="btn btn-success btn-sm"
-               (click)="addSource()"
-            >
-                <span class="glyphicon glyphicon-plus"></span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- Source volumes -->
-
-<div class="form-section">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Source volumes</h3>
-        </div>
-    </div>
-
-    <div *ngIf="!recipe.sourceVolumes.length" class="row">
-        <div class="col-md-12">
-            <p>No source volumes defined.</p>
-        </div>
-    </div>
-
-    <div *ngIf="recipe.sourceVolumes.length">
-        <div *ngFor="let sourceVolume of recipe.sourceVolumes">
-            <app-definition-add-source-volume-form-element
-                    [sourceVolume]="sourceVolume"
-                (deleteItem)="deleteSourceVolume($event)"
-            ></app-definition-add-source-volume-form-element>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <a class="btn btn-success btn-sm"
-               (click)="addSourceVolume()"
-            >
+            <a class="btn btn-success btn-sm" (click)="addSource()">
                 <span class="glyphicon glyphicon-plus"></span>
             </a>
         </div>
@@ -86,7 +49,7 @@
     <div *ngIf="recipe.assetVolumes.length">
         <div *ngFor="let assetVolume of recipe.assetVolumes">
             <app-definition-add-asset-volume-form-element
-                    [assetVolume]="assetVolume"
+                [assetVolume]="assetVolume"
                 (deleteItem)="deleteAssetVolume($event)"
             ></app-definition-add-asset-volume-form-element>
         </div>
@@ -94,9 +57,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <a class="btn btn-success btn-sm"
-               (click)="addAssetVolume()"
-            >
+            <a class="btn btn-success btn-sm" (click)="addAssetVolume()">
                 <span class="glyphicon glyphicon-plus"></span>
             </a>
         </div>
@@ -129,9 +90,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <a class="btn btn-success btn-sm"
-               (click)="addProxiedPort()"
-            >
+            <a class="btn btn-success btn-sm" (click)="addProxiedPort()">
                 <span class="glyphicon glyphicon-plus"></span>
             </a>
         </div>
@@ -164,9 +123,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <a class="btn btn-success btn-sm"
-               (click)="addEnvVariable()"
-            >
+            <a class="btn btn-success btn-sm" (click)="addEnvVariable()">
                 <span class="glyphicon glyphicon-plus"></span>
             </a>
         </div>
@@ -188,56 +145,35 @@
     ></app-definition-add-compose-file-form-element>
 </div>
 
-<!-- After build tasks -->
+<!-- Actions -->
 
 <div class="form-section">
     <div class="row">
         <div class="col-md-12">
-            <h3 style="display: inline;">After build tasks</h3>
+            <h3 style="display: inline;">Actions</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.actions.length" class="row">
+        <div class="col-md-12">
+            <p>No actions defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.actions.length">
+        <div *ngFor="let action of recipe.actions">
+            <app-definition-add-action-form-element
+                [item]="action"
+                [availableEnvVariableNames]="getAvailableEnvVariableNames()"
+                (deleteItem)="deleteAction($event)"
+            ></app-definition-add-action-form-element>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <p *ngIf="!recipe.afterBuildTasks.length">
-                No after build tasks defined.
-            </p>
-            <div *ngIf="recipe.afterBuildTasks.length">
-                <div *ngFor="let afterBuildTask of recipe.afterBuildTasks">
-
-                    <app-execute-service-command-task-form-element
-                            *ngIf="isAfterBuildTaskExecuteServiceCommand(afterBuildTask)"
-                            [task]="afterBuildTask"
-                            [availableEnvVariableNames]="getAvailableEnvVariableNames()"
-                            (deleteTask)="deleteAfterBuildTask($event)"
-                    ></app-execute-service-command-task-form-element>
-
-                    <app-copy-asset-into-container-task-form-element
-                            *ngIf="isAfterBuildTaskCopyAssetIntoContainer(afterBuildTask)"
-                            [task]="afterBuildTask"
-                            (deleteTask)="deleteAfterBuildTask($event)"
-                    ></app-copy-asset-into-container-task-form-element>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <a
-                    class="btn btn-success btn-sm"
-                    (click)="addAfterBuildTaskExecuteServiceCommand()"
-                    style="margin-right: 8px;"
-            >
-                Execute service command  <span class="glyphicon glyphicon-plus"></span>
-            </a>
-            <a
-                    class="btn btn-success btn-sm"
-                    (click)="addAfterBuildTaskCopyAssetIntoContainer()"
-                    style="margin-right: 8px;"
-            >
-                Copy asset into container <span class="glyphicon glyphicon-plus"></span>
+            <a class="btn btn-success btn-sm" (click)="addAction()">
+                <span class="glyphicon glyphicon-plus"></span>
             </a>
         </div>
     </div>
@@ -260,17 +196,49 @@
 
     <div *ngIf="recipe.summaryItems.length">
         <div *ngFor="let summaryItem of recipe.summaryItems">
-            <app-definition-add-summary-item-form-element [summaryItem]="summaryItem"
-                                                          (deleteSummaryItem)="deleteSummaryItem($event)"
+            <app-definition-add-summary-item-form-element
+                [summaryItem]="summaryItem"
+                (deleteSummaryItem)="deleteSummaryItem($event)"
             ></app-definition-add-summary-item-form-element>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <a class="btn btn-success btn-sm"
-               (click)="addSummaryItem()"
-            >
+            <a class="btn btn-success btn-sm" (click)="addSummaryItem()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Downloadables -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Downloadables</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.downloadables.length" class="row">
+        <div class="col-md-12">
+            <p>No downloadables defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.downloadables.length">
+        <div *ngFor="let downloadable of recipe.downloadables">
+            <app-definition-add-downloadable-form-element
+                [item]="downloadable"
+                (deleteItem)="deleteDownloadable($event)"
+            ></app-definition-add-downloadable-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm" (click)="addDownloadable()">
                 <span class="glyphicon glyphicon-plus"></span>
             </a>
         </div>

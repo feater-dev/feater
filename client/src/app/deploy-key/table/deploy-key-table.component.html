@@ -9,7 +9,12 @@
             <div class="col-md-4 col-md-push-8 col-sm-6 col-sm-push-6">
                 <div class="form">
                     <div class="table-quick-search form-group-sm">
-                        <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+                        <input
+                            type="text"
+                            [(ngModel)]="search"
+                            placeholder="Quick search"
+                            class="form-control"
+                        />
                     </div>
                 </div>
             </div>
@@ -27,29 +32,48 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let deployKey of deployKeys | filterBy: getFilterCondition()">
+                            <tr
+                                *ngFor="
+                                    let deployKey of deployKeys
+                                        | filterBy: getFilterCondition()
+                                "
+                            >
                                 <td class="fit-column">
-                                    <a routerLink="/deploy-key/{{ deployKey.id }}">
+                                    <a
+                                        routerLink="/deploy-key/{{
+                                            deployKey.id
+                                        }}"
+                                    >
                                         {{ deployKey.cloneUrl }}
                                     </a>
                                 </td>
                                 <td>{{ deployKey.fingerprint }}</td>
                                 <td class="fit-column">
-                                    <span tooltip="{{ deployKey.createdAt | absoluteDate }}"
-                                          placement="left"
-                                          theme="light"
-                                          show-delay="200"
+                                    <span
+                                        tooltip="{{
+                                            deployKey.createdAt | absoluteDate
+                                        }}"
+                                        placement="left"
+                                        theme="light"
+                                        show-delay="200"
                                     >
-                                        <small>{{ deployKey.createdAt | relativeDate }}</small>
+                                        <small>{{
+                                            deployKey.createdAt | relativeDate
+                                        }}</small>
                                     </span>
                                 </td>
                                 <td class="fit-column">
-                                    <span tooltip="{{ deployKey.updatedAt | absoluteDate }}"
-                                          placement="left"
-                                          theme="light"
-                                          show-delay="200"
+                                    <span
+                                        tooltip="{{
+                                            deployKey.updatedAt | absoluteDate
+                                        }}"
+                                        placement="left"
+                                        theme="light"
+                                        show-delay="200"
                                     >
-                                        <small>{{ deployKey.updatedAt | relativeDate }}</small>
+                                        <small>{{
+                                            deployKey.updatedAt | relativeDate
+                                        }}</small>
                                     </span>
                                 </td>
                             </tr>

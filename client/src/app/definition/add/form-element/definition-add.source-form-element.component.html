@@ -1,22 +1,28 @@
 <div class="well well-sm form-well">
-
     <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
         <span class="glyphicon glyphicon-trash"></span>
     </a>
 
     <div class="row">
-
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">ID</label>
-                <input type="text" class="form-control" [(ngModel)]="source.id">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="source.id"
+                />
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Clone URL</label>
-                <input type="text" class="form-control" [(ngModel)]="source.cloneUrl">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="source.cloneUrl"
+                />
             </div>
         </div>
 
@@ -25,20 +31,25 @@
                 <label class="control-label">&nbsp;</label>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" [(ngModel)]="source.useDeployKey"> Use deploy key
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="source.useDeployKey"
+                        />
+                        Use deploy key
                     </label>
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="row">
-
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Source reference type</label>
-                <select class="form-control" [(ngModel)]="source.reference.type">
+                <select
+                    class="form-control"
+                    [(ngModel)]="source.reference.type"
+                >
                     <option value="branch" selected>Branch</option>
                     <option value="tag">Tag</option>
                     <option value="commit">Commit</option>
@@ -49,58 +60,70 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Source reference name</label>
-                <input type="text" class="form-control" [(ngModel)]="source.reference.name">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="source.reference.name"
+                />
             </div>
         </div>
-
     </div>
 
-    <hr style="border-color: rgba(44,62,80,0.15);">
+    <hr style="border-color: rgba(44,62,80,0.15);" />
 
     <div class="row">
-
         <div class="col-md-12">
             <h4>Before build tasks</h4>
         </div>
-
     </div>
 
     <div class="row">
-
         <div class="col-md-12">
             <div *ngIf="!source.beforeBuildTasks.length">
                 <p>No before build tasks to list.</p>
             </div>
             <div *ngIf="source.beforeBuildTasks.length">
-                <div *ngFor="let beforeBuildTask of source.beforeBuildTasks" style="margin-bottom: 16px;">
-                    <div style="padding: 16px; margin-bottom: 8px; border: 1px solid rgba(44,62,80,0.15); background-color: #f7f8f9; border-radius: 3px; position: relative;">
-
+                <div
+                    *ngFor="let beforeBuildTask of source.beforeBuildTasks"
+                    style="margin-bottom: 16px;"
+                >
+                    <div
+                        style="padding: 16px; margin-bottom: 8px; border: 1px solid rgba(44,62,80,0.15); background-color: #f7f8f9; border-radius: 3px; position: relative;"
+                    >
                         <app-definition-add-before-build-task-copy-form-element
-                                *ngIf="isBeforeBuildTaskCopy(beforeBuildTask)"
-                                [task]="beforeBuildTask"
-                                (deleteTask)="deleteBeforeBuildTask($event)"
+                            *ngIf="isBeforeBuildTaskCopy(beforeBuildTask)"
+                            [task]="beforeBuildTask"
+                            (deleteTask)="deleteBeforeBuildTask($event)"
                         ></app-definition-add-before-build-task-copy-form-element>
 
                         <app-definition-add-before-build-task-interpolate-form-element
-                                *ngIf="isBeforeBuildTaskInterpolate(beforeBuildTask)"
-                                [task]="beforeBuildTask"
-                                (deleteTask)="deleteBeforeBuildTask($event)"
+                            *ngIf="
+                                isBeforeBuildTaskInterpolate(beforeBuildTask)
+                            "
+                            [task]="beforeBuildTask"
+                            (deleteTask)="deleteBeforeBuildTask($event)"
                         ></app-definition-add-before-build-task-interpolate-form-element>
-
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                <a class="btn btn-success btn-sm" (click)="addBeforeBuildTaskCopy()">Copy <span class="glyphicon glyphicon-plus"></span></a>
-                <a class="btn btn-success btn-sm" (click)="addBeforeBuildTaskInterpolate()" style="margin-left: 1em">Interpolate <span class="glyphicon glyphicon-plus"></span></a>
+                <a
+                    class="btn btn-success btn-sm"
+                    (click)="addBeforeBuildTaskCopy()"
+                    >Copy <span class="glyphicon glyphicon-plus"></span
+                ></a>
+                <a
+                    class="btn btn-success btn-sm"
+                    (click)="addBeforeBuildTaskInterpolate()"
+                    style="margin-left: 1em"
+                    >Interpolate <span class="glyphicon glyphicon-plus"></span
+                ></a>
             </div>
         </div>
     </div>
-
 </div>

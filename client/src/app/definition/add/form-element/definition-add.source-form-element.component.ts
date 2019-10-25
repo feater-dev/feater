@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {
-    DefinitionSourceFormElement,
+    SourceFormElement,
     BeforeBuildTaskFormElement,
     TaskFormElement,
     InterpolateTaskFormElement,
-} from '../../recipe-form/definition-recipe-form.model';
+} from '../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-source-form-element',
@@ -12,11 +12,11 @@ import {
     styles: [],
 })
 export class DefinitionAddSourceFormElementComponent {
-    @Input() source: DefinitionSourceFormElement;
+    @Input() source: SourceFormElement;
 
-    @Output() deleteSource: EventEmitter<
-        DefinitionSourceFormElement
-    > = new EventEmitter<DefinitionSourceFormElement>();
+    @Output() deleteSource: EventEmitter<SourceFormElement> = new EventEmitter<
+        SourceFormElement
+    >();
 
     delete(): void {
         this.deleteSource.emit(this.source);

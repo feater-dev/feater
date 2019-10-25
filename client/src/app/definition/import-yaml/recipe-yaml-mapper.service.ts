@@ -1,10 +1,11 @@
-import { DefinitionRecipeFormElement } from '../recipe-form/definition-recipe-form.model';
-import * as jsYaml from 'js-yaml';
-import * as camelCaseKeys from 'camelcase-keys';
 import { Injectable } from '@angular/core';
+import { RecipeFormElement } from '../recipe-form/recipe-form.model';
+import * as jsYaml from 'js-yaml';
+import * as _ from 'lodash';
+import { CamelCaseConverter } from './camel-case-converter';
 
 @Injectable()
-export class DefinitionRecipeYamlMapperService {
+export class RecipeYamlMapperService {
     readonly defaultNginxConfigTemplate = `# Proxy domain for
 # port {{{port}}}
 # of {{{service_id}}}
@@ -22,31 +23,30 @@ server {
     }
 }`;
 
-    map(recipeYaml: string): DefinitionRecipeFormElement {
-        const camelCaseYamlRecipe: any = camelCaseKeys(
+    public constructor(
+        private readonly camelCaseConverter: CamelCaseConverter,
+    ) {}
+
+    map(recipeYaml: string): RecipeFormElement {
+        const camelCaseYamlRecipe: any = this.camelCaseConverter.convert(
             jsYaml.safeLoad(recipeYaml),
-            { deep: true },
         );
 
         const mappedYamlRecipe = {
             sources: [],
-            sourceVolumes: [],
             assetVolumes: [],
             proxiedPorts: [],
             envVariables: [],
             composeFile: null,
-            afterBuildTasks: [],
+            actions: [],
             summaryItems: [],
+            downloadables: [],
         };
 
         for (const source of camelCaseYamlRecipe.sources) {
             // TODO Move Yaml validation to server side to provide checks and defaults.
             source.useDeployKey = source.useDeployKey || false;
             mappedYamlRecipe.sources.push(source);
-        }
-
-        for (const sourceVolume of camelCaseYamlRecipe.sourceVolumes) {
-            mappedYamlRecipe.sourceVolumes.push(sourceVolume);
         }
 
         for (const assetVolume of camelCaseYamlRecipe.assetVolumes) {
@@ -70,30 +70,38 @@ server {
             mappedYamlRecipe.envVariables.push(envVariable);
         }
 
+        const composeFile = camelCaseYamlRecipe.composeFiles[0];
         mappedYamlRecipe.composeFile = {
-            sourceId: camelCaseYamlRecipe.composeFiles[0].sourceId,
-            envDirRelativePath:
-                camelCaseYamlRecipe.composeFiles[0].envDirRelativePath,
-            composeFileRelativePaths:
-                camelCaseYamlRecipe.composeFiles[0].composeFileRelativePaths,
+            sourceId: composeFile.sourceId,
+            envDirRelativePath: composeFile.envDirRelativePath,
+            composeFileRelativePaths: composeFile.composeFileRelativePaths,
         };
 
-        for (const afterBuildTask of camelCaseYamlRecipe.afterBuildTasks) {
-            const mappedAfterBuildTask = afterBuildTask;
+        for (const action of camelCaseYamlRecipe.actions) {
+            mappedYamlRecipe.actions.push({
+                id: action.id,
+                type: action.type,
+                name: action.name,
+                afterBuildTasks: action.afterBuildTasks.map(afterBuildTask => {
+                    const mappedAfterBuildTask = _.cloneDeep(afterBuildTask);
+                    if (!mappedAfterBuildTask.id) {
+                        mappedAfterBuildTask.id = '';
+                    }
+                    if (!mappedAfterBuildTask.dependsOn) {
+                        mappedAfterBuildTask.dependsOn = [];
+                    }
 
-            if (!afterBuildTask.id) {
-                mappedAfterBuildTask.id = '';
-            }
-
-            if (!afterBuildTask.dependsOn) {
-                mappedAfterBuildTask.dependsOn = [];
-            }
-
-            mappedYamlRecipe.afterBuildTasks.push(mappedAfterBuildTask);
+                    return mappedAfterBuildTask;
+                }),
+            });
         }
 
         for (const summaryItem of camelCaseYamlRecipe.summaryItems) {
             mappedYamlRecipe.summaryItems.push(summaryItem);
+        }
+
+        for (const downloadable of camelCaseYamlRecipe.downloadables) {
+            mappedYamlRecipe.downloadables.push(downloadable);
         }
 
         return mappedYamlRecipe;

@@ -9,7 +9,12 @@
             <div class="col-md-4 col-md-push-8 col-sm-6 col-sm-push-6">
                 <div class="form">
                     <div class="table-quick-search form-group-sm">
-                        <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+                        <input
+                            type="text"
+                            [(ngModel)]="search"
+                            placeholder="Quick search"
+                            class="form-control"
+                        />
                     </div>
                 </div>
             </div>
@@ -19,44 +24,69 @@
                 <div class="table-wrapper">
                     <table class="table table-striped table-hover ">
                         <thead>
-                        <tr>
-                            <th [ngClass]="{'fit-column': withProjects}">ID</th>
-                            <th *ngIf="withProjects">Project</th>
-                            <th class="fit-column">Created</th>
-                            <th class="fit-column">Updated</th>
-                        </tr>
+                            <tr>
+                                <th [ngClass]="{ 'fit-column': withProjects }">
+                                    ID
+                                </th>
+                                <th *ngIf="withProjects">Project</th>
+                                <th class="fit-column">Created</th>
+                                <th class="fit-column">Updated</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let asset of assets | filterBy: getFilterCondition()">
-                            <td [ngClass]="{'fit-column': withProjects}">
-                                <a routerLink="/asset/{{ asset.project.id }}/{{ asset.id }}">
-                                    {{ asset.id }}
-                                </a>
-                            </td>
-                            <td *ngIf="withProjects">
-                                <a routerLink="/project/{{ asset.project.id }}">
-                                    {{ asset.project.name }}
-                                </a>
-                            </td>
-                            <td class="fit-column">
-                            <span tooltip="{{ asset.createdAt | absoluteDate }}"
-                                  placement="left"
-                                  theme="light"
-                                  show-delay="200"
+                            <tr
+                                *ngFor="
+                                    let asset of assets
+                                        | filterBy: getFilterCondition()
+                                "
                             >
-                                <small>{{ asset.createdAt | relativeDate }}</small>
-                            </span>
-                            </td>
-                            <td class="fit-column">
-                            <span tooltip="{{ asset.updatedAt | absoluteDate }}"
-                                  placement="left"
-                                  theme="light"
-                                  show-delay="200"
-                            >
-                                <small>{{ asset.updatedAt | relativeDate }}</small>
-                            </span>
-                            </td>
-                        </tr>
+                                <td [ngClass]="{ 'fit-column': withProjects }">
+                                    <a
+                                        routerLink="/asset/{{
+                                            asset.project.id
+                                        }}/{{ asset.id }}"
+                                    >
+                                        {{ asset.id }}
+                                    </a>
+                                </td>
+                                <td *ngIf="withProjects">
+                                    <a
+                                        routerLink="/project/{{
+                                            asset.project.id
+                                        }}"
+                                    >
+                                        {{ asset.project.name }}
+                                    </a>
+                                </td>
+                                <td class="fit-column">
+                                    <span
+                                        tooltip="{{
+                                            asset.createdAt | absoluteDate
+                                        }}"
+                                        placement="left"
+                                        theme="light"
+                                        show-delay="200"
+                                    >
+                                        <small>{{
+                                            asset.createdAt | relativeDate
+                                        }}</small>
+                                    </span>
+                                </td>
+                                <td class="fit-column">
+                                    <span
+                                        tooltip="{{
+                                            asset.updatedAt | absoluteDate
+                                        }}"
+                                        placement="left"
+                                        theme="light"
+                                        show-delay="200"
+                                    >
+                                        <small>{{
+                                            asset.updatedAt | relativeDate
+                                        }}</small>
+                                    </span>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

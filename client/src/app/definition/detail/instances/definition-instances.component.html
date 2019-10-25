@@ -2,28 +2,31 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
-        <app-definition-tabs [definitionId]="definition?.id" [activeTab]="definitionTabs.instances"></app-definition-tabs>
+        <app-definition-tabs
+            [definitionId]="definition?.id"
+            [activeTab]="definitionTabs.instances"
+        ></app-definition-tabs>
 
         <div class="row">
             <div class="col-md-12">
                 <div *ngIf="definition">
-                    <app-instance-table [instances]="definition?.instances"
-                                        [withProjects]="false"
-                                        [withDefinitions]="false"
+                    <app-instance-table
+                        [instances]="definition?.instances"
+                        [withProjects]="false"
+                        [withDefinitions]="false"
                     ></app-instance-table>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12" style="text-align: right;">
-                <a routerLink="/definition/{{ definition?.id }}/instance/add"
-                   class="btn btn-success"
+                <a
+                    routerLink="/definition/{{ definition?.id }}/instance/add"
+                    class="btn btn-success"
                 >
                     Add instance
                 </a>
             </div>
         </div>
-
     </div>
 </div>

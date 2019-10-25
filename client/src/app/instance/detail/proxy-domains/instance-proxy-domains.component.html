@@ -2,31 +2,55 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
-        <app-instance-tabs [instanceId]="instance?.id" [activeTab]="instanceTabs.proxyDomains"></app-instance-tabs>
+        <app-instance-tabs
+            [instanceId]="instance?.id"
+            [activeTab]="instanceTabs.proxyDomains"
+        ></app-instance-tabs>
 
         <div class="row">
             <div class="col-md-12">
                 <div class="table-wrapper">
-                    <table *ngIf="instance?.proxiedPorts?.length" class="table table-striped">
+                    <table
+                        *ngIf="instance?.proxiedPorts?.length"
+                        class="table table-striped"
+                    >
                         <thead>
                             <tr>
                                 <th scope="col" class="fit-column">ID</th>
-                                <th scope="col" class="fit-column">Service ID</th>
-                                <th scope="col" class="fit-column">IP address</th>
+                                <th scope="col" class="fit-column">
+                                    Service ID
+                                </th>
+                                <th scope="col" class="fit-column">
+                                    IP address
+                                </th>
                                 <th scope="col" class="fit-column">Port</th>
-                                <th scope="col" class="fit-column">Proxy domains</th>
+                                <th scope="col" class="fit-column">
+                                    Proxy domains
+                                </th>
                                 <th scope="col">Name</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let proxiedPort of instance?.proxiedPorts; trackBy: trackByIndex" class="form-control-static">
+                            <tr
+                                *ngFor="
+                                    let proxiedPort of instance?.proxiedPorts;
+                                    trackBy: trackByIndex
+                                "
+                                class="form-control-static"
+                            >
                                 <td>{{ proxiedPort.id }}</td>
                                 <td>{{ proxiedPort.serviceId }}</td>
-                                <td>{{ getServiceById(proxiedPort.serviceId).ipAddress || '&mdash;' }}</td>
+                                <td>
+                                    {{
+                                        getServiceById(proxiedPort.serviceId)
+                                            .ipAddress || '&mdash;'
+                                    }}
+                                </td>
                                 <td>{{ proxiedPort.port }}</td>
                                 <td>
-                                    <span style="white-space: nowrap;">{{ proxiedPort.domain }}</span>
+                                    <span style="white-space: nowrap;">{{
+                                        proxiedPort.domain
+                                    }}</span>
                                 </td>
                                 <td>{{ proxiedPort.name }}</td>
                             </tr>
@@ -35,6 +59,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>

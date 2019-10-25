@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { DefinitionRecipeFormElement } from '../recipe-form/definition-recipe-form.model';
-import { DefinitionRecipeYamlMapperService } from './definition-recipe-yaml-mapper.service';
+import { RecipeFormElement } from '../recipe-form/recipe-form.model';
+import { RecipeYamlMapperService } from './recipe-yaml-mapper.service';
 
 @Component({
     selector: 'app-import-definition-recipe-yaml',
@@ -10,12 +10,10 @@ import { DefinitionRecipeYamlMapperService } from './definition-recipe-yaml-mapp
 export class ImportDefinitionRecipeYamlComponent {
     recipeYaml = '';
 
-    @Output() importRecipeYaml = new EventEmitter<
-        DefinitionRecipeFormElement
-    >();
+    @Output() importRecipeYaml = new EventEmitter<RecipeFormElement>();
 
     constructor(
-        protected readonly definitionRecipeYamlMapperComponent: DefinitionRecipeYamlMapperService,
+        protected readonly definitionRecipeYamlMapperComponent: RecipeYamlMapperService,
     ) {}
 
     import(): void {

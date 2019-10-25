@@ -2,27 +2,53 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-md-12">
                 <div class="well bs-component">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label for="inputProjectName" class="col-md-2 control-label">Name</label>
+                            <label
+                                for="inputProjectName"
+                                class="col-md-2 control-label"
+                                >Name</label
+                            >
                             <div class="col-md-10">
-                                <p class="form-control-static" id="inputProjectName">{{ project?.name }}</p>
+                                <p
+                                    class="form-control-static"
+                                    id="inputProjectName"
+                                >
+                                    {{ project?.name }}
+                                </p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputProjectCreatedAt" class="col-md-2 control-label">Created</label>
+                            <label
+                                for="inputProjectCreatedAt"
+                                class="col-md-2 control-label"
+                                >Created</label
+                            >
                             <div class="col-md-10">
-                                <p class="form-control-static" id="inputProjectCreatedAt">{{ project?.createdAt | absoluteDate }}</p>
+                                <p
+                                    class="form-control-static"
+                                    id="inputProjectCreatedAt"
+                                >
+                                    {{ project?.createdAt | absoluteDate }}
+                                </p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputProjectUpdatedAt" class="col-md-2 control-label">Updated</label>
+                            <label
+                                for="inputProjectUpdatedAt"
+                                class="col-md-2 control-label"
+                                >Updated</label
+                            >
                             <div class="col-md-10">
-                                <p class="form-control-static" id="inputProjectUpdatedAt">{{ project?.updatedAt | absoluteDate }}</p>
+                                <p
+                                    class="form-control-static"
+                                    id="inputProjectUpdatedAt"
+                                >
+                                    {{ project?.updatedAt | absoluteDate }}
+                                </p>
                             </div>
                         </div>
                     </form>
@@ -34,14 +60,21 @@
             <div class="col-md-12">
                 <h3>Definitions</h3>
                 <div *ngIf="project">
-                    <app-definition-table [definitions]="project?.definitions" [withProjects]="false"></app-definition-table>
+                    <app-definition-table
+                        [definitions]="project?.definitions"
+                        [withProjects]="false"
+                    ></app-definition-table>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12">
-                <a routerLink="/project/{{ project?.id }}/definition/add" class="btn btn-success">Add definition</a>
+                <a
+                    routerLink="/project/{{ project?.id }}/definition/add"
+                    class="btn btn-success"
+                    >Add definition</a
+                >
             </div>
         </div>
 
@@ -49,16 +82,22 @@
             <div class="col-md-12">
                 <h3>Assets</h3>
                 <div *ngIf="project">
-                    <app-asset-table [assets]="project?.assets" [withProjects]="false"></app-asset-table>
+                    <app-asset-table
+                        [assets]="project?.assets"
+                        [withProjects]="false"
+                    ></app-asset-table>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12">
-                <a routerLink="/project/{{ project?.id }}/asset/add" class="btn btn-success">Add asset</a>
+                <a
+                    routerLink="/project/{{ project?.id }}/asset/add"
+                    class="btn btn-success"
+                    >Add asset</a
+                >
             </div>
         </div>
-
     </div>
 </div>

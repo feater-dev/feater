@@ -1,29 +1,27 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { NgxSpinnerService } from 'ngx-spinner';
 import {
-    DefinitionSourceFormElement,
-    DefinitionAssetVolumeFormElement,
-    DefinitionProxiedPortFormElement,
-    DefinitionEnvVariableFormElement,
-    DefinitionSummaryItemFormElement,
-    DefinitionRecipeFormElement,
-    ExecuteServiceCommandTaskFormElement,
-    AfterBuildTaskFormElement,
-    CopyAssetIntoContainerTaskFormElement,
-    DefinitionSourceVolumeFormElement,
-} from './definition-recipe-form.model';
+    SourceFormElement,
+    AssetVolumeFormElement,
+    ProxiedPortFormElement,
+    EnvVariableFormElement,
+    RecipeFormElement,
+    ActionFormElement,
+    SummaryItemFormElement,
+    DownloadableFormElement,
+} from './recipe-form.model';
 import { ToastrService } from 'ngx-toastr';
-import { DefinitionRecipeYamlMapperService } from '../import-yaml/definition-recipe-yaml-mapper.service';
+import { RecipeYamlMapperService } from '../import-yaml/recipe-yaml-mapper.service';
 
 @Component({
-    selector: 'app-definition-recipe-form',
-    templateUrl: './definition-recipe-form.component.html',
+    selector: 'app-recipe-form',
+    templateUrl: './recipe-form.component.html',
     styles: [],
 })
-export class DefinitionRecipeFormComponent {
-    @Input() recipe: DefinitionRecipeFormElement;
+export class RecipeFormComponent {
+    @Input() recipe: RecipeFormElement;
 
     constructor(
         protected route: ActivatedRoute,
@@ -31,7 +29,7 @@ export class DefinitionRecipeFormComponent {
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected toastr: ToastrService,
-        protected definitionRecipeYamlMapperService: DefinitionRecipeYamlMapperService,
+        protected definitionRecipeYamlMapperService: RecipeYamlMapperService,
     ) {}
 
     addSource(): void {
@@ -47,25 +45,10 @@ export class DefinitionRecipeFormComponent {
         });
     }
 
-    deleteSource(source: DefinitionSourceFormElement): void {
+    deleteSource(source: SourceFormElement): void {
         const index = this.recipe.sources.indexOf(source);
         if (-1 !== index) {
             this.recipe.sources.splice(index, 1);
-        }
-    }
-
-    addSourceVolume(): void {
-        this.recipe.sourceVolumes.push({
-            id: '',
-            sourceId: '',
-            relativePath: '',
-        });
-    }
-
-    deleteSourceVolume(volume: DefinitionSourceVolumeFormElement): void {
-        const index = this.recipe.sourceVolumes.indexOf(volume);
-        if (-1 !== index) {
-            this.recipe.sourceVolumes.splice(index, 1);
         }
     }
 
@@ -76,7 +59,7 @@ export class DefinitionRecipeFormComponent {
         });
     }
 
-    deleteAssetVolume(volume: DefinitionAssetVolumeFormElement): void {
+    deleteAssetVolume(volume: AssetVolumeFormElement): void {
         const index = this.recipe.assetVolumes.indexOf(volume);
         if (-1 !== index) {
             this.recipe.assetVolumes.splice(index, 1);
@@ -95,7 +78,7 @@ export class DefinitionRecipeFormComponent {
         });
     }
 
-    deleteProxiedPort(proxiedPort: DefinitionProxiedPortFormElement): void {
+    deleteProxiedPort(proxiedPort: ProxiedPortFormElement): void {
         const index = this.recipe.proxiedPorts.indexOf(proxiedPort);
         if (-1 !== index) {
             this.recipe.proxiedPorts.splice(index, 1);
@@ -109,51 +92,26 @@ export class DefinitionRecipeFormComponent {
         });
     }
 
-    deleteEnvVariable(envVariable: DefinitionEnvVariableFormElement): void {
+    deleteEnvVariable(envVariable: EnvVariableFormElement): void {
         const index = this.recipe.envVariables.indexOf(envVariable);
         if (-1 !== index) {
             this.recipe.envVariables.splice(index, 1);
         }
     }
 
-    addAfterBuildTaskExecuteServiceCommand(): void {
-        this.recipe.afterBuildTasks.push({
-            type: 'execute_service_command',
+    addAction(): void {
+        this.recipe.actions.push({
             id: '',
-            dependsOn: [],
-            command: [''],
-            inheritedEnvVariables: [],
-            customEnvVariables: [],
-        } as ExecuteServiceCommandTaskFormElement);
+            type: 'modification',
+            name: '',
+            afterBuildTasks: [],
+        });
     }
 
-    addAfterBuildTaskCopyAssetIntoContainer(): void {
-        this.recipe.afterBuildTasks.push({
-            type: 'copy_asset_into_container',
-            id: '',
-            dependsOn: [],
-            serviceId: '',
-            assetId: '',
-            destinationPath: '',
-        } as CopyAssetIntoContainerTaskFormElement);
-    }
-
-    isAfterBuildTaskExecuteServiceCommand(
-        afterBuildTask: AfterBuildTaskFormElement,
-    ): boolean {
-        return 'execute_service_command' === afterBuildTask.type;
-    }
-
-    isAfterBuildTaskCopyAssetIntoContainer(
-        afterBuildTask: AfterBuildTaskFormElement,
-    ): boolean {
-        return 'copy_asset_into_container' === afterBuildTask.type;
-    }
-
-    deleteAfterBuildTask(afterBuildTask: AfterBuildTaskFormElement): void {
-        const index = this.recipe.afterBuildTasks.indexOf(afterBuildTask);
+    deleteAction(action: ActionFormElement): void {
+        const index = this.recipe.actions.indexOf(action);
         if (-1 !== index) {
-            this.recipe.afterBuildTasks.splice(index, 1);
+            this.recipe.actions.splice(index, 1);
         }
     }
 
@@ -164,10 +122,26 @@ export class DefinitionRecipeFormComponent {
         });
     }
 
-    deleteSummaryItem(summaryItem: DefinitionSummaryItemFormElement): void {
+    deleteSummaryItem(summaryItem: SummaryItemFormElement): void {
         const index = this.recipe.summaryItems.indexOf(summaryItem);
         if (-1 !== index) {
             this.recipe.summaryItems.splice(index, 1);
+        }
+    }
+
+    addDownloadable(): void {
+        this.recipe.downloadables.push({
+            id: '',
+            name: '',
+            serviceId: '',
+            absolutePath: '',
+        });
+    }
+
+    deleteDownloadable(downloadable: DownloadableFormElement): void {
+        const index = this.recipe.downloadables.indexOf(downloadable);
+        if (-1 !== index) {
+            this.recipe.downloadables.splice(index, 1);
         }
     }
 

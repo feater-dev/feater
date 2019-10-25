@@ -1,26 +1,40 @@
-<app-title [context]="'Instance'" [title]="'Add for definition ' + definition?.name"></app-title>
+<app-title
+    [context]="'Instance'"
+    [title]="'Add for definition ' + definition?.name"
+></app-title>
 
 <div class="content-body">
     <div class="container-fluid">
-
         <div class="form">
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="inputInstance_name" class="control-label">Name</label>
-                        <input type="text" class="form-control" id="inputInstance_name" placeholder="Name" name="name" [(ngModel)]="instance.name">
+                        <label for="inputInstance_name" class="control-label"
+                            >Name</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="inputInstance_name"
+                            placeholder="Name"
+                            name="name"
+                            [(ngModel)]="instance.name"
+                        />
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-success" (click)="addItem()">Submit</button>
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                        (click)="addItem()"
+                    >
+                        Submit
+                    </button>
                 </div>
             </div>
-
         </div>
-
     </div>
 </div>

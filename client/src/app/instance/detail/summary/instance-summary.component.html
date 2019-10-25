@@ -2,22 +2,29 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
-        <app-instance-tabs [instanceId]="instance?.id" [activeTab]="instanceTabs.summary"></app-instance-tabs>
+        <app-instance-tabs
+            [instanceId]="instance?.id"
+            [activeTab]="instanceTabs.summary"
+        ></app-instance-tabs>
 
         <div class="form">
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="control-label">Name</label>
-                        <p class="form-control-static">{{ instance?.name}}</p>
+                        <p class="form-control-static">{{ instance?.name }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="control-label">Definition</label>
                         <p class="form-control-static">
-                            <a routerLink="/definition/{{ instance?.definition.id }}">{{ instance?.definition.name }}</a>
+                            <a
+                                routerLink="/definition/{{
+                                    instance?.definition.id
+                                }}"
+                                >{{ instance?.definition.name }}</a
+                            >
                         </p>
                     </div>
                 </div>
@@ -25,8 +32,12 @@
                     <div class="form-group">
                         <label class="control-label">Project</label>
                         <p class="form-control-static">
-                            <a routerLink="/project/{{ instance?.definition.project.id }}">
-                                {{instance?.definition.project.name }}
+                            <a
+                                routerLink="/project/{{
+                                    instance?.definition.project.id
+                                }}"
+                            >
+                                {{ instance?.definition.project.name }}
                             </a>
                         </p>
                     </div>
@@ -34,16 +45,40 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="control-label">Build status</label>
-                        <div class="instance-status-indicator form-control-static">
-                            <span *ngIf="instance?.completedAt" class="label label-success">
+                        <div
+                            class="instance-status-indicator form-control-static"
+                        >
+                            <span
+                                *ngIf="instance?.completedAt"
+                                class="label label-success"
+                            >
                                 Completed in
-                                {{ {start: instance?.createdAt, end: instance?.completedAt} | elapsedTime }}
+                                {{
+                                    {
+                                        start: instance?.createdAt,
+                                        end: instance?.completedAt
+                                    } | elapsedTime
+                                }}
                             </span>
-                            <span *ngIf="instance?.failedAt" class="label label-danger">
+                            <span
+                                *ngIf="instance?.failedAt"
+                                class="label label-danger"
+                            >
                                 Failed after
-                                {{ {start: instance?.createdAt, end: instance?.failedAt} | elapsedTime }}
+                                {{
+                                    {
+                                        start: instance?.createdAt,
+                                        end: instance?.failedAt
+                                    } | elapsedTime
+                                }}
                             </span>
-                            <span *ngIf="!instance?.completedAt && !instance?.failedAt" class="label label-default">
+                            <span
+                                *ngIf="
+                                    !instance?.completedAt &&
+                                    !instance?.failedAt
+                                "
+                                class="label label-default"
+                            >
                                 In progress
                             </span>
                         </div>
@@ -56,7 +91,7 @@
                         <label class="control-label">Created at</label>
                         <p class="form-control-static">
                             <span *ngIf="instance?.createdAt">
-                                {{ instance?.createdAt | absoluteDate }}<br>
+                                {{ instance?.createdAt | absoluteDate }}<br />
                                 ({{ instance?.createdAt | relativeDate }})
                             </span>
                             <span *ngIf="!instance?.createdAt">
@@ -70,7 +105,7 @@
                         <label class="control-label">Updated at</label>
                         <p class="form-control-static">
                             <span *ngIf="instance?.updatedAt">
-                                {{ instance?.updatedAt | absoluteDate }}<br>
+                                {{ instance?.updatedAt | absoluteDate }}<br />
                                 ({{ instance?.updatedAt | relativeDate }})
                             </span>
                             <span *ngIf="!instance?.updatedAt">
@@ -84,7 +119,7 @@
                     <div class="form-group">
                         <p class="form-control-static">
                             <span *ngIf="instance?.completedAt">
-                                {{ instance?.completedAt | absoluteDate }}<br>
+                                {{ instance?.completedAt | absoluteDate }}<br />
                                 ({{ instance?.completedAt | relativeDate }})
                             </span>
                             <span *ngIf="!instance?.completedAt">
@@ -98,7 +133,7 @@
                     <div *ngIf="instance?.failedAt" class="form-group">
                         <p class="form-control-static">
                             <span *ngIf="instance?.failedAt">
-                                {{ instance?.failedAt | absoluteDate }}<br>
+                                {{ instance?.failedAt | absoluteDate }}<br />
                                 ({{ instance?.failedAt | relativeDate }})
                             </span>
                             <span *ngIf="!instance?.failedAt">
@@ -110,13 +145,22 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group" >
+                    <div class="form-group">
                         <label class="control-label">Summary items</label>
                         <div class="form-control-static">
                             <div *ngIf="instance?.summaryItems?.length">
-                                <dl *ngFor="let summaryItem of instance?.summaryItems; trackBy: trackByIndex">
+                                <dl
+                                    *ngFor="
+                                        let summaryItem of instance?.summaryItems;
+                                        trackBy: trackByIndex
+                                    "
+                                >
                                     <dt>{{ summaryItem.name }}</dt>
-                                    <dd innerHTML="{{ summaryItem.value | linkify }}"></dd>
+                                    <dd
+                                        innerHTML="{{
+                                            summaryItem.value | linkify
+                                        }}"
+                                    ></dd>
                                 </dl>
                             </div>
                             <div *ngIf="!instance?.summaryItems?.length">
@@ -129,11 +173,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <div>
-                        <span (click)="removeInstance()" class="btn btn-danger">Remove</span>
+                        <span (click)="removeInstance()" class="btn btn-danger"
+                            >Remove</span
+                        >
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

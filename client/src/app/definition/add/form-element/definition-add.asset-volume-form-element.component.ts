@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { DefinitionAssetVolumeFormElement } from '../../recipe-form/definition-recipe-form.model';
+import { AssetVolumeFormElement } from '../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-asset-volume-form-element',
@@ -7,11 +7,11 @@ import { DefinitionAssetVolumeFormElement } from '../../recipe-form/definition-r
     styles: [],
 })
 export class DefinitionAddAssetVolumeFormElementComponent {
-    @Input() assetVolume: DefinitionAssetVolumeFormElement;
+    @Input() assetVolume: AssetVolumeFormElement;
 
     @Output() deleteItem: EventEmitter<
-        DefinitionAssetVolumeFormElement
-    > = new EventEmitter<DefinitionAssetVolumeFormElement>();
+        AssetVolumeFormElement
+    > = new EventEmitter<AssetVolumeFormElement>();
 
     delete(): void {
         this.deleteItem.emit(this.assetVolume);

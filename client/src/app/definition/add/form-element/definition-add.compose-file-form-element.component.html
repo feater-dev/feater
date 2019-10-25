@@ -1,12 +1,15 @@
 <div class="well well-sm form-well">
-
     <div class="row">
-
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Source id</label>
                 <select class="form-control" [(ngModel)]="composeFile.sourceId">
-                    <option *ngFor="let source of sources" [value]="source.id" selected>{{ source.id }}</option>
+                    <option
+                        *ngFor="let source of sources"
+                        [value]="source.id"
+                        selected
+                        >{{ source.id }}</option
+                    >
                 </select>
             </div>
         </div>
@@ -14,35 +17,48 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Env directory relative path</label>
-                <input type="text" class="form-control" [(ngModel)]="composeFile.envDirRelativePath">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="composeFile.envDirRelativePath"
+                />
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Compose file relative paths</label>
-                <div *ngFor="let composeFileRelativePath of composeFile.composeFileRelativePaths; trackBy: trackByIndex; let i = index"
-                     style="position: relative; padding-right: 40px;"
+                <div
+                    *ngFor="
+                        let composeFileRelativePath of composeFile.composeFileRelativePaths;
+                        trackBy: trackByIndex;
+                        let i = index
+                    "
+                    style="position: relative; padding-right: 40px;"
                 >
-                    <input type="text" class="form-control" [(ngModel)]="composeFile.composeFileRelativePaths[i]">
-                    <a class="btn btn-danger btn-sm"
-                       *ngIf="i > 0"
-                       (click)="deleteComposeFileRelativePath(i)"
-                       style="position: absolute; top: 5px; right: 0;"
+                    <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="composeFile.composeFileRelativePaths[i]"
+                    />
+                    <a
+                        class="btn btn-danger btn-sm"
+                        *ngIf="i > 0"
+                        (click)="deleteComposeFileRelativePath(i)"
+                        style="position: absolute; top: 5px; right: 0;"
                     >
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </div>
                 <div style="margin-top: 8px">
-                    <a class="btn btn-success btn-sm"
-                       (click)="addComposeFileRelativePath()"
+                    <a
+                        class="btn btn-success btn-sm"
+                        (click)="addComposeFileRelativePath()"
                     >
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>

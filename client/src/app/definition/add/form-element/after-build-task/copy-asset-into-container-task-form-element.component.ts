@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CopyAssetIntoContainerTaskFormElement } from '../../../recipe-form/definition-recipe-form.model';
+import { CopyAssetIntoContainerTaskFormElement } from '../../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-copy-asset-into-container-task-form-element',

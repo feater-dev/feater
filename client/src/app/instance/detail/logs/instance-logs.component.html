@@ -2,46 +2,102 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
-        <app-instance-tabs [instanceId]="instance?.id" [activeTab]="instanceTabs.buildLogs"></app-instance-tabs>
+        <app-instance-tabs
+            [instanceId]="instance?.id"
+            [activeTab]="instanceTabs.buildLogs"
+        ></app-instance-tabs>
 
         <div class="row">
             <div class="col-md-12">
-                <div class="form-group" [hidden]="!instance?.commandLogs?.length">
-                    <div *ngFor="let commandLog of instance?.commandLogs; trackBy: trackById">
+                <div
+                    class="form-group"
+                    [hidden]="!instance?.commandLogs?.length"
+                >
+                    <div
+                        *ngFor="
+                            let commandLog of instance?.commandLogs;
+                            trackBy: trackById
+                        "
+                    >
                         <div class="panel panel-default command-log">
                             <div class="panel-heading">
                                 <div class="command-log-expand-toggle">
-                                    <span *ngIf="isExpanded(commandLog)" (click)="collapse(commandLog)">
-                                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                                    <span
+                                        *ngIf="isExpanded(commandLog)"
+                                        (click)="collapse(commandLog)"
+                                    >
+                                        <span
+                                            class="glyphicon glyphicon-chevron-down"
+                                            aria-hidden="true"
+                                        ></span>
                                     </span>
-                                    <span *ngIf="!isExpanded(commandLog)" (click)="expand(commandLog)">
-                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                    <span
+                                        *ngIf="!isExpanded(commandLog)"
+                                        (click)="expand(commandLog)"
+                                    >
+                                        <span
+                                            class="glyphicon glyphicon-chevron-right"
+                                            aria-hidden="true"
+                                        ></span>
                                     </span>
                                 </div>
-                                <div class="command-log-description" [innerHTML]="commandLog.description | MarkdownToHtml"></div>
+                                <div
+                                    class="command-log-description"
+                                    [innerHTML]="
+                                        commandLog.description | MarkdownToHtml
+                                    "
+                                ></div>
                                 <div class="command-log-indicator">
-                                    <span *ngIf="commandLog.completedAt" class="label label-success">
+                                    <span
+                                        *ngIf="commandLog.completedAt"
+                                        class="label label-success"
+                                    >
                                         Completed in
-                                        {{ {start: commandLog.createdAt, end: commandLog.completedAt} | elapsedTime }}
+                                        {{
+                                            {
+                                                start: commandLog.createdAt,
+                                                end: commandLog.completedAt
+                                            } | elapsedTime
+                                        }}
                                     </span>
-                                        <span *ngIf="commandLog.failedAt" class="label label-danger">
+                                    <span
+                                        *ngIf="commandLog.failedAt"
+                                        class="label label-danger"
+                                    >
                                         Failed after
-                                        {{ {start: commandLog.createdAt, end: commandLog.failedAt} | elapsedTime }}
+                                        {{
+                                            {
+                                                start: commandLog.createdAt,
+                                                end: commandLog.failedAt
+                                            } | elapsedTime
+                                        }}
                                     </span>
-                                        <span *ngIf="!commandLog.completedAt && !commandLog.failedAt" class="label label-default">
+                                    <span
+                                        *ngIf="
+                                            !commandLog.completedAt &&
+                                            !commandLog.failedAt
+                                        "
+                                        class="label label-default"
+                                    >
                                         In progress
                                     </span>
                                 </div>
                             </div>
-                            <div *ngIf="isExpanded(commandLog)" class="panel-body">
-                                <pre class="command-log-entries" [innerHTML]="joinMessages(commandLog.entries)"></pre>
+                            <div
+                                *ngIf="isExpanded(commandLog)"
+                                class="panel-body"
+                            >
+                                <pre
+                                    class="command-log-entries"
+                                    [innerHTML]="
+                                        joinMessages(commandLog.entries)
+                                    "
+                                ></pre>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

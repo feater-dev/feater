@@ -2,17 +2,26 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
-        <app-definition-tabs [definitionId]="definition?.id" [activeTab]="definitionTabs.recipe"></app-definition-tabs>
+        <app-definition-tabs
+            [definitionId]="definition?.id"
+            [activeTab]="definitionTabs.recipe"
+        ></app-definition-tabs>
 
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="inputDefinition_recipeAsYaml" class="control-label">Recipe in Yaml</label>
-                    <pre class="form-control-static" id="inputDefinition_recipeAsYaml">{{ definition?.recipeAsYaml }}</pre>
+                    <label
+                        for="inputDefinition_recipeAsYaml"
+                        class="control-label"
+                        >Recipe in Yaml</label
+                    >
+                    <pre
+                        class="form-control-static"
+                        id="inputDefinition_recipeAsYaml"
+                        >{{ definition?.recipeAsYaml }}</pre
+                    >
                 </div>
             </div>
         </div>
-
     </div>
 </div>

@@ -12,6 +12,12 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 
+interface InstantiationAction {
+    id: string;
+    name: string;
+    type: string;
+}
+
 @Component({
     selector: 'app-instance-add',
     templateUrl: './instance-add.component.html',
@@ -21,6 +27,8 @@ export class InstanceAddComponent implements OnInit {
     instance: InstanceAddForm;
 
     definition: GetDefinitionQueryDefinitionFieldInterface;
+
+    instantiationActions: InstantiationAction[] = [];
 
     constructor(
         protected route: ActivatedRoute,
@@ -38,12 +46,12 @@ export class InstanceAddComponent implements OnInit {
         this.getDefinition();
     }
 
-    addItem() {
+    addItem(instantiationActionId: string) {
         this.spinner.show();
         this.apollo
             .mutate({
                 mutation: gql`
-                    ${this.getCreateInstanceMutation()}
+                    ${this.getCreateInstanceMutation(instantiationActionId)}
                 `,
             })
             .subscribe(
@@ -75,16 +83,20 @@ export class InstanceAddComponent implements OnInit {
             .valueChanges.subscribe(result => {
                 const resultData: GetDefinitionQueryInterface = result.data;
                 this.definition = resultData.definition;
+                this.instantiationActions = this.definition.actions.filter(
+                    action => 'instantiation' === action.type,
+                );
                 this.spinner.hide();
             });
     }
 
-    protected getCreateInstanceMutation(): string {
+    protected getCreateInstanceMutation(instantiationActionId: string): string {
         const jsonQuery = {
             mutation: {
                 createInstance: {
                     __args: {
                         definitionId: this.definition.id,
+                        instantiationActionId,
                         name: this.instance.name,
                     },
                     id: true,

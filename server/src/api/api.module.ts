@@ -24,10 +24,15 @@ import { AssetModelToTypeMapper } from './model-to-type-mapper/asset-model-to-ty
 import { DeployKeyModelToTypeMapper } from './model-to-type-mapper/deploy-key-model-to-type-mapper.service';
 import { DateConverter } from './date-converter.component';
 import { ActionLogResolver } from './resolver/action-log-resolver.component';
+import { DownloadableController } from './controller/downloadable-controller';
 
 @Module({
     imports: [PersistenceModule, InstantiationModule, HelperModule],
-    controllers: [AssetController, DockerLogsController],
+    controllers: [
+        AssetController,
+        DockerLogsController,
+        DownloadableController,
+    ],
     providers: [
         ProjectsResolver,
         DefinitionResolver,

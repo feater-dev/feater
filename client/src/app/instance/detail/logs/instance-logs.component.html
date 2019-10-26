@@ -8,14 +8,14 @@
         ></app-instance-tabs>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-lg-12">
                 <div
                     class="form-group"
-                    [hidden]="!instance?.commandLogs?.length"
+                    [hidden]="!instance?.actionLogs?.length"
                 >
                     <div
                         *ngFor="
-                            let commandLog of instance?.commandLogs;
+                            let actionLog of instance?.actionLogs;
                             trackBy: trackById
                         "
                     >
@@ -23,8 +23,8 @@
                             <div class="panel-heading">
                                 <div class="command-log-expand-toggle">
                                     <span
-                                        *ngIf="isExpanded(commandLog)"
-                                        (click)="collapse(commandLog)"
+                                        *ngIf="isActionLogExpanded(actionLog)"
+                                        (click)="collapseActionLog(actionLog)"
                                     >
                                         <span
                                             class="glyphicon glyphicon-chevron-down"
@@ -32,8 +32,8 @@
                                         ></span>
                                     </span>
                                     <span
-                                        *ngIf="!isExpanded(commandLog)"
-                                        (click)="expand(commandLog)"
+                                        *ngIf="!isActionLogExpanded(actionLog)"
+                                        (click)="expandActionLog(actionLog)"
                                     >
                                         <span
                                             class="glyphicon glyphicon-chevron-right"
@@ -41,58 +41,212 @@
                                         ></span>
                                     </span>
                                 </div>
-                                <div
-                                    class="command-log-description"
-                                    [innerHTML]="
-                                        commandLog.description | MarkdownToHtml
-                                    "
-                                ></div>
-                                <div class="command-log-indicator">
-                                    <span
-                                        *ngIf="commandLog.completedAt"
-                                        class="label label-success"
-                                    >
-                                        Completed in
-                                        {{
-                                            {
-                                                start: commandLog.createdAt,
-                                                end: commandLog.completedAt
-                                            } | elapsedTime
-                                        }}
-                                    </span>
-                                    <span
-                                        *ngIf="commandLog.failedAt"
-                                        class="label label-danger"
-                                    >
-                                        Failed after
-                                        {{
-                                            {
-                                                start: commandLog.createdAt,
-                                                end: commandLog.failedAt
-                                            } | elapsedTime
-                                        }}
-                                    </span>
-                                    <span
-                                        *ngIf="
-                                            !commandLog.completedAt &&
-                                            !commandLog.failedAt
+                                <div class="command-log-description">
+                                    <div
+                                        [innerHTML]="
+                                            actionLog.actionName +
+                                                ' (`' +
+                                                actionLog.actionId +
+                                                '`)' | MarkdownToHtml
                                         "
-                                        class="label label-default"
-                                    >
-                                        In progress
-                                    </span>
+                                    ></div>
+                                    <div>
+                                        <span>
+                                            <span
+                                                *ngIf="
+                                                    !actionLog.completedAt &&
+                                                    !actionLog.failedAt
+                                                "
+                                                class="label label-default"
+                                            >
+                                                Started at
+                                                {{
+                                                    actionLog.createdAt
+                                                        | date
+                                                            : 'yyyy-MM-dd HH:mm:ss'
+                                                }}, still in progress
+                                            </span>
+                                            <span
+                                                *ngIf="actionLog.failedAt"
+                                                class="label label-danger"
+                                            >
+                                                Failed at
+                                                {{
+                                                    actionLog.failedAt
+                                                        | date
+                                                            : 'yyyy-MM-dd HH:mm:ss'
+                                                }}, after
+                                                {{
+                                                    {
+                                                        start:
+                                                            actionLog.createdAt,
+                                                        end: actionLog.failedAt
+                                                    } | elapsedTime
+                                                }}
+                                            </span>
+                                            <span
+                                                *ngIf="actionLog.completedAt"
+                                                class="label label-success"
+                                            >
+                                                Completed at
+                                                {{
+                                                    actionLog.completedAt
+                                                        | date
+                                                            : 'yyyy-MM-dd HH:mm:ss'
+                                                }}, in
+                                                {{
+                                                    {
+                                                        start:
+                                                            actionLog.createdAt,
+                                                        end:
+                                                            actionLog.completedAt
+                                                    } | elapsedTime
+                                                }}
+                                            </span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
+
                             <div
-                                *ngIf="isExpanded(commandLog)"
+                                *ngIf="isActionLogExpanded(actionLog)"
                                 class="panel-body"
                             >
-                                <pre
-                                    class="command-log-entries"
-                                    [innerHTML]="
-                                        joinMessages(commandLog.entries)
+                                <div
+                                    *ngFor="
+                                        let commandLog of actionLog.commandLogs;
+                                        trackBy: trackById
                                     "
-                                ></pre>
+                                >
+                                    <div
+                                        class="panel panel-default command-log"
+                                    >
+                                        <div class="panel-heading">
+                                            <div
+                                                class="command-log-expand-toggle"
+                                            >
+                                                <span
+                                                    *ngIf="
+                                                        isCommandLogExpanded(
+                                                            commandLog
+                                                        )
+                                                    "
+                                                    (click)="
+                                                        collapseCommandLog(
+                                                            commandLog
+                                                        )
+                                                    "
+                                                >
+                                                    <span
+                                                        class="glyphicon glyphicon-chevron-down"
+                                                        aria-hidden="true"
+                                                    ></span>
+                                                </span>
+                                                <span
+                                                    *ngIf="
+                                                        !isCommandLogExpanded(
+                                                            commandLog
+                                                        )
+                                                    "
+                                                    (click)="
+                                                        expandCommandLog(
+                                                            commandLog
+                                                        )
+                                                    "
+                                                >
+                                                    <span
+                                                        class="glyphicon glyphicon-chevron-right"
+                                                        aria-hidden="true"
+                                                    ></span>
+                                                </span>
+                                            </div>
+                                            <div
+                                                class="command-log-description"
+                                            >
+                                                <div
+                                                    [innerHTML]="
+                                                        commandLog.description
+                                                            | MarkdownToHtml
+                                                    "
+                                                ></div>
+                                                <div>
+                                                    <span
+                                                        *ngIf="
+                                                            !commandLog.completedAt &&
+                                                            !commandLog.failedAt
+                                                        "
+                                                        class="label label-default"
+                                                    >
+                                                        Started at
+                                                        {{
+                                                            commandLog.createdAt
+                                                                | date
+                                                                    : 'yyyy-MM-dd HH:mm:ss'
+                                                        }}, still in progress
+                                                    </span>
+                                                    <span
+                                                        *ngIf="
+                                                            commandLog.failedAt
+                                                        "
+                                                        class="label label-danger"
+                                                    >
+                                                        Failed at
+                                                        {{
+                                                            commandLog.failedAt
+                                                                | date
+                                                                    : 'yyyy-MM-dd HH:mm:ss'
+                                                        }}, after
+                                                        {{
+                                                            {
+                                                                start:
+                                                                    commandLog.createdAt,
+                                                                end:
+                                                                    commandLog.failedAt
+                                                            } | elapsedTime
+                                                        }}
+                                                    </span>
+                                                    <span
+                                                        *ngIf="
+                                                            commandLog.completedAt
+                                                        "
+                                                        class="label label-success"
+                                                    >
+                                                        Completed at
+                                                        {{
+                                                            commandLog.completedAt
+                                                                | date
+                                                                    : 'yyyy-MM-dd HH:mm:ss'
+                                                        }}, in
+                                                        {{
+                                                            {
+                                                                start:
+                                                                    commandLog.createdAt,
+                                                                end:
+                                                                    commandLog.completedAt
+                                                            } | elapsedTime
+                                                        }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            *ngIf="
+                                                isCommandLogExpanded(commandLog)
+                                            "
+                                            class="panel-body"
+                                        >
+                                            <pre
+                                                class="command-log-entries"
+                                                [innerHTML]="
+                                                    joinMessages(
+                                                        commandLog.entries
+                                                    )
+                                                "
+                                            ></pre>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

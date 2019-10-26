@@ -25,16 +25,41 @@ import { InstanceServicesComponent } from './instance/detail/services/instance-s
 import { InstanceProxyDomainsComponent } from './instance/detail/proxy-domains/instance-proxy-domains.component';
 import { DefinitionDuplicateComponent } from './definition/duplicate/definition-duplicate.component';
 import { DefinitionEditComponent } from './definition/edit/definition-edit.component';
+import { InstanceDownloadablesComponent } from './instance/detail/downloadables/instance-downloadables.component';
 
 export const appRoutes: Routes = [
-    { path: 'projects', component: ProjectListComponent },
-    { path: 'project/add', component: ProjectAddComponent },
-    { path: 'project/:id', component: ProjectDetailComponent },
-    { path: 'project/:id/definition/add', component: DefinitionAddComponent },
-    { path: 'project/:id/asset/add', component: AssetAddComponent },
-    { path: 'definitions', component: DefinitionListComponent },
-    { path: 'definition/:id', component: DefinitionSummaryComponent },
-    { path: 'definition/:id/recipe', component: DefinitionRecipeComponent },
+    {
+        path: 'projects',
+        component: ProjectListComponent,
+    },
+    {
+        path: 'project/add',
+        component: ProjectAddComponent,
+    },
+    {
+        path: 'project/:id',
+        component: ProjectDetailComponent,
+    },
+    {
+        path: 'project/:id/definition/add',
+        component: DefinitionAddComponent,
+    },
+    {
+        path: 'project/:id/asset/add',
+        component: AssetAddComponent,
+    },
+    {
+        path: 'definitions',
+        component: DefinitionListComponent,
+    },
+    {
+        path: 'definition/:id',
+        component: DefinitionSummaryComponent,
+    },
+    {
+        path: 'definition/:id/recipe',
+        component: DefinitionRecipeComponent,
+    },
     {
         path: 'definition/:id/deploy-keys',
         component: DefinitionDeployKeysComponent,
@@ -51,28 +76,69 @@ export const appRoutes: Routes = [
         path: 'definition/:id/instances',
         component: DefinitionInstancesComponent,
     },
-    { path: 'definition/:id/edit', component: DefinitionEditComponent },
+    {
+        path: 'definition/:id/edit',
+        component: DefinitionEditComponent,
+    },
     {
         path: 'definition/:id/duplicate',
         component: DefinitionDuplicateComponent,
     },
-    { path: 'definition/:id/instance/add', component: InstanceAddComponent },
-    { path: 'instances', component: InstanceListComponent },
-    { path: 'instance/:id', component: InstanceSummaryComponent },
+    {
+        path: 'definition/:id/instance/add',
+        component: InstanceAddComponent,
+    },
+    {
+        path: 'instances',
+        component: InstanceListComponent,
+    },
+    {
+        path: 'instance/:id',
+        component: InstanceSummaryComponent,
+    },
     {
         path: 'instance/:id/environment',
         component: InstanceEnvironmentComponent,
     },
-    { path: 'instance/:id/services', component: InstanceServicesComponent },
+    {
+        path: 'instance/:id/downloadables',
+        component: InstanceDownloadablesComponent,
+    },
+    {
+        path: 'instance/:id/services',
+        component: InstanceServicesComponent,
+    },
     {
         path: 'instance/:id/proxy-domains',
         component: InstanceProxyDomainsComponent,
     },
-    { path: 'instance/:id/build-logs', component: InstanceLogsComponent },
-    { path: 'assets', component: AssetListComponent },
-    { path: 'asset/:projectId/:id', component: AssetDetailComponent },
-    { path: 'deploy-keys', component: DeployKeyListComponent },
-    { path: 'deploy-key/:id', component: DeployKeyDetailComponent },
-    { path: 'about', component: AboutComponent },
-    { path: '**', redirectTo: 'projects', pathMatch: 'full' },
+    {
+        path: 'instance/:id/build-logs',
+        component: InstanceLogsComponent,
+    },
+    {
+        path: 'assets',
+        component: AssetListComponent,
+    },
+    {
+        path: 'asset/:projectId/:id',
+        component: AssetDetailComponent,
+    },
+    {
+        path: 'deploy-keys',
+        component: DeployKeyListComponent,
+    },
+    {
+        path: 'deploy-key/:id',
+        component: DeployKeyDetailComponent,
+    },
+    {
+        path: 'about',
+        component: AboutComponent,
+    },
+    {
+        path: '**',
+        redirectTo: 'projects',
+        pathMatch: 'full',
+    },
 ];

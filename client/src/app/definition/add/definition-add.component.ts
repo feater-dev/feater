@@ -16,7 +16,7 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { RecipeYamlMapperService } from '../import-yaml/recipe-yaml-mapper.service';
 import gql from 'graphql-tag';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import * as jsYaml from 'js-yaml';
 import * as snakeCaseKeys from 'snakecase-keys';
 

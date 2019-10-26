@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import htmlLinkify from 'html-linkify';
-import jsYaml from 'js-yaml';
+import * as jsYaml from 'js-yaml';
 
 const options = {
     indent: 4,

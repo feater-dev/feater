@@ -77,6 +77,7 @@ import { appRoutes } from './app.routes';
 import { DefinitionAddDownloadableFormElementComponent } from './definition/add/form-element/definition-add.downloadable-form-element.component';
 import { DefinitionAddActionFormElementComponent } from './definition/add/form-element/definition-add.action-form-element.component';
 import { CamelCaseConverter } from './definition/import-yaml/camel-case-converter';
+import { InstanceDownloadablesComponent } from './instance/detail/downloadables/instance-downloadables.component';
 
 @NgModule({
     declarations: [
@@ -118,6 +119,7 @@ import { CamelCaseConverter } from './definition/import-yaml/camel-case-converte
         InstanceServicesComponent,
         InstanceProxyDomainsComponent,
         InstanceLogsComponent,
+        InstanceDownloadablesComponent,
         InstanceListComponent,
         AssetAddComponent,
         AssetDetailComponent,

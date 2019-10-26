@@ -17,6 +17,13 @@
                     >Proxy domains</a
                 >
             </li>
+            <li
+                [ngClass]="{ active: activeTab === instanceTabs.downloadables }"
+            >
+                <a routerLink="/instance/{{ instanceId }}/downloadables"
+                    >Downloadables</a
+                >
+            </li>
             <li [ngClass]="{ active: activeTab === instanceTabs.buildLogs }">
                 <a routerLink="/instance/{{ instanceId }}/build-logs"
                     >Build logs</a

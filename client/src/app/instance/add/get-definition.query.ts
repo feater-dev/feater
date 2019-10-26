@@ -5,6 +5,11 @@ export const getDefinitionQueryGql = gql`
         definition(id: $id) {
             id
             name
+            actions {
+                id
+                name
+                type
+            }
         }
     }
 `;
@@ -12,6 +17,11 @@ export const getDefinitionQueryGql = gql`
 export interface GetDefinitionQueryDefinitionFieldInterface {
     id: string;
     name: string;
+    actions: {
+        id: string;
+        name: string;
+        type: string;
+    }[];
 }
 
 export interface GetDefinitionQueryInterface {

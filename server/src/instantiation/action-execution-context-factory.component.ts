@@ -90,6 +90,16 @@ export class ActionExecutionContextFactory {
             recipe.summaryItems,
         );
 
+        actionExecutionContext.downloadables = [];
+        for (const downloadable of recipe.downloadables) {
+            actionExecutionContext.downloadables.push({
+                id: downloadable.id,
+                name: downloadable.name,
+                serviceId: downloadable.serviceId,
+                absolutePath: downloadable.absolutePath,
+            });
+        }
+
         actionExecutionContext.composeFiles = [];
         const composeFileRecipe = recipe.composeFiles[0];
         actionExecutionContext.composeFiles.push({ ...composeFileRecipe });

@@ -113,11 +113,9 @@
                                                 show-delay="200"
                                             >
                                                 <a
-                                                    href="{{
-                                                        baseDownloadLogsUrl +
-                                                            '/' +
-                                                            service.id
-                                                    }}"
+                                                    [attr.href]="
+                                                        getDownloadUrl(service)
+                                                    "
                                                     class="service-action"
                                                 >
                                                     <span

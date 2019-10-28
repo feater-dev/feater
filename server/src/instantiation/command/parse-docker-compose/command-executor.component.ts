@@ -10,6 +10,7 @@ import {
 } from './command-result.interface';
 import { SimpleCommand } from '../../executor/simple-command';
 import { config } from '../../../config/config';
+import { EnvVariablesSet } from '../../sets/env-variables-set';
 
 @Injectable()
 export class ParseDockerComposeCommandExecutorComponent
@@ -23,7 +24,7 @@ export class ParseDockerComposeCommandExecutorComponent
     ): Promise<ParseDockerComposeCommandResultInterface> {
         const {
             sourceId,
-            sourceAbsoluteGuestPath,
+            sourceAbsoluteHostPath,
             envDirRelativePath,
             composeFileRelativePaths,
             envVariables,
@@ -32,8 +33,7 @@ export class ParseDockerComposeCommandExecutorComponent
             commandLogger,
         } = command as ParseDockerComposeCommand;
 
-        // TODO Move to recipe and env variables.
-        const hostDockerSocketPath = '/var/run/docker.sock';
+        const dockerSocketAbsoluteHostPath = config.hostPaths.dockerSocket;
 
         const composeConfigCommand = config.instantiation.dockerBinaryPath;
         const composeConfigArguments: string[] = [];
@@ -56,9 +56,9 @@ export class ParseDockerComposeCommandExecutorComponent
             '-w',
             path.join('/source', envDirRelativePath),
             '-v',
-            `${sourceAbsoluteGuestPath}:/source`,
+            `${sourceAbsoluteHostPath}:/source`,
             '-v',
-            `${hostDockerSocketPath}:/var/run/docker.sock`,
+            `${dockerSocketAbsoluteHostPath}:/var/run/docker.sock`,
             `docker/compose:${config.instantiation.dockerComposeVersion}`,
         );
 
@@ -73,7 +73,7 @@ export class ParseDockerComposeCommandExecutorComponent
 
         commandLogger.info(`Source ID: ${sourceId}`);
         commandLogger.info(
-            `Source absolute host path: ${sourceAbsoluteGuestPath}`,
+            `Source absolute host path: ${sourceAbsoluteHostPath}`,
         );
         commandLogger.info(`Command: ${composeConfigCommand}`);
         commandLogger.info(

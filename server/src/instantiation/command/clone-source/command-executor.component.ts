@@ -65,13 +65,13 @@ export class CloneSourceCommandExecutorComponent
 
         const envVariables = new EnvVariablesSet();
         envVariables.add(
-            `FEATER__SOURCE_MOUNT__${sourceId}`,
+            `FEATER__SOURCE_MOUNT__${sourceId.toUpperCase()}`,
             sourceAbsoluteHostPath,
         );
 
         const featerVariables = new FeaterVariablesSet();
         featerVariables.add(
-            `source_mount__${sourceId}`,
+            `source_mount__${sourceId.toLowerCase()}`,
             sourceAbsoluteHostPath,
         );
 

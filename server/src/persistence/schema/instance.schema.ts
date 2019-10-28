@@ -9,6 +9,7 @@ const InstanceServiceSchema = new Schema(
     },
     {
         _id: false,
+        strict: true,
     },
 );
 
@@ -19,6 +20,7 @@ const InstanceAssetVolumeSchema = new Schema(
     },
     {
         _id: false,
+        strict: true,
     },
 );
 
@@ -29,6 +31,7 @@ const InstanceEnvVariableSchema = new Schema(
     },
     {
         _id: false,
+        strict: true,
     },
 );
 
@@ -39,6 +42,7 @@ const InstanceFeaterVariableSchema = new Schema(
     },
     {
         _id: false,
+        strict: true,
     },
 );
 
@@ -53,6 +57,7 @@ const InstanceProxiedPortSchema = new Schema(
     },
     {
         _id: false,
+        strict: true,
     },
 );
 
@@ -63,24 +68,44 @@ const InstanceSummaryItemSchema = new Schema(
     },
     {
         _id: false,
+        strict: true,
     },
 );
 
-export const InstanceSchema = new Schema({
-    definitionId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Definition',
+const InstanceDownloadableSchema = new Schema(
+    {
+        id: String,
+        name: String,
+        serviceId: String,
+        absolutePath: String,
     },
-    hash: String,
-    name: String,
-    services: [InstanceServiceSchema],
-    assetVolumes: [InstanceAssetVolumeSchema],
-    envVariables: [InstanceEnvVariableSchema],
-    featerVariables: [InstanceFeaterVariableSchema],
-    proxiedPorts: [InstanceProxiedPortSchema],
-    summaryItems: [InstanceSummaryItemSchema],
-    createdAt: Date,
-    updatedAt: Date,
-    completedAt: Date,
-    failedAt: Date,
-});
+    {
+        _id: false,
+        strict: true,
+    },
+);
+
+export const InstanceSchema = new Schema(
+    {
+        definitionId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Definition',
+        },
+        hash: String,
+        name: String,
+        services: [InstanceServiceSchema],
+        assetVolumes: [InstanceAssetVolumeSchema],
+        envVariables: [InstanceEnvVariableSchema],
+        featerVariables: [InstanceFeaterVariableSchema],
+        proxiedPorts: [InstanceProxiedPortSchema],
+        summaryItems: [InstanceSummaryItemSchema],
+        downloadables: [InstanceDownloadableSchema],
+        createdAt: Date,
+        updatedAt: Date,
+        completedAt: Date,
+        failedAt: Date,
+    },
+    {
+        strict: true,
+    },
+);

@@ -45,9 +45,15 @@ export class InstanceDownloadablesComponent implements OnInit, OnDestroy {
     }
 
     getDownloadUrl(downloadable: { id: string }): string {
-        return environment.downloadableDownloadUrl
-            .replace(':instanceId', this.instance.id)
-            .replace(':downloadableId', downloadable.id);
+        const downloadableUrlFragment =
+            '/download/downloadable/:instanceId/:downloadableId';
+
+        return (
+            environment.serverBaseUrl +
+            downloadableUrlFragment
+                .replace(':instanceId', this.instance.id)
+                .replace(':downloadableId', downloadable.id)
+        );
     }
 
     trackByIndex(index: number, obj: any): any {

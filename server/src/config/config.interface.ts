@@ -11,6 +11,7 @@ export interface ConfigInterface {
     };
     readonly hostPaths: {
         readonly build: string;
+        readonly dockerSocket: string;
     };
     readonly instantiation: {
         readonly gitBinaryPath: string;

@@ -436,7 +436,8 @@ export class Instantiator {
                     );
 
                     return new RunDockerComposeCommand(
-                        source.dockerVolumeName,
+                        source.id,
+                        source.paths.absolute.host,
                         composeFile.envDirRelativePath,
                         composeFile.composeFileRelativePaths,
                         actionExecutionContext.envVariables,

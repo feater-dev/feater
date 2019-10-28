@@ -161,6 +161,18 @@ export class InstanceServicesComponent implements OnInit, OnDestroy {
             );
     }
 
+    getDownloadUrl(service: { id: string }): string {
+        const downloadableUrlFragment =
+            '/download/docker-logs/:instanceId/:serviceId';
+
+        return (
+            environment.serverBaseUrl +
+            downloadableUrlFragment
+                .replace(':instanceId', this.instance.id)
+                .replace(':serviceId', service.id)
+        );
+    }
+
     trackByIndex(index: number, obj: any): any {
         return index;
     }

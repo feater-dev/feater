@@ -11,7 +11,7 @@ export interface CachedContainerInfo {
     readonly id: string;
     readonly state: string;
     readonly status: string;
-    readonly ipAddress: string;
+    readonly ipAddress?: string;
 }
 
 @Injectable()
@@ -62,14 +62,14 @@ export class ContainerInfoChecker {
         const instanceHash = matches[1];
         const serviceName = matches[2];
         const networkName = `${config.instantiation.containerNamePrefix}${instanceHash}_default`;
+        const network = containerInfo.NetworkSettings.Networks[networkName];
 
         return {
             namePrefix: `${config.instantiation.containerNamePrefix}${instanceHash}_${serviceName}`,
             id: containerInfo.Id,
             state: containerInfo.State,
             status: containerInfo.Status,
-            ipAddress:
-                containerInfo.NetworkSettings.Networks[networkName].IPAddress,
+            ipAddress: network ? network.IPAddress : null,
         };
     }
 

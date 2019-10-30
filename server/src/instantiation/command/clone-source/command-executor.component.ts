@@ -10,6 +10,11 @@ import { SimpleCommand } from '../../executor/simple-command';
 import { CommandLogger } from '../../logger/command-logger';
 import { SpawnHelper } from '../../helper/spawn-helper.component';
 import { DeployKeyHelperComponent } from '../../../helper/deploy-key-helper.component';
+import { CloneSourceCommandResultInterface } from './command-result.interface';
+import { EnvVariablesSet } from '../../sets/env-variables-set';
+import { FeaterVariablesSet } from '../../sets/feater-variables-set';
+import { GitSshCommandEnvVariablesFactory } from '../git-ssh-command-env-variables-factory';
+import { DeployKeyInterface } from '../../../persistence/interface/deploy-key.interface';
 
 @Injectable()
 export class CloneSourceCommandExecutorComponent
@@ -17,6 +22,7 @@ export class CloneSourceCommandExecutorComponent
     constructor(
         private readonly deployKeyRepository: DeployKeyRepository,
         private readonly deployKeyHelper: DeployKeyHelperComponent,
+        private readonly gitSshCommandEnvVariablesFactory: GitSshCommandEnvVariablesFactory,
         private readonly spawnHelper: SpawnHelper,
     ) {}
 
@@ -24,13 +30,15 @@ export class CloneSourceCommandExecutorComponent
         return command instanceof CloneSourceCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
+            sourceId,
             cloneUrl,
             useDeployKey,
             referenceType,
             referenceName,
             sourceAbsoluteGuestPath,
+            sourceAbsoluteHostPath,
             workingDirectory,
             commandLogger,
         } = command as CloneSourceCommand;
@@ -55,17 +63,32 @@ export class CloneSourceCommandExecutorComponent
             commandLogger,
         );
 
-        return {};
+        const envVariables = new EnvVariablesSet();
+        envVariables.add(
+            `FEATER__SOURCE_MOUNT__${sourceId.toUpperCase()}`,
+            sourceAbsoluteHostPath,
+        );
+
+        const featerVariables = new FeaterVariablesSet();
+        featerVariables.add(
+            `source_mount__${sourceId.toLowerCase()}`,
+            sourceAbsoluteHostPath,
+        );
+
+        return {
+            envVariables,
+            featerVariables,
+        } as CloneSourceCommandResultInterface;
     }
 
-    protected async cloneRepository(
+    private async cloneRepository(
         cloneUrl: string,
         useDeployKey: boolean,
         sourceAbsoluteGuestPath: string,
         workingDirectory: string,
         commandLogger: CommandLogger,
     ): Promise<void> {
-        let deployKey;
+        let deployKey: DeployKeyInterface | null;
         const spawnedGitCloneOptions: SpawnOptions = { cwd: workingDirectory };
 
         commandLogger.info(`Clone URL: ${cloneUrl}`);
@@ -80,24 +103,9 @@ export class CloneSourceCommandExecutorComponent
                 )}`,
             );
 
-            const identityFileAbsoluteGuestPath = this.deployKeyHelper.getIdentityFileAbsoluteGuestPath(
-                cloneUrl,
+            spawnedGitCloneOptions.env = await this.gitSshCommandEnvVariablesFactory.create(
+                deployKey,
             );
-
-            spawnedGitCloneOptions.env = {
-                GIT_SSH_COMMAND: [
-                    `sshpass`,
-                    `-e`,
-                    `-P`,
-                    `"Enter passphrase for key '${identityFileAbsoluteGuestPath}': "`,
-                    `ssh`,
-                    `-o`,
-                    `StrictHostKeyChecking=no`,
-                    `-i`,
-                    identityFileAbsoluteGuestPath,
-                ].join(' '),
-                SSHPASS: deployKey.passphrase,
-            };
         } else {
             deployKey = null;
             commandLogger.info(`Not using deploy key.`);
@@ -121,7 +129,7 @@ export class CloneSourceCommandExecutorComponent
         );
     }
 
-    protected checkoutReference(
+    private checkoutReference(
         referenceType: string,
         referenceName: string,
         sourceAbsoluteGuestPath: string,

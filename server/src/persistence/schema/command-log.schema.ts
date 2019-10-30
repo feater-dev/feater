@@ -1,25 +1,17 @@
 import { Schema } from 'mongoose';
 
-const CommandLogDetailItemSchema = new Schema(
+export const CommandLogSchema = new Schema(
     {
-        name: String,
-        value: Schema.Types.Mixed,
+        actionLogId: String,
+        instanceId: String, // TODO Remove if possible, can be retrieved from action log or replaced with log file path.
+        instanceHash: String, // TODO Remove if possible, can be retrieved from action log or replaced with log file path.
+        description: String,
+        createdAt: Date,
+        updatedAt: Date,
+        completedAt: Date,
+        failedAt: Date,
     },
     {
-        _id: false,
+        strict: true,
     },
 );
-
-export const CommandLogSchema = new Schema({
-    taskId: String,
-    instanceId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Instance',
-    },
-    description: String,
-    details: [CommandLogDetailItemSchema],
-    createdAt: Date,
-    updatedAt: Date,
-    completedAt: Date,
-    failedAt: Date,
-});

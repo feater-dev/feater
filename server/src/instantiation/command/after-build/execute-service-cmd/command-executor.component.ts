@@ -15,7 +15,7 @@ export class ExecuteServiceCmdCommandExecutorComponent
         return command instanceof ExecuteServiceCmdCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             collectedEnvVariables,
             customEnvVariables,

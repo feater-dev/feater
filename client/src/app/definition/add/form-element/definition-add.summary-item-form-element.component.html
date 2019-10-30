@@ -1,6 +1,8 @@
 <div class="well well-sm form-well">
-
-    <button class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
+    <button
+        class="btn btn-danger btn-sm form-well-delete-btn"
+        (click)="delete()"
+    >
         <span class="glyphicon glyphicon-trash"></span>
     </button>
 
@@ -8,15 +10,22 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Name</label>
-                <input type="text" class="form-control" [(ngModel)]="summaryItem.name">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="summaryItem.name"
+                />
             </div>
         </div>
         <div class="col-md-8">
             <div class="form-group">
                 <label class="control-label">Text</label>
-                <input type="text" class="form-control" [(ngModel)]="summaryItem.value">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="summaryItem.value"
+                />
             </div>
         </div>
     </div>
-
 </div>

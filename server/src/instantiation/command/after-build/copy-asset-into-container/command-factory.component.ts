@@ -1,8 +1,8 @@
 import { AfterBuildTaskCommandFactoryInterface } from '../command-factory.interface';
 import { CopyAssetIntoContainerCommand } from './command';
-import { InstanceContextAfterBuildTaskInterface } from '../../../instance-context/after-build/instance-context-after-build-task.interface';
-import { InstanceContext } from '../../../instance-context/instance-context';
-import { InstanceContextCopyAssetIntoContainerInterface } from '../../../instance-context/after-build/instance-context-copy-asset-into-container.interface';
+import { ActionExecutionContextAfterBuildTaskInterface } from '../../../action-execution-context/after-build/action-execution-context-after-build-task.interface';
+import { ActionExecutionContext } from '../../../action-execution-context/action-execution-context';
+import { ActionExecutionContextCopyAssetIntoContainerInterface } from '../../../action-execution-context/after-build/action-execution-context-copy-asset-into-container.interface';
 import { ContextAwareCommand } from '../../../executor/context-aware-command.interface';
 import { CommandType } from '../../../executor/command.type';
 import { Injectable } from '@nestjs/common';
@@ -18,22 +18,23 @@ export class CopyAssetIntoContainerCommandFactoryComponent
 
     createCommand(
         type: string,
-        afterBuildTask: InstanceContextAfterBuildTaskInterface,
-        taskId: string,
-        instanceContext: InstanceContext,
-        updateInstanceFromInstanceContext: () => Promise<void>,
+        afterBuildTask: ActionExecutionContextAfterBuildTaskInterface,
+        actionLogId: string,
+        actionExecutionContext: ActionExecutionContext,
+        updateInstanceFromActionExecutionContext: () => Promise<void>,
     ): CommandType {
-        const typedAfterBuildTask = afterBuildTask as InstanceContextCopyAssetIntoContainerInterface;
+        const typedAfterBuildTask = afterBuildTask as ActionExecutionContextCopyAssetIntoContainerInterface;
         const taskIdDescriptionPart = typedAfterBuildTask.id
             ? ` \`${typedAfterBuildTask.id}\``
             : '';
 
         return new ContextAwareCommand(
-            taskId,
-            instanceContext.id,
+            actionLogId,
+            actionExecutionContext.id,
+            actionExecutionContext.hash,
             `Running after build task${taskIdDescriptionPart} and copying asset \`${typedAfterBuildTask.assetId}\` for service \`${typedAfterBuildTask.serviceId}\``,
             () => {
-                const service = instanceContext.findService(
+                const service = actionExecutionContext.findService(
                     typedAfterBuildTask.serviceId,
                 );
 
@@ -42,7 +43,7 @@ export class CopyAssetIntoContainerCommandFactoryComponent
                     typedAfterBuildTask.assetId,
                     typedAfterBuildTask.destinationPath,
                     service.containerId,
-                    instanceContext.paths.dir.absolute.guest,
+                    actionExecutionContext.paths.absolute.guest,
                 );
             },
         );

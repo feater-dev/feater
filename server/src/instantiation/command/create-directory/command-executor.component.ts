@@ -12,15 +12,17 @@ export class CreateDirectoryCommandExecutorComponent
         return command instanceof CreateDirectoryCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             absoluteGuestDirPath,
             commandLogger,
         } = command as CreateDirectoryCommand;
 
+        // TODO Command logger already creates build dir so maybe this can be moved higher, to instantiator.
         commandLogger.info(`Absolute guest path: ${absoluteGuestDirPath}`);
-        fs.mkdirSync(absoluteGuestDirPath);
-        fs.mkdirSync(path.join(absoluteGuestDirPath, 'source'));
+        fs.mkdirSync(path.join(absoluteGuestDirPath, 'source'), {
+            recursive: true,
+        });
 
         return {};
     }

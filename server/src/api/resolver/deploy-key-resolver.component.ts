@@ -5,14 +5,13 @@ import { ResolverDeployKeyFilterArgumentsInterface } from '../filter-argument/re
 import { RegenerateDeployKeyInputTypeInterface } from '../input-type/regenerate-deploy-key-input-type.interface';
 import { RemoveDeployKeyInputTypeInterface } from '../input-type/remove-deploy-key-input-type.interface';
 import { DefinitionRepository } from '../../persistence/repository/definition.repository';
-import { SourceTypeInterface } from '../type/nested/definition-recipe/source-type.interface';
 import { DeployKeyHelperComponent } from '../../helper/deploy-key-helper.component';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { DeployKeyLister } from '../lister/deploy-key-lister.component';
 import { DeployKeyModelToTypeMapper } from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
 import { unlinkSync } from 'fs';
 import * as _ from 'lodash';
-import { DefinitionRecipeMapper } from '../../instantiation/definition-recipe-mapper.component';
+import { RecipeMapper } from '../recipe/schema-version/0-1/recipe-mapper';
 
 @Resolver('DeployKey')
 export class DeployKeyResolver {
@@ -22,11 +21,11 @@ export class DeployKeyResolver {
         private readonly deployKeyHelper: DeployKeyHelperComponent,
         private readonly deployKeyLister: DeployKeyLister,
         private readonly deployKeyModelToTypeMapper: DeployKeyModelToTypeMapper,
-        private readonly definitionRecipeMapper: DefinitionRecipeMapper,
+        private readonly recipeMapper: RecipeMapper,
     ) {}
 
     @Query('deployKeys')
-    async getAll(@Args() args: any): Promise<DeployKeyTypeInterface[]> {
+    async getAll(@Args() args: unknown): Promise<DeployKeyTypeInterface[]> {
         const resolverListOptions = args as ResolverPaginationArgumentsInterface;
         const criteria = this.applyFilterArgumentToCriteria(
             {},
@@ -68,12 +67,12 @@ export class DeployKeyResolver {
         const definitions = await this.definitionRepository.find({}, 0, 99999);
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            const definitionRecipe = this.definitionRecipeMapper.map(
+            const definitionRecipe = this.recipeMapper.map(
                 definition.recipeAsYaml,
             );
             for (const source of definitionRecipe.sources) {
-                const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-                if ((source as SourceTypeInterface).useDeployKey) {
+                const cloneUrl = source.cloneUrl;
+                if (source.useDeployKey) {
                     referencedCloneUrls.push(cloneUrl);
                 }
             }
@@ -114,12 +113,12 @@ export class DeployKeyResolver {
 
         const referencedCloneUrls = [];
         for (const definition of definitions) {
-            const definitionRecipe = this.definitionRecipeMapper.map(
+            const definitionRecipe = this.recipeMapper.map(
                 definition.recipeAsYaml,
             );
             for (const source of definitionRecipe.sources) {
-                const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-                if ((source as SourceTypeInterface).useDeployKey) {
+                const cloneUrl = source.cloneUrl;
+                if (source.useDeployKey) {
                     referencedCloneUrls.push(cloneUrl);
                 }
             }
@@ -160,10 +159,11 @@ export class DeployKeyResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyFilterArgumentToCriteria(
+    // TODO Replace `any` with more specific type.
+    private applyFilterArgumentToCriteria(
         criteria: any,
         args: ResolverDeployKeyFilterArgumentsInterface,
-    ): any {
+    ): unknown {
         return criteria;
     }
 }

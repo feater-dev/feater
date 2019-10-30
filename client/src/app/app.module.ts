@@ -68,13 +68,16 @@ import { ToastrModule } from 'ngx-toastr';
 import { TitleComponent } from './title/title.component';
 import { DefinitionTabsComponent } from './definition/detail/tabs/definition-tabs.component';
 import { InstanceTabsComponent } from './instance/detail/tabs/instance-tabs.component';
-import { DefinitionRecipeFormComponent } from './definition/recipe-form/definition-recipe-form.component';
+import { RecipeFormComponent } from './definition/recipe-form/recipe-form.component';
 import { ImportDefinitionRecipeYamlComponent } from './definition/import-yaml/import-definition-recipe-yaml.component';
-import { DefinitionRecipeYamlMapperService } from './definition/import-yaml/definition-recipe-yaml-mapper.service';
-import { DefinitionAddSourceVolumeFormElementComponent } from './definition/add/form-element/definition-add.source-volume-form-element.component';
+import { RecipeYamlMapperService } from './definition/import-yaml/recipe-yaml-mapper.service';
 import { DefinitionRecipeSimplifiedFormComponent } from './definition/recipe-form-simplified/definition-recipe-simplified-form.component';
 import { DefinitionAddSourceSimplifiedFormElementComponent } from './definition/add/form-element/definition-add.source-simplified-form-element.component';
 import { appRoutes } from './app.routes';
+import { DefinitionAddDownloadableFormElementComponent } from './definition/add/form-element/definition-add.downloadable-form-element.component';
+import { DefinitionAddActionFormElementComponent } from './definition/add/form-element/definition-add.action-form-element.component';
+import { CamelCaseConverter } from './definition/import-yaml/camel-case-converter';
+import { InstanceDownloadablesComponent } from './instance/detail/downloadables/instance-downloadables.component';
 
 @NgModule({
     declarations: [
@@ -82,7 +85,7 @@ import { appRoutes } from './app.routes';
         ProjectAddComponent,
         ProjectDetailComponent,
         ProjectListComponent,
-        DefinitionRecipeFormComponent,
+        RecipeFormComponent,
         DefinitionRecipeSimplifiedFormComponent,
         ImportDefinitionRecipeYamlComponent,
         DefinitionAddComponent,
@@ -90,13 +93,14 @@ import { appRoutes } from './app.routes';
         DefinitionEditComponent,
         DefinitionAddSourceFormElementComponent,
         DefinitionAddSourceSimplifiedFormElementComponent,
-        DefinitionAddSourceVolumeFormElementComponent,
         DefinitionAddAssetVolumeFormElementComponent,
         DefinitionAddBeforeBuildTaskCopyFormElementComponent,
         DefinitionAddBeforeBuildTaskInterpolateFormElementComponent,
         DefinitionAddProxiedPortFormElementComponent,
         DefinitionAddEnvVariableFormElementComponent,
         DefinitionAddComposeFileFormElementComponent,
+        DefinitionAddDownloadableFormElementComponent,
+        DefinitionAddActionFormElementComponent,
         ExecuteServiceCommandTaskFormElementComponent,
         CopyAssetIntoContainerTaskFormElementComponent,
         DefinitionAddSummaryItemFormElementComponent,
@@ -115,6 +119,7 @@ import { appRoutes } from './app.routes';
         InstanceServicesComponent,
         InstanceProxyDomainsComponent,
         InstanceLogsComponent,
+        InstanceDownloadablesComponent,
         InstanceListComponent,
         AssetAddComponent,
         AssetDetailComponent,
@@ -157,7 +162,7 @@ import { appRoutes } from './app.routes';
         }),
     ],
     entryComponents: [ConfirmComponent],
-    providers: [DefinitionRecipeYamlMapperService],
+    providers: [RecipeYamlMapperService, CamelCaseConverter],
     bootstrap: [AppComponent],
 })
 export class AppModule {

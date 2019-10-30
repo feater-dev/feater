@@ -11,7 +11,7 @@ export class CopyFileCommandExecutorComponent
         return command instanceof CopyFileCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             absoluteGuestSourcePath,
             absoluteGuestDestinationPath,

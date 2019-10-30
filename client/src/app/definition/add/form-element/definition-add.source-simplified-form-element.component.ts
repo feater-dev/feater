@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DefinitionSourceFormElement } from '../../recipe-form/definition-recipe-form.model';
+import { SourceFormElement } from '../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-source-simplified-form-element',
@@ -8,5 +8,5 @@ import { DefinitionSourceFormElement } from '../../recipe-form/definition-recipe
     styles: [],
 })
 export class DefinitionAddSourceSimplifiedFormElementComponent {
-    @Input() source: DefinitionSourceFormElement;
+    @Input() source: SourceFormElement;
 }

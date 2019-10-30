@@ -3,7 +3,7 @@ import * as moment from 'moment';
 
 @Pipe({ name: 'elapsedTime' })
 export class ElapsedTimePipe implements PipeTransform {
-    transform(startAndEndDateString: { start: string; end: string }): string {
+    transform(startAndEndDateString: { start: string; end?: string }): string {
         if (!startAndEndDateString.start || !startAndEndDateString.end) {
             return '...';
         }

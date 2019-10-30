@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import {
-    DefinitionSourceFormElement,
-    DefinitionAddComposeFileFormElement,
-} from '../../recipe-form/definition-recipe-form.model';
+    SourceFormElement,
+    ComposeFileFormElement,
+} from '../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-compose-file-form-element',
@@ -10,9 +10,9 @@ import {
     styles: [],
 })
 export class DefinitionAddComposeFileFormElementComponent {
-    @Input() composeFile: DefinitionAddComposeFileFormElement;
+    @Input() composeFile: ComposeFileFormElement;
 
-    @Input() sources: DefinitionSourceFormElement[];
+    @Input() sources: SourceFormElement[];
 
     addComposeFileRelativePath(): void {
         this.composeFile.composeFileRelativePaths.push('');

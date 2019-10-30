@@ -5,16 +5,31 @@ export const getInstanceLogsQueryGql = gql`
         instance(id: $id) {
             id
             name
-            commandLogs {
+            actionLogs {
                 id
-                description
+                actionId
+                actionType
+                actionName
                 createdAt
                 completedAt
                 failedAt
-                entries {
+                commandLogs {
                     id
-                    timestamp
-                    message
+                    description
+                    createdAt
+                    completedAt
+                    failedAt
+                    entries {
+                        level
+                        message
+                    }
+                }
+            }
+            definition {
+                actions {
+                    id
+                    name
+                    type
                 }
             }
         }
@@ -24,19 +39,33 @@ export const getInstanceLogsQueryGql = gql`
 export interface GetInstanceLogsQueryInstanceFieldInterface {
     id: string;
     name: string;
-    commandLogs: {
+    actionLogs: {
         id: string;
-        description: string;
+        actionId: string;
+        actionType: string;
+        actionName: string;
         createdAt: string;
         completedAt: string;
         failedAt: string;
-        entries: {
+        commandLogs: {
             id: string;
-            timestamp: string;
-            formattedTimestamp: string;
-            message: string;
+            description: string;
+            createdAt: string;
+            completedAt: string;
+            failedAt: string;
+            entries: {
+                level: string;
+                message: string;
+            }[];
         }[];
     }[];
+    definition: {
+        actions: {
+            id: string;
+            name: string;
+            type: string;
+        }[];
+    };
 }
 
 export interface GetInstanceLogsQueryInterface {

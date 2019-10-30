@@ -16,7 +16,7 @@ export class EnableProxyDomainsCommandExecutorComponent
         return command instanceof EnableProxyDomainsCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             instanceHash,
             nginxConfigs,

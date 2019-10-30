@@ -2,22 +2,34 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
         <div class="form">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="inputProject_name" class="control-label">Name</label>
-                        <input type="text" class="form-control" id="inputProject_name" name="name" [(ngModel)]="project.name">
+                        <label for="inputProject_name" class="control-label"
+                            >Name</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="inputProject_name"
+                            name="name"
+                            [(ngModel)]="project.name"
+                        />
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-success" (click)="createProject()">Submit</button>
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                        (click)="createProject()"
+                    >
+                        Submit
+                    </button>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

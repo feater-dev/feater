@@ -9,7 +9,12 @@
             <div class="col-md-4 col-md-push-8 col-sm-6 col-sm-push-6">
                 <div class="form">
                     <div class="table-quick-search form-group-sm">
-                        <input type="text" [(ngModel)]="search" placeholder="Quick search" class="form-control">
+                        <input
+                            type="text"
+                            [(ngModel)]="search"
+                            placeholder="Quick search"
+                            class="form-control"
+                        />
                     </div>
                 </div>
             </div>
@@ -19,46 +24,75 @@
                 <div class="table-wrapper">
                     <table class="table table-striped table-hover ">
                         <thead>
-                        <tr>
-                            <th class="fit-column">Name</th>
-                            <th *ngIf="withProjects" class="fit-column">Project</th>
-                            <th>Number of instances</th>
-                            <th class="fit-column">Created</th>
-                            <th class="fit-column">Updated</th>
-                        </tr>
+                            <tr>
+                                <th class="fit-column">Name</th>
+                                <th *ngIf="withProjects" class="fit-column">
+                                    Project
+                                </th>
+                                <th>Number of instances</th>
+                                <th class="fit-column">Created</th>
+                                <th class="fit-column">Updated</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let definition of definitions | filterBy: getFilterCondition()">
-                            <td class="fit-column">
-                                <a routerLink="/definition/{{ definition.id }}">
-                                    {{ definition.name }}
-                                </a>
-                            </td>
-                            <td *ngIf="withProjects" class="fit-column">
-                                <a routerLink="/project/{{ definition.project.id }}">
-                                    {{ definition.project.name }}
-                                </a>
-                            </td>
-                            <td>{{ definition.instances.length || '&mdash;' }}</td>
-                            <td class="fit-column">
-                            <span tooltip="{{ definition.createdAt | absoluteDate }}"
-                                  placement="left"
-                                  theme="light"
-                                  show-delay="200"
+                            <tr
+                                *ngFor="
+                                    let definition of definitions
+                                        | filterBy: getFilterCondition()
+                                "
                             >
-                                <small>{{ definition.createdAt | relativeDate }}</small>
-                            </span>
-                            </td>
-                            <td class="fit-column">
-                            <span tooltip="{{ definition.updatedAt | absoluteDate }}"
-                                  placement="left"
-                                  theme="light"
-                                  show-delay="200"
-                            >
-                                <small>{{ definition.updatedAt | relativeDate }}</small>
-                            </span>
-                            </td>
-                        </tr>
+                                <td class="fit-column">
+                                    <a
+                                        routerLink="/definition/{{
+                                            definition.id
+                                        }}"
+                                    >
+                                        {{ definition.name }}
+                                    </a>
+                                </td>
+                                <td *ngIf="withProjects" class="fit-column">
+                                    <a
+                                        routerLink="/project/{{
+                                            definition.project.id
+                                        }}"
+                                    >
+                                        {{ definition.project.name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{
+                                        definition.instances.length || '&mdash;'
+                                    }}
+                                </td>
+                                <td class="fit-column">
+                                    <span
+                                        tooltip="{{
+                                            definition.createdAt | absoluteDate
+                                        }}"
+                                        placement="left"
+                                        theme="light"
+                                        show-delay="200"
+                                    >
+                                        <small>{{
+                                            definition.createdAt | relativeDate
+                                        }}</small>
+                                    </span>
+                                </td>
+                                <td class="fit-column">
+                                    <span
+                                        tooltip="{{
+                                            definition.updatedAt | absoluteDate
+                                        }}"
+                                        placement="left"
+                                        theme="light"
+                                        show-delay="200"
+                                    >
+                                        <small>{{
+                                            definition.updatedAt | relativeDate
+                                        }}</small>
+                                    </span>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

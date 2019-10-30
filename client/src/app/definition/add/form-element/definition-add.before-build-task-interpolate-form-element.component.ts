@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { InterpolateTaskFormElement } from '../../recipe-form/definition-recipe-form.model';
+import { InterpolateTaskFormElement } from '../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-before-build-task-interpolate-form-element',

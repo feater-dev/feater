@@ -1,11 +1,9 @@
 import { DefinitionTypeInterface } from '../type/definition-type.interface';
 import { DefinitionRepository } from '../../persistence/repository/definition.repository';
-import { DefinitionRecipeMapper } from '../../instantiation/definition-recipe-mapper.component';
 import { CreateDefinitionInputTypeInterface } from '../input-type/create-definition-input-type.interface';
 import { ResolverPaginationArgumentsInterface } from '../pagination-argument/resolver-pagination-arguments.interface';
 import { ResolverDefinitionFilterArgumentsInterface } from '../filter-argument/resolver-definition-filter-arguments.interface';
 import { DeployKeyRepository } from '../../persistence/repository/deploy-key.repository';
-import { SourceTypeInterface } from '../type/nested/definition-recipe/source-type.interface';
 import { DeployKeyInterface } from '../../persistence/interface/deploy-key.interface';
 import { DeployKeyTypeInterface } from '../type/deploy-key-type.interface';
 import { PredictedEnvVariableTypeInterface } from '../type/predicted-env-variable-type.interface';
@@ -31,8 +29,10 @@ import { InstanceLister } from '../lister/instance-lister.component';
 import { InstanceModelToTypeMapper } from '../model-to-type-mapper/instance-model-to-type-mapper.component';
 import { InstanceTypeInterface } from '../type/instance-type.interface';
 import { DeployKeyModelToTypeMapper } from '../model-to-type-mapper/deploy-key-model-to-type-mapper.service';
-import { DefintionRecipeZeroOneZeroValidator } from '../../instantiation/validation/defintion-recipe-zero-one-zero-validator.component';
 import * as escapeStringRegexp from 'escape-string-regexp';
+import { RecipeMapper } from '../recipe/schema-version/0-1/recipe-mapper';
+import { RecipeValidator } from '../recipe/schema-version/0-1/recipe-validator';
+import { DefinitionActionTypeInterface } from '../type/definition-action-type.interface';
 
 @Resolver('Definition')
 export class DefinitionResolver {
@@ -41,7 +41,7 @@ export class DefinitionResolver {
         private readonly definitionRepository: DefinitionRepository,
         private readonly instanceRepository: InstanceRepository,
         private readonly deployKeyRepository: DeployKeyRepository,
-        private readonly definitionRecipeMapper: DefinitionRecipeMapper,
+        private readonly recipeMapper: RecipeMapper,
         private readonly variablePredictor: VariablesPredictor,
         private readonly definitionLister: DefinitionLister,
         private readonly definitionModelToTypeMapper: DefinitionModelToTypeMapper,
@@ -49,11 +49,11 @@ export class DefinitionResolver {
         private readonly instanceLister: InstanceLister,
         private readonly instanceModelToTypeMapper: InstanceModelToTypeMapper,
         private readonly deployKeyModelToTypeMapper: DeployKeyModelToTypeMapper,
-        private readonly defintionRecipeZeroOneZeroValidator: DefintionRecipeZeroOneZeroValidator,
+        private readonly recipeValidator: RecipeValidator,
     ) {}
 
     @Query('definitions')
-    async getAll(@Args() args: any): Promise<DefinitionTypeInterface[]> {
+    async getAll(@Args() args: unknown): Promise<DefinitionTypeInterface[]> {
         const criteria = this.applyDefinitionFilterArgumentToCriteria(
             {},
             args as ResolverDefinitionFilterArgumentsInterface,
@@ -77,7 +77,7 @@ export class DefinitionResolver {
     async getProject(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<ProjectTypeInterface> {
-        const project = await this.projectRepository.findById(
+        const project = await this.projectRepository.findByIdOrFail(
             definition.projectId,
         );
 
@@ -87,28 +87,35 @@ export class DefinitionResolver {
     @ResolveProperty('instances')
     async getInstances(
         @Parent() definition: DefinitionTypeInterface,
-        @Args() args: any,
+        @Args() args: unknown,
     ): Promise<InstanceTypeInterface[]> {
-        const criteria = { definitionId: definition.id };
         const instances = await this.instanceLister.getList(
-            criteria,
+            { definitionId: definition.id },
             args as ResolverPaginationArgumentsInterface,
         );
 
-        return this.instanceModelToTypeMapper.mapMany(instances);
+        const mappedInstances: InstanceTypeInterface[] = [];
+        for (const instance of instances) {
+            const definition = await this.definitionRepository.findByIdOrFail(
+                instance.definitionId,
+            );
+            mappedInstances.push(
+                this.instanceModelToTypeMapper.mapOne(instance, definition),
+            );
+        }
+
+        return mappedInstances;
     }
 
     @ResolveProperty('deployKeys')
     async getDeployKeys(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<DeployKeyTypeInterface[]> {
-        const definitionRecipe = this.definitionRecipeMapper.map(
-            definition.recipeAsYaml,
-        );
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         const deployKeys: DeployKeyInterface[] = [];
-        for (const source of definitionRecipe.sources) {
+        for (const source of recipe.sources) {
             const sourceDeployKeys = await this.deployKeyRepository.findByCloneUrl(
-                (source as SourceTypeInterface).cloneUrl,
+                source.cloneUrl,
             );
             if (1 < sourceDeployKeys.length) {
                 throw new Error('More than one deploy key found.');
@@ -125,11 +132,9 @@ export class DefinitionResolver {
     async getPredictedEnvVariables(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<PredictedEnvVariableTypeInterface[]> {
-        const definitionRecipe = this.definitionRecipeMapper.map(
-            definition.recipeAsYaml,
-        );
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         const predictedEnvVariables = this.variablePredictor.predictEnvVariables(
-            definitionRecipe,
+            recipe,
         );
         const mappedPredictedEnvVariables: PredictedEnvVariableTypeInterface[] = [];
 
@@ -148,11 +153,9 @@ export class DefinitionResolver {
     async getPredictedFeaterVariables(
         @Parent() definition: DefinitionTypeInterface,
     ): Promise<PredictedFeaterVariableTypeInterface[]> {
-        const definitionRecipe = this.definitionRecipeMapper.map(
-            definition.recipeAsYaml,
-        );
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         const predictedFeaterVariables = this.variablePredictor.predictFeaterVariables(
-            definitionRecipe,
+            recipe,
         );
         const mappedPredictedFeaterVariables: PredictedFeaterVariableTypeInterface[] = [];
 
@@ -167,6 +170,24 @@ export class DefinitionResolver {
         return mappedPredictedFeaterVariables;
     }
 
+    @ResolveProperty('actions')
+    async getActions(
+        @Parent() definition: DefinitionTypeInterface,
+    ): Promise<DefinitionActionTypeInterface[]> {
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
+        const mappedActions: DefinitionActionTypeInterface[] = [];
+
+        for (const action of recipe.actions) {
+            mappedActions.push({
+                id: action.id,
+                type: action.type,
+                name: action.name,
+            });
+        }
+
+        return mappedActions;
+    }
+
     @Mutation('createDefinition')
     async create(
         @Args() createDefinitionInput: CreateDefinitionInputTypeInterface,
@@ -175,8 +196,13 @@ export class DefinitionResolver {
             createDefinitionInput.projectId,
         );
 
-        // TODO Add input validation. Handle validation result.
-        // this.defintionRecipeZeroOneZeroValidator.validateRecipe(recipeAsYaml);
+        // TODO Forward port.
+        // const validationResult = this.recipeValidator.validateRecipe(
+        //     createDefinitionInput.recipeAsYaml,
+        // );
+        // if (validationResult.error) {
+        //     throw new Error('Invalid definition recipe.');
+        // }
 
         const definition = await this.definitionRepository.create(
             createDefinitionInput.projectId,
@@ -184,10 +210,10 @@ export class DefinitionResolver {
             createDefinitionInput.recipeAsYaml,
         );
 
-        const recipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         for (const source of recipe.sources) {
-            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-            if ((source as SourceTypeInterface).useDeployKey) {
+            const cloneUrl = source.cloneUrl;
+            if (source.useDeployKey) {
                 const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(
                     cloneUrl,
                 );
@@ -204,19 +230,24 @@ export class DefinitionResolver {
     async update(
         @Args() updateDefinitionInput: UpdateDefinitionInputTypeInterface,
     ): Promise<DefinitionTypeInterface> {
-        // TODO Add input validation. Handle validation result.
-        // this.defintionRecipeZeroOneZeroValidator.validateRecipe(recipeAsYaml);
-
         const definition = await this.definitionRepository.update(
             updateDefinitionInput.id,
             updateDefinitionInput.name,
             updateDefinitionInput.recipeAsYaml,
         );
 
-        const recipe = this.definitionRecipeMapper.map(definition.recipeAsYaml);
+        // TODO Forward port.
+        // const validationResult = this.recipeValidator.validateRecipe(
+        //     updateDefinitionInput.recipeAsYaml,
+        // );
+        // if (validationResult.error) {
+        //     throw new Error('Invalid definition recipe.');
+        // }
+
+        const recipe = this.recipeMapper.map(definition.recipeAsYaml);
         for (const source of recipe.sources) {
-            const cloneUrl = (source as SourceTypeInterface).cloneUrl;
-            if ((source as SourceTypeInterface).useDeployKey) {
+            const cloneUrl = source.cloneUrl;
+            if (source.useDeployKey) {
                 const deployKeyExists = await this.deployKeyRepository.existsForCloneUrl(
                     cloneUrl,
                 );
@@ -249,10 +280,11 @@ export class DefinitionResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyDefinitionFilterArgumentToCriteria(
+    // TODO Replace `any` with more specific type.
+    private applyDefinitionFilterArgumentToCriteria(
         criteria: any,
         args: ResolverDefinitionFilterArgumentsInterface,
-    ): object {
+    ): unknown {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }

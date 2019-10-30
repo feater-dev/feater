@@ -6,16 +6,22 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
         <div class="form build-defintion-add-form">
-
             <div class="row form-section">
                 <div class="col-md-12">
                     <h3>Basic information</h3>
                 </div>
                 <div class="form-group col-md-12">
-                    <label for="addDefinition_name" class="control-label">Name</label>
-                    <input type="text" class="form-control" id="addDefinition_name" name="addDefinition_name" [(ngModel)]="definition.name">
+                    <label for="addDefinition_name" class="control-label"
+                        >Name</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="addDefinition_name"
+                        name="addDefinition_name"
+                        [(ngModel)]="definition.name"
+                    />
                 </div>
             </div>
 
@@ -23,23 +29,31 @@
                 <div class="col-md-12">
                     <div class="btn-block">
                         <a
-                                *ngIf="!isRecipeInputModeFullForm()"
-                                (click)="switchMode(definitionRecipeInputModes.fullForm)"
-                                class="btn btn-primary btn-sm"
+                            *ngIf="!isRecipeInputModeFullForm()"
+                            (click)="
+                                switchMode(definitionRecipeInputModes.fullForm)
+                            "
+                            class="btn btn-primary btn-sm"
                         >
                             Full recipe form
                         </a>
                         <a
-                                *ngIf="!isRecipeInputModeSimplifiedForm()"
-                                (click)="switchMode(definitionRecipeInputModes.simplifiedForm)"
-                                class="btn btn-primary btn-sm"
+                            *ngIf="!isRecipeInputModeSimplifiedForm()"
+                            (click)="
+                                switchMode(
+                                    definitionRecipeInputModes.simplifiedForm
+                                )
+                            "
+                            class="btn btn-primary btn-sm"
                         >
                             Simplified recipe form
                         </a>
                         <a
-                                *ngIf="!isRecipeInputModeRawYaml()"
-                                (click)="switchMode(definitionRecipeInputModes.rawYaml)"
-                                class="btn btn-primary btn-sm"
+                            *ngIf="!isRecipeInputModeRawYaml()"
+                            (click)="
+                                switchMode(definitionRecipeInputModes.rawYaml)
+                            "
+                            class="btn btn-primary btn-sm"
                         >
                             Recipe in YAML format
                         </a>
@@ -49,29 +63,37 @@
 
             <!-- Recipe form -->
             <div *ngIf="isRecipeInputModeFullForm()">
-                <app-definition-recipe-form [recipe]="definition.recipe"></app-definition-recipe-form>
+                <app-recipe-form [recipe]="definition.recipe"></app-recipe-form>
             </div>
 
             <!-- Recipe form -->
             <div *ngIf="isRecipeInputModeSimplifiedForm()">
-                <app-definition-recipe-simplified-form [recipe]="definition.recipe"></app-definition-recipe-simplified-form>
+                <app-definition-recipe-simplified-form
+                    [recipe]="definition.recipe"
+                ></app-definition-recipe-simplified-form>
             </div>
 
             <!-- Import recipe from Yaml -->
             <div *ngIf="isRecipeInputModeRawYaml()">
-                <app-import-definition-recipe-yaml (importRecipeYaml)="importRecipeYaml($event)"></app-import-definition-recipe-yaml>
+                <app-import-definition-recipe-yaml
+                    (importRecipeYaml)="importRecipeYaml($event)"
+                ></app-import-definition-recipe-yaml>
             </div>
 
             <!-- Buttons -->
             <div class="form-section">
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-success" (click)="createDefinition()">Submit</button>
+                        <button
+                            type="submit"
+                            class="btn btn-success"
+                            (click)="createDefinition()"
+                        >
+                            Submit
+                        </button>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 </div>

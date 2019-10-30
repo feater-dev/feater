@@ -1,6 +1,6 @@
-import { DefinitionRecipeFormElement } from '../recipe-form/definition-recipe-form.model';
+import { RecipeFormElement } from '../recipe-form/recipe-form.model';
 
 export interface DefinitionFormModel {
     name: string;
-    recipe: DefinitionRecipeFormElement;
+    recipe: RecipeFormElement;
 }

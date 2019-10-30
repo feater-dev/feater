@@ -1,7 +1,7 @@
-import { Controller, Response, Next, Param, Get } from '@nestjs/common';
+import { Controller, Response, Param, Get, Next } from '@nestjs/common';
 import { InstanceRepository } from '../../persistence/repository/instance.repository';
 import { config } from '../../config/config';
-import { spawn, spawnSync } from 'child_process';
+import { spawn } from 'child_process';
 import * as contentDisposition from 'content-disposition';
 import * as moment from 'moment';
 
@@ -13,8 +13,8 @@ export class DockerLogsController {
     public async download(
         @Response() res,
         @Next() next,
-        @Param('instanceId') instanceId,
-        @Param('serviceId') serviceId,
+        @Param('instanceId') instanceId: string,
+        @Param('serviceId') serviceId: string,
     ): Promise<void> {
         const instance = await this.instanceRepository.findById(instanceId);
 

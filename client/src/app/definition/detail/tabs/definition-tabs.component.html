@@ -1,23 +1,39 @@
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-pills">
-            <li [ngClass]="{'active': activeTab === definitionTabs.summary}">
+            <li [ngClass]="{ active: activeTab === definitionTabs.summary }">
                 <a routerLink="/definition/{{ definitionId }}">Summary</a>
             </li>
-            <li [ngClass]="{'active': activeTab === definitionTabs.recipe}">
+            <li [ngClass]="{ active: activeTab === definitionTabs.recipe }">
                 <a routerLink="/definition/{{ definitionId }}/recipe">Recipe</a>
             </li>
-            <li [ngClass]="{'active': activeTab === definitionTabs.deployKeys}">
-                <a routerLink="/definition/{{ definitionId }}/deploy-keys">Deploy keys</a>
+            <li [ngClass]="{ active: activeTab === definitionTabs.deployKeys }">
+                <a routerLink="/definition/{{ definitionId }}/deploy-keys"
+                    >Deploy keys</a
+                >
             </li>
-            <li [ngClass]="{'active': activeTab === definitionTabs.predictedEnvironment}">
-                <a routerLink="/definition/{{ definitionId }}/environment">Predicted environment</a>
+            <li
+                [ngClass]="{
+                    active: activeTab === definitionTabs.predictedEnvironment
+                }"
+            >
+                <a routerLink="/definition/{{ definitionId }}/environment"
+                    >Predicted environment</a
+                >
             </li>
-            <li [ngClass]="{'active': activeTab === definitionTabs.predictedSubstitutions}">
-                <a routerLink="/definition/{{ definitionId }}/substitutions">Predicted substitutions</a>
+            <li
+                [ngClass]="{
+                    active: activeTab === definitionTabs.predictedSubstitutions
+                }"
+            >
+                <a routerLink="/definition/{{ definitionId }}/substitutions"
+                    >Predicted substitutions</a
+                >
             </li>
-            <li [ngClass]="{'active': activeTab === definitionTabs.instances}">
-                <a routerLink="/definition/{{ definitionId }}/instances">Instances</a>
+            <li [ngClass]="{ active: activeTab === definitionTabs.instances }">
+                <a routerLink="/definition/{{ definitionId }}/instances"
+                    >Instances</a
+                >
             </li>
         </ul>
     </div>

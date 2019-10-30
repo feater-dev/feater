@@ -5,6 +5,7 @@ export enum InstanceTabs {
     environment,
     services,
     proxyDomains,
+    downloadables,
     buildLogs,
 }
 

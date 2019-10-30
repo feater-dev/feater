@@ -22,16 +22,20 @@ export const config: ConfigInterface = {
         identity: process.env.FEATER_GUEST_PATH_IDENTITY,
         proxy: process.env.FEATER_GUEST_PATH_PROXY,
     },
+    hostPaths: {
+        build: process.env.FEATER_HOST_PATH_BUILD,
+        dockerSocket: process.env.FEATER_HOST_PATH_DOCKER_SOCKET,
+    },
     instantiation: {
         gitBinaryPath: process.env.FEATER_GIT_BINARY_PATH,
         dockerBinaryPath: process.env.FEATER_DOCKER_BINARY_PATH,
-        dockerComposeHttpTimeout: Number(
-            process.env.FEATER_DOCKER_COMPOSE_HTTP_TIMEOUT,
-        ),
         containerNamePrefix: process.env.FEATER_CONTAINER_NAME_PREFIX,
         proxyDomainPattern: process.env.FEATER_PROXY_DOMAIN_PATTERN,
         proxyNetworkName: process.env.FEATER_PROXY_NETWORK_NAME,
         dockerComposeVersion: process.env.FEATER_DOCKER_COMPOSE_VERSION,
+        dockerComposeHttpTimeout: Number(
+            process.env.FEATER_DOCKER_COMPOSE_HTTP_TIMEOUT,
+        ),
     },
     logger: {
         console: {

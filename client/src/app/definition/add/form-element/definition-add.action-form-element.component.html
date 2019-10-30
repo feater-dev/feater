@@ -1,0 +1,104 @@
+<div class="well well-sm form-well">
+    <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
+        <span class="glyphicon glyphicon-trash"></span>
+    </a>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-md-1 control-label">Type</label>
+                <select class="form-control" [(ngModel)]="item.type">
+                    <option value="instantiation" selected
+                        >Instantiation</option
+                    >
+                    <option value="modification">Modification</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-md-1 control-label">ID</label>
+                <input type="text" class="form-control" [(ngModel)]="item.id" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="item.name"
+                />
+            </div>
+        </div>
+    </div>
+
+    <hr style="border-color: rgba(44,62,80,0.15);" />
+
+    <!-- After build tasks -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>After build tasks</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p *ngIf="!item.afterBuildTasks.length">
+                No after build tasks defined.
+            </p>
+            <div *ngIf="item.afterBuildTasks.length">
+                <div *ngFor="let afterBuildTask of item.afterBuildTasks">
+                    <div class="after-build-task-well">
+                        <app-execute-service-command-task-form-element
+                            *ngIf="
+                                isAfterBuildTaskExecuteServiceCommand(
+                                    afterBuildTask
+                                )
+                            "
+                            [task]="afterBuildTask"
+                            [availableEnvVariableNames]="
+                                availableEnvVariableNames
+                            "
+                            (deleteItem)="deleteAfterBuildTask($event)"
+                        ></app-execute-service-command-task-form-element>
+
+                        <app-copy-asset-into-container-task-form-element
+                            *ngIf="
+                                isAfterBuildTaskCopyAssetIntoContainer(
+                                    afterBuildTask
+                                )
+                            "
+                            [task]="afterBuildTask"
+                            (deleteItem)="deleteAfterBuildTask($event)"
+                        ></app-copy-asset-into-container-task-form-element>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a
+                class="btn btn-success btn-sm"
+                (click)="addAfterBuildTaskExecuteServiceCommand()"
+                style="margin-right: 8px;"
+            >
+                Execute service command
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+            <a
+                class="btn btn-success btn-sm"
+                (click)="addAfterBuildTaskCopyAssetIntoContainer()"
+                style="margin-right: 8px;"
+            >
+                Copy asset into container
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>

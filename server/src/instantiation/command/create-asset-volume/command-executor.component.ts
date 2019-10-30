@@ -26,7 +26,7 @@ export class CreateAssetVolumeCommandExecutorComponent
         return command instanceof CreateAssetVolumeCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             assetVolumeId,
             assetId,
@@ -78,7 +78,7 @@ export class CreateAssetVolumeCommandExecutorComponent
         } as CreateAssetVolumeCommandResultInterface;
     }
 
-    protected createVolume(
+    private createVolume(
         dockerVolumeName: string,
         workingDirectory: string,
         commandLogger: CommandLogger,
@@ -94,7 +94,7 @@ export class CreateAssetVolumeCommandExecutorComponent
         );
     }
 
-    protected extractAssetToVolume(
+    private extractAssetToVolume(
         absoluteUploadedAssetGuestPath: string,
         dockerVolumeName: string,
         workingDirectory: string,

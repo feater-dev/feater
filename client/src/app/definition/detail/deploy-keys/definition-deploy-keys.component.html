@@ -2,16 +2,19 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
-        <app-definition-tabs [definitionId]="definition?.id" [activeTab]="definitionTabs.deployKeys"></app-definition-tabs>
+        <app-definition-tabs
+            [definitionId]="definition?.id"
+            [activeTab]="definitionTabs.deployKeys"
+        ></app-definition-tabs>
 
         <div class="row">
             <div class="col-md-12">
                 <div *ngIf="definition">
-                    <app-deploy-key-table [deployKeys]="definition.deployKeys"></app-deploy-key-table>
+                    <app-deploy-key-table
+                        [deployKeys]="definition.deployKeys"
+                    ></app-deploy-key-table>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

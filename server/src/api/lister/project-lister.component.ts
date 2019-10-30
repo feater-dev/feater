@@ -6,9 +6,9 @@ import { ResolverPaginationArgumentsInterface } from '../pagination-argument/res
 
 @Injectable()
 export class ProjectLister {
-    protected readonly defaultSortKey = 'created_at_desc';
+    private readonly defaultSortKey = 'created_at_desc';
 
-    protected readonly sortMap = {
+    private readonly sortMap = {
         name_asc: {
             name: 'asc',
             createdAt: 'desc',
@@ -35,7 +35,7 @@ export class ProjectLister {
     ) {}
 
     async getList(
-        criteria: any,
+        criteria: unknown,
         pagination: ResolverPaginationArgumentsInterface,
     ): Promise<ProjectInterface[]> {
         return await this.projectRepository.find(

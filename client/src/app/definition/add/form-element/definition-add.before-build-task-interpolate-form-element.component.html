@@ -1,5 +1,4 @@
 <div class="row">
-
     <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
         <span class="glyphicon glyphicon-trash"></span>
     </a>
@@ -10,7 +9,10 @@
     </div>
     <div class="col-md-9">
         <label class="control-label">Path</label>
-        <input type="text" class="form-control" [(ngModel)]="task.relativePath">
+        <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="task.relativePath"
+        />
     </div>
-
 </div>

@@ -3,11 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { InstanceInterface } from '../interface/instance.interface';
 import { CreateInstanceInputTypeInterface } from '../../api/input-type/create-instance-input-type.interface';
-import { InstanceContext } from '../../instantiation/instance-context/instance-context';
 
 @Injectable()
 export class InstanceRepository {
-    protected saveInSequencePromise: Promise<void>;
+    private saveInSequencePromise: Promise<void>;
 
     constructor(
         @InjectModel('Instance')
@@ -19,10 +18,10 @@ export class InstanceRepository {
     }
 
     find(
-        criteria: object,
+        criteria: unknown,
         offset: number,
         limit: number,
-        sort?: object,
+        sort?: unknown,
     ): Promise<InstanceInterface[]> {
         const query = this.instanceModel.find(criteria);
         query.skip(offset).limit(limit);

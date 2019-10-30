@@ -2,8 +2,10 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
-        <app-definition-tabs [definitionId]="definition?.id" [activeTab]="definitionTabs.predictedSubstitutions"></app-definition-tabs>
+        <app-definition-tabs
+            [definitionId]="definition?.id"
+            [activeTab]="definitionTabs.predictedSubstitutions"
+        ></app-definition-tabs>
 
         <div class="row">
             <div class="col-md-12">
@@ -18,22 +20,49 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let predictedFeaterVariable of definition?.predictedFeaterVariables"
+                                <tr
+                                    *ngFor="
+                                        let predictedFeaterVariable of definition?.predictedFeaterVariables
+                                    "
                                     class="form-control-static"
                                 >
                                     <td>
-                                        <span class="env-variable-name">{{ predictedFeaterVariable.name }}</span>
+                                        <span class="env-variable-name">{{
+                                            predictedFeaterVariable.name
+                                        }}</span>
                                     </td>
                                     <td>
-                                        <span *ngIf="predictedFeaterVariable.value">Value</span>
-                                        <span *ngIf="predictedFeaterVariable.pattern">Pattern</span>
+                                        <span
+                                            *ngIf="
+                                                predictedFeaterVariable.value
+                                            "
+                                            >Value</span
+                                        >
+                                        <span
+                                            *ngIf="
+                                                predictedFeaterVariable.pattern
+                                            "
+                                            >Pattern</span
+                                        >
                                     </td>
                                     <td>
-                                        <span *ngIf="predictedFeaterVariable.value" class="env-variable-value">
+                                        <span
+                                            *ngIf="
+                                                predictedFeaterVariable.value
+                                            "
+                                            class="env-variable-value"
+                                        >
                                             {{ predictedFeaterVariable.value }}
                                         </span>
-                                        <span *ngIf="predictedFeaterVariable.pattern" class="env-variable-pattern">
-                                            {{ predictedFeaterVariable.pattern }}
+                                        <span
+                                            *ngIf="
+                                                predictedFeaterVariable.pattern
+                                            "
+                                            class="env-variable-pattern"
+                                        >
+                                            {{
+                                                predictedFeaterVariable.pattern
+                                            }}
                                         </span>
                                     </td>
                                 </tr>
@@ -43,6 +72,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>

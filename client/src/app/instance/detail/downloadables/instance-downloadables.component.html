@@ -1,0 +1,64 @@
+<app-title [context]="'Instance'" [title]="instance?.name"></app-title>
+
+<div class="content-body">
+    <div class="container-fluid">
+        <app-instance-tabs
+            [instanceId]="instance?.id"
+            [activeTab]="instanceTabs.downloadables"
+        ></app-instance-tabs>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div *ngIf="instance?.downloadables.length">
+                    <div class="table-wrapper">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="fit-column">ID</th>
+                                    <th scope="col" class="fit-column">Name</th>
+                                    <th scope="col" class="fit-column">
+                                        Service ID
+                                    </th>
+                                    <th scope="col">Absolute path</th>
+                                    <th scope="col" class="fit-column"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let downloadable of instance?.downloadables;
+                                        trackBy: trackByIndex
+                                    "
+                                    class="form-control-static"
+                                >
+                                    <td class="fit-column">
+                                        {{ downloadable.id }}
+                                    </td>
+                                    <td class="fit-column">
+                                        {{ downloadable.name }}
+                                    </td>
+                                    <td class="fit-column">
+                                        {{ downloadable.serviceId }}
+                                    </td>
+                                    <td>{{ downloadable.absolutePath }}</td>
+                                    <td class="fit-column">
+                                        <a
+                                            [attr.href]="
+                                                getDownloadUrl(downloadable)
+                                            "
+                                            class="service-action"
+                                        >
+                                            <span
+                                                class="glyphicon glyphicon-download"
+                                            ></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,51 +12,47 @@ export class BaseLogger implements LoggerInterface {
         this.logger = winston.createLogger({
             exitOnError: false,
             transports: [
-                new winston.transports.Console({
-                    level: config.logger.console.logLevel,
-                }),
-                // @ts-ignore Was giving "Property 'MongoDB' does not exist on type 'Transports'."
+                // @ts-ignore
                 new winston.transports.MongoDB({
                     level: config.logger.mongoDb.logLevel,
                     db: config.mongo.dsn,
                     collection: 'logs',
                     tryReconnect: true,
                     decolorize: true,
-                    metaKey: 'meta',
                 }),
             ],
         });
     }
 
-    emerg(message: string, meta: object = {}) {
+    emerg(message: string, meta: unknown = {}) {
         this.logger.emerg(message, { meta });
     }
 
-    alert(message: string, meta: object = {}) {
+    alert(message: string, meta: unknown = {}) {
         this.logger.alert(message, { meta });
     }
 
-    crit(message: string, meta: object = {}) {
+    crit(message: string, meta: unknown = {}) {
         this.logger.crit(message, { meta });
     }
 
-    error(message: string, meta: object = {}) {
+    error(message: string, meta: unknown = {}) {
         this.logger.error(message, { meta });
     }
 
-    warning(message: string, meta: object = {}) {
+    warning(message: string, meta: unknown = {}) {
         this.logger.warning(message, { meta });
     }
 
-    notice(message: string, meta: object = {}) {
+    notice(message: string, meta: unknown = {}) {
         this.logger.notice(message, { meta });
     }
 
-    info(message: string, meta: object = {}) {
+    info(message: string, meta: unknown = {}) {
         this.logger.log({ level: 'info', message, meta });
     }
 
-    debug(message: string, meta: object = {}) {
+    debug(message: string, meta: unknown = {}) {
         this.logger.debug(message, { meta });
     }
 }

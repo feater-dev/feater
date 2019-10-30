@@ -1,0 +1,10 @@
+type InstanceActionLog {
+    id: String!
+    actionId: String!
+    actionType: String!
+    actionName: String!
+    createdAt: String!
+    completedAt: String
+    failedAt: String
+    commandLogs: [InstanceCommandLog!]!
+}

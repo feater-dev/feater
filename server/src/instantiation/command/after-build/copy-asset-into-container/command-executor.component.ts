@@ -25,7 +25,7 @@ export class CopyAssetIntoContainerCommandExecutorComponent
         return command instanceof CopyAssetIntoContainerCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             serviceId,
             assetId,
@@ -49,7 +49,7 @@ export class CopyAssetIntoContainerCommandExecutorComponent
         return {};
     }
 
-    protected copyAssetToContainer(
+    private copyAssetToContainer(
         uploadPaths: AssetUploadPathsInterface,
         containerId: string,
         destinationPath: string,

@@ -6,9 +6,9 @@ import { ResolverPaginationArgumentsInterface } from '../pagination-argument/res
 
 @Injectable()
 export class AssetLister {
-    protected readonly defaultSortKey = 'id_asc';
+    private readonly defaultSortKey = 'id_asc';
 
-    protected readonly sortMap = {
+    private readonly sortMap = {
         id_asc: {
             id: 'asc',
             createdAt: 'desc',
@@ -37,7 +37,7 @@ export class AssetLister {
     ) {}
 
     async getList(
-        criteria: any,
+        criteria: unknown,
         pagination: ResolverPaginationArgumentsInterface,
     ): Promise<AssetInterface[]> {
         return await this.assetRepository.find(

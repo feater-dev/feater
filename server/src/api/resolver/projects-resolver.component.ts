@@ -38,15 +38,13 @@ export class ProjectsResolver {
     ) {}
 
     @Query('projects')
-    async getAll(@Args() args?: any): Promise<ProjectTypeInterface[]> {
-        const criteria = this.applyProjectFilterArgumentToCriteria(
-            {},
-            args as ResolverProjectFilterArgumentsInterface,
-        );
-        const projects = await this.projectLister.getList(
-            criteria,
-            args as ResolverPaginationArgumentsInterface,
-        );
+    async getAll(
+        @Args()
+        args?: ResolverPaginationArgumentsInterface &
+            ResolverProjectFilterArgumentsInterface,
+    ): Promise<ProjectTypeInterface[]> {
+        const criteria = this.applyProjectFilterArgumentToCriteria({}, args);
+        const projects = await this.projectLister.getList(criteria, args);
 
         return this.projectModelToTypeMapper.mapMany(projects);
     }
@@ -61,16 +59,15 @@ export class ProjectsResolver {
     @ResolveProperty('definitions')
     async getDefinitions(
         @Parent() project: ProjectTypeInterface,
-        @Args() args: any,
+        @Args()
+        args: ResolverDefinitionFilterArgumentsInterface &
+            ResolverPaginationArgumentsInterface,
     ): Promise<DefinitionTypeInterface[]> {
         const criteria = this.applyDefinitionFilterArgumentToCriteria(
             { projectId: project.id },
-            args as ResolverDefinitionFilterArgumentsInterface,
+            args,
         );
-        const definitions = await this.definitionLister.getList(
-            criteria,
-            args as ResolverPaginationArgumentsInterface,
-        );
+        const definitions = await this.definitionLister.getList(criteria, args);
 
         return this.definitionModelToTypeMapper.mapMany(definitions);
     }
@@ -78,17 +75,15 @@ export class ProjectsResolver {
     @ResolveProperty('assets')
     async getAssets(
         @Parent() project: ProjectTypeInterface,
-        @Args() args: any,
+        @Args()
+        args: ResolverPaginationArgumentsInterface &
+            ResolverAssetFilterArgumentsInterface,
     ): Promise<AssetTypeInterface[]> {
-        const resolverListOptions = args as ResolverPaginationArgumentsInterface;
         const criteria = this.applyAssetFilterArgumentToCriteria(
             { projectId: project.id, uploaded: true },
-            args as ResolverAssetFilterArgumentsInterface,
+            args,
         );
-        const assets = await this.assetLister.getList(
-            criteria,
-            args as ResolverPaginationArgumentsInterface,
-        );
+        const assets = await this.assetLister.getList(criteria, args);
 
         return this.assetModelToTypeMapper.mapMany(assets);
     }
@@ -104,10 +99,11 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyProjectFilterArgumentToCriteria(
+    // TODO Replace `any` with more specific type.
+    private applyProjectFilterArgumentToCriteria(
         criteria: any,
         args: ResolverProjectFilterArgumentsInterface,
-    ): object {
+    ): unknown {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }
@@ -116,10 +112,11 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyDefinitionFilterArgumentToCriteria(
+    // TODO Replace `any` with more specific type.
+    private applyDefinitionFilterArgumentToCriteria(
         criteria: any,
         args: ResolverDefinitionFilterArgumentsInterface,
-    ): object {
+    ): unknown {
         if (args.name) {
             criteria.name = new RegExp(escapeStringRegexp(args.name));
         }
@@ -131,10 +128,11 @@ export class ProjectsResolver {
     }
 
     // TODO Move somewhere else.
-    protected applyAssetFilterArgumentToCriteria(
+    // TODO Replace `any` with more specific type.
+    private applyAssetFilterArgumentToCriteria(
         criteria: any,
         args: ResolverAssetFilterArgumentsInterface,
-    ): object {
+    ): unknown {
         if (args.id) {
             criteria.id = new RegExp(escapeStringRegexp(args.id));
         }

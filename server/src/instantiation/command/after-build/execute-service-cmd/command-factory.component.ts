@@ -1,8 +1,8 @@
 import { AfterBuildTaskCommandFactoryInterface } from '../command-factory.interface';
 import { ExecuteServiceCmdCommand } from './command';
-import { InstanceContextAfterBuildTaskInterface } from '../../../instance-context/after-build/instance-context-after-build-task.interface';
-import { InstanceContext } from '../../../instance-context/instance-context';
-import { InstanceContextExecuteServiceCmdInterface } from '../../../instance-context/after-build/instance-context-execute-service-cmd.Interface';
+import { ActionExecutionContextAfterBuildTaskInterface } from '../../../action-execution-context/after-build/action-execution-context-after-build-task.interface';
+import { ActionExecutionContext } from '../../../action-execution-context/action-execution-context';
+import { ActionExecutionContextExecuteServiceCmdInterface } from '../../../action-execution-context/after-build/action-execution-context-execute-service-cmd.Interface';
 import { ContextAwareCommand } from '../../../executor/context-aware-command.interface';
 import { EnvVariablesSet } from '../../../sets/env-variables-set';
 import { CommandType } from '../../../executor/command.type';
@@ -11,7 +11,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ExecuteServiceCmdCommandFactoryComponent
     implements AfterBuildTaskCommandFactoryInterface {
-    protected readonly TYPE = 'execute_service_command';
+    private readonly TYPE = 'execute_service_command';
 
     supportsType(type: string): boolean {
         return this.TYPE === type;
@@ -19,34 +19,35 @@ export class ExecuteServiceCmdCommandFactoryComponent
 
     createCommand(
         type: string,
-        afterBuildTask: InstanceContextAfterBuildTaskInterface,
-        taskId: string,
-        instanceContext: InstanceContext,
-        updateInstanceFromInstanceContext: () => Promise<void>,
+        afterBuildTask: ActionExecutionContextAfterBuildTaskInterface,
+        actionLogId: string,
+        actionExecutionContext: ActionExecutionContext,
+        updateInstanceFromActionExecutionContext: () => Promise<void>,
     ): CommandType {
-        const typedAfterBuildTask = afterBuildTask as InstanceContextExecuteServiceCmdInterface;
+        const typedAfterBuildTask = afterBuildTask as ActionExecutionContextExecuteServiceCmdInterface;
         const taskIdDescriptionPart = typedAfterBuildTask.id
             ? ` \`${typedAfterBuildTask.id}\``
             : '';
 
         return new ContextAwareCommand(
-            taskId,
-            instanceContext.id,
+            actionLogId,
+            actionExecutionContext.id,
+            actionExecutionContext.hash,
             `Running after build task${taskIdDescriptionPart} and executing service command for service \`${typedAfterBuildTask.serviceId}\``,
             () => {
-                const service = instanceContext.findService(
+                const service = actionExecutionContext.findService(
                     typedAfterBuildTask.serviceId,
                 );
 
                 return new ExecuteServiceCmdCommand(
-                    instanceContext.envVariables,
+                    actionExecutionContext.envVariables,
                     EnvVariablesSet.fromList(
                         typedAfterBuildTask.customEnvVariables,
                     ),
                     typedAfterBuildTask.inheritedEnvVariables,
                     service.containerId,
                     typedAfterBuildTask.command,
-                    instanceContext.paths.dir.absolute.guest,
+                    actionExecutionContext.paths.absolute.guest,
                 );
             },
         );

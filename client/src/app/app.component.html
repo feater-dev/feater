@@ -1,18 +1,19 @@
 <div id="page-wrapper">
-
     <div id="sidebar-wrapper">
         <app-navbar></app-navbar>
     </div>
 
     <div id="content-wrapper">
-        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 160px;">
-            <ngx-spinner bdColor="rgba(255,255,255,1)"
-                         size="large"
-                         color="rgba(128,128,128,1)"
-                         type="ball-pulse"
+        <div
+            style="position: absolute; top: 0; right: 0; bottom: 0; left: 160px;"
+        >
+            <ngx-spinner
+                bdColor="rgba(255,255,255,1)"
+                size="large"
+                color="rgba(128,128,128,1)"
+                type="ball-pulse"
             ></ngx-spinner>
         </div>
         <router-outlet></router-outlet>
     </div>
-
 </div>

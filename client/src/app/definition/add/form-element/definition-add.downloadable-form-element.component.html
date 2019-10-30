@@ -1,0 +1,47 @@
+<div class="well well-sm form-well">
+    <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
+        <span class="glyphicon glyphicon-trash"></span>
+    </a>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="col-md-1 control-label">ID</label>
+                <input type="text" class="form-control" [(ngModel)]="item.id" />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="item.name"
+                />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Service</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="item.serviceId"
+                />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Absolute path</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="item.absolutePath"
+                />
+            </div>
+        </div>
+    </div>
+</div>

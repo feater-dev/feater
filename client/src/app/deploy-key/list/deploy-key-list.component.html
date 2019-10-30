@@ -2,14 +2,14 @@
 
 <div class="content-body">
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-md-12">
                 <div *ngIf="deployKeys">
-                    <app-deploy-key-table [deployKeys]="deployKeys"></app-deploy-key-table>
+                    <app-deploy-key-table
+                        [deployKeys]="deployKeys"
+                    ></app-deploy-key-table>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

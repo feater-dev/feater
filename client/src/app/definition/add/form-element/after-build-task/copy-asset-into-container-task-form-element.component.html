@@ -1,5 +1,4 @@
 <div class="well well-sm form-well">
-
     <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
         <span class="glyphicon glyphicon-trash"></span>
     </a>
@@ -15,7 +14,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">ID</label>
-                <input type="text" class="form-control" [(ngModel)]="task.id">
+                <input type="text" class="form-control" [(ngModel)]="task.id" />
             </div>
         </div>
 
@@ -26,22 +25,30 @@
                     <p>No depends on ids to list.</p>
                 </div>
                 <div *ngIf="0 < task.dependsOn.length">
-                    <div *ngFor="let dependsOnItem of task.dependsOn; trackBy: trackByIndex; let i = index"
-                         style="position: relative; padding-right: 40px;"
+                    <div
+                        *ngFor="
+                            let dependsOnItem of task.dependsOn;
+                            trackBy: trackByIndex;
+                            let i = index
+                        "
+                        style="position: relative; padding-right: 40px;"
                     >
-                        <input type="text" class="form-control" [(ngModel)]="task.dependsOn[i]">
-                        <a class="btn btn-danger btn-sm"
-                           (click)="deleteDependsOn(i)"
-                           style="position: absolute; top: 5px; right: 0;"
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="task.dependsOn[i]"
+                        />
+                        <a
+                            class="btn btn-danger btn-sm"
+                            (click)="deleteDependsOn(i)"
+                            style="position: absolute; top: 5px; right: 0;"
                         >
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </div>
                 </div>
                 <div style="margin-top: 8px">
-                    <a class="btn btn-success btn-sm"
-                       (click)="addDependsOn()"
-                    >
+                    <a class="btn btn-success btn-sm" (click)="addDependsOn()">
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </div>
@@ -53,23 +60,34 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Service ID</label>
-                <input type="text" class="form-control" [(ngModel)]="task.serviceId">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="task.serviceId"
+                />
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Asset ID</label>
-                <input type="text" class="form-control" [(ngModel)]="task.assetId">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="task.assetId"
+                />
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label">Destination path</label>
-                <input type="text" class="form-control" [(ngModel)]="task.destinationPath">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="task.destinationPath"
+                />
             </div>
         </div>
     </div>
-
 </div>

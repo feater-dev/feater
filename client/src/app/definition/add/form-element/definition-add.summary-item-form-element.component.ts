@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { DefinitionSummaryItemFormElement } from '../../recipe-form/definition-recipe-form.model';
+import { SummaryItemFormElement } from '../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-summary-item-form-element',
@@ -7,11 +7,11 @@ import { DefinitionSummaryItemFormElement } from '../../recipe-form/definition-r
     styles: [],
 })
 export class DefinitionAddSummaryItemFormElementComponent {
-    @Input() summaryItem: DefinitionSummaryItemFormElement;
+    @Input() summaryItem: SummaryItemFormElement;
 
     @Output() deleteSummaryItem: EventEmitter<
-        DefinitionSummaryItemFormElement
-    > = new EventEmitter<DefinitionSummaryItemFormElement>();
+        SummaryItemFormElement
+    > = new EventEmitter<SummaryItemFormElement>();
 
     delete(): void {
         this.deleteSummaryItem.emit(this.summaryItem);

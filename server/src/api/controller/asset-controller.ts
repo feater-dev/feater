@@ -2,7 +2,6 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as mkdirRecursive from 'mkdir-recursive';
 import * as Busboy from 'busboy';
-
 import {
     Controller,
     Post,
@@ -26,8 +25,8 @@ export class AssetController {
         @Request() req,
         @Response() res,
         @Next() next,
-        @Param('projectId') projectId,
-        @Param('id') id,
+        @Param('projectId') projectId: string,
+        @Param('id') id: string,
     ): Promise<void> {
         let assetFilePromise;
 

@@ -41,10 +41,10 @@ export class CommandsMapExecutorComponent {
         });
     }
 
-    protected executeNextBatch(
+    private executeNextBatch(
         commandsMapItems: CommandsMapItem[],
         resolve: (value?: void | PromiseLike<void>) => void,
-        reject: (reason?: any) => void,
+        reject: (reason?: unknown) => void,
         completedCommandIds: string[],
         executingCommandSymbols: symbol[],
         pendingCommandSymbols: symbol[],

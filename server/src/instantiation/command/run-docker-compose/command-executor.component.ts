@@ -16,9 +16,10 @@ export class RunDockerComposeCommandExecutorComponent
         return command instanceof RunDockerComposeCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
-            sourceDockerVolumeName,
+            sourceId,
+            sourceAbsoluteHostPath,
             envDirRelativePath,
             composeFileRelativePaths,
             envVariables,
@@ -26,8 +27,7 @@ export class RunDockerComposeCommandExecutorComponent
             commandLogger,
         } = command as RunDockerComposeCommand;
 
-        // TODO Move to recipe and env variables.
-        const hostDockerSocketPath = '/var/run/docker.sock';
+        const dockerSocketAbsoluteHostPath = config.hostPaths.dockerSocket;
 
         const composeUpCommand = config.instantiation.dockerBinaryPath;
         const composeUpArguments: string[] = [];
@@ -50,9 +50,9 @@ export class RunDockerComposeCommandExecutorComponent
             '-w',
             path.join('/source', envDirRelativePath),
             '-v',
-            `${hostDockerSocketPath}:/var/run/docker.sock`,
+            `${dockerSocketAbsoluteHostPath}:/var/run/docker.sock`,
             '-v',
-            `${sourceDockerVolumeName}:/source`,
+            `${sourceAbsoluteHostPath}:/source`,
             `docker/compose:${config.instantiation.dockerComposeVersion}`,
         );
 
@@ -65,7 +65,10 @@ export class RunDockerComposeCommandExecutorComponent
 
         composeUpArguments.push('up', '-d', '--no-color');
 
-        commandLogger.info(`Source volume name: ${sourceDockerVolumeName}`);
+        commandLogger.info(`Source ID: ${sourceId}`);
+        commandLogger.info(
+            `Source absolute host path: ${sourceAbsoluteHostPath}`,
+        );
         commandLogger.info(`Command: ${composeUpCommand}`);
         commandLogger.info(`Arguments: ${JSON.stringify(composeUpArguments)}`);
 

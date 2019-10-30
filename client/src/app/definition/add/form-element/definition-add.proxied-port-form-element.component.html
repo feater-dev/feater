@@ -1,49 +1,67 @@
 <div class="well well-sm form-well">
-
     <a class="btn btn-danger btn-sm form-well-delete-btn" (click)="delete()">
         <span class="glyphicon glyphicon-trash"></span>
     </a>
 
     <div class="row">
-
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">ID</label>
-                <input type="text" class="form-control" [(ngModel)]="proxiedPort.id">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="proxiedPort.id"
+                />
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">Name</label>
-                <input type="text" class="form-control" [(ngModel)]="proxiedPort.name">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="proxiedPort.name"
+                />
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">Service</label>
-                <input type="text" class="form-control" [(ngModel)]="proxiedPort.serviceId">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="proxiedPort.serviceId"
+                />
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">Proxied port</label>
-                <input type="text" class="form-control" [(ngModel)]="proxiedPort.port">
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="proxiedPort.port"
+                />
             </div>
         </div>
-
     </div>
 
     <div class="row">
-
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">Nginx configuration</label>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" [(ngModel)]="proxiedPort.useDefaultNginxConfigTemplate"> Use default template
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="
+                                proxiedPort.useDefaultNginxConfigTemplate
+                            "
+                        />
+                        Use default template
                     </label>
                 </div>
             </div>
@@ -51,26 +69,27 @@
 
         <div class="col-md-9">
             <div
-                    *ngIf="!proxiedPort.useDefaultNginxConfigTemplate"
-                    class="form-group"
+                *ngIf="!proxiedPort.useDefaultNginxConfigTemplate"
+                class="form-group"
             >
-                <label class="control-label">Custom Nginx configuration template</label>
+                <label class="control-label"
+                    >Custom Nginx configuration template</label
+                >
                 <textarea
-                        [(ngModel)]="proxiedPort.nginxConfigTemplate"
-                        class="form-control"
-                        rows="10"
-                        style="font-family: monospace;"
+                    [(ngModel)]="proxiedPort.nginxConfigTemplate"
+                    class="form-control"
+                    rows="10"
+                    style="font-family: monospace;"
                 ></textarea>
                 <p>
                     Available tokens:
-                    <code ngNonBindable>{{{proxy_domain}}</code>,
-                    <code ngNonBindable>{{{service_id}}</code>,
-                    <code ngNonBindable>{{{ip_address}}</code>,
+                    <code ngNonBindable>{{{proxy_domain}}</code
+                    >, <code ngNonBindable>{{{service_id}}</code
+                    >, <code ngNonBindable>{{{ip_address}}</code
+                    >,
                     <code ngNonBindable>{{{port}}</code>
                 </p>
             </div>
         </div>
-
     </div>
-
 </div>

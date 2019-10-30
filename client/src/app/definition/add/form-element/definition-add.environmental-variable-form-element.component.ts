@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { DefinitionEnvVariableFormElement } from '../../recipe-form/definition-recipe-form.model';
+import { EnvVariableFormElement } from '../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-environmental-variable-form-element',
@@ -8,11 +8,11 @@ import { DefinitionEnvVariableFormElement } from '../../recipe-form/definition-r
     styles: [],
 })
 export class DefinitionAddEnvVariableFormElementComponent {
-    @Input() envVariable: DefinitionEnvVariableFormElement;
+    @Input() envVariable: EnvVariableFormElement;
 
     @Output() deleteEnvVariable: EventEmitter<
-        DefinitionEnvVariableFormElement
-    > = new EventEmitter<DefinitionEnvVariableFormElement>();
+        EnvVariableFormElement
+    > = new EventEmitter<EnvVariableFormElement>();
 
     delete(): void {
         this.deleteEnvVariable.emit(this.envVariable);

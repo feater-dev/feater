@@ -1,0 +1,246 @@
+<!-- Sources-->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Sources</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.sources.length" class="row">
+        <div class="col-md-12">
+            <p>No sources defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.sources.length">
+        <div *ngFor="let source of recipe.sources">
+            <app-definition-add-source-form-element
+                [source]="source"
+                (deleteSource)="deleteSource($event)"
+            ></app-definition-add-source-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm" (click)="addSource()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Asset volumes -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Asset volumes</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.assetVolumes.length" class="row">
+        <div class="col-md-12">
+            <p>No asset volumes defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.assetVolumes.length">
+        <div *ngFor="let assetVolume of recipe.assetVolumes">
+            <app-definition-add-asset-volume-form-element
+                [assetVolume]="assetVolume"
+                (deleteItem)="deleteAssetVolume($event)"
+            ></app-definition-add-asset-volume-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm" (click)="addAssetVolume()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Proxied ports -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Proxied ports</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.proxiedPorts.length" class="row">
+        <div class="col-md-12">
+            <p>No proxied ports defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.proxiedPorts.length">
+        <div *ngFor="let proxiedPort of recipe.proxiedPorts">
+            <app-definition-add-proxied-port-form-element
+                [proxiedPort]="proxiedPort"
+                (deleteProxiedPort)="deleteProxiedPort($event)"
+            ></app-definition-add-proxied-port-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm" (click)="addProxiedPort()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Environmental variables -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Environmental variables</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.envVariables.length" class="row">
+        <div class="col-md-12">
+            <p>No environmental variables defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.envVariables.length">
+        <div *ngFor="let envVariable of recipe.envVariables">
+            <app-definition-add-environmental-variable-form-element
+                [envVariable]="envVariable"
+                (deleteEnvVariable)="deleteEnvVariable($event)"
+            ></app-definition-add-environmental-variable-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm" (click)="addEnvVariable()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Compose files -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Compose files</h3>
+        </div>
+    </div>
+
+    <app-definition-add-compose-file-form-element
+        [composeFile]="this.recipe.composeFile"
+        [sources]="this.recipe.sources"
+    ></app-definition-add-compose-file-form-element>
+</div>
+
+<!-- Actions -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 style="display: inline;">Actions</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.actions.length" class="row">
+        <div class="col-md-12">
+            <p>No actions defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.actions.length">
+        <div *ngFor="let action of recipe.actions">
+            <app-definition-add-action-form-element
+                [item]="action"
+                [availableEnvVariableNames]="getAvailableEnvVariableNames()"
+                (deleteItem)="deleteAction($event)"
+            ></app-definition-add-action-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm" (click)="addAction()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Summary items -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Summary items</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.summaryItems.length" class="row">
+        <div class="col-md-12">
+            <p>No summary items defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.summaryItems.length">
+        <div *ngFor="let summaryItem of recipe.summaryItems">
+            <app-definition-add-summary-item-form-element
+                [summaryItem]="summaryItem"
+                (deleteSummaryItem)="deleteSummaryItem($event)"
+            ></app-definition-add-summary-item-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm" (click)="addSummaryItem()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Downloadables -->
+
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Downloadables</h3>
+        </div>
+    </div>
+
+    <div *ngIf="!recipe.downloadables.length" class="row">
+        <div class="col-md-12">
+            <p>No downloadables defined.</p>
+        </div>
+    </div>
+
+    <div *ngIf="recipe.downloadables.length">
+        <div *ngFor="let downloadable of recipe.downloadables">
+            <app-definition-add-downloadable-form-element
+                [item]="downloadable"
+                (deleteItem)="deleteDownloadable($event)"
+            ></app-definition-add-downloadable-form-element>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success btn-sm" (click)="addDownloadable()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</div>

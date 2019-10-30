@@ -1,5 +1,4 @@
 type InstanceCommandLogEntry {
-    id: String!
+    level: String!
     message: String!
-    timestamp: String!
 }

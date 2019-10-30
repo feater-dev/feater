@@ -5,24 +5,24 @@ import { Apollo } from 'apollo-angular';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 import { NgxSpinnerService } from 'ngx-spinner';
 import {
-    DefinitionRecipeFormElement,
+    RecipeFormElement,
     ExecuteServiceCommandTaskFormElement,
-} from '../recipe-form/definition-recipe-form.model';
+} from '../recipe-form/recipe-form.model';
 import {
     getProjectQueryGql,
     GetProjectQueryInterface,
     GetProjectQueryProjectFieldInterface,
 } from './get-project.query';
 import { ToastrService } from 'ngx-toastr';
-import { DefinitionRecipeYamlMapperService } from '../import-yaml/definition-recipe-yaml-mapper.service';
+import { RecipeYamlMapperService } from '../import-yaml/recipe-yaml-mapper.service';
 import gql from 'graphql-tag';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import * as jsYaml from 'js-yaml';
 import * as snakeCaseKeys from 'snakecase-keys';
 
 interface DefinitionAddForm {
     name: string;
-    recipe: DefinitionRecipeFormElement;
+    recipe: RecipeFormElement;
 }
 
 export enum DefinitionRecipeInputModes {
@@ -56,13 +56,12 @@ export class DefinitionAddComponent implements OnInit {
         protected apollo: Apollo,
         protected spinner: NgxSpinnerService,
         protected toastr: ToastrService,
-        protected definitionRecipeYamlMapperComponent: DefinitionRecipeYamlMapperService,
+        protected definitionRecipeYamlMapperComponent: RecipeYamlMapperService,
     ) {
         this.definition = {
             name: '',
             recipe: {
                 sources: [],
-                sourceVolumes: [],
                 assetVolumes: [],
                 proxiedPorts: [],
                 envVariables: [],
@@ -71,8 +70,9 @@ export class DefinitionAddComponent implements OnInit {
                     envDirRelativePath: '',
                     composeFileRelativePaths: [''],
                 },
-                afterBuildTasks: [],
+                actions: [],
                 summaryItems: [],
+                downloadables: [],
             },
         };
     }
@@ -127,24 +127,15 @@ export class DefinitionAddComponent implements OnInit {
         return DefinitionRecipeInputModes.rawYaml === this.recipeInputMode;
     }
 
-    importRecipeYaml(recipe: DefinitionRecipeFormElement): void {
+    importRecipeYaml(recipe: RecipeFormElement): void {
         this.definition.recipe = recipe;
         this.switchMode(this.definitionRecipeInputModes.fullForm);
     }
 
     protected mapDefinitionToDto(): any {
-        for (const afterBuildTask of this.definition.recipe.afterBuildTasks) {
-            if ('execute_service_command' === afterBuildTask.type) {
-                this.filterAfterBuildExecuteCommandTask(
-                    afterBuildTask as ExecuteServiceCommandTaskFormElement,
-                );
-            }
-        }
-
         const recipe = {
-            schemaVersion: '0.1.0',
+            schemaVersion: '0.1',
             sources: this.definition.recipe.sources,
-            sourceVolumes: this.definition.recipe.sourceVolumes,
             assetVolumes: this.definition.recipe.assetVolumes,
             proxiedPorts: this.definition.recipe.proxiedPorts.map(
                 proxiedPort => {
@@ -165,17 +156,32 @@ export class DefinitionAddComponent implements OnInit {
             ),
             envVariables: this.definition.recipe.envVariables,
             composeFiles: [this.definition.recipe.composeFile],
-            afterBuildTasks: _.cloneDeep(
-                this.definition.recipe.afterBuildTasks,
-            ),
-            summaryItems: this.definition.recipe.summaryItems,
-        };
+            actions: this.definition.recipe.actions.map(action => ({
+                id: action.id,
+                type: action.type,
+                name: action.name,
+                afterBuildTasks: action.afterBuildTasks.map(afterBuildTask => {
+                    const mappedAfterBuildTask = _.cloneDeep(afterBuildTask);
+                    if (
+                        'execute_service_command' === mappedAfterBuildTask.type
+                    ) {
+                        this.filterAfterBuildExecuteCommandTask(
+                            mappedAfterBuildTask as ExecuteServiceCommandTaskFormElement,
+                        );
+                    }
+                    if ('' === mappedAfterBuildTask.id) {
+                        delete mappedAfterBuildTask.id;
+                    }
+                    if (0 === mappedAfterBuildTask.dependsOn.length) {
+                        delete mappedAfterBuildTask.dependsOn;
+                    }
 
-        for (const sourceVolume of recipe.sourceVolumes) {
-            if ('' === sourceVolume.relativePath) {
-                delete sourceVolume.relativePath;
-            }
-        }
+                    return mappedAfterBuildTask;
+                }),
+            })),
+            summaryItems: this.definition.recipe.summaryItems,
+            downloadables: this.definition.recipe.downloadables,
+        };
 
         for (const assetVolume of recipe.assetVolumes) {
             if ('' === assetVolume.assetId) {
@@ -183,12 +189,9 @@ export class DefinitionAddComponent implements OnInit {
             }
         }
 
-        for (const afterBuildTask of recipe.afterBuildTasks) {
-            if ('' === afterBuildTask.id) {
-                delete afterBuildTask.id;
-            }
-            if (0 === afterBuildTask.dependsOn.length) {
-                delete afterBuildTask.dependsOn;
+        for (const action of this.definition.recipe.actions) {
+            const clonedAfterBuildTasks = _.cloneDeep(action.afterBuildTasks);
+            for (const afterBuildTask of clonedAfterBuildTasks) {
             }
         }
 
@@ -197,10 +200,7 @@ export class DefinitionAddComponent implements OnInit {
             name: this.definition.name,
             recipeAsYaml: jsYaml.safeDump(
                 snakeCaseKeys(recipe, { deep: true }),
-                {
-                    indent: 4,
-                    flowLevel: -1,
-                },
+                { indent: 4, flowLevel: -1 },
             ),
         };
 

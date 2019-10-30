@@ -1,20 +1,33 @@
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-pills">
-            <li [ngClass]="{'active': activeTab === instanceTabs.summary}">
+            <li [ngClass]="{ active: activeTab === instanceTabs.summary }">
                 <a routerLink="/instance/{{ instanceId }}">Summary</a>
             </li>
-            <li [ngClass]="{'active': activeTab === instanceTabs.environment}">
-                <a routerLink="/instance/{{ instanceId }}/environment">Environment</a>
+            <li [ngClass]="{ active: activeTab === instanceTabs.environment }">
+                <a routerLink="/instance/{{ instanceId }}/environment"
+                    >Environment</a
+                >
             </li>
-            <li [ngClass]="{'active': activeTab === instanceTabs.services}">
+            <li [ngClass]="{ active: activeTab === instanceTabs.services }">
                 <a routerLink="/instance/{{ instanceId }}/services">Services</a>
             </li>
-            <li [ngClass]="{'active': activeTab === instanceTabs.proxyDomains}">
-                <a routerLink="/instance/{{ instanceId }}/proxy-domains">Proxy domains</a>
+            <li [ngClass]="{ active: activeTab === instanceTabs.proxyDomains }">
+                <a routerLink="/instance/{{ instanceId }}/proxy-domains"
+                    >Proxy domains</a
+                >
             </li>
-            <li [ngClass]="{'active': activeTab === instanceTabs.buildLogs}">
-                <a routerLink="/instance/{{ instanceId }}/build-logs">Build logs</a>
+            <li
+                [ngClass]="{ active: activeTab === instanceTabs.downloadables }"
+            >
+                <a routerLink="/instance/{{ instanceId }}/downloadables"
+                    >Downloadables</a
+                >
+            </li>
+            <li [ngClass]="{ active: activeTab === instanceTabs.buildLogs }">
+                <a routerLink="/instance/{{ instanceId }}/build-logs"
+                    >Build logs</a
+                >
             </li>
         </ul>
     </div>

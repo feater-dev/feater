@@ -2,18 +2,21 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ResolverPaginationArgumentsHelper {
-    protected readonly defaultLimit = 99999;
-    protected readonly maximalLimit = 99999;
+    private readonly maximalLimit = 999999;
 
     getLimit(limit?: number): number {
-        return Math.min(limit || this.defaultLimit, this.maximalLimit);
+        return Math.min(limit || this.maximalLimit, this.maximalLimit);
     }
 
     getOffset(offset?: number): number {
         return offset || 0;
     }
 
-    getSort(defaultSortKey: string, sortMap: object, sortKey?: string): object {
+    getSort(
+        defaultSortKey: string,
+        sortMap: unknown,
+        sortKey?: string,
+    ): unknown {
         if (!sortKey) {
             sortKey = defaultSortKey;
         }

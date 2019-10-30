@@ -32,7 +32,13 @@ type Mutation {
 
     createInstance(
         definitionId: String!
+        instantiationActionId: String!
         name: String!
+    ): Instance
+
+    modifyInstance(
+        instanceId: String!
+        modificationActionId: String!
     ): Instance
 
     removeInstance(

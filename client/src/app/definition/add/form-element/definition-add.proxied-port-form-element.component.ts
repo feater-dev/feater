@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { DefinitionProxiedPortFormElement } from '../../recipe-form/definition-recipe-form.model';
+import { ProxiedPortFormElement } from '../../recipe-form/recipe-form.model';
 
 @Component({
     selector: 'app-definition-add-proxied-port-form-element',
@@ -7,11 +7,11 @@ import { DefinitionProxiedPortFormElement } from '../../recipe-form/definition-r
     styles: [],
 })
 export class DefinitionAddProxiedPortFormElementComponent {
-    @Input() proxiedPort: DefinitionProxiedPortFormElement;
+    @Input() proxiedPort: ProxiedPortFormElement;
 
     @Output() deleteProxiedPort: EventEmitter<
-        DefinitionProxiedPortFormElement
-    > = new EventEmitter<DefinitionProxiedPortFormElement>();
+        ProxiedPortFormElement
+    > = new EventEmitter<ProxiedPortFormElement>();
 
     delete() {
         this.deleteProxiedPort.emit(this.proxiedPort);

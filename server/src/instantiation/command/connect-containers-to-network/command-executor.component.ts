@@ -15,7 +15,7 @@ export class ConnectToNetworkCommandExecutorComponent
         return command instanceof ConnectToNetworkCommand;
     }
 
-    async execute(command: SimpleCommand): Promise<any> {
+    async execute(command: SimpleCommand): Promise<unknown> {
         const {
             serviceId,
             containerId,

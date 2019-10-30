@@ -46,7 +46,7 @@ export class InstanceAddComponent implements OnInit {
         this.getDefinition();
     }
 
-    addItem(instantiationActionId: string) {
+    createInstance(instantiationActionId: string) {
         this.spinner.show();
         this.apollo
             .mutate({
@@ -58,13 +58,13 @@ export class InstanceAddComponent implements OnInit {
                 ({ data }) => {
                     this.spinner.hide();
                     this.toastr.success(
-                        `Instance <em>${data.createInstance.name}</em> created, build started.`,
+                        `Creation of instance <em>${data.createInstance.name}</em> started.`,
                     );
                     this.router.navigate(['/instance', data.createInstance.id]);
                 },
                 () => {
                     this.toastr.error(
-                        `Failed to create <em>${this.instance.name}</em>.`,
+                        `Failed to create instance <em>${this.instance.name}</em>.`,
                     );
                     this.spinner.hide();
                 },

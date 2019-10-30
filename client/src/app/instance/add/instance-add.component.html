@@ -29,14 +29,14 @@
                     <p *ngIf="!instantiationActions.length">
                         No instantiation actions defined.
                     </p>
-                    <div class="buttons">
+                    <div class="buttons btn-block">
                         <span
                             *ngFor="
                                 let instantiationAction of instantiationActions
                             "
                         >
                             <button
-                                (click)="addItem(instantiationAction.id)"
+                                (click)="createInstance(instantiationAction.id)"
                                 type="submit"
                                 class="btn btn-success"
                             >

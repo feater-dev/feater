@@ -3,7 +3,7 @@ export interface ActionLogTypeInterface {
     actionId: string;
     actionType: string;
     actionName: string;
-    createdAt: Date;
-    completedAt?: Date;
-    failedAt?: Date;
+    createdAt: string;
+    completedAt?: string;
+    failedAt?: string;
 }

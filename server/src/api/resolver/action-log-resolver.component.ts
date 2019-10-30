@@ -5,12 +5,14 @@ import { PathHelper } from '../../instantiation/helper/path-helper.component';
 import { ActionLogTypeInterface } from '../type/action-log-type.interface';
 import * as os from 'os';
 import * as fs from 'fs';
+import { DateConverter } from '../date-converter.component';
 
 @Resolver('InstanceActionLog')
 export class ActionLogResolver {
     constructor(
         private readonly commandLogRepository: CommandLogRepository,
         private readonly pathHelper: PathHelper,
+        private readonly dateConverter: DateConverter,
     ) {}
 
     @ResolveProperty('commandLogs')
@@ -51,9 +53,11 @@ export class ActionLogResolver {
             mappedCommandLogs.push({
                 id: commandLog._id.toString(),
                 description: commandLog.description,
-                createdAt: commandLog.createdAt,
-                completedAt: commandLog.completedAt,
-                failedAt: commandLog.failedAt,
+                createdAt: this.dateConverter.convertDate(commandLog.createdAt),
+                completedAt: this.dateConverter.convertDate(
+                    commandLog.completedAt,
+                ),
+                failedAt: this.dateConverter.convertDate(commandLog.failedAt),
                 entries: commandLogEntries,
             });
         }

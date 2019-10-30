@@ -32,6 +32,7 @@ import * as nanoidGenerate from 'nanoid/generate';
 import * as path from 'path';
 import { Instantiator } from '../../instantiation/instantiator.service';
 import { Modificator } from '../../instantiation/modificator.service';
+import { DateConverter } from '../date-converter.component';
 
 @Resolver('Instance')
 export class InstanceResolver {
@@ -45,6 +46,7 @@ export class InstanceResolver {
         private readonly definitionModelToTypeMapper: DefinitionModelToTypeMapper,
         private readonly actionLogRepository: ActionLogRepository,
         private readonly commandLogRepository: CommandLogRepository,
+        private readonly dateConverter: DateConverter,
     ) {}
 
     @Query('instances')
@@ -109,9 +111,11 @@ export class InstanceResolver {
                 actionId: actionLog.actionId,
                 actionType: actionLog.actionType,
                 actionName: actionLog.actionName,
-                createdAt: actionLog.createdAt,
-                completedAt: actionLog.completedAt,
-                failedAt: actionLog.failedAt,
+                createdAt: this.dateConverter.convertDate(actionLog.createdAt),
+                completedAt: this.dateConverter.convertDate(
+                    actionLog.completedAt,
+                ),
+                failedAt: this.dateConverter.convertDate(actionLog.failedAt),
             });
         }
 

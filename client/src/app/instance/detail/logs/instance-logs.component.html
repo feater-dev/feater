@@ -253,5 +253,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <p *ngIf="!modificationActions.length">
+                    No modification actions defined.
+                </p>
+                <div class="buttons btn-block">
+                    <span
+                        *ngFor="let modificationAction of modificationActions"
+                    >
+                        <button
+                            (click)="modifyInstance(modificationAction.id)"
+                            type="submit"
+                            class="btn btn-success"
+                        >
+                            {{ modificationAction.name }}
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

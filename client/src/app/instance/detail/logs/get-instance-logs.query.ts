@@ -25,6 +25,13 @@ export const getInstanceLogsQueryGql = gql`
                     }
                 }
             }
+            definition {
+                actions {
+                    id
+                    name
+                    type
+                }
+            }
         }
     }
 `;
@@ -52,6 +59,13 @@ export interface GetInstanceLogsQueryInstanceFieldInterface {
             }[];
         }[];
     }[];
+    definition: {
+        actions: {
+            id: string;
+            name: string;
+            type: string;
+        }[];
+    };
 }
 
 export interface GetInstanceLogsQueryInterface {

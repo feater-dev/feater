@@ -49,7 +49,7 @@
     "moment": "^2.22.2",
     "mongoose": "^5.6.0",
     "morgan": "^1.9.0",
-    "nanoid": "^1.0.2",
+    "nanoid": "^3.1.31",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.3",
     "rxjs": "^6.3.3",

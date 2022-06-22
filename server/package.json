@@ -38,7 +38,7 @@
     "escape-string-regexp": "^1.0.5",
     "fs-extra": "^5.0.0",
     "git-url-parse": "^10.1.0",
-    "got": "^8.3.2",
+    "got": "^11.8.5",
     "graphql": "^14.3.1",
     "graphql-tools": "^4.0.4",
     "graphql-type-json": "^0.3.0",
